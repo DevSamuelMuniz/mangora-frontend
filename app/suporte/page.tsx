@@ -1,0 +1,4 @@
+import type { Metadata } from "next";
+import PublicInfoPage from "@/components/public/PublicInfoPage";
+export const metadata: Metadata = { title: "Suporte | Gestão+" };
+export default function SupportPage() { return <PublicInfoPage eyebrow="Ajuda" title="Como podemos ajudar?" description="Encontre os canais e informações essenciais para resolver dúvidas sobre o Gestão+." sections={[{ title: "Atendimento", paragraphs: ["Nosso atendimento está disponível de segunda a sexta-feira, das 8h às 18h, no horário de Brasília."], items: ["WhatsApp: (81) 98463-9299.", "E-mail: suporte@gestaomais.com.br.", "Tenha o nome da empresa e uma descrição do problema em mãos."] }, { title: "Antes de solicitar ajuda", paragraphs: ["Verifique sua conexão, atualize a página e confirme se os dados obrigatórios foram preenchidos."], items: ["Não envie senhas ou códigos de acesso.", "Inclua uma captura de tela quando possível.", "Informe os passos para reproduzir o problema."] }]} />; }
