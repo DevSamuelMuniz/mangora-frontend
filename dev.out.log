@@ -1,0 +1,16 @@
+
+> pdv@0.1.0 dev
+> next dev
+
+▲ Next.js 16.2.10 (Turbopack)
+- Local:         http://localhost:3000
+- Network:       http://192.168.1.4:3000
+- Environments: .env.local
+✓ Ready in 582ms
+
+ GET /login 200 in 1006ms (next.js: 279ms, application-code: 727ms)
+ GET /configuracoes 200 in 651ms (next.js: 54ms, application-code: 597ms)
+ GET /recuperar-senha 200 in 1344ms (next.js: 925ms, application-code: 419ms)
+ GET /redefinir-senha?token=preview-invalid-token-value-1234567890 200 in 700ms (next.js: 534ms, application-code: 167ms)
+ GET /recuperar-senha 200 in 190ms (next.js: 34ms, application-code: 155ms)
+[?25h

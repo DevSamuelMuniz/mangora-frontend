@@ -1,0 +1,19 @@
+
+<--- Last few GCs --->
+
+[15264:0000018ACC6AF000]  1531606 ms: Scavenge 8033.1 (8070.5) -> 8018.9 (8080.5) MB, pooled: 0 MB, 23.45 / 0.00 ms  (average mu = 0.292, current mu = 0.285) allocation failure; 
+[15264:0000018ACC6AF000]  1539944 ms: Mark-Compact (reduce) 8019.6 (8080.7) -> 7962.5 (7979.1) MB, pooled: 0 MB, 8229.43 / 86.06 ms  (+ 52.4 ms in 10 steps since start of marking, biggest step 6.6 ms, walltime since start of marking 8338 ms) (average mu =
+FATAL ERROR: Ineffective mark-compacts near heap limit Allocation failed - JavaScript heap out of memory
+----- Native stack trace -----
+
+ 1: 00007FF619623D9F node::OnFatalError+1343
+ 2: 00007FF61826DCB7 v8::Function::NewInstance+423
+ 3: 00007FF61806E4F7 uv_udp_get_send_queue_count+54423
+ 4: 00007FF618072204 uv_udp_get_send_queue_count+70052
+ 5: 00007FF61808116C v8::internal::StrongRootAllocatorBase::deallocate_impl+16604
+ 6: 00007FF6180809AB v8::internal::StrongRootAllocatorBase::deallocate_impl+14619
+ 7: 00007FF6199524AD node::AsyncResource::CallbackScope::CallbackScope+2184429
+ 8: 00007FF61806BFC0 uv_udp_get_send_queue_count+44896
+ 9: 00007FF6180EFDA9 v8::Unlocker::~Unlocker+9273
+10: 00007FF617C635D8 v8::CodeEvent::GetFunctionName+131144
+11: 0000018A9FE775FA 
