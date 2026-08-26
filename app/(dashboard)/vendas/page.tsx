@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import SalesCatalog from "@/components/sales/SalesCatalog";
 
 export const metadata: Metadata = {
-  title: "Vendas | Gestão+",
+  title: "Vendas | Mangora",
   description: "Acompanhe as vendas da sua empresa.",
 };
 

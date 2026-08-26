@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import StockMovementForm from "@/components/stock/StockMovementForm";
 
 export const metadata: Metadata = {
-  title: "Nova movimentação | Gestão+",
+  title: "Nova movimentação | Mangora",
   description: "Registre uma movimentação de estoque.",
 };
 

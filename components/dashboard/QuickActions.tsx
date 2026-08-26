@@ -22,21 +22,21 @@ const actions: QuickAction[] = [
     description: "Registrar uma venda",
     href: "/vendas/nova",
     icon: ShoppingCart,
-    className: "bg-violet-50 text-violet-600",
+    className: "bg-orange-50 text-orange-600",
   },
   {
     title: "Novo produto",
     description: "Adicionar ao catálogo",
     href: "/produtos/novo",
     icon: PackagePlus,
-    className: "bg-cyan-50 text-cyan-600",
+    className: "bg-yellow-50 text-yellow-600",
   },
   {
     title: "Novo cliente",
     description: "Cadastrar cliente",
     href: "/clientes/novo",
     icon: UserPlus,
-    className: "bg-emerald-50 text-emerald-600",
+    className: "bg-green-50 text-green-600",
   },
   {
     title: "Lançamento",
@@ -68,7 +68,7 @@ export default function QuickActions() {
             <Link
               key={action.title}
               href={action.href}
-              className="group flex items-center gap-3 rounded-xl border border-slate-200 p-3 transition hover:-translate-y-0.5 hover:border-violet-200 hover:bg-violet-50/40 hover:shadow-sm"
+              className="group flex items-center gap-3 rounded-xl border border-slate-200 p-3 transition hover:-translate-y-0.5 hover:border-orange-200 hover:bg-orange-50/40 hover:shadow-sm"
             >
               <div
                 className={`flex size-9 shrink-0 items-center justify-center rounded-xl ${action.className}`}
@@ -86,7 +86,7 @@ export default function QuickActions() {
                 </p>
               </div>
 
-              <ArrowUpRight className="size-3.5 text-slate-300 transition group-hover:text-violet-600" />
+              <ArrowUpRight className="size-3.5 text-slate-300 transition group-hover:text-orange-600" />
             </Link>
           );
         })}

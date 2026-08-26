@@ -1,8 +1,11 @@
 @import "tailwindcss";
 
 :root {
-  --background: #f8fafc;
-  --foreground: #020617;
+  --background: #fffaf5;
+  --foreground: #173d2b;
+  --brand-primary: #f97316;
+  --brand-secondary: #f59e0b;
+  --brand-accent: #16803c;
   color-scheme: light;
 }
 
@@ -17,4 +20,47 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+::selection {
+  background: #fed7aa;
+  color: #7c2d12;
+}
+
+:focus-visible {
+  outline-color: var(--brand-primary);
+}
+
+@keyframes mangora-float {
+  0%,
+  100% {
+    transform: translateY(0) rotate(-2deg);
+  }
+  50% {
+    transform: translateY(-12px) rotate(1deg);
+  }
+}
+
+@keyframes mangora-flow {
+  from {
+    transform: translateX(-110%);
+  }
+  to {
+    transform: translateX(320%);
+  }
+}
+
+.mangora-float {
+  animation: mangora-float 5s ease-in-out infinite;
+}
+
+.mangora-flow {
+  animation: mangora-flow 4.5s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mangora-float,
+  .mangora-flow {
+    animation: none;
+  }
 }

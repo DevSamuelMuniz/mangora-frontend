@@ -140,11 +140,11 @@ export default function ProductCatalog() {
       <section>
         <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
           <div>
-            <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-violet-600">Catálogo</p>
+            <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-orange-600">Catálogo</p>
             <h1 className="mt-1 text-2xl font-black tracking-tight text-slate-950 sm:text-3xl">Produtos</h1>
             <p className="mt-1 text-xs text-slate-500">Organize produtos, preços e disponibilidade em estoque.</p>
           </div>
-          <Link href="/produtos/novo" className="inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 px-4 text-sm font-bold text-white shadow-lg shadow-violet-200 transition hover:-translate-y-0.5 hover:shadow-xl">
+          <Link href="/produtos/novo" className="inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-orange-600 to-amber-600 px-4 text-sm font-bold text-white shadow-lg shadow-orange-200 transition hover:-translate-y-0.5 hover:shadow-xl">
             <PackagePlus className="size-4" />
             Novo produto
           </Link>
@@ -155,7 +155,7 @@ export default function ProductCatalog() {
             <label className="relative">
               <span className="sr-only">Buscar produtos</span>
               <Search className="pointer-events-none absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-slate-400" />
-              <input type="search" value={search} onChange={(event) => { setSearch(event.target.value); setPage(1); }} placeholder="Buscar por nome, SKU ou código..." className="h-11 w-full rounded-xl border border-slate-200 bg-slate-50 pl-10 pr-4 text-sm text-slate-950 outline-none transition placeholder:text-slate-400 focus:border-violet-300 focus:bg-white focus:ring-4 focus:ring-violet-100" />
+              <input type="search" value={search} onChange={(event) => { setSearch(event.target.value); setPage(1); }} placeholder="Buscar por nome, SKU ou código..." className="h-11 w-full rounded-xl border border-slate-200 bg-slate-50 pl-10 pr-4 text-sm text-slate-950 outline-none transition placeholder:text-slate-400 focus:border-orange-300 focus:bg-white focus:ring-4 focus:ring-orange-100" />
             </label>
             <FilterSelect label="Categoria" value={category} onChange={(value) => { setCategory(value); setPage(1); }} options={categories.map((item) => ({ value: item, label: item }))} />
             <FilterSelect label="Status" value={status} onChange={(value) => { setStatus(value as StatusFilter); setPage(1); }} options={[{ value: "active", label: "Ativos" }, { value: "inactive", label: "Inativos" }]} />
@@ -173,7 +173,7 @@ export default function ProductCatalog() {
         <div className="mt-4 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
           {loading ? (
             <div className="flex min-h-80 items-center justify-center text-slate-500">
-              <LoaderCircle className="size-5 animate-spin text-violet-600" />
+              <LoaderCircle className="size-5 animate-spin text-orange-600" />
               <span className="ml-2 text-xs font-semibold">Carregando produtos...</span>
             </div>
           ) : error && products.length === 0 ? (
@@ -181,7 +181,7 @@ export default function ProductCatalog() {
               <div className="flex size-12 items-center justify-center rounded-2xl bg-red-50 text-red-600"><AlertTriangle className="size-5" /></div>
               <h2 className="mt-4 text-sm font-bold text-slate-900">Não foi possível carregar o catálogo</h2>
               <p className="mt-1 max-w-sm text-xs leading-5 text-slate-500">{error}</p>
-              <button type="button" onClick={() => void loadProducts()} className="mt-4 inline-flex h-10 items-center gap-2 rounded-xl border border-slate-200 px-4 text-xs font-bold text-violet-600 hover:bg-violet-50"><RefreshCw className="size-3.5" />Tentar novamente</button>
+              <button type="button" onClick={() => void loadProducts()} className="mt-4 inline-flex h-10 items-center gap-2 rounded-xl border border-slate-200 px-4 text-xs font-bold text-orange-600 hover:bg-orange-50"><RefreshCw className="size-3.5" />Tentar novamente</button>
             </div>
           ) : visibleProducts.length > 0 ? (
             <>
@@ -196,11 +196,11 @@ export default function ProductCatalog() {
                       const lowStock = product.trackStock && availableStock > 0 && availableStock <= product.minimumStock;
                       return (
                         <tr key={product.id} className="transition hover:bg-slate-50">
-                          <td className="px-5 py-3.5"><div className="flex items-center gap-3"><div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-violet-50 to-cyan-50 text-violet-600"><Package className="size-4.5" /></div><div className="min-w-0"><p className="max-w-64 truncate text-xs font-bold text-slate-800">{product.name}</p><p className="mt-1 text-[10px] text-slate-400">SKU: {product.sku}</p></div></div></td>
+                          <td className="px-5 py-3.5"><div className="flex items-center gap-3"><div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-orange-50 to-yellow-50 text-orange-600"><Package className="size-4.5" /></div><div className="min-w-0"><p className="max-w-64 truncate text-xs font-bold text-slate-800">{product.name}</p><p className="mt-1 text-[10px] text-slate-400">SKU: {product.sku}</p></div></div></td>
                           <td className="px-4 py-3.5 text-xs text-slate-600">{product.category}</td>
                           <td className="px-4 py-3.5 text-xs font-bold text-slate-800">{currencyFormatter.format(product.price)}</td>
                           <td className="px-4 py-3.5"><div className="flex items-center gap-2"><span className={`text-xs font-bold ${product.trackStock && availableStock === 0 ? "text-red-600" : lowStock ? "text-amber-600" : "text-slate-800"}`}>{product.trackStock ? `${availableStock} disp.${product.reservedStock ? ` · ${product.reservedStock} reserv.` : ""}` : "Não controlado"}</span>{lowStock && <AlertTriangle className="size-3.5 text-amber-500" />}</div></td>
-                          <td className="px-4 py-3.5"><span className={`inline-flex rounded-full px-2.5 py-1 text-[10px] font-bold ${product.active ? "bg-emerald-50 text-emerald-600" : "bg-slate-100 text-slate-500"}`}>{product.active ? "Ativo" : "Inativo"}</span></td>
+                          <td className="px-4 py-3.5"><span className={`inline-flex rounded-full px-2.5 py-1 text-[10px] font-bold ${product.active ? "bg-green-50 text-green-600" : "bg-slate-100 text-slate-500"}`}>{product.active ? "Ativo" : "Inativo"}</span></td>
                           <td className="px-4 py-3.5 text-center">
                             <details className="relative inline-block text-left">
                               <summary aria-label={`Ações do produto ${product.name}`} className="flex size-8 cursor-pointer list-none items-center justify-center rounded-lg text-slate-400 transition hover:bg-slate-100 hover:text-slate-700"><MoreHorizontal className="size-4" /></summary>
@@ -228,10 +228,10 @@ export default function ProductCatalog() {
             </>
           ) : (
             <div className="flex min-h-80 flex-col items-center justify-center px-6 py-12 text-center">
-              <div className="flex size-12 items-center justify-center rounded-2xl bg-violet-50 text-violet-600"><Package className="size-5" /></div>
+              <div className="flex size-12 items-center justify-center rounded-2xl bg-orange-50 text-orange-600"><Package className="size-5" /></div>
               <h2 className="mt-4 text-sm font-bold text-slate-900">Nenhum produto encontrado</h2>
               <p className="mt-1 max-w-sm text-xs leading-5 text-slate-500">{products.length === 0 ? "Cadastre o primeiro produto para começar seu catálogo." : "Ajuste os filtros para visualizar o catálogo."}</p>
-              {products.length === 0 ? <Link href="/produtos/novo" className="mt-4 inline-flex h-10 items-center rounded-xl bg-violet-600 px-4 text-xs font-bold text-white">Cadastrar produto</Link> : <button type="button" onClick={clearFilters} className="mt-4 h-10 rounded-xl border border-slate-200 px-4 text-xs font-bold text-violet-600 transition hover:bg-violet-50">Limpar filtros</button>}
+              {products.length === 0 ? <Link href="/produtos/novo" className="mt-4 inline-flex h-10 items-center rounded-xl bg-orange-600 px-4 text-xs font-bold text-white">Cadastrar produto</Link> : <button type="button" onClick={clearFilters} className="mt-4 h-10 rounded-xl border border-slate-200 px-4 text-xs font-bold text-orange-600 transition hover:bg-orange-50">Limpar filtros</button>}
             </div>
           )}
         </div>
@@ -245,7 +245,7 @@ export default function ProductCatalog() {
 
 function FilterSelect({ label, value, options, onChange }: { label: string; value: string; options: { value: string; label: string }[]; onChange: (value: string) => void }) {
   return (
-    <label><span className="sr-only">{label}</span><select value={value} onChange={(event) => onChange(event.target.value)} className="h-11 w-full rounded-xl border border-slate-200 bg-slate-50 px-3 text-xs font-semibold text-slate-600 outline-none transition focus:border-violet-300 focus:bg-white focus:ring-4 focus:ring-violet-100"><option value="all">{label}: todos</option>{options.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}</select></label>
+    <label><span className="sr-only">{label}</span><select value={value} onChange={(event) => onChange(event.target.value)} className="h-11 w-full rounded-xl border border-slate-200 bg-slate-50 px-3 text-xs font-semibold text-slate-600 outline-none transition focus:border-orange-300 focus:bg-white focus:ring-4 focus:ring-orange-100"><option value="all">{label}: todos</option>{options.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}</select></label>
   );
 }
 
@@ -253,12 +253,12 @@ function ProductDetailsModal({ product, onClose }: { product: Product; onClose: 
   return (
     <div onMouseDown={(event) => { if (event.target === event.currentTarget) onClose(); }} className="fixed inset-0 z-[70] flex items-center justify-center bg-slate-950/40 p-4 backdrop-blur-sm">
       <div role="dialog" aria-modal="true" className="w-full max-w-md rounded-2xl border border-slate-200 bg-white p-5 shadow-2xl">
-        <div className="flex items-start justify-between gap-4"><div><p className="text-[10px] font-bold uppercase tracking-wider text-violet-600">Detalhes do produto</p><h2 className="mt-1 text-lg font-black text-slate-950">{product.name}</h2></div><button type="button" onClick={onClose} aria-label="Fechar detalhes" className="flex size-9 items-center justify-center rounded-xl text-slate-400 hover:bg-slate-100"><X className="size-4" /></button></div>
+        <div className="flex items-start justify-between gap-4"><div><p className="text-[10px] font-bold uppercase tracking-wider text-orange-600">Detalhes do produto</p><h2 className="mt-1 text-lg font-black text-slate-950">{product.name}</h2></div><button type="button" onClick={onClose} aria-label="Fechar detalhes" className="flex size-9 items-center justify-center rounded-xl text-slate-400 hover:bg-slate-100"><X className="size-4" /></button></div>
         <dl className="mt-5 grid grid-cols-2 gap-3">
           {[["SKU", product.sku], ["Categoria", product.category], ["Preço", currencyFormatter.format(product.price)], ["Estoque físico", product.trackStock ? `${product.stock} unidade(s)` : "Não controlado"], ["Reservado", `${product.reservedStock} unidade(s)`], ["Disponível", `${product.stock - product.reservedStock} unidade(s)`], ["Estoque mínimo", `${product.minimumStock} unidade(s)`], ["Status", product.active ? "Ativo" : "Inativo"], ["Código de barras", product.barcode || "Não informado"]].map(([label, value]) => <div key={label} className="rounded-xl bg-slate-50 p-3"><dt className="text-[10px] font-semibold text-slate-400">{label}</dt><dd className="mt-1 break-words text-xs font-bold text-slate-800">{value}</dd></div>)}
         </dl>
         {product.description && <p className="mt-3 rounded-xl bg-slate-50 p-3 text-xs leading-5 text-slate-600">{product.description}</p>}
-        <div className="mt-5 flex justify-end"><Link href={`/produtos/${product.id}/editar`} className="inline-flex h-10 items-center gap-2 rounded-xl bg-violet-600 px-4 text-xs font-bold text-white"><Pencil className="size-3.5" />Editar produto</Link></div>
+        <div className="mt-5 flex justify-end"><Link href={`/produtos/${product.id}/editar`} className="inline-flex h-10 items-center gap-2 rounded-xl bg-orange-600 px-4 text-xs font-bold text-white"><Pencil className="size-3.5" />Editar produto</Link></div>
       </div>
     </div>
   );

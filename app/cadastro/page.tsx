@@ -11,7 +11,6 @@ import {
   CheckCircle2,
   Eye,
   EyeOff,
-  LayoutDashboard,
   LoaderCircle,
   LockKeyhole,
   Mail,
@@ -24,6 +23,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { apiRequest } from "@/lib/api/client";
+import BrandLogo from "@/components/brand/BrandLogo";
 
 const benefits = [
   {
@@ -144,7 +144,7 @@ export default function CadastroPage() {
         <PresentationSection />
 
         <section className="relative flex min-h-screen items-center justify-center px-5 py-8 sm:px-8 lg:h-screen lg:min-h-0 lg:px-10 lg:py-3">
-          <div className="absolute inset-x-0 top-0 h-48 bg-gradient-to-b from-violet-50 to-transparent lg:hidden" />
+          <div className="absolute inset-x-0 top-0 h-48 bg-gradient-to-b from-orange-50 to-transparent lg:hidden" />
 
           <div className="relative w-full max-w-xl">
             <MobileHeader />
@@ -152,7 +152,7 @@ export default function CadastroPage() {
             <div className="mb-4 hidden items-center justify-between lg:flex">
               <Link
                 href="/"
-                className="flex items-center gap-2 text-xs font-semibold text-slate-500 transition hover:text-violet-600"
+                className="flex items-center gap-2 text-xs font-semibold text-slate-500 transition hover:text-orange-600"
               >
                 <ArrowLeft className="size-4" />
                 Voltar para o início
@@ -162,7 +162,7 @@ export default function CadastroPage() {
                 Já possui conta?{" "}
                 <Link
                   href="/login"
-                  className="font-bold text-violet-600 hover:text-violet-800"
+                  className="font-bold text-orange-600 hover:text-orange-800"
                 >
                   Entrar
                 </Link>
@@ -170,7 +170,7 @@ export default function CadastroPage() {
             </div>
 
             <div>
-              <span className="inline-flex items-center gap-2 rounded-full border border-violet-100 bg-violet-50 px-3 py-1.5 text-xs font-bold text-violet-700">
+              <span className="inline-flex items-center gap-2 rounded-full border border-orange-100 bg-orange-50 px-3 py-1.5 text-xs font-bold text-orange-700">
                 <Sparkles className="size-3.5" />
                 Crie sua conta
               </span>
@@ -263,7 +263,7 @@ export default function CadastroPage() {
               {success && (
                 <div
                   role="status"
-                  className="mt-3 flex items-center gap-2 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-2.5 text-xs font-semibold text-emerald-700"
+                  className="mt-3 flex items-center gap-2 rounded-xl border border-green-200 bg-green-50 px-4 py-2.5 text-xs font-semibold text-green-700"
                 >
                   <CheckCircle2 className="size-4 shrink-0" />
                   Conta criada com sucesso. Acessando o painel...
@@ -275,21 +275,21 @@ export default function CadastroPage() {
                   type="checkbox"
                   name="acceptedTerms"
                   required
-                  className="mt-0.5 size-4 shrink-0 rounded border-slate-300 accent-violet-600"
+                  className="mt-0.5 size-4 shrink-0 rounded border-slate-300 accent-orange-600"
                 />
 
                 <span>
                   Concordo com os{" "}
                   <Link
                     href="/termos"
-                    className="font-bold text-violet-600 hover:text-violet-800"
+                    className="font-bold text-orange-600 hover:text-orange-800"
                   >
                     Termos de Uso
                   </Link>{" "}
                   e com a{" "}
                   <Link
                     href="/privacidade"
-                    className="font-bold text-violet-600 hover:text-violet-800"
+                    className="font-bold text-orange-600 hover:text-orange-800"
                   >
                     Política de Privacidade
                   </Link>
@@ -300,7 +300,7 @@ export default function CadastroPage() {
               <button
                 type="submit"
                 disabled={loading}
-                className="group mt-4 flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 px-5 text-sm font-bold text-white shadow-lg shadow-violet-200 transition hover:-translate-y-0.5 hover:shadow-xl disabled:cursor-not-allowed disabled:opacity-70 disabled:hover:translate-y-0"
+                className="group mt-4 flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-orange-600 to-amber-600 px-5 text-sm font-bold text-white shadow-lg shadow-orange-200 transition hover:-translate-y-0.5 hover:shadow-xl disabled:cursor-not-allowed disabled:opacity-70 disabled:hover:translate-y-0"
               >
                 {loading ? (
                   <>
@@ -328,13 +328,13 @@ export default function CadastroPage() {
 
             <Link
               href="/login"
-              className="flex h-11 w-full items-center justify-center rounded-xl border border-slate-200 bg-white text-sm font-bold text-slate-800 transition hover:border-violet-200 hover:bg-violet-50 hover:text-violet-700"
+              className="flex h-11 w-full items-center justify-center rounded-xl border border-slate-200 bg-white text-sm font-bold text-slate-800 transition hover:border-orange-200 hover:bg-orange-50 hover:text-orange-700"
             >
               Entrar na minha conta
             </Link>
 
             <div className="mt-3 flex items-center justify-center gap-2 text-[11px] text-slate-400">
-              <ShieldCheck className="size-3.5 text-emerald-500" />
+              <ShieldCheck className="size-3.5 text-green-500" />
               Seus dados serão armazenados com segurança.
             </div>
           </div>
@@ -346,30 +346,20 @@ export default function CadastroPage() {
 
 function PresentationSection() {
   return (
-    <section className="relative hidden h-screen overflow-hidden bg-gradient-to-br from-violet-700 via-indigo-700 to-cyan-600 p-8 text-white lg:flex lg:flex-col lg:justify-between xl:p-10">
+    <section className="relative hidden h-screen overflow-hidden bg-gradient-to-br from-orange-700 via-amber-700 to-yellow-600 p-8 text-white lg:flex lg:flex-col lg:justify-between xl:p-10">
       <div className="absolute -left-32 -top-32 size-96 rounded-full bg-white/10 blur-3xl" />
-      <div className="absolute -bottom-40 -right-28 size-[420px] rounded-full bg-cyan-300/20 blur-3xl" />
+      <div className="absolute -bottom-40 -right-28 size-[420px] rounded-full bg-yellow-300/20 blur-3xl" />
 
       <div className="absolute left-1/2 top-1/2 size-[430px] -translate-x-1/2 -translate-y-1/2 rounded-full border border-white/10" />
       <div className="absolute left-1/2 top-1/2 size-[290px] -translate-x-1/2 -translate-y-1/2 rounded-full border border-white/10" />
 
       <Link href="/" className="relative z-10 flex w-fit items-center gap-3">
-        <Logo variant="light" />
-
-        <div>
-          <p className="text-lg font-black tracking-tight">
-            Gestão<span className="text-cyan-200">+</span>
-          </p>
-
-          <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-white/55">
-            Gestão inteligente
-          </p>
-        </div>
+        <BrandLogo className="h-10" surface="light" priority />
       </Link>
 
       <div className="relative z-10 mx-auto w-full max-w-lg">
         <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3 py-1.5 text-xs font-semibold backdrop-blur">
-          <Sparkles className="size-4 text-cyan-200" />
+          <Sparkles className="size-4 text-yellow-200" />
           Gestão completa para seu negócio
         </div>
 
@@ -395,10 +385,10 @@ function PresentationSection() {
       </div>
 
       <div className="relative z-10 flex items-center justify-between text-xs text-white/55">
-        <p>© {new Date().getFullYear()} Gestão+</p>
+        <p>© {new Date().getFullYear()} Mangora</p>
 
         <div className="flex items-center gap-2">
-          <CheckCircle2 className="size-4 text-emerald-300" />
+          <CheckCircle2 className="size-4 text-green-300" />
           Cadastro protegido
         </div>
       </div>
@@ -418,7 +408,7 @@ function BenefitCard({
   return (
     <div className="flex items-center gap-3 rounded-xl border border-white/15 bg-white/10 p-3 backdrop-blur-md">
       <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-white/15">
-        <Icon className="size-4 text-cyan-100" />
+        <Icon className="size-4 text-yellow-100" />
       </div>
 
       <div>
@@ -433,11 +423,7 @@ function MobileHeader() {
   return (
     <div className="mb-6 flex items-center justify-between lg:hidden">
       <Link href="/" className="flex items-center gap-3">
-        <Logo />
-
-        <span className="text-lg font-black text-slate-950">
-          Gestão<span className="text-violet-600">+</span>
-        </span>
+        <BrandLogo className="h-9" priority />
       </Link>
 
       <Link
@@ -451,19 +437,6 @@ function MobileHeader() {
   );
 }
 
-function Logo({ variant = "default" }: { variant?: "default" | "light" }) {
-  return (
-    <div
-      className={`flex size-10 items-center justify-center rounded-xl ${
-        variant === "light"
-          ? "border border-white/20 bg-white/15 backdrop-blur"
-          : "bg-gradient-to-br from-violet-600 to-cyan-500 shadow-lg shadow-violet-200"
-      }`}
-    >
-      <LayoutDashboard className="size-5 text-white" />
-    </div>
-  );
-}
 
 type InputFieldProps = {
   id: string;
@@ -503,7 +476,7 @@ function InputField({
           required
           autoComplete={autoComplete}
           placeholder={placeholder}
-          className="h-11 w-full rounded-xl border border-slate-200 bg-white pl-10 pr-3 text-sm text-slate-950 outline-none transition placeholder:text-slate-400 focus:border-violet-400 focus:ring-4 focus:ring-violet-100"
+          className="h-11 w-full rounded-xl border border-slate-200 bg-white pl-10 pr-3 text-sm text-slate-950 outline-none transition placeholder:text-slate-400 focus:border-orange-400 focus:ring-4 focus:ring-orange-100"
         />
       </div>
     </div>
@@ -528,7 +501,7 @@ function SelectField() {
           name="segment"
           required
           defaultValue=""
-          className="h-11 w-full appearance-none rounded-xl border border-slate-200 bg-white pl-10 pr-9 text-sm text-slate-950 outline-none transition focus:border-violet-400 focus:ring-4 focus:ring-violet-100"
+          className="h-11 w-full appearance-none rounded-xl border border-slate-200 bg-white pl-10 pr-9 text-sm text-slate-950 outline-none transition focus:border-orange-400 focus:ring-4 focus:ring-orange-100"
         >
           <option value="" disabled>
             Selecione
@@ -586,7 +559,7 @@ function PasswordField({
           minLength={8}
           autoComplete="new-password"
           placeholder={placeholder}
-          className="h-11 w-full rounded-xl border border-slate-200 bg-white pl-10 pr-11 text-sm text-slate-950 outline-none transition placeholder:text-slate-400 focus:border-violet-400 focus:ring-4 focus:ring-violet-100"
+          className="h-11 w-full rounded-xl border border-slate-200 bg-white pl-10 pr-11 text-sm text-slate-950 outline-none transition placeholder:text-slate-400 focus:border-orange-400 focus:ring-4 focus:ring-orange-100"
         />
 
         <button

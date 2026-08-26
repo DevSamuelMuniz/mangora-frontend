@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import PublicInfoPage from "@/components/public/PublicInfoPage";
 
-export const metadata: Metadata = { title: "Privacidade | Gestão+" };
+export const metadata: Metadata = { title: "Privacidade | Mangora" };
 
 export default function PrivacyPage() {
   return (

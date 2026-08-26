@@ -21,17 +21,17 @@ export default function MetricCard({
   variation,
   trend = "neutral",
   icon: Icon,
-  iconClassName = "bg-violet-50 text-violet-600",
+  iconClassName = "bg-orange-50 text-orange-600",
 }: MetricCardProps) {
   const trendClassName =
     trend === "up"
-      ? "bg-emerald-50 text-emerald-600"
+      ? "bg-green-50 text-green-600"
       : trend === "down"
         ? "bg-red-50 text-red-600"
         : "bg-slate-100 text-slate-500";
 
   return (
-    <article className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm transition hover:border-violet-200 hover:shadow-md">
+    <article className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm transition hover:border-orange-200 hover:shadow-md">
       <div className="flex items-start justify-between gap-3">
         <div
           className={`flex size-9 shrink-0 items-center justify-center rounded-xl ${iconClassName}`}

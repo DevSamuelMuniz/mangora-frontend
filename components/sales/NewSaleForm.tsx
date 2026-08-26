@@ -127,11 +127,11 @@ export default function NewSaleForm() {
   return (
     <section>
       <div className="flex items-start gap-3">
-        <Link href="/vendas" aria-label="Voltar para vendas" className="flex size-10 shrink-0 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-500 shadow-sm transition hover:bg-slate-50 hover:text-violet-600">
+        <Link href="/vendas" aria-label="Voltar para vendas" className="flex size-10 shrink-0 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-500 shadow-sm transition hover:bg-slate-50 hover:text-orange-600">
           <ArrowLeft className="size-4" />
         </Link>
         <div>
-          <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-violet-600">Comercial</p>
+          <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-orange-600">Comercial</p>
           <h1 className="mt-1 text-2xl font-black tracking-tight text-slate-950 sm:text-3xl">Nova venda</h1>
           <p className="mt-1 text-xs text-slate-500">Selecione os itens e confira o resumo antes de finalizar.</p>
         </div>
@@ -141,28 +141,28 @@ export default function NewSaleForm() {
         <div className="space-y-4">
           <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:p-5">
             <div className="flex items-center gap-3 border-b border-slate-100 pb-4">
-              <div className="flex size-9 items-center justify-center rounded-xl bg-violet-50 text-violet-600"><Package className="size-4" /></div>
+              <div className="flex size-9 items-center justify-center rounded-xl bg-orange-50 text-orange-600"><Package className="size-4" /></div>
               <div><h2 className="text-sm font-bold text-slate-950">Selecionar produtos</h2><p className="mt-0.5 text-[10px] text-slate-400">Busque pelo nome ou SKU e adicione ao carrinho.</p></div>
             </div>
 
             <label className="relative mt-4 block">
               <span className="sr-only">Buscar produtos para venda</span>
               <Search className="pointer-events-none absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-slate-400" />
-              <input type="search" value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Buscar produto por nome ou SKU..." className="h-11 w-full rounded-xl border border-slate-200 bg-slate-50 pl-10 pr-4 text-sm text-slate-950 outline-none transition placeholder:text-slate-400 focus:border-violet-300 focus:bg-white focus:ring-4 focus:ring-violet-100" />
+              <input type="search" value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Buscar produto por nome ou SKU..." className="h-11 w-full rounded-xl border border-slate-200 bg-slate-50 pl-10 pr-4 text-sm text-slate-950 outline-none transition placeholder:text-slate-400 focus:border-orange-300 focus:bg-white focus:ring-4 focus:ring-orange-100" />
             </label>
 
             <div className="mt-4 grid gap-2 sm:grid-cols-2">
               {loadingOptions ? (
-                <div className="col-span-full flex items-center justify-center px-4 py-8 text-xs text-slate-500"><LoaderCircle className="mr-2 size-4 animate-spin text-violet-600" />Carregando produtos...</div>
+                <div className="col-span-full flex items-center justify-center px-4 py-8 text-xs text-slate-500"><LoaderCircle className="mr-2 size-4 animate-spin text-orange-600" />Carregando produtos...</div>
               ) : availableProducts.length ? availableProducts.map((product) => {
                 const inCart = cart.find((item) => item.product.id === product.id)?.quantity ?? 0;
                 const availableStock = product.stock - product.reservedStock;
                 const unavailable = product.trackStock && inCart >= availableStock;
                 return (
-                  <button key={product.id} type="button" onClick={() => addProduct(product)} disabled={unavailable} className="group flex min-w-0 items-center gap-3 rounded-xl border border-slate-200 p-3 text-left transition hover:border-violet-200 hover:bg-violet-50/40 disabled:cursor-not-allowed disabled:opacity-50">
-                    <div className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-slate-100 text-slate-500 group-hover:bg-violet-100 group-hover:text-violet-600"><Package className="size-4" /></div>
+                  <button key={product.id} type="button" onClick={() => addProduct(product)} disabled={unavailable} className="group flex min-w-0 items-center gap-3 rounded-xl border border-slate-200 p-3 text-left transition hover:border-orange-200 hover:bg-orange-50/40 disabled:cursor-not-allowed disabled:opacity-50">
+                    <div className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-slate-100 text-slate-500 group-hover:bg-orange-100 group-hover:text-orange-600"><Package className="size-4" /></div>
                     <div className="min-w-0 flex-1"><p className="truncate text-xs font-bold text-slate-800">{product.name}</p><p className="mt-0.5 text-[9px] text-slate-400">{product.sku} · {product.trackStock ? `${availableStock} un. disponíveis` : "Sem controle de estoque"}</p></div>
-                    <div className="shrink-0 text-right"><p className="text-xs font-black text-slate-900">{currencyFormatter.format(product.price)}</p><span className="mt-1 inline-flex size-5 items-center justify-center rounded-md bg-violet-50 text-violet-600"><Plus className="size-3" /></span></div>
+                    <div className="shrink-0 text-right"><p className="text-xs font-black text-slate-900">{currencyFormatter.format(product.price)}</p><span className="mt-1 inline-flex size-5 items-center justify-center rounded-md bg-orange-50 text-orange-600"><Plus className="size-3" /></span></div>
                   </button>
                 );
               }) : (
@@ -172,7 +172,7 @@ export default function NewSaleForm() {
           </div>
 
           <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:p-5">
-            <div className="flex items-center justify-between gap-4"><div><h2 className="text-sm font-bold text-slate-950">Itens da venda</h2><p className="mt-0.5 text-[10px] text-slate-400">{itemCount} item(ns) selecionado(s)</p></div><ShoppingCart className="size-4 text-violet-600" /></div>
+            <div className="flex items-center justify-between gap-4"><div><h2 className="text-sm font-bold text-slate-950">Itens da venda</h2><p className="mt-0.5 text-[10px] text-slate-400">{itemCount} item(ns) selecionado(s)</p></div><ShoppingCart className="size-4 text-orange-600" /></div>
             <div className="mt-4 overflow-hidden rounded-xl border border-slate-200">
               {cart.length ? cart.map((item) => (
                 <div key={item.product.id} className="flex flex-col gap-3 border-b border-slate-100 p-3 last:border-0 sm:flex-row sm:items-center">
@@ -196,7 +196,7 @@ export default function NewSaleForm() {
 
         <aside className="space-y-4 xl:sticky xl:top-20">
           <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:p-5">
-            <div className="flex items-center gap-3 border-b border-slate-100 pb-4"><div className="flex size-9 items-center justify-center rounded-xl bg-cyan-50 text-cyan-600"><WalletCards className="size-4" /></div><div><h2 className="text-sm font-bold text-slate-950">Resumo da venda</h2><p className="mt-0.5 text-[10px] text-slate-400">Cliente, pagamento e totais.</p></div></div>
+            <div className="flex items-center gap-3 border-b border-slate-100 pb-4"><div className="flex size-9 items-center justify-center rounded-xl bg-yellow-50 text-yellow-600"><WalletCards className="size-4" /></div><div><h2 className="text-sm font-bold text-slate-950">Resumo da venda</h2><p className="mt-0.5 text-[10px] text-slate-400">Cliente, pagamento e totais.</p></div></div>
 
             <div className="mt-4 space-y-4">
               <Field label="Cliente (opcional)" id="customerId">
@@ -221,7 +221,7 @@ export default function NewSaleForm() {
             <dl className="space-y-3 text-xs"><div className="flex justify-between gap-4 text-slate-500"><dt>Subtotal</dt><dd className="font-bold text-slate-700">{currencyFormatter.format(subtotal)}</dd></div><div className="flex justify-between gap-4 text-slate-500"><dt>Desconto</dt><dd className="font-bold text-red-600">- {currencyFormatter.format(discountValue)}</dd></div><div className="flex items-end justify-between gap-4 border-t border-slate-100 pt-4"><dt className="font-bold text-slate-800">Total</dt><dd className="text-2xl font-black tracking-tight text-slate-950">{currencyFormatter.format(total)}</dd></div></dl>
 
             {error && <div role="alert" className="mt-4 rounded-xl border border-red-200 bg-red-50 px-3 py-2.5 text-xs font-semibold text-red-700">{error}</div>}
-            <button type="button" disabled={loading || loadingOptions} onClick={finishSale} className="mt-5 flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 px-4 text-sm font-bold text-white shadow-lg shadow-violet-200 transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-70 disabled:hover:translate-y-0">
+            <button type="button" disabled={loading || loadingOptions} onClick={finishSale} className="mt-5 flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-orange-600 to-amber-600 px-4 text-sm font-bold text-white shadow-lg shadow-orange-200 transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-70 disabled:hover:translate-y-0">
               {loading ? <><LoaderCircle className="size-4 animate-spin" />Finalizando...</> : <><CheckCircle2 className="size-4" />Finalizar venda</>}
             </button>
             <p className="mt-3 text-center text-[9px] leading-4 text-slate-400">Ao finalizar, a venda e a baixa de estoque são registradas juntas.</p>
@@ -232,7 +232,7 @@ export default function NewSaleForm() {
   );
 }
 
-const inputClassName = "h-11 w-full rounded-xl border border-slate-200 bg-white px-3.5 text-sm text-slate-950 outline-none transition focus:border-violet-400 focus:ring-4 focus:ring-violet-100";
+const inputClassName = "h-11 w-full rounded-xl border border-slate-200 bg-white px-3.5 text-sm text-slate-950 outline-none transition focus:border-orange-400 focus:ring-4 focus:ring-orange-100";
 
 function Field({ label, id, children }: { label: string; id: string; children: ReactNode }) {
   return <div><label htmlFor={id} className="mb-1.5 block text-xs font-bold text-slate-700">{label}</label>{children}</div>;

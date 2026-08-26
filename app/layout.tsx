@@ -1,5 +1,10 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import {
+  Bricolage_Grotesque,
+  Geist,
+  Geist_Mono,
+  Manrope,
+} from "next/font/google";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -12,10 +17,25 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const bricolage = Bricolage_Grotesque({
+  variable: "--font-bricolage",
+  subsets: ["latin"],
+});
+
+const manrope = Manrope({
+  variable: "--font-manrope",
+  subsets: ["latin"],
+});
+
 export const metadata: Metadata = {
-  title: "Gestão+ | Gestão inteligente",
+  title: "Mangora | Gestão inteligente",
   description:
     "Gestão completa para vendas, estoque, clientes e financeiro da sua empresa.",
+  icons: {
+    icon: "/mangora-logo.png",
+    shortcut: "/mangora-logo.png",
+    apple: "/mangora-logo.png",
+  },
 };
 
 export default function RootLayout({
@@ -26,7 +46,7 @@ export default function RootLayout({
   return (
     <html
       lang="pt-BR"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${geistSans.variable} ${geistMono.variable} ${bricolage.variable} ${manrope.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">{children}</body>
     </html>

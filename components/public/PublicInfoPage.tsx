@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { ArrowLeft, CheckCircle2, LayoutDashboard } from "lucide-react";
+import { ArrowLeft, CheckCircle2 } from "lucide-react";
+import BrandLogo from "@/components/brand/BrandLogo";
 
 type PublicInfoSection = {
   title: string;
@@ -27,17 +28,12 @@ export default function PublicInfoPage({
       <header className="border-b border-slate-200 bg-white">
         <div className="mx-auto flex h-16 max-w-5xl items-center justify-between px-5 sm:px-8">
           <Link href="/" className="flex items-center gap-3">
-            <span className="flex size-9 items-center justify-center rounded-xl bg-gradient-to-br from-violet-600 to-cyan-500 shadow-md shadow-violet-200">
-              <LayoutDashboard className="size-4.5 text-white" />
-            </span>
-            <span className="font-black tracking-tight">
-              Gestão<span className="text-violet-600">+</span>
-            </span>
+            <BrandLogo className="h-9" priority />
           </Link>
 
           <Link
             href="/"
-            className="flex items-center gap-2 text-sm font-bold text-slate-600 transition hover:text-violet-700"
+            className="flex items-center gap-2 text-sm font-bold text-slate-600 transition hover:text-orange-700"
           >
             <ArrowLeft className="size-4" />
             Voltar ao início
@@ -47,7 +43,7 @@ export default function PublicInfoPage({
 
       <div className="mx-auto max-w-5xl px-5 py-12 sm:px-8 sm:py-16">
         <div className="max-w-3xl">
-          <span className="text-xs font-black uppercase tracking-[0.16em] text-violet-600">
+          <span className="text-xs font-black uppercase tracking-[0.16em] text-orange-600">
             {eyebrow}
           </span>
           <h1 className="mt-3 text-3xl font-black tracking-[-0.04em] sm:text-5xl">
@@ -81,7 +77,7 @@ export default function PublicInfoPage({
                 <ul className="mt-5 grid gap-3">
                   {section.items.map((item) => (
                     <li key={item} className="flex items-start gap-3 text-sm text-slate-600">
-                      <CheckCircle2 className="mt-0.5 size-4 shrink-0 text-emerald-500" />
+                      <CheckCircle2 className="mt-0.5 size-4 shrink-0 text-green-500" />
                       {item}
                     </li>
                   ))}
@@ -94,13 +90,13 @@ export default function PublicInfoPage({
         <div className="mt-10 flex flex-wrap gap-3">
           <Link
             href="/cadastro"
-            className="rounded-xl bg-violet-600 px-5 py-3 text-sm font-bold text-white transition hover:bg-violet-700"
+            className="rounded-xl bg-orange-600 px-5 py-3 text-sm font-bold text-white transition hover:bg-orange-700"
           >
             Criar uma conta
           </Link>
           <Link
             href="/login"
-            className="rounded-xl border border-slate-200 bg-white px-5 py-3 text-sm font-bold text-slate-700 transition hover:border-violet-200 hover:text-violet-700"
+            className="rounded-xl border border-slate-200 bg-white px-5 py-3 text-sm font-bold text-slate-700 transition hover:border-orange-200 hover:text-orange-700"
           >
             Entrar na plataforma
           </Link>
