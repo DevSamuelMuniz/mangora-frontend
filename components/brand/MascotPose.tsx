@@ -18,7 +18,7 @@ const positions: Record<MascotPoseName, string> = {
   run: "100% 0%",
   work: "0% 100%",
   point: "50% 100%",
-  celebrate: "100% 100%",
+  celebrate: "97% 100%",
 };
 
 export default function MascotPose({
@@ -35,6 +35,7 @@ export default function MascotPose({
         backgroundImage: "url('/mangora-mascote-poses.png')",
         backgroundPosition: positions[pose],
         backgroundSize: "300% 200%",
+        clipPath: pose === "point" ? "inset(0 10% 0 0)" : undefined,
       }}
     />
   );

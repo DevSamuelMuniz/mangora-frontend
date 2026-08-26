@@ -202,14 +202,14 @@ export default function Home() {
             copy="A Mangora reduz o trabalho repetido porque cada parte da gestão atualiza a próxima."
           />
 
-          <div className="mt-14 grid gap-4 lg:grid-cols-12 lg:grid-rows-2">
+          <div className="mt-14 grid items-stretch gap-4 lg:grid-cols-12">
             {resources.map((resource, index) => (
               <ResourceCard key={resource.title} resource={resource} index={index} />
             ))}
 
-            <article className="relative min-h-[430px] overflow-hidden rounded-[2.25rem] bg-[#123d2b] p-7 text-white lg:col-span-5 lg:row-span-2 lg:p-10">
+            <article className="relative min-h-[340px] overflow-hidden rounded-[2.25rem] bg-[#123d2b] p-7 text-white lg:col-span-5 lg:p-10">
               <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_35%,rgba(255,178,26,0.18),transparent_28%)]" />
-              <div className="relative z-10 max-w-sm">
+              <div className="relative z-10 max-w-md">
                 <span className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-2 text-xs font-extrabold uppercase tracking-[0.14em] text-[#ffd56a]">
                   <Zap className="size-4" /> Atualização automática
                 </span>
@@ -222,14 +222,16 @@ export default function Home() {
                 </p>
               </div>
 
-              <div className="absolute -bottom-9 right-0 w-[60%] min-w-56 sm:right-6 lg:w-[66%]">
-                <MascotPose
-                  pose="work"
-                  label="Mascote Mangora trabalhando no computador"
-                  className="drop-shadow-[0_24px_24px_rgba(0,0,0,0.28)]"
-                />
-              </div>
             </article>
+
+            <div className="relative -mt-20 ml-auto w-[72%] max-w-72 self-end lg:col-span-3 lg:mt-0 lg:w-full lg:max-w-none lg:self-center">
+              <div className="absolute inset-x-6 bottom-4 h-20 rounded-full bg-[#ffb21a]/20 blur-2xl" />
+              <MascotPose
+                pose="work"
+                label="Mascote Mangora trabalhando no computador"
+                className="relative drop-shadow-[0_24px_24px_rgba(18,61,43,0.2)]"
+              />
+            </div>
           </div>
         </div>
       </section>
@@ -589,9 +591,9 @@ function ResourceCard({ resource, index }: { resource: { icon: LucideIcon; label
   const cardClass = index === 0
     ? "bg-[#ff6b1a] text-white lg:col-span-4"
     : index === 1
-      ? "bg-[#ffb21a] text-[#123d2b] lg:col-span-3"
+      ? "bg-[#ffb21a] text-[#123d2b] lg:col-span-4"
       : index === 2
-        ? "bg-[#dff4e7] text-[#123d2b] lg:col-span-3"
+        ? "bg-[#dff4e7] text-[#123d2b] lg:col-span-4"
         : "bg-[#fff8ea] text-[#123d2b] lg:col-span-4";
   const iconClass = index === 0 ? "bg-white/15 text-white" : "bg-white/65 text-[#147a45]";
 
