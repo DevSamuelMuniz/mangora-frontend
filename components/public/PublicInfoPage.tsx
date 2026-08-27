@@ -24,7 +24,7 @@ export default function PublicInfoPage({
   sections,
 }: PublicInfoPageProps) {
   return (
-    <main className="min-h-screen bg-slate-50 text-slate-950">
+    <main className="mangora-public min-h-screen bg-slate-50 text-slate-950">
       <header className="border-b border-slate-200 bg-white">
         <div className="mx-auto flex h-16 max-w-5xl items-center justify-between px-5 sm:px-8">
           <Link href="/" className="flex items-center gap-3">

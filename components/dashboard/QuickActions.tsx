@@ -49,7 +49,7 @@ const actions: QuickAction[] = [
 
 export default function QuickActions() {
   return (
-    <article className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:p-5">
+    <article className="mangora-quick-actions rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:p-5">
       <div>
         <h2 className="text-sm font-bold text-slate-950">
           Ações rápidas

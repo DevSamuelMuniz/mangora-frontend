@@ -15,7 +15,7 @@ export default function SalesChart({ charts }: { charts: DashboardData["charts"]
   const maximum = Math.max(1, ...current.data.map((item) => item.value));
 
   return (
-    <article className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:p-5">
+    <article className="mangora-chart-card rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:p-5">
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div className="flex items-center gap-2">
           <div className="flex size-8 items-center justify-center rounded-lg bg-orange-50 text-orange-600"><BarChart3 className="size-4" /></div>
@@ -45,7 +45,7 @@ export default function SalesChart({ charts }: { charts: DashboardData["charts"]
       <div className="mt-6 flex h-52 items-end gap-2 sm:gap-3">
         {current.data.map((item) => (
           <div key={item.label} className="flex h-full flex-1 flex-col items-center justify-end gap-2">
-            <div className="group relative flex h-full w-full items-end justify-center"><div className="w-full max-w-10 rounded-t-lg bg-gradient-to-t from-orange-600 to-yellow-400 transition hover:opacity-80" style={{ height: `${Math.max(item.value ? 3 : 0, item.value / maximum * 100)}%` }} /><span className="pointer-events-none absolute bottom-full mb-2 hidden rounded-lg bg-slate-950 px-2 py-1 text-[9px] font-bold text-white group-hover:block">{currencyFormatter.format(item.value)}</span></div>
+            <div className="group relative flex h-full w-full items-end justify-center"><div className="mangora-chart-bar w-full max-w-10 rounded-t-lg bg-gradient-to-t from-orange-600 to-yellow-400 transition hover:opacity-80" style={{ height: `${Math.max(item.value ? 3 : 0, item.value / maximum * 100)}%` }} /><span className="pointer-events-none absolute bottom-full mb-2 hidden rounded-lg bg-slate-950 px-2 py-1 text-[9px] font-bold text-white group-hover:block">{currencyFormatter.format(item.value)}</span></div>
             <span className="text-[10px] font-medium capitalize text-slate-400">{item.label}</span>
           </div>
         ))}

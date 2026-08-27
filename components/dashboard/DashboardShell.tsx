@@ -17,20 +17,20 @@ export default function DashboardShell({
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-950">
+    <div className="mangora-app min-h-screen bg-slate-50 text-slate-950">
       <Sidebar
         open={sidebarOpen}
         onClose={() => setSidebarOpen(false)}
         session={session}
       />
 
-      <div className="lg:pl-64">
+      <div className="mangora-workspace lg:pl-64">
         <DashboardHeader
           onOpenSidebar={() => setSidebarOpen(true)}
           session={session}
         />
 
-        <main className="px-4 py-5 sm:px-6 lg:px-8">
+        <main className="mangora-content px-4 py-5 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-[1600px]">
             {children}
           </div>

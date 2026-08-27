@@ -32,7 +32,7 @@ export default function PasswordRecoveryPage() {
   }
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-slate-50 px-5 py-10">
+    <main className="mangora-public flex min-h-screen items-center justify-center bg-slate-50 px-5 py-10">
       <div className="w-full max-w-md">
         <Link href="/" className="mx-auto flex w-fit items-center gap-3">
           <BrandLogo className="h-11" priority />

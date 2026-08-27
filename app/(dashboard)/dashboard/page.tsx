@@ -28,14 +28,14 @@ export default async function DashboardPage() {
     }).format(new Date());
 
     return (
-            <section>
-                <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-end">
+            <section className="mangora-dashboard">
+                <div className="mangora-dashboard-intro flex flex-col justify-between gap-3 sm:flex-row sm:items-end">
                     <div>
                         <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-orange-600">
                             Visão geral
                         </p>
 
-                        <h1 className="mt-1 text-2xl font-black tracking-tight text-slate-950 sm:text-3xl">
+                        <h1 className="mt-1 text-3xl font-black tracking-tight text-slate-950 sm:text-4xl">
                             Olá, {firstName} 👋
                         </h1>
 

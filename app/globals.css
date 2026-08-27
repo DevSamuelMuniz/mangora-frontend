@@ -19,7 +19,7 @@
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-manrope), Arial, Helvetica, sans-serif;
 }
 
 ::selection {
@@ -63,4 +63,324 @@ body {
   .mangora-flow {
     animation: none;
   }
+}
+
+/* Mangora application system ------------------------------------------------ */
+.mangora-app {
+  --app-ink: #123d2b;
+  --app-copy: #315847;
+  --app-muted: #6a7d73;
+  --app-line: rgba(18, 61, 43, 0.13);
+  --app-paper: #fffdfa;
+  --app-cream: #fff8ea;
+  --app-mango: #ff6b1a;
+  --app-gold: #ffb21a;
+  --app-leaf: #147a45;
+  background:
+    radial-gradient(circle at 94% 3%, rgba(255, 178, 26, 0.14), transparent 22rem),
+    var(--app-cream);
+  color: var(--app-ink);
+  font-family: var(--font-manrope), Arial, Helvetica, sans-serif;
+}
+
+.mangora-app .mangora-content {
+  min-height: calc(100vh - 4rem);
+  padding-bottom: 3rem;
+}
+
+.mangora-app h1,
+.mangora-app h2,
+.mangora-app h3 {
+  font-family: var(--font-bricolage), var(--font-manrope), sans-serif;
+  letter-spacing: -0.025em;
+}
+
+.mangora-app .bg-slate-50 { background-color: var(--app-cream); }
+.mangora-app .bg-white { background-color: var(--app-paper); }
+.mangora-app .bg-white\/90 { background-color: rgba(255, 248, 234, 0.92); }
+.mangora-app .bg-slate-100 { background-color: rgba(18, 61, 43, 0.06); }
+.mangora-app .bg-orange-50 { background-color: #fff0dd; }
+.mangora-app .bg-orange-100 { background-color: #ffe1bd; }
+.mangora-app .bg-yellow-50,
+.mangora-app .bg-amber-50 { background-color: #fff5cf; }
+.mangora-app .bg-green-50 { background-color: #dff4e7; }
+
+.mangora-app .text-slate-950,
+.mangora-app .text-slate-900,
+.mangora-app .text-slate-800 { color: var(--app-ink); }
+.mangora-app .text-slate-700,
+.mangora-app .text-slate-600 { color: var(--app-copy); }
+.mangora-app .text-slate-500 { color: #597064; }
+.mangora-app .text-slate-400 { color: var(--app-muted); }
+.mangora-app .text-orange-800,
+.mangora-app .text-orange-700,
+.mangora-app .text-orange-600,
+.mangora-app .text-orange-500 { color: var(--app-mango); }
+.mangora-app .text-green-700,
+.mangora-app .text-green-600,
+.mangora-app .text-green-500 { color: var(--app-leaf); }
+
+.mangora-app .border-slate-100,
+.mangora-app .border-slate-200,
+.mangora-app .divide-slate-100 > :not(:last-child),
+.mangora-app .divide-slate-200 > :not(:last-child) { border-color: var(--app-line); }
+.mangora-app .border-orange-100,
+.mangora-app .border-orange-200,
+.mangora-app .border-orange-300 { border-color: rgba(255, 107, 26, 0.3); }
+
+.mangora-app .shadow-sm,
+.mangora-app .shadow-md,
+.mangora-app .shadow-lg {
+  box-shadow: 0 8px 22px rgba(18, 61, 43, 0.055);
+}
+
+.mangora-app input:not([type="checkbox"]):not([type="radio"]),
+.mangora-app select,
+.mangora-app textarea {
+  border-color: rgba(18, 61, 43, 0.16);
+  background-color: #fffdf8;
+  color: var(--app-ink);
+}
+
+.mangora-app input:not([type="checkbox"]):not([type="radio"]):focus,
+.mangora-app select:focus,
+.mangora-app textarea:focus {
+  border-color: var(--app-mango);
+  background-color: #fff;
+  box-shadow: 0 0 0 4px rgba(255, 178, 26, 0.18);
+}
+
+.mangora-app input[type="checkbox"],
+.mangora-app input[type="radio"] { accent-color: var(--app-leaf); }
+
+.mangora-app table thead {
+  background-color: #fff5df;
+  color: var(--app-copy);
+}
+
+.mangora-app table tbody tr { border-color: var(--app-line); }
+.mangora-app table tbody tr:hover { background-color: rgba(255, 178, 26, 0.07); }
+
+.mangora-app [class*="bg-gradient-to-r"][class*="from-orange"],
+.mangora-app [class*="bg-gradient-to-br"][class*="from-orange"] {
+  background-image: none;
+  background-color: var(--app-mango);
+}
+
+.mangora-app a[class*="bg-orange-600"],
+.mangora-app button[class*="bg-orange-600"],
+.mangora-app button[class*="from-orange-600"],
+.mangora-app a[class*="from-orange-600"] {
+  box-shadow: 0 4px 0 #c9460b;
+}
+
+.mangora-app a[class*="bg-orange-600"]:hover,
+.mangora-app button[class*="bg-orange-600"]:hover,
+.mangora-app button[class*="from-orange-600"]:hover,
+.mangora-app a[class*="from-orange-600"]:hover { transform: translateY(-1px); }
+
+.mangora-sidebar {
+  border-right: 0;
+  background: var(--app-ink) !important;
+  color: white;
+  box-shadow: 10px 0 30px rgba(18, 61, 43, 0.12);
+}
+
+.mangora-sidebar > div:first-of-type {
+  height: 4.75rem;
+  border-color: rgba(255, 255, 255, 0.09);
+}
+
+.mangora-sidebar > div:first-of-type a {
+  border-radius: 0.85rem;
+  background: var(--app-cream);
+  padding: 0.45rem 0.7rem;
+  box-shadow: 3px 3px 0 var(--app-gold);
+}
+
+.mangora-sidebar > div:nth-of-type(2) button {
+  border-color: rgba(255, 255, 255, 0.13);
+  background: rgba(255, 255, 255, 0.07);
+}
+
+.mangora-sidebar > div:nth-of-type(2) button:hover {
+  border-color: rgba(255, 178, 26, 0.5);
+  background: rgba(255, 178, 26, 0.1);
+}
+
+.mangora-sidebar > div:nth-of-type(2) button p:first-child { color: white; }
+.mangora-sidebar > div:nth-of-type(2) button p:last-child,
+.mangora-sidebar > div:nth-of-type(2) button svg { color: rgba(255, 255, 255, 0.55); }
+
+.mangora-sidebar nav > p { color: rgba(255, 255, 255, 0.42); }
+.mangora-sidebar nav > div[class*="space-y"] a { color: rgba(255, 255, 255, 0.7); }
+.mangora-sidebar nav > div[class*="space-y"] a svg { color: rgba(255, 255, 255, 0.45); }
+.mangora-sidebar nav > div[class*="space-y"] a:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: white;
+}
+.mangora-sidebar nav > div[class*="space-y"] a[class*="bg-orange-50"] {
+  background: var(--app-mango);
+  color: white;
+  box-shadow: 3px 3px 0 var(--app-gold);
+}
+.mangora-sidebar nav > div[class*="space-y"] a[class*="bg-orange-50"] svg { color: white; }
+.mangora-sidebar nav > div[class*="h-px"] { background: rgba(255, 255, 255, 0.1); }
+.mangora-sidebar > div:last-child { border-color: rgba(255, 255, 255, 0.1); }
+.mangora-sidebar > div:last-child > div { background: var(--app-leaf); }
+
+.mangora-header {
+  height: 4.75rem;
+  border-color: var(--app-line);
+  background: rgba(255, 248, 234, 0.88) !important;
+}
+
+.mangora-header h1 { font-family: var(--font-bricolage), sans-serif; font-size: 1rem; }
+.mangora-header button,
+.mangora-header input { border-color: var(--app-line); }
+.mangora-header button:hover { background-color: #fff0dd; color: var(--app-mango); }
+
+.mangora-dashboard-intro {
+  position: relative;
+  padding: 0.35rem 0 0.85rem;
+}
+
+.mangora-dashboard-intro::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 4.5rem;
+  height: 0.32rem;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--app-mango) 0 62%, var(--app-gold) 62%);
+}
+
+.mangora-metric-card {
+  position: relative;
+  overflow: hidden;
+  border-color: var(--app-line);
+}
+
+.mangora-metric-card::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0;
+  height: 0.22rem;
+  background: var(--app-gold);
+  opacity: 0;
+  transition: opacity 180ms ease;
+}
+
+.mangora-metric-card:hover::after { opacity: 1; }
+.mangora-metric-card:hover { transform: translateY(-2px); }
+
+.mangora-chart-card {
+  background:
+    linear-gradient(rgba(255, 255, 255, 0.93), rgba(255, 255, 255, 0.93)),
+    repeating-linear-gradient(0deg, transparent 0 2.7rem, rgba(18, 61, 43, 0.08) 2.7rem calc(2.7rem + 1px));
+}
+
+.mangora-chart-bar {
+  background-image: none !important;
+  background-color: var(--app-gold) !important;
+  border: 1px solid rgba(18, 61, 43, 0.12);
+}
+
+.mangora-chart-bar:hover { background-color: var(--app-mango) !important; }
+.mangora-quick-actions { border-color: rgba(255, 107, 26, 0.25); }
+
+/* Branded public and recovery surfaces ------------------------------------- */
+.mangora-public {
+  --app-ink: #123d2b;
+  --app-copy: #315847;
+  --app-muted: #6a7d73;
+  --app-line: rgba(18, 61, 43, 0.13);
+  --app-paper: #fffdfa;
+  --app-cream: #fff8ea;
+  --app-mango: #ff6b1a;
+  --app-gold: #ffb21a;
+  --app-leaf: #147a45;
+  background:
+    radial-gradient(circle at 90% 5%, rgba(255, 178, 26, 0.2), transparent 24rem),
+    var(--app-cream) !important;
+  color: var(--app-ink);
+  font-family: var(--font-manrope), Arial, Helvetica, sans-serif;
+}
+
+.mangora-public h1,
+.mangora-public h2,
+.mangora-public h3 {
+  font-family: var(--font-bricolage), var(--font-manrope), sans-serif;
+  letter-spacing: -0.035em;
+  color: var(--app-ink);
+}
+
+.mangora-public .bg-white,
+.mangora-public .bg-white\/95 { background-color: var(--app-paper); }
+.mangora-public .bg-slate-50 { background-color: var(--app-cream); }
+.mangora-public .bg-orange-50 { background-color: #fff0dd; }
+.mangora-public .bg-green-50 { background-color: #dff4e7; }
+.mangora-public .text-slate-950,
+.mangora-public .text-slate-900,
+.mangora-public .text-slate-800,
+.mangora-public .text-slate-700 { color: var(--app-ink); }
+.mangora-public .text-slate-600 { color: var(--app-copy); }
+.mangora-public .text-slate-500,
+.mangora-public .text-slate-400 { color: var(--app-muted); }
+.mangora-public .text-orange-600,
+.mangora-public .text-orange-700 { color: var(--app-mango); }
+.mangora-public .text-green-500,
+.mangora-public .text-green-600 { color: var(--app-leaf); }
+.mangora-public .border-slate-100,
+.mangora-public .border-slate-200 { border-color: var(--app-line); }
+
+.mangora-public section[class*="rounded-3xl"] {
+  border-width: 2px;
+  border-color: var(--app-ink);
+  background: var(--app-paper);
+  box-shadow: 7px 8px 0 var(--app-gold);
+}
+
+.mangora-public section[class*="rounded-2xl"] {
+  border-color: var(--app-line);
+  box-shadow: 0 9px 24px rgba(18, 61, 43, 0.055);
+}
+
+.mangora-public input,
+.mangora-public select,
+.mangora-public textarea {
+  border-color: rgba(18, 61, 43, 0.16);
+  background: #fffdf8;
+  color: var(--app-ink);
+}
+
+.mangora-public input:focus,
+.mangora-public select:focus,
+.mangora-public textarea:focus {
+  border-color: var(--app-mango);
+  box-shadow: 0 0 0 4px rgba(255, 178, 26, 0.18);
+}
+
+.mangora-public [class*="bg-gradient-to-r"][class*="from-orange"],
+.mangora-public [class*="bg-gradient-to-br"][class*="from-orange"] {
+  background-image: none;
+  background-color: var(--app-mango);
+}
+
+.mangora-public a[class*="bg-orange-600"],
+.mangora-public button[class*="bg-orange-600"],
+.mangora-public button[class*="from-orange-600"] {
+  background-color: var(--app-mango);
+  box-shadow: 0 4px 0 #c9460b;
+}
+
+.mangora-public header {
+  border-color: var(--app-line);
+  background: rgba(255, 248, 234, 0.9);
+}
+
+@media (min-width: 1024px) {
+  .mangora-app .mangora-workspace { padding-left: 16rem; }
+  .mangora-app .mangora-content { padding: 1.75rem 2rem 3.5rem; }
 }

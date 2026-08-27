@@ -3,45 +3,10 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
-import {
-  ArrowLeft,
-  ArrowRight,
-  BarChart3,
-  Building2,
-  CheckCircle2,
-  Eye,
-  EyeOff,
-  LoaderCircle,
-  LockKeyhole,
-  Mail,
-  Phone,
-  ShieldCheck,
-  Sparkles,
-  Store,
-  User,
-  Zap,
-  type LucideIcon,
-} from "lucide-react";
-import { apiRequest } from "@/lib/api/client";
+import { ArrowLeft, ArrowRight, Building2, CheckCircle2, Eye, EyeOff, LoaderCircle, LockKeyhole, Mail, Phone, ShieldCheck, Store, User, type LucideIcon } from "lucide-react";
+import AuthVisualPanel from "@/components/auth/AuthVisualPanel";
 import BrandLogo from "@/components/brand/BrandLogo";
-
-const benefits = [
-  {
-    icon: BarChart3,
-    title: "Gestão centralizada",
-    description: "Vendas, estoque e financeiro em um só lugar.",
-  },
-  {
-    icon: Zap,
-    title: "Configuração rápida",
-    description: "Cadastre sua empresa em poucos minutos.",
-  },
-  {
-    icon: ShieldCheck,
-    title: "Dados protegidos",
-    description: "Informações separadas e acesso controlado.",
-  },
-];
+import { apiRequest } from "@/lib/api/client";
 
 const segments = [
   { value: "RETAIL", label: "Loja ou comércio" },
@@ -59,283 +24,97 @@ const segments = [
 export default function CadastroPage() {
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
-  const [showPasswordConfirmation, setShowPasswordConfirmation] =
-    useState(false);
-
+  const [showPasswordConfirmation, setShowPasswordConfirmation] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-
     setError("");
     setSuccess(false);
-
     const formData = new FormData(event.currentTarget);
-
-    const name = String(formData.get("name") ?? "").trim();
-    const companyName = String(formData.get("companyName") ?? "").trim();
-    const segment = String(formData.get("segment") ?? "");
-    const phone = String(formData.get("phone") ?? "").trim();
-    const email = String(formData.get("email") ?? "")
-      .trim()
-      .toLowerCase();
-
     const password = String(formData.get("password") ?? "");
-    const passwordConfirmation = String(
-      formData.get("passwordConfirmation") ?? "",
-    );
-
+    const passwordConfirmation = String(formData.get("passwordConfirmation") ?? "");
     const acceptedTerms = formData.get("acceptedTerms") === "on";
 
-    if (password.length < 8) {
-      setError("A senha deve possuir pelo menos 8 caracteres.");
-      return;
-    }
-
-    if (password !== passwordConfirmation) {
-      setError("As senhas informadas não são iguais.");
-      return;
-    }
-
-    if (!acceptedTerms) {
-      setError("Você precisa aceitar os Termos de Uso.");
-      return;
-    }
+    if (password.length < 8) return setError("A senha deve possuir pelo menos 8 caracteres.");
+    if (password !== passwordConfirmation) return setError("As senhas informadas não são iguais.");
+    if (!acceptedTerms) return setError("Você precisa aceitar os Termos de Uso.");
 
     const registerData = {
-      name,
-      companyName,
-      segment,
-      phone,
-      email,
+      name: String(formData.get("name") ?? "").trim(),
+      companyName: String(formData.get("companyName") ?? "").trim(),
+      segment: String(formData.get("segment") ?? ""),
+      phone: String(formData.get("phone") ?? "").trim(),
+      email: String(formData.get("email") ?? "").trim().toLowerCase(),
       password,
       acceptedTerms,
     };
 
     try {
       setLoading(true);
-
-      await apiRequest("/auth/register", {
-        method: "POST",
-        body: JSON.stringify(registerData),
-      });
-
+      await apiRequest("/auth/register", { method: "POST", body: JSON.stringify(registerData) });
       setSuccess(true);
-
       await new Promise((resolve) => setTimeout(resolve, 700));
       router.push("/dashboard");
       router.refresh();
     } catch (registrationError) {
-      setError(
-        registrationError instanceof Error
-          ? registrationError.message
-          : "Não foi possível criar sua conta.",
-      );
+      setError(registrationError instanceof Error ? registrationError.message : "Não foi possível criar sua conta.");
     } finally {
       setLoading(false);
     }
   }
 
   return (
-    <main className="min-h-screen bg-slate-50 lg:h-screen lg:overflow-hidden">
-      <div className="grid min-h-screen lg:h-screen lg:grid-cols-[0.85fr_1.15fr]">
-        <PresentationSection />
+    <main className="min-h-screen bg-[#fff8ea] font-[family-name:var(--font-manrope)] text-[#123d2b]">
+      <div className="grid min-h-screen lg:grid-cols-[0.78fr_1.22fr] xl:grid-cols-[0.92fr_1.08fr]">
+        <AuthVisualPanel variant="register" />
 
-        <section className="relative flex min-h-screen items-center justify-center px-5 py-8 sm:px-8 lg:h-screen lg:min-h-0 lg:px-10 lg:py-3">
-          <div className="absolute inset-x-0 top-0 h-48 bg-gradient-to-b from-orange-50 to-transparent lg:hidden" />
-
-          <div className="relative w-full max-w-xl">
-            <MobileHeader />
+        <section className="relative flex min-h-screen items-center justify-center overflow-hidden px-5 py-7 sm:px-8 lg:px-9 xl:px-14">
+          <div className="absolute -right-20 top-8 size-72 rounded-full bg-[#ffb21a]/15 blur-3xl" />
+          <div className="absolute bottom-0 left-0 size-56 rounded-full bg-[#147a45]/10 blur-3xl" />
+          <div className="relative w-full max-w-[46rem]">
+            <div className="mb-6 flex items-center justify-between lg:hidden">
+              <Link href="/" aria-label="Página inicial da Mangora"><BrandLogo className="h-9" priority /></Link>
+              <Link href="/" aria-label="Voltar para o início" className="flex size-11 items-center justify-center rounded-xl border-2 border-[#123d2b]/15 bg-white text-[#123d2b]"><ArrowLeft className="size-4" /></Link>
+            </div>
 
             <div className="mb-4 hidden items-center justify-between lg:flex">
-              <Link
-                href="/"
-                className="flex items-center gap-2 text-xs font-semibold text-slate-500 transition hover:text-orange-600"
-              >
-                <ArrowLeft className="size-4" />
-                Voltar para o início
-              </Link>
-
-              <p className="text-xs text-slate-500">
-                Já possui conta?{" "}
-                <Link
-                  href="/login"
-                  className="font-bold text-orange-600 hover:text-orange-800"
-                >
-                  Entrar
-                </Link>
-              </p>
+              <Link href="/" className="flex items-center gap-2 text-xs font-extrabold text-[#597064] transition hover:text-[#ff6b1a]"><ArrowLeft className="size-4" />Voltar para o início</Link>
+              <p className="text-xs font-semibold text-[#597064]">Já tem uma conta? <Link href="/login" className="font-extrabold text-[#147a45] hover:text-[#ff6b1a]">Entrar</Link></p>
             </div>
 
-            <div>
-              <span className="inline-flex items-center gap-2 rounded-full border border-orange-100 bg-orange-50 px-3 py-1.5 text-xs font-bold text-orange-700">
-                <Sparkles className="size-3.5" />
-                Crie sua conta
-              </span>
-
-              <h1 className="mt-3 text-3xl font-black tracking-[-0.035em] text-slate-950">
-                Comece a organizar sua empresa
-              </h1>
-
-              <p className="mt-1.5 text-sm leading-6 text-slate-500">
-                Preencha os dados para criar seu acesso à plataforma.
-              </p>
-            </div>
-
-            <form onSubmit={handleSubmit} className="mt-5">
-              <div className="grid gap-x-4 gap-y-3 sm:grid-cols-2">
-                <InputField
-                  id="name"
-                  name="name"
-                  label="Seu nome"
-                  type="text"
-                  placeholder="Nome completo"
-                  autoComplete="name"
-                  icon={User}
-                />
-
-                <InputField
-                  id="companyName"
-                  name="companyName"
-                  label="Nome da empresa"
-                  type="text"
-                  placeholder="Nome do estabelecimento"
-                  autoComplete="organization"
-                  icon={Building2}
-                />
-
-                <SelectField />
-
-                <InputField
-                  id="phone"
-                  name="phone"
-                  label="Telefone ou WhatsApp"
-                  type="tel"
-                  placeholder="(81) 99999-9999"
-                  autoComplete="tel"
-                  icon={Phone}
-                />
-
-                <div className="sm:col-span-2">
-                  <InputField
-                    id="email"
-                    name="email"
-                    label="E-mail"
-                    type="email"
-                    placeholder="voce@empresa.com"
-                    autoComplete="email"
-                    icon={Mail}
-                  />
+            <div className="rounded-[2rem] border-2 border-[#123d2b] bg-white p-5 shadow-[7px_8px_0_#ffb21a] sm:p-7 xl:p-8">
+              <div className="flex items-start justify-between gap-5">
+                <div>
+                  <p className="text-xs font-black uppercase tracking-[0.18em] text-[#ff6b1a]">Seu primeiro passo</p>
+                  <h1 className="mt-2 font-[family-name:var(--font-bricolage)] text-3xl font-extrabold leading-none tracking-[-0.045em] text-[#123d2b] sm:text-4xl xl:text-[2.75rem]">Vamos preparar sua Mangora.</h1>
+                  <p className="mt-2 text-sm font-medium leading-6 text-[#597064]">Preencha os dados essenciais. Você ajusta o restante depois.</p>
                 </div>
-
-                <PasswordField
-                  id="password"
-                  name="password"
-                  label="Senha"
-                  placeholder="Mínimo de 8 caracteres"
-                  visible={showPassword}
-                  onToggle={() => setShowPassword((current) => !current)}
-                />
-
-                <PasswordField
-                  id="passwordConfirmation"
-                  name="passwordConfirmation"
-                  label="Confirmar senha"
-                  placeholder="Digite novamente"
-                  visible={showPasswordConfirmation}
-                  onToggle={() =>
-                    setShowPasswordConfirmation((current) => !current)
-                  }
-                />
+                <span className="hidden size-12 shrink-0 rotate-6 items-center justify-center rounded-2xl bg-[#dff4e7] text-[#147a45] sm:flex"><ShieldCheck className="size-6" /></span>
               </div>
 
-              {error && (
-                <div
-                  role="alert"
-                  className="mt-3 rounded-xl border border-red-200 bg-red-50 px-4 py-2.5 text-xs font-semibold text-red-700"
-                >
-                  {error}
+              <form onSubmit={handleSubmit} className="mt-5">
+                <div className="grid gap-x-4 gap-y-3.5 sm:grid-cols-2">
+                  <InputField id="name" name="name" label="Seu nome" type="text" placeholder="Nome completo" autoComplete="name" icon={User} />
+                  <InputField id="companyName" name="companyName" label="Nome da empresa" type="text" placeholder="Nome do estabelecimento" autoComplete="organization" icon={Building2} />
+                  <SelectField />
+                  <InputField id="phone" name="phone" label="Telefone ou WhatsApp" type="tel" placeholder="(81) 99999-9999" autoComplete="tel" icon={Phone} />
+                  <div className="sm:col-span-2"><InputField id="email" name="email" label="E-mail" type="email" placeholder="voce@empresa.com" autoComplete="email" icon={Mail} /></div>
+                  <PasswordField id="password" name="password" label="Crie uma senha" placeholder="Mínimo de 8 caracteres" visible={showPassword} onToggle={() => setShowPassword((current) => !current)} />
+                  <PasswordField id="passwordConfirmation" name="passwordConfirmation" label="Confirme a senha" placeholder="Digite novamente" visible={showPasswordConfirmation} onToggle={() => setShowPasswordConfirmation((current) => !current)} />
                 </div>
-              )}
 
-              {success && (
-                <div
-                  role="status"
-                  className="mt-3 flex items-center gap-2 rounded-xl border border-green-200 bg-green-50 px-4 py-2.5 text-xs font-semibold text-green-700"
-                >
-                  <CheckCircle2 className="size-4 shrink-0" />
-                  Conta criada com sucesso. Acessando o painel...
-                </div>
-              )}
+                {error && <div role="alert" className="mt-3 rounded-xl border-2 border-red-200 bg-red-50 px-4 py-2.5 text-xs font-bold text-red-700">{error}</div>}
+                {success && <div role="status" className="mt-3 flex items-center gap-2 rounded-xl border-2 border-green-200 bg-green-50 px-4 py-2.5 text-xs font-bold text-green-700"><CheckCircle2 className="size-4 shrink-0" />Conta criada. Abrindo seu painel...</div>}
 
-              <label className="mt-4 flex cursor-pointer items-start gap-2.5 text-xs leading-5 text-slate-600">
-                <input
-                  type="checkbox"
-                  name="acceptedTerms"
-                  required
-                  className="mt-0.5 size-4 shrink-0 rounded border-slate-300 accent-orange-600"
-                />
+                <label className="mt-4 flex cursor-pointer items-start gap-2.5 text-xs font-semibold leading-5 text-[#597064]"><input type="checkbox" name="acceptedTerms" required className="mt-0.5 size-4 shrink-0 rounded border-[#123d2b]/30 accent-[#147a45]" /><span>Li e concordo com os <Link href="/termos" className="font-extrabold text-[#147a45] hover:text-[#ff6b1a]">Termos de Uso</Link> e com a <Link href="/privacidade" className="font-extrabold text-[#147a45] hover:text-[#ff6b1a]">Política de Privacidade</Link>.</span></label>
 
-                <span>
-                  Concordo com os{" "}
-                  <Link
-                    href="/termos"
-                    className="font-bold text-orange-600 hover:text-orange-800"
-                  >
-                    Termos de Uso
-                  </Link>{" "}
-                  e com a{" "}
-                  <Link
-                    href="/privacidade"
-                    className="font-bold text-orange-600 hover:text-orange-800"
-                  >
-                    Política de Privacidade
-                  </Link>
-                  .
-                </span>
-              </label>
+                <button type="submit" disabled={loading} className="group mt-4 flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-[#ff6b1a] px-5 text-sm font-extrabold text-white shadow-[0_5px_0_#c9460b] transition hover:-translate-y-0.5 hover:shadow-[0_7px_0_#c9460b] focus-visible:outline-4 focus-visible:outline-offset-4 focus-visible:outline-[#ffb21a] disabled:cursor-not-allowed disabled:opacity-65 disabled:hover:translate-y-0">{loading ? <><LoaderCircle className="size-4 animate-spin" />Preparando sua conta...</> : <>Criar minha conta<ArrowRight className="size-4 transition group-hover:translate-x-1" /></>}</button>
+              </form>
 
-              <button
-                type="submit"
-                disabled={loading}
-                className="group mt-4 flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-orange-600 to-amber-600 px-5 text-sm font-bold text-white shadow-lg shadow-orange-200 transition hover:-translate-y-0.5 hover:shadow-xl disabled:cursor-not-allowed disabled:opacity-70 disabled:hover:translate-y-0"
-              >
-                {loading ? (
-                  <>
-                    <LoaderCircle className="size-4 animate-spin" />
-                    Criando conta...
-                  </>
-                ) : (
-                  <>
-                    Criar minha conta
-                    <ArrowRight className="size-4 transition group-hover:translate-x-1" />
-                  </>
-                )}
-              </button>
-            </form>
-
-            <div className="my-4 flex items-center gap-3">
-              <div className="h-px flex-1 bg-slate-200" />
-
-              <span className="text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-400">
-                Já possui cadastro?
-              </span>
-
-              <div className="h-px flex-1 bg-slate-200" />
-            </div>
-
-            <Link
-              href="/login"
-              className="flex h-11 w-full items-center justify-center rounded-xl border border-slate-200 bg-white text-sm font-bold text-slate-800 transition hover:border-orange-200 hover:bg-orange-50 hover:text-orange-700"
-            >
-              Entrar na minha conta
-            </Link>
-
-            <div className="mt-3 flex items-center justify-center gap-2 text-[11px] text-slate-400">
-              <ShieldCheck className="size-3.5 text-green-500" />
-              Seus dados serão armazenados com segurança.
+              <p className="mt-4 text-center text-xs font-semibold text-[#6a7d73] lg:hidden">Já possui cadastro? <Link href="/login" className="font-extrabold text-[#147a45]">Entrar na minha conta</Link></p>
             </div>
           </div>
         </section>
@@ -344,237 +123,22 @@ export default function CadastroPage() {
   );
 }
 
-function PresentationSection() {
-  return (
-    <section className="relative hidden h-screen overflow-hidden bg-gradient-to-br from-orange-700 via-amber-700 to-yellow-600 p-8 text-white lg:flex lg:flex-col lg:justify-between xl:p-10">
-      <div className="absolute -left-32 -top-32 size-96 rounded-full bg-white/10 blur-3xl" />
-      <div className="absolute -bottom-40 -right-28 size-[420px] rounded-full bg-yellow-300/20 blur-3xl" />
+type InputFieldProps = { id: string; name: string; label: string; type: "text" | "email" | "tel"; placeholder: string; autoComplete: string; icon: LucideIcon };
 
-      <div className="absolute left-1/2 top-1/2 size-[430px] -translate-x-1/2 -translate-y-1/2 rounded-full border border-white/10" />
-      <div className="absolute left-1/2 top-1/2 size-[290px] -translate-x-1/2 -translate-y-1/2 rounded-full border border-white/10" />
-
-      <Link href="/" className="relative z-10 flex w-fit items-center gap-3">
-        <BrandLogo className="h-10" surface="light" priority />
-      </Link>
-
-      <div className="relative z-10 mx-auto w-full max-w-lg">
-        <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3 py-1.5 text-xs font-semibold backdrop-blur">
-          <Sparkles className="size-4 text-yellow-200" />
-          Gestão completa para seu negócio
-        </div>
-
-        <h2 className="mt-5 text-4xl font-black leading-[1.08] tracking-[-0.04em] xl:text-5xl">
-          Um sistema que cresce com sua empresa.
-        </h2>
-
-        <p className="mt-4 max-w-md text-sm leading-6 text-white/70 xl:text-base">
-          Centralize vendas, produtos, clientes, estoque e financeiro em uma
-          plataforma moderna.
-        </p>
-
-        <div className="mt-6 grid gap-3">
-          {benefits.map((benefit) => (
-            <BenefitCard
-              key={benefit.title}
-              icon={benefit.icon}
-              title={benefit.title}
-              description={benefit.description}
-            />
-          ))}
-        </div>
-      </div>
-
-      <div className="relative z-10 flex items-center justify-between text-xs text-white/55">
-        <p>© {new Date().getFullYear()} Mangora</p>
-
-        <div className="flex items-center gap-2">
-          <CheckCircle2 className="size-4 text-green-300" />
-          Cadastro protegido
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function BenefitCard({
-  icon: Icon,
-  title,
-  description,
-}: {
-  icon: LucideIcon;
-  title: string;
-  description: string;
-}) {
-  return (
-    <div className="flex items-center gap-3 rounded-xl border border-white/15 bg-white/10 p-3 backdrop-blur-md">
-      <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-white/15">
-        <Icon className="size-4 text-yellow-100" />
-      </div>
-
-      <div>
-        <h3 className="text-sm font-bold">{title}</h3>
-        <p className="mt-0.5 text-xs text-white/60">{description}</p>
-      </div>
-    </div>
-  );
-}
-
-function MobileHeader() {
-  return (
-    <div className="mb-6 flex items-center justify-between lg:hidden">
-      <Link href="/" className="flex items-center gap-3">
-        <BrandLogo className="h-9" priority />
-      </Link>
-
-      <Link
-        href="/"
-        aria-label="Voltar para o início"
-        className="flex size-10 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-600 shadow-sm"
-      >
-        <ArrowLeft className="size-4" />
-      </Link>
-    </div>
-  );
-}
-
-
-type InputFieldProps = {
-  id: string;
-  name: string;
-  label: string;
-  type: "text" | "email" | "tel";
-  placeholder: string;
-  autoComplete: string;
-  icon: LucideIcon;
-};
-
-function InputField({
-  id,
-  name,
-  label,
-  type,
-  placeholder,
-  autoComplete,
-  icon: Icon,
-}: InputFieldProps) {
-  return (
-    <div>
-      <label
-        htmlFor={id}
-        className="mb-1 block text-xs font-bold text-slate-700"
-      >
-        {label}
-      </label>
-
-      <div className="relative">
-        <Icon className="pointer-events-none absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-slate-400" />
-
-        <input
-          id={id}
-          name={name}
-          type={type}
-          required
-          autoComplete={autoComplete}
-          placeholder={placeholder}
-          className="h-11 w-full rounded-xl border border-slate-200 bg-white pl-10 pr-3 text-sm text-slate-950 outline-none transition placeholder:text-slate-400 focus:border-orange-400 focus:ring-4 focus:ring-orange-100"
-        />
-      </div>
-    </div>
-  );
+function InputField({ id, name, label, type, placeholder, autoComplete, icon: Icon }: InputFieldProps) {
+  return <div><FieldLabel htmlFor={id}>{label}</FieldLabel><div className="relative"><Icon className="pointer-events-none absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-[#6a7d73]" /><input id={id} name={name} type={type} required autoComplete={autoComplete} placeholder={placeholder} className="h-11 w-full rounded-xl border-2 border-[#123d2b]/15 bg-[#fffdf7] pl-10 pr-3 text-sm font-semibold text-[#123d2b] outline-none transition placeholder:font-medium placeholder:text-[#789083] focus:border-[#ff6b1a] focus:bg-white focus:ring-4 focus:ring-[#ffb21a]/20" /></div></div>;
 }
 
 function SelectField() {
-  return (
-    <div>
-      <label
-        htmlFor="segment"
-        className="mb-1 block text-xs font-bold text-slate-700"
-      >
-        Segmento da empresa
-      </label>
-
-      <div className="relative">
-        <Store className="pointer-events-none absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-slate-400" />
-
-        <select
-          id="segment"
-          name="segment"
-          required
-          defaultValue=""
-          className="h-11 w-full appearance-none rounded-xl border border-slate-200 bg-white pl-10 pr-9 text-sm text-slate-950 outline-none transition focus:border-orange-400 focus:ring-4 focus:ring-orange-100"
-        >
-          <option value="" disabled>
-            Selecione
-          </option>
-
-          {segments.map((segment) => (
-            <option key={segment.value} value={segment.value}>
-              {segment.label}
-            </option>
-          ))}
-        </select>
-
-        <span className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-[10px] text-slate-400">
-          ▼
-        </span>
-      </div>
-    </div>
-  );
+  return <div><FieldLabel htmlFor="segment">Segmento da empresa</FieldLabel><div className="relative"><Store className="pointer-events-none absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-[#6a7d73]" /><select id="segment" name="segment" required defaultValue="" className="h-11 w-full appearance-none rounded-xl border-2 border-[#123d2b]/15 bg-[#fffdf7] pl-10 pr-9 text-sm font-semibold text-[#123d2b] outline-none transition focus:border-[#ff6b1a] focus:bg-white focus:ring-4 focus:ring-[#ffb21a]/20"><option value="" disabled>Selecione</option>{segments.map((segment) => <option key={segment.value} value={segment.value}>{segment.label}</option>)}</select><span className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-[10px] text-[#6a7d73]">▼</span></div></div>;
 }
 
-type PasswordFieldProps = {
-  id: string;
-  name: string;
-  label: string;
-  placeholder: string;
-  visible: boolean;
-  onToggle: () => void;
-};
+type PasswordFieldProps = { id: string; name: string; label: string; placeholder: string; visible: boolean; onToggle: () => void };
 
-function PasswordField({
-  id,
-  name,
-  label,
-  placeholder,
-  visible,
-  onToggle,
-}: PasswordFieldProps) {
-  return (
-    <div>
-      <label
-        htmlFor={id}
-        className="mb-1 block text-xs font-bold text-slate-700"
-      >
-        {label}
-      </label>
+function PasswordField({ id, name, label, placeholder, visible, onToggle }: PasswordFieldProps) {
+  return <div><FieldLabel htmlFor={id}>{label}</FieldLabel><div className="relative"><LockKeyhole className="pointer-events-none absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-[#6a7d73]" /><input id={id} name={name} type={visible ? "text" : "password"} required minLength={8} autoComplete="new-password" placeholder={placeholder} className="h-11 w-full rounded-xl border-2 border-[#123d2b]/15 bg-[#fffdf7] pl-10 pr-11 text-sm font-semibold text-[#123d2b] outline-none transition placeholder:font-medium placeholder:text-[#789083] focus:border-[#ff6b1a] focus:bg-white focus:ring-4 focus:ring-[#ffb21a]/20" /><button type="button" onClick={onToggle} aria-label={visible ? "Ocultar senha" : "Mostrar senha"} className="absolute right-2 top-1/2 flex size-8 -translate-y-1/2 items-center justify-center rounded-lg text-[#6a7d73] transition hover:bg-[#fff0dd] hover:text-[#ff6b1a]">{visible ? <EyeOff className="size-4" /> : <Eye className="size-4" />}</button></div></div>;
+}
 
-      <div className="relative">
-        <LockKeyhole className="pointer-events-none absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-slate-400" />
-
-        <input
-          id={id}
-          name={name}
-          type={visible ? "text" : "password"}
-          required
-          minLength={8}
-          autoComplete="new-password"
-          placeholder={placeholder}
-          className="h-11 w-full rounded-xl border border-slate-200 bg-white pl-10 pr-11 text-sm text-slate-950 outline-none transition placeholder:text-slate-400 focus:border-orange-400 focus:ring-4 focus:ring-orange-100"
-        />
-
-        <button
-          type="button"
-          onClick={onToggle}
-          aria-label={visible ? "Ocultar senha" : "Mostrar senha"}
-          className="absolute right-2.5 top-1/2 flex size-8 -translate-y-1/2 items-center justify-center rounded-lg text-slate-400 transition hover:bg-slate-100 hover:text-slate-700"
-        >
-          {visible ? (
-            <EyeOff className="size-4" />
-          ) : (
-            <Eye className="size-4" />
-          )}
-        </button>
-      </div>
-    </div>
-  );
+function FieldLabel({ htmlFor, children }: { htmlFor: string; children: React.ReactNode }) {
+  return <label htmlFor={htmlFor} className="mb-1 block text-xs font-extrabold text-[#315847]">{children}</label>;
 }
