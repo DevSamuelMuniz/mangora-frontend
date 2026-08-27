@@ -61,7 +61,7 @@ export default function LoginPage() {
               <p className="mt-4 text-sm font-medium leading-6 text-[#597064]">Seu painel está pronto para mais um dia de trabalho.</p>
 
               <form onSubmit={handleSubmit} className="mt-7 space-y-4">
-                <FieldLabel htmlFor="email">E-mail</FieldLabel>
+                <FieldLabel htmlFor="email" className="pb-4">E-mail</FieldLabel>
                 <div className="relative">
                   <Mail className="pointer-events-none absolute left-4 top-1/2 size-4 -translate-y-1/2 text-[#6a7d73]" />
                   <input id="email" name="email" type="email" required autoComplete="email" placeholder="voce@empresa.com" className="h-13 w-full rounded-xl border-2 border-[#123d2b]/15 bg-[#fffdf7] pl-11 pr-4 text-sm font-semibold text-[#123d2b] outline-none transition placeholder:font-medium placeholder:text-[#789083] focus:border-[#ff6b1a] focus:bg-white focus:ring-4 focus:ring-[#ffb21a]/20" />
@@ -94,6 +94,6 @@ export default function LoginPage() {
   );
 }
 
-function FieldLabel({ htmlFor, children }: { htmlFor: string; children: React.ReactNode }) {
-  return <label htmlFor={htmlFor} className="mb-[-0.5rem] block text-xs font-extrabold text-[#315847]">{children}</label>;
+function FieldLabel({ htmlFor, children, className = "" }: { htmlFor: string; children: React.ReactNode; className?: string }) {
+  return <label htmlFor={htmlFor} className={`mb-[-0.5rem] block text-xs font-extrabold text-[#315847] ${className}`}>{children}</label>;
 }
