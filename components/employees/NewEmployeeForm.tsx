@@ -31,7 +31,7 @@ export default function NewEmployeeForm() {
           employeeCode: data.get("employeeCode") || undefined, notes: data.get("notes") || undefined,
         }),
       });
-      router.push("/funcionarios?created=1");
+      router.push(`/funcionarios?toast=${encodeURIComponent("Funcionário adicionado")}`);
       router.refresh();
     } catch (cause) {
       setError(cause instanceof Error ? cause.message : "Não foi possível cadastrar o funcionário.");

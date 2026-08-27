@@ -25,7 +25,7 @@ import { paymentMethodLabels, saleStatusLabels, type PaymentMethod, type Sale, t
 
 const PAGE_SIZE = 6;
 const currencyFormatter = new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" });
-const paymentMethods: PaymentMethod[] = ["PIX", "CREDIT_CARD", "DEBIT_CARD", "CASH", "BOLETO"];
+const paymentMethods: PaymentMethod[] = ["PIX", "CREDIT_CARD", "DEBIT_CARD", "CASH", "BOLETO", "CHECK", "STORE_CREDIT"];
 
 export default function SalesCatalog() {
   const [sales, setSales] = useState<Sale[]>([]);
@@ -115,7 +115,7 @@ export default function SalesCatalog() {
             <h1 className="mt-1 text-2xl font-black tracking-tight text-slate-950 sm:text-3xl">Vendas</h1>
             <p className="mt-1 text-xs text-slate-500">Acompanhe movimentações, pagamentos e resultados.</p>
           </div>
-          <Link href="/vendas/nova" className="inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-orange-600 to-amber-600 px-4 text-sm font-bold text-white shadow-lg shadow-orange-200 transition hover:-translate-y-0.5 hover:shadow-xl">
+          <Link href="/vendas?acao=novo" className="inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-orange-600 to-amber-600 px-4 text-sm font-bold text-white shadow-lg shadow-orange-200 transition hover:-translate-y-0.5 hover:shadow-xl">
             <ShoppingCart className="size-4" />Nova venda
           </Link>
         </div>
@@ -194,7 +194,7 @@ export default function SalesCatalog() {
               <div className="flex size-12 items-center justify-center rounded-2xl bg-orange-50 text-orange-600"><ReceiptText className="size-5" /></div>
               <h2 className="mt-4 text-sm font-bold text-slate-900">Nenhuma venda encontrada</h2>
               <p className="mt-1 text-xs text-slate-500">{sales.length === 0 ? "Registre a primeira venda da empresa." : "Ajuste os filtros para consultar outras movimentações."}</p>
-              {sales.length === 0 ? <Link href="/vendas/nova" className="mt-4 inline-flex h-10 items-center rounded-xl bg-orange-600 px-4 text-xs font-bold text-white">Registrar venda</Link> : <button type="button" onClick={clearFilters} className="mt-4 h-10 rounded-xl border border-slate-200 px-4 text-xs font-bold text-orange-600 hover:bg-orange-50">Limpar filtros</button>}
+              {sales.length === 0 ? <Link href="/vendas?acao=novo" className="mt-4 inline-flex h-10 items-center rounded-xl bg-orange-600 px-4 text-xs font-bold text-white">Registrar venda</Link> : <button type="button" onClick={clearFilters} className="mt-4 h-10 rounded-xl border border-slate-200 px-4 text-xs font-bold text-orange-600 hover:bg-orange-50">Limpar filtros</button>}
             </div>
           )}
         </div>

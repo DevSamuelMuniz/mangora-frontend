@@ -1,2 +1,2 @@
-import SupplierForm from "@/components/suppliers/SupplierForm";
-export default function NewSupplierPage() { return <SupplierForm />; }
+import { redirect } from "next/navigation";
+export default function NewSupplierPage() { redirect("/fornecedores?acao=novo"); }

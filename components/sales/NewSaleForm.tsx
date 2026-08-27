@@ -27,7 +27,7 @@ type CartItem = {
 };
 
 const currencyFormatter = new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" });
-const paymentMethods: PaymentMethod[] = ["PIX", "CREDIT_CARD", "DEBIT_CARD", "CASH", "BOLETO"];
+const paymentMethods: PaymentMethod[] = ["PIX", "CREDIT_CARD", "DEBIT_CARD", "CASH", "BOLETO", "CHECK", "STORE_CREDIT"];
 
 export default function NewSaleForm() {
   const router = useRouter();
@@ -38,6 +38,7 @@ export default function NewSaleForm() {
   const [search, setSearch] = useState("");
   const [customerId, setCustomerId] = useState("");
   const [paymentMethod, setPaymentMethod] = useState("");
+  const [dueDate, setDueDate] = useState("");
   const [discount, setDiscount] = useState("0");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -100,6 +101,15 @@ export default function NewSaleForm() {
       setError("Selecione uma forma de pagamento.");
       return;
     }
+    const deferredPayment = paymentMethod === "CHECK" || paymentMethod === "STORE_CREDIT";
+    if (deferredPayment && !customerId) {
+      setError("Selecione o cliente para registrar cheque ou venda fiada.");
+      return;
+    }
+    if (deferredPayment && !dueDate) {
+      setError("Informe o vencimento do pagamento.");
+      return;
+    }
     if (discountValue > subtotal) {
       setError("O desconto não pode ser maior que o subtotal.");
       return;
@@ -112,11 +122,12 @@ export default function NewSaleForm() {
         body: JSON.stringify({
           customerId: customerId || undefined,
           paymentMethod,
+          dueDate: deferredPayment ? dueDate : undefined,
           discount: discountValue,
           items: cart.map((item) => ({ productId: item.product.id, quantity: item.quantity })),
         }),
       });
-      router.push(`/vendas?selecionada=${created.id}`);
+      router.push(`/vendas?selecionada=${created.id}&toast=${encodeURIComponent("Venda registrada")}`);
     } catch (requestError) {
       setError(requestError instanceof Error ? requestError.message : "Não foi possível concluir a venda.");
     } finally {
@@ -212,6 +223,10 @@ export default function NewSaleForm() {
                 </select>
               </Field>
               {paymentMethod === "CASH" && <p className="rounded-xl bg-amber-50 p-3 text-[10px] leading-4 text-amber-700">Vendas em dinheiro são registradas no caixa aberto da empresa.</p>}
+              {(paymentMethod === "CHECK" || paymentMethod === "STORE_CREDIT") && <>
+                <p className="rounded-xl bg-amber-50 p-3 text-[10px] leading-4 text-amber-700">O valor ficará em contas a receber e poderá ser baixado parcialmente.</p>
+                <Field label="Vencimento" id="dueDate"><input id="dueDate" type="date" required min={new Date().toLocaleDateString("en-CA")} value={dueDate} onChange={(event) => setDueDate(event.target.value)} className={inputClassName} /></Field>
+              </>}
               <Field label="Desconto" id="discount">
                 <div className="relative"><span className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-xs font-bold text-slate-400">R$</span><input id="discount" type="number" min="0" step="0.01" value={discount} onChange={(event) => setDiscount(event.target.value)} className={`${inputClassName} pl-10`} /></div>
               </Field>

@@ -115,7 +115,7 @@ export default function StockMovementForm({ initialProductId = "" }: { initialPr
         method: "POST",
         body: JSON.stringify(payload),
       });
-      router.push("/estoque");
+      router.push(`/estoque?toast=${encodeURIComponent("Movimentação registrada")}`);
       router.refresh();
     } catch (requestError) {
       setError(requestError instanceof Error ? requestError.message : "Não foi possível registrar a movimentação.");

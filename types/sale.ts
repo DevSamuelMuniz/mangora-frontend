@@ -1,5 +1,5 @@
 export type SaleStatus = "COMPLETED" | "CANCELLED";
-export type PaymentMethod = "PIX" | "CREDIT_CARD" | "DEBIT_CARD" | "CASH" | "BOLETO";
+export type PaymentMethod = "PIX" | "CREDIT_CARD" | "DEBIT_CARD" | "CASH" | "BOLETO" | "CHECK" | "STORE_CREDIT";
 
 export type SaleItem = {
   id: string;
@@ -33,6 +33,13 @@ export type Sale = {
   createdAt: string;
   updatedAt: string;
   items: SaleItem[];
+  receivable: {
+    id: string;
+    status: "PENDING" | "PARTIALLY_PAID" | "PAID" | "CANCELLED";
+    dueDate: string;
+    paidAmount: number;
+    outstandingAmount: number;
+  } | null;
   customer: { id: string; name: string; tradeName: string | null } | null;
 };
 
@@ -42,6 +49,8 @@ export const paymentMethodLabels: Record<PaymentMethod, string> = {
   DEBIT_CARD: "Cartão de débito",
   CASH: "Dinheiro",
   BOLETO: "Boleto",
+  CHECK: "Cheque",
+  STORE_CREDIT: "Fiado",
 };
 
 export const saleStatusLabels: Record<SaleStatus, string> = {

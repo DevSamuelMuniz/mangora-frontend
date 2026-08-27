@@ -88,7 +88,7 @@ export default function NewOrderForm() {
           items: items.map((item) => ({ productId: item.product.id, quantity: item.quantity })),
         }),
       });
-      router.push("/pedidos");
+      router.push(`/pedidos?toast=${encodeURIComponent("Pedido criado")}`);
     } catch (requestError) {
       setError(requestError instanceof Error ? requestError.message : "Não foi possível salvar o pedido.");
     } finally { setLoading(false); }

@@ -1,5 +1,5 @@
 export type FinancialEntryType = "INCOME" | "EXPENSE";
-export type FinancialEntryStatus = "PENDING" | "PAID" | "OVERDUE" | "CANCELLED";
+export type FinancialEntryStatus = "PENDING" | "PARTIALLY_PAID" | "PAID" | "OVERDUE" | "CANCELLED";
 export type StoredFinancialEntryStatus = Exclude<FinancialEntryStatus, "OVERDUE">;
 
 export type FinancialEntry = {
@@ -14,6 +14,8 @@ export type FinancialEntry = {
   description: string;
   category: string;
   amount: number;
+  paidAmount: number;
+  outstandingAmount: number;
   dueDate: string;
   paidAt: string | null;
   account: string;
@@ -26,6 +28,17 @@ export type FinancialEntry = {
   cancelReason: string | null;
   createdAt: string;
   updatedAt: string;
+  payments: FinancialPayment[];
+};
+
+export type FinancialPayment = {
+  id: string;
+  financialEntryId: string;
+  receivedByName: string;
+  amount: number;
+  paymentMethod: "PIX" | "CREDIT_CARD" | "DEBIT_CARD" | "CASH" | "BOLETO" | "CHECK" | "STORE_CREDIT";
+  paidAt: string;
+  notes: string | null;
 };
 
 export type FinancialOverview = {
@@ -35,4 +48,4 @@ export type FinancialOverview = {
 };
 
 export const financialTypeLabels: Record<FinancialEntryType, string> = { INCOME: "Receita", EXPENSE: "Despesa" };
-export const financialStatusLabels: Record<FinancialEntryStatus, string> = { PENDING: "Pendente", PAID: "Pago", OVERDUE: "Vencido", CANCELLED: "Cancelado" };
+export const financialStatusLabels: Record<FinancialEntryStatus, string> = { PENDING: "Pendente", PARTIALLY_PAID: "Pago parcialmente", PAID: "Pago", OVERDUE: "Vencido", CANCELLED: "Cancelado" };

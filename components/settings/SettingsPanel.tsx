@@ -21,8 +21,8 @@ const segments = [
   ["SERVICE_PROVIDER", "Prestador de serviços"], ["OTHER", "Outro segmento"],
 ];
 
-export default function SettingsPanel() {
-  const [activeTab, setActiveTab] = useState<SettingsTab>("company");
+export default function SettingsPanel({ initialTab = "company" }: { initialTab?: SettingsTab }) {
+  const [activeTab, setActiveTab] = useState<SettingsTab>(initialTab);
   const [company, setCompany] = useState<CompanySettings | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);

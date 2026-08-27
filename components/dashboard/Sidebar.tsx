@@ -42,79 +42,29 @@ type NavigationItem = {
   roles?: MembershipRole[];
 };
 
-const navigation: NavigationItem[] = [
-  {
-    label: "Dashboard",
-    href: "/dashboard",
-    icon: LayoutDashboard,
-  },
-  {
-    label: "Vendas",
-    href: "/vendas",
-    icon: ShoppingBag,
-  },
-  {
-    label: "Caixa",
-    href: "/caixa",
-    icon: Banknote,
-    roles: ["OWNER", "ADMIN", "MANAGER", "CASHIER"],
-  },
-  {
-    label: "Pedidos",
-    href: "/pedidos",
-    icon: FileText,
-  },
-  {
-    label: "Produtos",
-    href: "/produtos",
-    icon: Package,
-  },
-  {
-    label: "Estoque",
-    href: "/estoque",
-    icon: Boxes,
-  },
-  {
-    label: "Serviços",
-    href: "/servicos",
-    icon: Wrench,
-    roles: ["OWNER", "ADMIN", "MANAGER"],
-  },
-  {
-    label: "Categorias",
-    href: "/categorias",
-    icon: FolderTree,
-    roles: ["OWNER", "ADMIN", "MANAGER"],
-  },
-  {
-    label: "Compras",
-    href: "/compras",
-    icon: ClipboardList,
-    roles: ["OWNER", "ADMIN", "MANAGER"],
-  },
-  {
-    label: "Fornecedores",
-    href: "/fornecedores",
-    icon: Truck,
-    roles: ["OWNER", "ADMIN", "MANAGER"],
-  },
-  {
-    label: "Clientes",
-    href: "/clientes",
-    icon: Users,
-  },
-  {
-    label: "Financeiro",
-    href: "/financeiro",
-    icon: CircleDollarSign,
-    roles: ["OWNER", "ADMIN", "MANAGER"],
-  },
-  {
-    label: "Relatórios",
-    href: "/relatorios",
-    icon: BarChart3,
-    roles: ["OWNER", "ADMIN", "MANAGER"],
-  },
+type NavigationGroup = { label: string; icon: LucideIcon; items: NavigationItem[] };
+
+const navigationGroups: NavigationGroup[] = [
+  { label: "Operação", icon: ShoppingBag, items: [
+    { label: "Vendas", href: "/vendas", icon: ShoppingBag },
+    { label: "Caixa", href: "/caixa", icon: Banknote, roles: ["OWNER", "ADMIN", "MANAGER", "CASHIER"] },
+    { label: "Pedidos", href: "/pedidos", icon: FileText },
+  ] },
+  { label: "Catálogo", icon: Package, items: [
+    { label: "Produtos", href: "/produtos", icon: Package },
+    { label: "Serviços", href: "/servicos", icon: Wrench, roles: ["OWNER", "ADMIN", "MANAGER"] },
+    { label: "Categorias", href: "/categorias", icon: FolderTree, roles: ["OWNER", "ADMIN", "MANAGER"] },
+  ] },
+  { label: "Suprimentos", icon: Boxes, items: [
+    { label: "Estoque", href: "/estoque", icon: Boxes },
+    { label: "Compras", href: "/compras", icon: ClipboardList, roles: ["OWNER", "ADMIN", "MANAGER"] },
+    { label: "Fornecedores", href: "/fornecedores", icon: Truck, roles: ["OWNER", "ADMIN", "MANAGER"] },
+  ] },
+  { label: "Gestão", icon: CircleDollarSign, items: [
+    { label: "Clientes", href: "/clientes", icon: Users },
+    { label: "Financeiro", href: "/financeiro", icon: CircleDollarSign, roles: ["OWNER", "ADMIN", "MANAGER"] },
+    { label: "Relatórios", href: "/relatorios", icon: BarChart3, roles: ["OWNER", "ADMIN", "MANAGER"] },
+  ] },
 ];
 
 const secondaryNavigation: NavigationItem[] = [
@@ -145,7 +95,8 @@ export default function Sidebar({
 }: SidebarProps) {
   const pathname = usePathname();
   const [companyOpen, setCompanyOpen] = useState(false);
-  const visibleNavigation = navigation.filter((item) => !item.roles || item.roles.includes(session.membership.role));
+  const [openGroups, setOpenGroups] = useState<Record<string, boolean>>(() => Object.fromEntries(navigationGroups.map((group) => [group.label, group.items.some((item) => pathname.startsWith(item.href))])));
+  const visibleNavigationGroups = navigationGroups.map((group) => ({ ...group, items: group.items.filter((item) => !item.roles || item.roles.includes(session.membership.role)) })).filter((group) => group.items.length > 0);
   const visibleSecondaryNavigation = secondaryNavigation.filter((item) => !item.roles || item.roles.includes(session.membership.role));
 
   function isActive(href: string) {
@@ -260,32 +211,23 @@ export default function Sidebar({
           </p>
 
           <div className="space-y-1">
-            {visibleNavigation.map((item) => {
-              const Icon = item.icon;
-              const active = isActive(item.href);
-
-              return (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  onClick={onClose}
-                  className={`flex h-10 items-center gap-3 rounded-xl px-3 text-sm font-semibold transition ${
-                    active
-                      ? "bg-orange-50 text-orange-700"
-                      : "text-slate-600 hover:bg-slate-100 hover:text-slate-950"
-                  }`}
-                >
-                  <Icon
-                    className={`size-4.5 ${
-                      active
-                        ? "text-orange-600"
-                        : "text-slate-400"
-                    }`}
-                  />
-
-                  {item.label}
-                </Link>
-              );
+            <Link href="/dashboard" onClick={onClose} className={`flex h-10 items-center gap-3 rounded-xl px-3 text-sm font-semibold transition ${pathname === "/dashboard" ? "bg-orange-50 text-orange-700" : "text-slate-600 hover:bg-slate-100 hover:text-slate-950"}`}>
+              <LayoutDashboard className={`size-4.5 ${pathname === "/dashboard" ? "text-orange-600" : "text-slate-400"}`} />Dashboard
+            </Link>
+            {visibleNavigationGroups.map((group) => {
+              const GroupIcon = group.icon;
+              const active = group.items.some((item) => isActive(item.href));
+              const expanded = Boolean(openGroups[group.label]);
+              return <div key={group.label} className={`rounded-xl ${active ? "bg-[#fff8ea]" : ""}`}>
+                <button type="button" onClick={() => setOpenGroups((current) => ({ ...current, [group.label]: !expanded }))} aria-expanded={expanded} className={`flex h-10 w-full items-center gap-3 rounded-xl px-3 text-sm font-semibold transition ${active ? "text-[#123d2b]" : "text-slate-600 hover:bg-slate-100"}`}>
+                  <GroupIcon className={`size-4.5 ${active ? "text-orange-600" : "text-slate-400"}`} />
+                  <span className="flex-1 text-left">{group.label}</span>
+                  <ChevronDown className={`size-3.5 text-slate-400 transition-transform ${expanded ? "rotate-180" : ""}`} />
+                </button>
+                {expanded && <div className="mb-1 ml-5 space-y-0.5 border-l border-orange-200 pl-2">
+                  {group.items.map((item) => { const ItemIcon = item.icon; const itemActive = isActive(item.href); return <Link key={item.href} href={item.href} onClick={onClose} className={`flex h-9 items-center gap-2.5 rounded-lg px-2.5 text-xs font-semibold transition ${itemActive ? "bg-white text-orange-700 shadow-sm" : "text-slate-500 hover:bg-white/70 hover:text-slate-900"}`}><ItemIcon className={`size-3.5 ${itemActive ? "text-orange-600" : "text-slate-400"}`} />{item.label}</Link>; })}
+                </div>}
+              </div>;
             })}
           </div>
 

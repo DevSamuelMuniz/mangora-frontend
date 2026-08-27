@@ -1,17 +1,9 @@
-import type { Metadata } from "next";
-
-import StockMovementForm from "@/components/stock/StockMovementForm";
-
-export const metadata: Metadata = {
-  title: "Nova movimentação | Mangora",
-  description: "Registre uma movimentação de estoque.",
-};
-
 export default async function StockMovementPage({
   searchParams,
 }: {
   searchParams: Promise<{ productId?: string }>;
 }) {
   const { productId } = await searchParams;
-  return <StockMovementForm initialProductId={productId} />;
+  const { redirect } = await import("next/navigation");
+  redirect(`/estoque?acao=movimentar${productId ? `&productId=${encodeURIComponent(productId)}` : ""}`);
 }

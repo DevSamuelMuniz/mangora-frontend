@@ -102,7 +102,7 @@ export default function CustomerForm({ customerId }: { customerId?: string }) {
         method: customerId ? "PATCH" : "POST",
         body: JSON.stringify(payload),
       });
-      router.push("/clientes");
+      router.push(`/clientes?toast=${encodeURIComponent(editing ? "Cliente atualizado" : "Cliente cadastrado")}`);
       router.refresh();
     } catch (requestError) {
       setError(requestError instanceof Error ? requestError.message : "Não foi possível salvar o cliente.");

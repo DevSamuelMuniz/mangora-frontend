@@ -4,6 +4,7 @@ import { ReactNode, useState } from "react";
 import Sidebar from "./Sidebar";
 import DashboardHeader from "./DashboardHeader";
 import type { AuthSession } from "@/lib/auth/types";
+import RouteToast from "@/components/ui/RouteToast";
 
 type DashboardShellProps = {
   children: ReactNode;
@@ -25,6 +26,7 @@ export default function DashboardShell({
       />
 
       <div className="mangora-workspace lg:pl-64">
+        <RouteToast />
         <DashboardHeader
           onOpenSidebar={() => setSidebarOpen(true)}
           session={session}

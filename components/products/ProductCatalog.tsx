@@ -144,7 +144,7 @@ export default function ProductCatalog() {
             <h1 className="mt-1 text-2xl font-black tracking-tight text-slate-950 sm:text-3xl">Produtos</h1>
             <p className="mt-1 text-xs text-slate-500">Organize produtos, preços e disponibilidade em estoque.</p>
           </div>
-          <Link href="/produtos/novo" className="inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-orange-600 to-amber-600 px-4 text-sm font-bold text-white shadow-lg shadow-orange-200 transition hover:-translate-y-0.5 hover:shadow-xl">
+          <Link href="/produtos?acao=novo" className="inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-orange-600 to-amber-600 px-4 text-sm font-bold text-white shadow-lg shadow-orange-200 transition hover:-translate-y-0.5 hover:shadow-xl">
             <PackagePlus className="size-4" />
             Novo produto
           </Link>
@@ -206,7 +206,7 @@ export default function ProductCatalog() {
                               <summary aria-label={`Ações do produto ${product.name}`} className="flex size-8 cursor-pointer list-none items-center justify-center rounded-lg text-slate-400 transition hover:bg-slate-100 hover:text-slate-700"><MoreHorizontal className="size-4" /></summary>
                               <div className="absolute right-0 z-20 mt-1 w-36 rounded-xl border border-slate-200 bg-white p-1.5 text-left shadow-xl">
                                 <button type="button" onClick={() => setSelectedProduct(product)} className="flex h-9 w-full items-center gap-2 rounded-lg px-2.5 text-xs font-semibold text-slate-600 hover:bg-slate-50"><Eye className="size-3.5" />Visualizar</button>
-                                <Link href={`/produtos/${product.id}/editar`} className="flex h-9 w-full items-center gap-2 rounded-lg px-2.5 text-xs font-semibold text-slate-600 hover:bg-slate-50"><Pencil className="size-3.5" />Editar</Link>
+                                <Link href={`/produtos?acao=editar&id=${product.id}`} className="flex h-9 w-full items-center gap-2 rounded-lg px-2.5 text-xs font-semibold text-slate-600 hover:bg-slate-50"><Pencil className="size-3.5" />Editar</Link>
                                 <button type="button" onClick={() => setProductToDelete(product)} className="flex h-9 w-full items-center gap-2 rounded-lg px-2.5 text-xs font-semibold text-red-600 hover:bg-red-50"><Trash2 className="size-3.5" />Excluir</button>
                               </div>
                             </details>
@@ -231,7 +231,7 @@ export default function ProductCatalog() {
               <div className="flex size-12 items-center justify-center rounded-2xl bg-orange-50 text-orange-600"><Package className="size-5" /></div>
               <h2 className="mt-4 text-sm font-bold text-slate-900">Nenhum produto encontrado</h2>
               <p className="mt-1 max-w-sm text-xs leading-5 text-slate-500">{products.length === 0 ? "Cadastre o primeiro produto para começar seu catálogo." : "Ajuste os filtros para visualizar o catálogo."}</p>
-              {products.length === 0 ? <Link href="/produtos/novo" className="mt-4 inline-flex h-10 items-center rounded-xl bg-orange-600 px-4 text-xs font-bold text-white">Cadastrar produto</Link> : <button type="button" onClick={clearFilters} className="mt-4 h-10 rounded-xl border border-slate-200 px-4 text-xs font-bold text-orange-600 transition hover:bg-orange-50">Limpar filtros</button>}
+              {products.length === 0 ? <Link href="/produtos?acao=novo" className="mt-4 inline-flex h-10 items-center rounded-xl bg-orange-600 px-4 text-xs font-bold text-white">Cadastrar produto</Link> : <button type="button" onClick={clearFilters} className="mt-4 h-10 rounded-xl border border-slate-200 px-4 text-xs font-bold text-orange-600 transition hover:bg-orange-50">Limpar filtros</button>}
             </div>
           )}
         </div>
@@ -258,7 +258,7 @@ function ProductDetailsModal({ product, onClose }: { product: Product; onClose: 
           {[["SKU", product.sku], ["Categoria", product.category], ["Preço", currencyFormatter.format(product.price)], ["Estoque físico", product.trackStock ? `${product.stock} unidade(s)` : "Não controlado"], ["Reservado", `${product.reservedStock} unidade(s)`], ["Disponível", `${product.stock - product.reservedStock} unidade(s)`], ["Estoque mínimo", `${product.minimumStock} unidade(s)`], ["Status", product.active ? "Ativo" : "Inativo"], ["Código de barras", product.barcode || "Não informado"]].map(([label, value]) => <div key={label} className="rounded-xl bg-slate-50 p-3"><dt className="text-[10px] font-semibold text-slate-400">{label}</dt><dd className="mt-1 break-words text-xs font-bold text-slate-800">{value}</dd></div>)}
         </dl>
         {product.description && <p className="mt-3 rounded-xl bg-slate-50 p-3 text-xs leading-5 text-slate-600">{product.description}</p>}
-        <div className="mt-5 flex justify-end"><Link href={`/produtos/${product.id}/editar`} className="inline-flex h-10 items-center gap-2 rounded-xl bg-orange-600 px-4 text-xs font-bold text-white"><Pencil className="size-3.5" />Editar produto</Link></div>
+        <div className="mt-5 flex justify-end"><Link href={`/produtos?acao=editar&id=${product.id}`} className="inline-flex h-10 items-center gap-2 rounded-xl bg-orange-600 px-4 text-xs font-bold text-white"><Pencil className="size-3.5" />Editar produto</Link></div>
       </div>
     </div>
   );

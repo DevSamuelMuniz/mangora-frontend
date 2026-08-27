@@ -101,7 +101,7 @@ export default function ProductForm({ productId }: { productId?: string }) {
         method: productId ? "PATCH" : "POST",
         body: JSON.stringify(payload),
       });
-      router.push("/produtos");
+      router.push(`/produtos?toast=${encodeURIComponent(editing ? "Produto atualizado" : "Produto cadastrado")}`);
       router.refresh();
     } catch (requestError) {
       setError(requestError instanceof Error ? requestError.message : "Não foi possível salvar o produto.");
@@ -198,7 +198,7 @@ export default function ProductForm({ productId }: { productId?: string }) {
                   <p className="mb-1.5 text-xs font-bold text-slate-700">Estoque atual</p>
                   <div className="flex h-11 items-center justify-between rounded-xl border border-slate-200 bg-slate-50 px-3.5">
                     <span className="text-sm font-black text-slate-800">{product?.stock ?? 0} un.</span>
-                    <Link href={`/estoque/movimentacao?productId=${product?.id ?? ""}`} className="text-[10px] font-bold text-orange-600">Movimentar estoque</Link>
+                    <Link href={`/estoque?acao=movimentar&productId=${product?.id ?? ""}`} className="text-[10px] font-bold text-orange-600">Movimentar estoque</Link>
                   </div>
                 </div>
               ) : (

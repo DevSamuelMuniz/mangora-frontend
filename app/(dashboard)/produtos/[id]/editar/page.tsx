@@ -1,11 +1,4 @@
-import type { Metadata } from "next";
-
-import ProductForm from "@/components/products/ProductForm";
-
-export const metadata: Metadata = {
-  title: "Editar produto | Mangora",
-  description: "Atualize as informações de um produto da sua empresa.",
-};
+import { redirect } from "next/navigation";
 
 export default async function EditProductPage({
   params,
@@ -13,5 +6,5 @@ export default async function EditProductPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  return <ProductForm productId={id} />;
+  redirect(`/produtos?acao=editar&id=${encodeURIComponent(id)}`);
 }

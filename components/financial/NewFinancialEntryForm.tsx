@@ -74,7 +74,7 @@ export default function NewFinancialEntryForm() {
           notes: String(formData.get("notes") ?? "") || undefined,
         }),
       });
-      router.push("/financeiro");
+      router.push(`/financeiro?toast=${encodeURIComponent("Lançamento registrado")}`);
     } catch (requestError) {
       setError(requestError instanceof Error ? requestError.message : "Não foi possível salvar o lançamento.");
     } finally {
