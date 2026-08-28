@@ -12,5 +12,5 @@ export default async function SettingsPage({ searchParams }: { searchParams: Pro
   const { secao } = await searchParams;
   const tabs: SettingsTab[] = ["company", "preferences", "sales", "notifications", "online", "security"];
   const initialTab = tabs.includes(secao as SettingsTab) ? secao as SettingsTab : "company";
-  return <SettingsPanel initialTab={initialTab} />;
+  return <SettingsPanel key={initialTab} initialTab={initialTab} />;
 }

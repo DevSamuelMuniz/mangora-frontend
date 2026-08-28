@@ -18,12 +18,12 @@ import { apiRequest } from "@/lib/api/client";
 import type {
   StockMovement,
   StockMovementInput,
-  StockMovementType,
+  ManualStockMovementType,
   StockOverviewResponse,
 } from "@/types/stock";
 
 const movementOptions: {
-  type: StockMovementType;
+  type: ManualStockMovementType;
   label: string;
   description: string;
   icon: LucideIcon;
@@ -33,7 +33,7 @@ const movementOptions: {
   { type: "ADJUSTMENT", label: "Ajuste", description: "Correção após contagem física", icon: ClipboardCheck },
 ];
 
-const reasons: Record<StockMovementType, string[]> = {
+const reasons: Record<ManualStockMovementType, string[]> = {
   ENTRY: ["Compra de fornecedor", "Devolução de cliente", "Reposição", "Outro"],
   EXIT: ["Perda ou avaria", "Consumo interno", "Retirada", "Outro"],
   ADJUSTMENT: ["Contagem física", "Correção de cadastro", "Avaria identificada", "Outro"],
@@ -44,7 +44,7 @@ export default function StockMovementForm({ initialProductId = "" }: { initialPr
   const [products, setProducts] = useState<StockOverviewResponse["products"]>([]);
   const [loadingProducts, setLoadingProducts] = useState(true);
   const [productId, setProductId] = useState(initialProductId);
-  const [movementType, setMovementType] = useState<StockMovementType>("ENTRY");
+  const [movementType, setMovementType] = useState<ManualStockMovementType>("ENTRY");
   const [quantity, setQuantity] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");

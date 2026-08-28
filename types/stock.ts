@@ -1,6 +1,7 @@
 import type { Product } from "./product";
 
-export type StockMovementType = "ENTRY" | "EXIT" | "ADJUSTMENT";
+export type StockMovementType = "ENTRY" | "EXIT" | "ADJUSTMENT" | "TRANSFER_IN" | "TRANSFER_OUT";
+export type ManualStockMovementType = "ENTRY" | "EXIT" | "ADJUSTMENT";
 
 export type StockMovement = {
   id: string;
@@ -21,6 +22,11 @@ export type StockMovement = {
     name: string;
     sku: string;
   };
+  transfer?: {
+    id: string;
+    sourceCompany: { id: string; tradeName: string };
+    destinationCompany: { id: string; tradeName: string };
+  } | null;
 };
 
 export type StockOverviewResponse = {
@@ -36,7 +42,7 @@ export type StockOverviewResponse = {
 
 export type StockMovementInput = {
   productId: string;
-  type: StockMovementType;
+  type: ManualStockMovementType;
   quantity: number;
   unitCost?: number;
   reason: string;

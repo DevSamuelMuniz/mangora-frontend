@@ -28,7 +28,7 @@ export default function RouteToast() {
 
   if (!message) return null;
   return (
-    <div role="status" aria-live="polite" className="fixed bottom-5 right-5 z-[100] flex max-w-sm items-center gap-3 rounded-2xl border border-green-200 bg-white px-4 py-3 text-sm font-bold text-[#123d2b] shadow-[0_18px_55px_rgba(18,61,43,0.22)]">
+    <div role="status" aria-live="polite" className="fixed bottom-5 right-5 z-[100] flex max-w-sm items-center gap-3 rounded-2xl border border-[#147a45]/35 bg-[#fffdf8] px-4 py-3 text-sm font-bold text-[#123d2b] shadow-[0_18px_55px_rgba(18,61,43,0.22)]">
       <span className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-green-50 text-[#147a45]"><CheckCircle2 className="size-4" /></span>
       <span className="flex-1">{message}</span>
       <button type="button" onClick={dismiss} aria-label="Fechar aviso" className="flex size-8 items-center justify-center rounded-lg text-slate-400 hover:bg-slate-100"><X className="size-3.5" /></button>

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   BarChart3,
   Banknote,
@@ -28,6 +28,8 @@ import {
 } from "lucide-react";
 import { roleLabels, type AuthSession, type MembershipRole } from "@/lib/auth/types";
 import BrandLogo from "@/components/brand/BrandLogo";
+import { apiRequest } from "@/lib/api/client";
+import type { UnitGroupResponse } from "@/types/unit";
 
 type SidebarProps = {
   open: boolean;
@@ -69,6 +71,12 @@ const navigationGroups: NavigationGroup[] = [
 
 const secondaryNavigation: NavigationItem[] = [
   {
+    label: "Lojas",
+    href: "/unidades",
+    icon: Store,
+    roles: ["OWNER", "ADMIN", "MANAGER"],
+  },
+  {
     label: "Funcionários",
     href: "/funcionarios",
     icon: Building2,
@@ -95,9 +103,27 @@ export default function Sidebar({
 }: SidebarProps) {
   const pathname = usePathname();
   const [companyOpen, setCompanyOpen] = useState(false);
+  const [units, setUnits] = useState<UnitGroupResponse["units"]>([]);
+  const [switching, setSwitching] = useState("");
   const [openGroups, setOpenGroups] = useState<Record<string, boolean>>(() => Object.fromEntries(navigationGroups.map((group) => [group.label, group.items.some((item) => pathname.startsWith(item.href))])));
   const visibleNavigationGroups = navigationGroups.map((group) => ({ ...group, items: group.items.filter((item) => !item.roles || item.roles.includes(session.membership.role)) })).filter((group) => group.items.length > 0);
   const visibleSecondaryNavigation = secondaryNavigation.filter((item) => !item.roles || item.roles.includes(session.membership.role));
+
+  useEffect(() => {
+    if (!companyOpen) return;
+    apiRequest<UnitGroupResponse>("/companies/group").then((data) => setUnits(data.units)).catch(() => setUnits([]));
+  }, [companyOpen]);
+
+  async function switchUnit(membershipId: string) {
+    if (membershipId === session.membership.id) return setCompanyOpen(false);
+    try {
+      setSwitching(membershipId);
+      await apiRequest("/auth/switch-company", { method: "POST", body: JSON.stringify({ membershipId }) });
+      window.location.assign("/dashboard?toast=Unidade%20alterada");
+    } finally {
+      setSwitching("");
+    }
+  }
 
   function isActive(href: string) {
     if (href === "/dashboard") {
@@ -166,7 +192,7 @@ export default function Sidebar({
           </button>
 
           {companyOpen && (
-            <div
+            <><button type="button" aria-label="Fechar seletor de lojas" onClick={() => setCompanyOpen(false)} className="fixed inset-0 z-10 cursor-default" /><div
               role="menu"
               aria-label="Menu da empresa"
               className="absolute inset-x-3 top-[4.5rem] z-20 rounded-xl border border-slate-200 bg-white p-1.5 shadow-xl"
@@ -179,6 +205,9 @@ export default function Sidebar({
                   {session.company.tradeName}
                 </p>
               </div>
+              {units.map((unit) => <button key={unit.membershipId} type="button" role="menuitem" disabled={Boolean(switching)} onClick={() => void switchUnit(unit.membershipId)} className={`flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-[11px] font-semibold transition ${unit.current ? "bg-orange-50 text-orange-700" : "text-slate-600 hover:bg-slate-50"}`}><span className={`size-2 rounded-full ${unit.current ? "bg-orange-500" : "bg-slate-300"}`} /><span className="min-w-0 flex-1 truncate">{unit.company.unitCode ? `${unit.company.unitCode} · ` : ""}{unit.company.tradeName}</span>{switching === unit.membershipId && <span className="text-[9px]">Trocando...</span>}</button>)}
+              <div className="my-1 h-px bg-slate-100" />
+              <Link href="/unidades" role="menuitem" onClick={() => { setCompanyOpen(false); onClose(); }} className="flex rounded-lg px-3 py-2 text-[11px] font-bold text-orange-700 hover:bg-orange-50">Gerenciar lojas e consolidado</Link>
               {(session.membership.role === "OWNER" || session.membership.role === "ADMIN") && <Link
                 href="/configuracoes"
                 role="menuitem"
@@ -201,7 +230,7 @@ export default function Sidebar({
               >
                 Gerenciar assinatura
               </Link>}
-            </div>
+            </div></>
           )}
         </div>
 
@@ -218,14 +247,14 @@ export default function Sidebar({
               const GroupIcon = group.icon;
               const active = group.items.some((item) => isActive(item.href));
               const expanded = Boolean(openGroups[group.label]);
-              return <div key={group.label} className={`rounded-xl ${active ? "bg-[#fff8ea]" : ""}`}>
-                <button type="button" onClick={() => setOpenGroups((current) => ({ ...current, [group.label]: !expanded }))} aria-expanded={expanded} className={`flex h-10 w-full items-center gap-3 rounded-xl px-3 text-sm font-semibold transition ${active ? "text-[#123d2b]" : "text-slate-600 hover:bg-slate-100"}`}>
+              return <div key={group.label} className="rounded-xl">
+                <button type="button" data-active={active} onClick={() => setOpenGroups((current) => ({ ...current, [group.label]: !expanded }))} aria-expanded={expanded} className="mangora-nav-group flex h-10 w-full items-center gap-3 rounded-xl px-3 text-sm font-semibold transition">
                   <GroupIcon className={`size-4.5 ${active ? "text-orange-600" : "text-slate-400"}`} />
                   <span className="flex-1 text-left">{group.label}</span>
                   <ChevronDown className={`size-3.5 text-slate-400 transition-transform ${expanded ? "rotate-180" : ""}`} />
                 </button>
-                {expanded && <div className="mb-1 ml-5 space-y-0.5 border-l border-orange-200 pl-2">
-                  {group.items.map((item) => { const ItemIcon = item.icon; const itemActive = isActive(item.href); return <Link key={item.href} href={item.href} onClick={onClose} className={`flex h-9 items-center gap-2.5 rounded-lg px-2.5 text-xs font-semibold transition ${itemActive ? "bg-white text-orange-700 shadow-sm" : "text-slate-500 hover:bg-white/70 hover:text-slate-900"}`}><ItemIcon className={`size-3.5 ${itemActive ? "text-orange-600" : "text-slate-400"}`} />{item.label}</Link>; })}
+                {expanded && <div className="mb-1 ml-5 space-y-0.5 border-l border-white/15 pl-2">
+                  {group.items.map((item) => { const ItemIcon = item.icon; const itemActive = isActive(item.href); return <Link key={item.href} href={item.href} data-active={itemActive} onClick={onClose} className="mangora-nav-child flex h-9 items-center gap-2.5 rounded-lg px-2.5 text-xs font-semibold transition"><ItemIcon className="size-3.5" />{item.label}</Link>; })}
                 </div>}
               </div>;
             })}

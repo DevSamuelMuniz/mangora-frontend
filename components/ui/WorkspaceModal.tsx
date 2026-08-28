@@ -36,8 +36,8 @@ export default function WorkspaceModal({ children, closeHref, label, size = "lar
   return (
     <div className="fixed inset-0 z-[80] flex items-end justify-center bg-[#123d2b]/45 p-0 backdrop-blur-sm sm:items-center sm:p-5">
       <button type="button" aria-label={`Fechar ${label}`} onClick={() => router.replace(closeHref, { scroll: false })} className="absolute inset-0 cursor-default" />
-      <div role="dialog" aria-modal="true" aria-label={label} className={`relative max-h-[96vh] w-full overflow-y-auto rounded-t-[1.75rem] border border-white/70 bg-[#fffdfa] p-4 shadow-[0_28px_90px_rgba(18,61,43,0.32)] sm:max-h-[92vh] sm:rounded-[1.75rem] sm:p-6 ${sizes[size]}`}>
-        <div className="sticky top-0 z-20 -mx-1 mb-4 flex justify-end bg-gradient-to-b from-[#fffdfa] via-[#fffdfa] to-transparent px-1 pb-3">
+      <div role="dialog" aria-modal="true" aria-label={label} className={`relative max-h-[96vh] w-full overflow-y-auto rounded-t-[1.75rem] border border-[#123d2b]/20 bg-[#e9dfd2] p-4 shadow-[0_28px_90px_rgba(18,61,43,0.32)] sm:max-h-[92vh] sm:rounded-[1.75rem] sm:p-6 ${sizes[size]}`}>
+        <div className="sticky top-0 z-20 -mx-1 mb-4 flex justify-end bg-gradient-to-b from-[#e9dfd2] via-[#e9dfd2] to-transparent px-1 pb-3">
           <button type="button" onClick={() => router.replace(closeHref, { scroll: false })} className="flex size-10 items-center justify-center rounded-xl border border-[#123d2b]/10 bg-white text-[#597064] shadow-sm transition hover:border-orange-200 hover:text-orange-700" aria-label={`Fechar ${label}`}>
             <X className="size-4" />
           </button>
