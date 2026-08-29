@@ -85,7 +85,6 @@ export default function LoginPage() {
               <div className="my-6 flex items-center gap-3"><div className="h-px flex-1 bg-[#123d2b]/10" /><span className="text-[10px] font-black uppercase tracking-[0.15em] text-[#789083]">Novo por aqui?</span><div className="h-px flex-1 bg-[#123d2b]/10" /></div>
               <Link href="/cadastro" className="flex h-12 w-full items-center justify-center rounded-xl border-2 border-[#123d2b] bg-[#fff8ea] text-sm font-extrabold text-[#123d2b] transition hover:-translate-y-0.5 hover:bg-[#ffb21a]">Criar minha conta</Link>
             </div>
-"""
             <p className="mt-6 text-center text-[11px] font-medium leading-5 text-[#6a7d73]">Ao entrar, você concorda com nossos <Link href="/termos" className="font-extrabold hover:text-[#ff6b1a]">Termos</Link> e com a <Link href="/privacidade" className="font-extrabold hover:text-[#ff6b1a]">Política de Privacidade</Link>.</p>
           </div>
         </section>
@@ -93,7 +92,6 @@ export default function LoginPage() {
     </main>
   );
 }
-"
 function FieldLabel({ htmlFor, children, className = "" }: { htmlFor: string; children: React.ReactNode; className?: string }) {
   return <label htmlFor={htmlFor} className={`mb-[-0.5rem] block text-xs font-extrabold text-[#315847] ${className}`}>{children}</label>;
 }

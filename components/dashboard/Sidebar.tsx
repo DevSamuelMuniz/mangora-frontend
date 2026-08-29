@@ -66,6 +66,7 @@ const navigationGroups: NavigationGroup[] = [
     { label: "Clientes", href: "/clientes", icon: Users },
     { label: "Financeiro", href: "/financeiro", icon: CircleDollarSign, roles: ["OWNER", "ADMIN", "MANAGER"] },
     { label: "Relatórios", href: "/relatorios", icon: BarChart3, roles: ["OWNER", "ADMIN", "MANAGER"] },
+    { label: "Notas fiscais", href: "/notas-fiscais", icon: FileText, roles: ["OWNER", "ADMIN", "MANAGER"] },
   ] },
 ];
 
@@ -92,6 +93,12 @@ const secondaryNavigation: NavigationItem[] = [
     label: "Configurações",
     href: "/configuracoes",
     icon: Settings,
+    roles: ["OWNER", "ADMIN"],
+  },
+  {
+    label: "Configuração fiscal",
+    href: "/configuracoes-fiscais",
+    icon: FileText,
     roles: ["OWNER", "ADMIN"],
   },
 ];

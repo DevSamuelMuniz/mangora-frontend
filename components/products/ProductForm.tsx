@@ -92,6 +92,11 @@ export default function ProductForm({ productId }: { productId?: string }) {
       description: optional("description"),
       imageUrl: optional("imageUrl"),
       publicVisible: formData.get("publicVisible") === "on",
+      fiscalNcm: optional("fiscalNcm"), fiscalCest: optional("fiscalCest"),
+      fiscalCfop: optional("fiscalCfop"), fiscalOrigin: optional("fiscalOrigin"),
+      fiscalCsosn: optional("fiscalCsosn"), fiscalCstIcms: optional("fiscalCstIcms"),
+      fiscalCstPis: optional("fiscalCstPis"), fiscalCstCofins: optional("fiscalCstCofins"),
+      fiscalUnit: optional("fiscalUnit") ?? "UN", fiscalBenefitCode: optional("fiscalBenefitCode"),
       ...(!productId && { stock }),
     };
 
@@ -227,6 +232,22 @@ export default function ProductForm({ productId }: { productId?: string }) {
             <textarea id="description" name="description" rows={3} maxLength={2000} defaultValue={product?.description ?? ""} placeholder="Informações adicionais sobre o produto..." className="w-full resize-y rounded-xl border border-slate-200 bg-white px-3.5 py-3 text-sm text-slate-950 outline-none transition placeholder:text-slate-400 focus:border-orange-400 focus:ring-4 focus:ring-orange-100" />
           </Field>
         </div>
+
+        <details className="group rounded-2xl border border-green-200 bg-white p-4 shadow-sm open:ring-4 open:ring-green-50 sm:p-5">
+          <summary className="cursor-pointer list-none"><div className="flex items-center justify-between gap-3"><div><h2 className="text-sm font-black text-green-950">Dados fiscais do produto</h2><p className="mt-1 text-[10px] text-green-700">Necessários para preparar NF-e e NFC-e. Confirme os códigos com o contador.</p></div><span className="rounded-full bg-green-100 px-3 py-1 text-[9px] font-black text-green-800 group-open:bg-orange-100 group-open:text-orange-800">Abrir campos</span></div></summary>
+          <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            <Field label="NCM" id="fiscalNcm"><input id="fiscalNcm" name="fiscalNcm" inputMode="numeric" pattern="[0-9]{8}" maxLength={8} defaultValue={product?.fiscalNcm ?? ""} placeholder="00000000" className={inputClassName} /></Field>
+            <Field label="CEST (quando aplicável)" id="fiscalCest"><input id="fiscalCest" name="fiscalCest" inputMode="numeric" pattern="[0-9]{7}" maxLength={7} defaultValue={product?.fiscalCest ?? ""} placeholder="0000000" className={inputClassName} /></Field>
+            <Field label="CFOP padrão" id="fiscalCfop"><input id="fiscalCfop" name="fiscalCfop" inputMode="numeric" pattern="[0-9]{4}" maxLength={4} defaultValue={product?.fiscalCfop ?? ""} placeholder="5102" className={inputClassName} /></Field>
+            <Field label="Unidade comercial" id="fiscalUnit"><input id="fiscalUnit" name="fiscalUnit" maxLength={6} defaultValue={product?.fiscalUnit ?? "UN"} placeholder="UN" className={inputClassName} /></Field>
+            <Field label="Origem da mercadoria" id="fiscalOrigin"><select id="fiscalOrigin" name="fiscalOrigin" defaultValue={product?.fiscalOrigin ?? ""} className={inputClassName}><option value="">Selecione</option><option value="0">0 · Nacional</option><option value="1">1 · Estrangeira — importação direta</option><option value="2">2 · Estrangeira — mercado interno</option><option value="3">3 · Nacional com conteúdo importado</option><option value="4">4 · Nacional conforme processos básicos</option><option value="5">5 · Nacional com conteúdo importado ≤ 40%</option><option value="6">6 · Estrangeira sem similar nacional</option><option value="7">7 · Estrangeira mercado interno sem similar</option><option value="8">8 · Nacional com conteúdo importado &gt; 70%</option></select></Field>
+            <Field label="CSOSN (Simples)" id="fiscalCsosn"><input id="fiscalCsosn" name="fiscalCsosn" inputMode="numeric" pattern="[0-9]{3}" maxLength={3} defaultValue={product?.fiscalCsosn ?? ""} placeholder="102" className={inputClassName} /></Field>
+            <Field label="CST ICMS (regime normal)" id="fiscalCstIcms"><input id="fiscalCstIcms" name="fiscalCstIcms" inputMode="numeric" pattern="[0-9]{2,3}" maxLength={3} defaultValue={product?.fiscalCstIcms ?? ""} placeholder="00" className={inputClassName} /></Field>
+            <Field label="Código de benefício" id="fiscalBenefitCode"><input id="fiscalBenefitCode" name="fiscalBenefitCode" maxLength={20} defaultValue={product?.fiscalBenefitCode ?? ""} className={inputClassName} /></Field>
+            <Field label="CST PIS" id="fiscalCstPis"><input id="fiscalCstPis" name="fiscalCstPis" inputMode="numeric" pattern="[0-9]{2}" maxLength={2} defaultValue={product?.fiscalCstPis ?? ""} placeholder="01" className={inputClassName} /></Field>
+            <Field label="CST COFINS" id="fiscalCstCofins"><input id="fiscalCstCofins" name="fiscalCstCofins" inputMode="numeric" pattern="[0-9]{2}" maxLength={2} defaultValue={product?.fiscalCstCofins ?? ""} placeholder="01" className={inputClassName} /></Field>
+          </div>
+        </details>
 
         {!categories.length && <div className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-xs text-amber-700">Crie uma categoria de produto antes de continuar. <Link href="/categorias" className="font-bold underline">Gerenciar categorias</Link></div>}
         {error && <div role="alert" className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-xs font-semibold text-red-700">{error}</div>}
