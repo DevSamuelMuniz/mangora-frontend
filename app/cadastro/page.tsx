@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
 import { ArrowLeft, ArrowRight, Building2, CheckCircle2, Eye, EyeOff, LoaderCircle, LockKeyhole, Mail, Phone, ShieldCheck, Store, User, type LucideIcon } from "lucide-react";
 import AuthVisualPanel from "@/components/auth/AuthVisualPanel";
@@ -22,7 +21,6 @@ const segments = [
 ];
 
 export default function CadastroPage() {
-  const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const [showPasswordConfirmation, setShowPasswordConfirmation] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -56,9 +54,8 @@ export default function CadastroPage() {
       setLoading(true);
       await apiRequest("/auth/register", { method: "POST", body: JSON.stringify(registerData) });
       setSuccess(true);
-      await new Promise((resolve) => setTimeout(resolve, 700));
-      router.push("/dashboard");
-      router.refresh();
+      await new Promise((resolve) => setTimeout(resolve, 450));
+      window.location.replace("/dashboard");
     } catch (registrationError) {
       setError(registrationError instanceof Error ? registrationError.message : "Não foi possível criar sua conta.");
     } finally {

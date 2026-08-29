@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
 import { ArrowLeft, ArrowRight, Eye, EyeOff, LoaderCircle, LockKeyhole, Mail, ShieldCheck } from "lucide-react";
 import AuthVisualPanel from "@/components/auth/AuthVisualPanel";
@@ -9,7 +8,6 @@ import BrandLogo from "@/components/brand/BrandLogo";
 import { apiRequest } from "@/lib/api/client";
 
 export default function LoginPage() {
-  const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -27,8 +25,7 @@ export default function LoginPage() {
 
     try {
       await apiRequest("/auth/login", { method: "POST", body: JSON.stringify(loginData) });
-      router.push("/dashboard");
-      router.refresh();
+      window.location.replace("/dashboard");
     } catch (loginError) {
       setError(loginError instanceof Error ? loginError.message : "Não foi possível realizar o login.");
     } finally {

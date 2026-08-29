@@ -1,4 +1,6 @@
-const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3001/api";
+// Browser requests stay on the frontend origin. The server-side proxy forwards
+// them to the API and makes the HttpOnly session cookie visible to Next.js.
+const API_URL = "/api/backend";
 
 type ApiErrorPayload = {
   message?: string | string[];

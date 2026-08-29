@@ -13,6 +13,7 @@ export async function getCurrentSession(): Promise<AuthSession | null> {
   try {
     const response = await fetch(`${API_URL}/auth/me`, {
       cache: "no-store",
+      signal: AbortSignal.timeout(5_000),
       headers: {
         cookie: `${accessToken.name}=${accessToken.value}`,
       },
