@@ -177,7 +177,7 @@ export default function Sidebar({
             type="button"
             onClick={() => setCompanyOpen((current) => !current)}
             aria-expanded={companyOpen}
-            className="flex w-full items-center gap-3 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-left transition hover:border-orange-200 hover:bg-orange-50"
+            className="mangora-company-switcher flex w-full items-center gap-3 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-left transition hover:border-orange-200 hover:bg-orange-50"
           >
             <div className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-orange-100 text-orange-700">
               <Store className="size-4" />
