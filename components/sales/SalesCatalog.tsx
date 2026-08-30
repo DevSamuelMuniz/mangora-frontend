@@ -23,6 +23,7 @@ import {
 import { paymentMethodLabels, saleStatusLabels, type PaymentMethod, type Sale, type SaleStatus } from "@/types/sale";
 import { formatCurrency, formatDate, formatTime } from "@/lib/format";
 import { useCancelSale, useSales } from "@/features/sales/hooks/useSales";
+import { useToast } from "@/components/ui/toast";
 import { FilterSelect } from "@/components/shared/FilterSelect";
 import { PageButton } from "@/components/shared/PageButton";
 import { SummaryCard } from "@/components/shared/SummaryCard";
@@ -33,6 +34,7 @@ const paymentMethods: PaymentMethod[] = ["PIX", "CREDIT_CARD", "DEBIT_CARD", "CA
 export default function SalesCatalog() {
   const { data: sales = [], isLoading: loading, error, refetch: loadSales } = useSales();
   const cancelSale = useCancelSale();
+  const toast = useToast();
   const [actionError, setActionError] = useState("");
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState("all");
@@ -85,8 +87,11 @@ export default function SalesCatalog() {
       const cancelled = await cancelSale.mutateAsync({ id: saleToCancel.id, reason });
       setSelectedSale((current) => (current?.id === cancelled.id ? cancelled : current));
       setSaleToCancel(null);
+      toast.success(`Venda ${cancelled.code} cancelada — estoque e financeiro estornados.`);
     } catch (requestError) {
-      setActionError(requestError instanceof Error ? requestError.message : "Não foi possível cancelar a venda.");
+      const message = requestError instanceof Error ? requestError.message : "Não foi possível cancelar a venda.";
+      setActionError(message);
+      toast.error(message);
     }
   }
 

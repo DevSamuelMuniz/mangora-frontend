@@ -38,11 +38,17 @@ export function useCreateGroup() {
 export function useCreateUnit() {
     const queryClient = useQueryClient();
     return useMutation<void, Error, { tradeName: string; legalName?: string; document?: string | null; email?: string; copyCatalog?: boolean }>({
-        mutationFn: (input) =>
-            apiRequest("/companies/units", {
+        mutationFn: (input) => {
+            // O DTO exige documento com exatamente 11 (CPF) ou 14 (CNPJ) dígitos.
+            // Dígitos parciais causariam 400 — só enviamos quando completo.
+            const document =
+                input.document && /^\d{11}$|^\d{14}$/.test(input.document) ? input.document : null;
+            const email = input.email?.trim() || undefined;
+            return apiRequest("/companies/units", {
                 method: "POST",
-                body: JSON.stringify({ ...input, document: input.document || null }),
-            }),
+                body: JSON.stringify({ ...input, document, email }),
+            });
+        },
         onSuccess: () => {
             void queryClient.invalidateQueries({ queryKey: unitGroupQueryKey });
         },

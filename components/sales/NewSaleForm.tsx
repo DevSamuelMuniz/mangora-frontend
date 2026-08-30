@@ -19,6 +19,7 @@ import {
 import type { Product } from "@/types/product";
 import { paymentMethodLabels, type PaymentMethod } from "@/types/sale";
 import { formatCurrency } from "@/lib/format";
+import { useToast } from "@/components/ui/toast";
 import { useCreateSale, useSaleOptions } from "@/features/sales/hooks/useSales";
 
 type CartItem = {
@@ -32,6 +33,7 @@ export default function NewSaleForm() {
   const router = useRouter();
   const { data: options, isLoading: loadingOptions, error: optionsError } = useSaleOptions();
   const createSale = useCreateSale();
+  const toast = useToast();
   const products = useMemo(() => options?.products ?? [], [options]);
   const customers = useMemo(() => options?.customers ?? [], [options]);
   const [cart, setCart] = useState<CartItem[]>([]);
@@ -109,9 +111,12 @@ export default function NewSaleForm() {
         discount: discountValue,
         items: cart.map((item) => ({ productId: item.product.id, quantity: item.quantity })),
       });
+      toast.success(`Venda ${created.code} registrada.`);
       router.push(`/vendas?selecionada=${created.id}&toast=${encodeURIComponent("Venda registrada")}`);
     } catch (requestError) {
-      setError(requestError instanceof Error ? requestError.message : "Não foi possível concluir a venda.");
+      const message = requestError instanceof Error ? requestError.message : "Não foi possível concluir a venda.";
+      setError(message);
+      toast.error(message);
     }
   }
 

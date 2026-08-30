@@ -5,6 +5,7 @@ import { ArrowRightLeft, Boxes, Building2, CircleDollarSign, LoaderCircle, Plus,
 
 import { formatCurrency, formatNumber } from "@/lib/format";
 import { useConsolidated, useCreateGroup, useCreateUnit, useSwitchCompany, useUnitGroup } from "@/features/units/hooks/useUnits";
+import { useToast } from "@/components/ui/toast";
 
 type Period = "7d" | "30d" | "90d";
 
@@ -18,10 +19,10 @@ export default function UnitsOverview() {
   const loading = groupLoading || consolidatedLoading;
   const saving = createGroupMutation.isPending || createUnitMutation.isPending || switchMutation.isPending;
   const [actionError, setActionError] = useState("");
-  const [message, setMessage] = useState("");
   const [modalOpen, setModalOpen] = useState(false);
   const [groupName, setGroupName] = useState("");
   const [unit, setUnit] = useState({ tradeName: "", legalName: "", document: "", email: "", copyCatalog: true });
+  const toast = useToast();
 
   const errorMessage = actionError
     || (groupError instanceof Error ? groupError.message : "")
@@ -32,8 +33,8 @@ export default function UnitsOverview() {
     setActionError("");
     try {
       await createGroupMutation.mutateAsync({ name: effectiveGroupName });
-      setMessage("Grupo de lojas ativado. Agora você pode adicionar até duas unidades.");
-    } catch (requestError) { setActionError(requestError instanceof Error ? requestError.message : "Não foi possível ativar o grupo."); }
+      toast.success("Grupo de lojas ativado. Agora você pode adicionar até duas unidades.");
+    } catch (requestError) { toast.error(requestError instanceof Error ? requestError.message : "Não foi possível ativar o grupo."); }
   }
 
   async function createUnit(event: React.FormEvent<HTMLFormElement>) {
@@ -41,8 +42,8 @@ export default function UnitsOverview() {
     try {
       await createUnitMutation.mutateAsync({ ...unit, document: unit.document || null });
       setUnit({ tradeName: "", legalName: "", document: "", email: "", copyCatalog: true });
-      setModalOpen(false); setMessage("Nova loja criada com estoque independente.");
-    } catch (requestError) { setActionError(requestError instanceof Error ? requestError.message : "Não foi possível criar a loja."); }
+      setModalOpen(false); toast.success("Nova loja criada com estoque independente.");
+    } catch (requestError) { toast.error(requestError instanceof Error ? requestError.message : "Não foi possível criar a loja."); }
   }
 
   async function switchUnit(membershipId: string) {
@@ -50,7 +51,7 @@ export default function UnitsOverview() {
     try {
       await switchMutation.mutateAsync({ membershipId });
       window.location.assign("/dashboard?toast=Unidade%20alterada");
-    } catch (requestError) { setActionError(requestError instanceof Error ? requestError.message : "Não foi possível trocar de loja."); }
+    } catch (requestError) { toast.error(requestError instanceof Error ? requestError.message : "Não foi possível trocar de loja."); }
   }
 
   const summary = consolidated?.summary;
@@ -61,7 +62,6 @@ export default function UnitsOverview() {
     </div>
 
     {errorMessage && <div role="alert" className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-xs font-semibold text-red-800">{errorMessage}</div>}
-    {message && <div role="status" className="flex items-center justify-between rounded-xl border border-green-200 bg-green-50 px-4 py-3 text-xs font-semibold text-green-800"><span>{message}</span><button type="button" onClick={() => setMessage("")} aria-label="Fechar"><X className="size-4" /></button></div>}
 
     {!loading && group && !group.group && <article className="overflow-hidden rounded-[1.75rem] border border-[#174c36]/20 bg-[#174c36] p-6 text-white shadow-xl shadow-green-950/10 sm:p-8"><div className="grid gap-6 lg:grid-cols-[1fr_420px] lg:items-center"><div><span className="inline-flex rounded-full bg-yellow-300 px-3 py-1 text-[10px] font-black uppercase tracking-wider text-green-950">Pronto para expandir</span><h2 className="mt-4 max-w-xl text-2xl font-black sm:text-3xl">Transforme sua empresa atual na Loja 1.</h2><p className="mt-2 max-w-xl text-sm leading-6 text-green-50/80">Cada loja terá caixa, vendas e estoque próprios. A visão consolidada reunirá os indicadores sem misturar a operação.</p></div><div className="rounded-2xl border border-white/15 bg-white/10 p-4"><label className="text-[10px] font-bold uppercase tracking-wider text-yellow-200">Nome do grupo</label><input value={effectiveGroupName} onChange={(event) => setGroupName(event.target.value)} className="mt-2 h-11 w-full rounded-xl border border-white/20 bg-white px-3 text-sm font-bold text-slate-950 outline-none focus:border-yellow-300" placeholder="Ex.: Grupo Mangora" /><button type="button" disabled={saving || effectiveGroupName.trim().length < 2} onClick={() => void createGroup()} className="mt-3 flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-yellow-300 text-xs font-black text-green-950 transition hover:bg-yellow-200 disabled:opacity-50">{saving && <LoaderCircle className="size-4 animate-spin" />}Ativar gestão de lojas</button></div></div></article>}
 
