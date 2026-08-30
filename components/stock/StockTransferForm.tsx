@@ -1,47 +1,43 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { ArrowRight, ArrowRightLeft, Boxes, LoaderCircle, Store } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { apiRequest } from "@/lib/api/client";
-import type { StockOverviewResponse } from "@/types/stock";
-import type { UnitGroupResponse } from "@/types/unit";
+import { useCreateStockTransfer, useStockOverview } from "@/features/stock/hooks/useStockOverview";
+import { useUnitGroup } from "@/features/units/hooks/useUnits";
 
 export default function StockTransferForm({ initialProductId }: { initialProductId?: string }) {
   const router = useRouter();
-  const [stock, setStock] = useState<StockOverviewResponse | null>(null);
-  const [group, setGroup] = useState<UnitGroupResponse | null>(null);
+  const { data: stock = null, isLoading: loading, error: loadError } = useStockOverview();
+  const { data: group = null } = useUnitGroup();
+  const createTransfer = useCreateStockTransfer();
+  const saving = createTransfer.isPending;
   const [productId, setProductId] = useState(initialProductId ?? "");
   const [destinationCompanyId, setDestinationCompanyId] = useState("");
   const [quantity, setQuantity] = useState(1);
   const [notes, setNotes] = useState("");
-  const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
 
-  useEffect(() => {
-    Promise.all([apiRequest<StockOverviewResponse>("/stock"), apiRequest<UnitGroupResponse>("/companies/group")])
-      .then(([stockData, groupData]) => {
-        setStock(stockData); setGroup(groupData);
-        const destination = groupData.units.find((unit) => !unit.current);
-        if (destination) setDestinationCompanyId(destination.company.id);
-      })
-      .catch((requestError: unknown) => setError(requestError instanceof Error ? requestError.message : "Não foi possível preparar a transferência."))
-      .finally(() => setLoading(false));
-  }, []);
+  const errorMessage = error || (loadError instanceof Error ? loadError.message : "");
 
   const selectedProduct = useMemo(() => stock?.products.find((product) => product.id === productId), [productId, stock]);
   const availableStock = selectedProduct ? selectedProduct.stock - selectedProduct.reservedStock : 0;
   const destinations = group?.units.filter((unit) => !unit.current) ?? [];
 
+  // Estado derivado: pré-seleciona a primeira loja de destino quando o grupo carrega.
+  const [destApplied, setDestApplied] = useState(false);
+  if (!destApplied && destinations[0]) {
+    setDestinationCompanyId(destinations[0].company.id);
+    setDestApplied(true);
+  }
+
   async function submit(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault(); setSaving(true); setError("");
+    event.preventDefault(); setError("");
     try {
-      await apiRequest("/stock/transfers", { method: "POST", body: JSON.stringify({ productId, destinationCompanyId, quantity, notes }) });
+      await createTransfer.mutateAsync({ productId, destinationCompanyId, quantity, notes });
       router.push(`/estoque?toast=${encodeURIComponent("Transferência entre lojas registrada")}`);
       router.refresh();
     } catch (requestError) { setError(requestError instanceof Error ? requestError.message : "Não foi possível transferir o produto."); }
-    finally { setSaving(false); }
   }
 
   if (loading) return <div className="flex min-h-48 items-center justify-center"><LoaderCircle className="size-5 animate-spin text-orange-600" /><span className="ml-2 text-xs font-bold text-slate-600">Preparando transferência...</span></div>;
@@ -49,7 +45,7 @@ export default function StockTransferForm({ initialProductId }: { initialProduct
 
   return <form onSubmit={(event) => void submit(event)}>
     <div className="flex items-center gap-3"><div className="flex size-11 items-center justify-center rounded-2xl bg-orange-100 text-orange-700"><ArrowRightLeft className="size-5" /></div><div><p className="text-[10px] font-black uppercase tracking-wider text-orange-600">Movimentação entre unidades</p><h2 className="text-xl font-black text-slate-950">Transferir estoque</h2></div></div>
-    {error && <div role="alert" className="mt-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-xs font-semibold text-red-800">{error}</div>}
+    {errorMessage && <div role="alert" className="mt-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-xs font-semibold text-red-800">{errorMessage}</div>}
     <div className="mt-5 grid gap-4 sm:grid-cols-2">
       <label className="text-xs font-bold text-slate-700">Produto de origem<select required value={productId} onChange={(event) => setProductId(event.target.value)} className={inputClass}><option value="">Selecione o produto</option>{stock?.products.filter((product) => product.active && product.stock - product.reservedStock > 0).map((product) => <option key={product.id} value={product.id}>{product.name} · {product.stock - product.reservedStock} disp.</option>)}</select></label>
       <label className="text-xs font-bold text-slate-700">Loja de destino<select required value={destinationCompanyId} onChange={(event) => setDestinationCompanyId(event.target.value)} className={inputClass}>{destinations.map((unit) => <option key={unit.company.id} value={unit.company.id}>{unit.company.unitCode} · {unit.company.tradeName}</option>)}</select></label>

@@ -1,10 +1,12 @@
 import { NextRequest } from "next/server";
+import { API_BASE_URL, assertApiUrlConfigured } from "@/lib/api/config";
 
-const BACKEND_URL = (process.env.API_URL ?? process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3001/api").replace(/\/$/, "");
+const BACKEND_URL = API_BASE_URL;
 
 type RouteContext = { params: Promise<{ path: string[] }> };
 
 async function proxy(request: NextRequest, context: RouteContext) {
+  assertApiUrlConfigured();
   const { path } = await context.params;
   const target = new URL(`${BACKEND_URL}/${path.map(encodeURIComponent).join("/")}`);
   target.search = request.nextUrl.search;

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, useState } from "react";
 import {
   ArrowLeft,
   ImageIcon,
@@ -11,38 +11,20 @@ import {
   Save,
 } from "lucide-react";
 
-import { apiRequest } from "@/lib/api/client";
-import type { Product, ProductInput } from "@/types/product";
-import type { Category } from "@/types/category";
+import type { ProductInput } from "@/types/product";
+import { useProductForm, useSaveProduct } from "@/features/products/hooks/useProducts";
 
 export default function ProductForm({ productId }: { productId?: string }) {
   const router = useRouter();
   const editing = Boolean(productId);
-  const [product, setProduct] = useState<Product | null>(null);
-  const [categories, setCategories] = useState<Category[]>([]);
-  const [loadingProduct, setLoadingProduct] = useState(true);
-  const [loading, setLoading] = useState(false);
+  const { data: formData, isLoading: loadingProduct, error: loadError } = useProductForm(productId ?? null);
+  const saveProduct = useSaveProduct();
+  const loading = saveProduct.isPending;
+  const categories = formData?.categories ?? [];
+  const product = formData?.product ?? null;
   const [error, setError] = useState("");
 
-  useEffect(() => {
-    let mounted = true;
-    Promise.all([apiRequest<Category[]>("/categories?itemType=PRODUCT"), productId ? apiRequest<Product>(`/products/${productId}`) : Promise.resolve(null)])
-      .then(([categoryData, data]) => {
-        if (mounted) { setCategories(categoryData.filter((item) => item.active || item.id === data?.categoryId)); setProduct(data); }
-      })
-      .catch((requestError: unknown) => {
-        if (mounted) {
-          setError(requestError instanceof Error ? requestError.message : "Não foi possível carregar o produto.");
-        }
-      })
-      .finally(() => {
-        if (mounted) setLoadingProduct(false);
-      });
-
-    return () => {
-      mounted = false;
-    };
-  }, [productId]);
+  const errorMessage = error || (loadError instanceof Error ? loadError.message : "");
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -101,17 +83,11 @@ export default function ProductForm({ productId }: { productId?: string }) {
     };
 
     try {
-      setLoading(true);
-      await apiRequest<Product>(productId ? `/products/${productId}` : "/products", {
-        method: productId ? "PATCH" : "POST",
-        body: JSON.stringify(payload),
-      });
+      await saveProduct.mutateAsync({ id: productId ?? null, payload });
       router.push(`/produtos?toast=${encodeURIComponent(editing ? "Produto atualizado" : "Produto cadastrado")}`);
       router.refresh();
     } catch (requestError) {
       setError(requestError instanceof Error ? requestError.message : "Não foi possível salvar o produto.");
-    } finally {
-      setLoading(false);
     }
   }
 
@@ -250,7 +226,7 @@ export default function ProductForm({ productId }: { productId?: string }) {
         </details>
 
         {!categories.length && <div className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-xs text-amber-700">Crie uma categoria de produto antes de continuar. <Link href="/categorias" className="font-bold underline">Gerenciar categorias</Link></div>}
-        {error && <div role="alert" className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-xs font-semibold text-red-700">{error}</div>}
+        {errorMessage && <div role="alert" className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-xs font-semibold text-red-700">{errorMessage}</div>}
 
         <div className="flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
           <Link href="/produtos" className="flex h-11 items-center justify-center rounded-xl border border-slate-200 bg-white px-5 text-sm font-bold text-slate-600 transition hover:bg-slate-50">Cancelar</Link>

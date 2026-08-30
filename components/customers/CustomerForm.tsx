@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { FormEvent, type ReactNode, useEffect, useState } from "react";
+import { FormEvent, type ReactNode, useState } from "react";
 import {
   ArrowLeft,
   Building2,
@@ -13,42 +13,28 @@ import {
   type LucideIcon,
 } from "lucide-react";
 
-import { apiRequest } from "@/lib/api/client";
-import type { Customer, CustomerInput, CustomerType } from "@/types/customer";
+import type { CustomerInput, CustomerType } from "@/types/customer";
+import { useCustomerForm, useSaveCustomer } from "@/features/customers/hooks/useCustomers";
 
 const states = ["AC", "AL", "AP", "AM", "BA", "CE", "DF", "ES", "GO", "MA", "MT", "MS", "MG", "PA", "PB", "PR", "PE", "PI", "RJ", "RN", "RS", "RO", "RR", "SC", "SP", "SE", "TO"];
 
 export default function CustomerForm({ customerId }: { customerId?: string }) {
   const router = useRouter();
   const editing = Boolean(customerId);
-  const [customer, setCustomer] = useState<Customer | null>(null);
+  const { data: customer = null, isLoading: loadingCustomer, error: loadError } = useCustomerForm(customerId ?? null);
+  const saveCustomer = useSaveCustomer();
+  const loading = saveCustomer.isPending;
   const [customerType, setCustomerType] = useState<CustomerType>("INDIVIDUAL");
-  const [loadingCustomer, setLoadingCustomer] = useState(editing);
-  const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  useEffect(() => {
-    if (!customerId) return;
-    let mounted = true;
+  // Estado derivado: aplica o tipo do cliente carregado (modo edição) no primeiro render com dados.
+  const [typeApplied, setTypeApplied] = useState(false);
+  if (!typeApplied && customer) {
+    setCustomerType(customer.type);
+    setTypeApplied(true);
+  }
 
-    apiRequest<Customer>(`/customers/${customerId}`)
-      .then((data) => {
-        if (mounted) {
-          setCustomer(data);
-          setCustomerType(data.type);
-        }
-      })
-      .catch((requestError: unknown) => {
-        if (mounted) setError(requestError instanceof Error ? requestError.message : "Não foi possível carregar o cliente.");
-      })
-      .finally(() => {
-        if (mounted) setLoadingCustomer(false);
-      });
-
-    return () => {
-      mounted = false;
-    };
-  }, [customerId]);
+  const errorMessage = error || (loadError instanceof Error ? loadError.message : "");
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -97,17 +83,11 @@ export default function CustomerForm({ customerId }: { customerId?: string }) {
     };
 
     try {
-      setLoading(true);
-      await apiRequest<Customer>(customerId ? `/customers/${customerId}` : "/customers", {
-        method: customerId ? "PATCH" : "POST",
-        body: JSON.stringify(payload),
-      });
+      await saveCustomer.mutateAsync({ id: customerId ?? null, payload });
       router.push(`/clientes?toast=${encodeURIComponent(editing ? "Cliente atualizado" : "Cliente cadastrado")}`);
       router.refresh();
     } catch (requestError) {
       setError(requestError instanceof Error ? requestError.message : "Não foi possível salvar o cliente.");
-    } finally {
-      setLoading(false);
     }
   }
 
@@ -168,7 +148,7 @@ export default function CustomerForm({ customerId }: { customerId?: string }) {
           <Field label="Observações (opcional)" id="notes" className="mt-4"><textarea id="notes" name="notes" rows={3} maxLength={2000} defaultValue={customer?.notes ?? ""} placeholder="Informações adicionais sobre o cliente..." className="w-full resize-y rounded-xl border border-slate-200 bg-white px-3.5 py-3 text-sm text-slate-950 outline-none transition placeholder:text-slate-400 focus:border-orange-400 focus:ring-4 focus:ring-orange-100" /></Field>
         </div>
 
-        {error && <div role="alert" className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-xs font-semibold text-red-700">{error}</div>}
+        {errorMessage && <div role="alert" className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-xs font-semibold text-red-700">{errorMessage}</div>}
         <div className="flex flex-col-reverse gap-3 sm:flex-row sm:justify-end"><Link href="/clientes" className="flex h-11 items-center justify-center rounded-xl border border-slate-200 bg-white px-5 text-sm font-bold text-slate-600 transition hover:bg-slate-50">Cancelar</Link><button type="submit" disabled={loading} className="flex h-11 items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-orange-600 to-amber-600 px-5 text-sm font-bold text-white shadow-lg shadow-orange-200 transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-70 disabled:hover:translate-y-0">{loading ? <><LoaderCircle className="size-4 animate-spin" />Salvando...</> : <><Save className="size-4" />{editing ? "Salvar alterações" : "Salvar cliente"}</>}</button></div>
       </form>
     </section>

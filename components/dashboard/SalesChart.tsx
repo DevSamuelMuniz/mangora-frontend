@@ -4,8 +4,8 @@ import { useState } from "react";
 import { BarChart3, Check, ChevronDown, TrendingUp } from "lucide-react";
 import type { DashboardData } from "@/types/analytics";
 import type { ReportPeriod } from "@/types/report";
+import { formatCurrency } from "@/lib/format";
 
-const currencyFormatter = new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" });
 const periodLabels: Record<ReportPeriod, string> = { "7d": "Últimos 7 dias", "30d": "Últimos 30 dias", "90d": "Últimos 90 dias" };
 
 export default function SalesChart({ charts }: { charts: DashboardData["charts"] }) {
@@ -39,13 +39,13 @@ export default function SalesChart({ charts }: { charts: DashboardData["charts"]
       </div>
 
       <div className="mt-5 flex items-end justify-between">
-        <div><p className="text-2xl font-black text-slate-950">{currencyFormatter.format(current.revenue)}</p><div className="mt-1 flex items-center gap-1.5"><span className={`flex items-center gap-1 text-[10px] font-bold ${current.variation >= 0 ? "text-green-600" : "text-red-600"}`}><TrendingUp className="size-3.5" />{Math.abs(current.variation).toLocaleString("pt-BR")}%</span><span className="text-[10px] text-slate-400">comparado ao período anterior</span></div></div>
+        <div><p className="text-2xl font-black text-slate-950">{formatCurrency(current.revenue)}</p><div className="mt-1 flex items-center gap-1.5"><span className={`flex items-center gap-1 text-[10px] font-bold ${current.variation >= 0 ? "text-green-600" : "text-red-600"}`}><TrendingUp className="size-3.5" />{Math.abs(current.variation).toLocaleString("pt-BR")}%</span><span className="text-[10px] text-slate-400">comparado ao período anterior</span></div></div>
       </div>
 
       <div className="mt-6 flex h-52 items-end gap-2 sm:gap-3">
         {current.data.map((item) => (
           <div key={item.label} className="flex h-full flex-1 flex-col items-center justify-end gap-2">
-            <div className="group relative flex h-full w-full items-end justify-center"><div className="mangora-chart-bar w-full max-w-10 rounded-t-lg bg-gradient-to-t from-orange-600 to-yellow-400 transition hover:opacity-80" style={{ height: `${Math.max(item.value ? 3 : 0, item.value / maximum * 100)}%` }} /><span className="pointer-events-none absolute bottom-full mb-2 hidden rounded-lg bg-slate-950 px-2 py-1 text-[9px] font-bold text-white group-hover:block">{currencyFormatter.format(item.value)}</span></div>
+            <div className="group relative flex h-full w-full items-end justify-center"><div className="mangora-chart-bar w-full max-w-10 rounded-t-lg bg-gradient-to-t from-orange-600 to-yellow-400 transition hover:opacity-80" style={{ height: `${Math.max(item.value ? 3 : 0, item.value / maximum * 100)}%` }} /><span className="pointer-events-none absolute bottom-full mb-2 hidden rounded-lg bg-slate-950 px-2 py-1 text-[9px] font-bold text-white group-hover:block">{formatCurrency(item.value)}</span></div>
             <span className="text-[10px] font-medium capitalize text-slate-400">{item.label}</span>
           </div>
         ))}

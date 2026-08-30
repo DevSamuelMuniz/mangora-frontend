@@ -2,12 +2,11 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import PublicStorefront from "@/components/public-store/PublicStorefront";
 import type { PublicStore } from "@/types/public-store";
-
-const API_URL = process.env.API_URL ?? process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3001/api";
+import { API_BASE_URL } from "@/lib/api/config";
 
 async function loadStore(slug: string) {
   try {
-    const response = await fetch(`${API_URL}/public/stores/${encodeURIComponent(slug)}`, { cache: "no-store" });
+    const response = await fetch(`${API_BASE_URL}/public/stores/${encodeURIComponent(slug)}`, { cache: "no-store" });
     if (!response.ok) return null;
     return response.json() as Promise<PublicStore>;
   } catch { return null; }

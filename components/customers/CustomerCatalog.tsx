@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import {
   AlertTriangle,
   Building2,
@@ -19,49 +19,30 @@ import {
   UserRoundCheck,
   UserRoundX,
   X,
-  type LucideIcon,
 } from "lucide-react";
 
-import { apiRequest } from "@/lib/api/client";
 import type { Customer, CustomerType } from "@/types/customer";
+import { formatCurrency, formatDate, formatDocument, formatPhone } from "@/lib/format";
+import { useCustomers, useDeleteCustomer } from "@/features/customers/hooks/useCustomers";
+import { FilterSelect } from "@/components/shared/FilterSelect";
+import { PageButton } from "@/components/shared/PageButton";
+import { SummaryCard } from "@/components/shared/SummaryCard";
 
 const PAGE_SIZE = 6;
-const currencyFormatter = new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" });
-const dateFormatter = new Intl.DateTimeFormat("pt-BR", { day: "2-digit", month: "short", year: "numeric" });
 type StatusFilter = "all" | "active" | "inactive";
 
 export default function CustomerCatalog() {
-  const [customers, setCustomers] = useState<Customer[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
+  const { data: customers = [], isLoading: loading, error, refetch: loadCustomers } = useCustomers();
+  const deleteCustomer = useDeleteCustomer();
+  const [actionError, setActionError] = useState("");
   const [search, setSearch] = useState("");
   const [type, setType] = useState<"all" | CustomerType>("all");
   const [status, setStatus] = useState<StatusFilter>("all");
   const [page, setPage] = useState(1);
   const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(null);
   const [customerToDelete, setCustomerToDelete] = useState<Customer | null>(null);
-  const [deleting, setDeleting] = useState(false);
 
-  const loadCustomers = useCallback(async () => {
-    try {
-      setLoading(true);
-      setError("");
-      setCustomers(await apiRequest<Customer[]>("/customers"));
-    } catch (requestError) {
-      setError(requestError instanceof Error ? requestError.message : "Não foi possível carregar os clientes.");
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
-  useEffect(() => {
-    let mounted = true;
-    apiRequest<Customer[]>("/customers")
-      .then((data) => { if (mounted) setCustomers(data); })
-      .catch((requestError: unknown) => { if (mounted) setError(requestError instanceof Error ? requestError.message : "Não foi possível carregar os clientes."); })
-      .finally(() => { if (mounted) setLoading(false); });
-    return () => { mounted = false; };
-  }, []);
+  const errorMessage = actionError || (error instanceof Error ? error.message : "");
 
   const filteredCustomers = useMemo(() => {
     const normalizedSearch = search.trim().toLocaleLowerCase("pt-BR");
@@ -89,16 +70,12 @@ export default function CustomerCatalog() {
   async function confirmDelete() {
     if (!customerToDelete) return;
     try {
-      setDeleting(true);
-      setError("");
-      await apiRequest<void>(`/customers/${customerToDelete.id}`, { method: "DELETE" });
-      setCustomers((current) => current.filter((customer) => customer.id !== customerToDelete.id));
+      setActionError("");
+      await deleteCustomer.mutateAsync({ id: customerToDelete.id });
       setSelectedCustomer((current) => (current?.id === customerToDelete.id ? null : current));
       setCustomerToDelete(null);
     } catch (requestError) {
-      setError(requestError instanceof Error ? requestError.message : "Não foi possível excluir o cliente.");
-    } finally {
-      setDeleting(false);
+      setActionError(requestError instanceof Error ? requestError.message : "Não foi possível excluir o cliente.");
     }
   }
 
@@ -124,13 +101,13 @@ export default function CustomerCatalog() {
           </div>
         </div>
 
-        {error && customers.length > 0 && <div role="alert" className="mt-4 flex items-center justify-between gap-3 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-xs font-semibold text-red-700"><span>{error}</span><button type="button" onClick={() => void loadCustomers()} className="shrink-0 font-bold underline">Tentar novamente</button></div>}
+        {errorMessage && customers.length > 0 && <div role="alert" className="mt-4 flex items-center justify-between gap-3 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-xs font-semibold text-red-700"><span>{errorMessage}</span><button type="button" onClick={() => void loadCustomers()} className="shrink-0 font-bold underline">Tentar novamente</button></div>}
 
         <div className="mt-4 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
           {loading ? (
             <div className="flex min-h-80 items-center justify-center text-slate-500"><LoaderCircle className="size-5 animate-spin text-orange-600" /><span className="ml-2 text-xs font-semibold">Carregando clientes...</span></div>
-          ) : error && customers.length === 0 ? (
-            <div className="flex min-h-80 flex-col items-center justify-center px-6 py-12 text-center"><div className="flex size-12 items-center justify-center rounded-2xl bg-red-50 text-red-600"><AlertTriangle className="size-5" /></div><h2 className="mt-4 text-sm font-bold text-slate-900">Não foi possível carregar os clientes</h2><p className="mt-1 max-w-sm text-xs leading-5 text-slate-500">{error}</p><button type="button" onClick={() => void loadCustomers()} className="mt-4 inline-flex h-10 items-center gap-2 rounded-xl border border-slate-200 px-4 text-xs font-bold text-orange-600 hover:bg-orange-50"><RefreshCw className="size-3.5" />Tentar novamente</button></div>
+          ) : errorMessage && customers.length === 0 ? (
+            <div className="flex min-h-80 flex-col items-center justify-center px-6 py-12 text-center"><div className="flex size-12 items-center justify-center rounded-2xl bg-red-50 text-red-600"><AlertTriangle className="size-5" /></div><h2 className="mt-4 text-sm font-bold text-slate-900">Não foi possível carregar os clientes</h2><p className="mt-1 max-w-sm text-xs leading-5 text-slate-500">{errorMessage}</p><button type="button" onClick={() => void loadCustomers()} className="mt-4 inline-flex h-10 items-center gap-2 rounded-xl border border-slate-200 px-4 text-xs font-bold text-orange-600 hover:bg-orange-50"><RefreshCw className="size-3.5" />Tentar novamente</button></div>
           ) : visibleCustomers.length > 0 ? (
             <>
               <div className="overflow-x-auto">
@@ -141,8 +118,8 @@ export default function CustomerCatalog() {
                       <tr key={customer.id} className="transition hover:bg-slate-50">
                         <td className="px-5 py-3.5"><div className="flex items-center gap-3"><div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-orange-100 to-yellow-50 text-xs font-black text-orange-700">{getInitials(customer.name)}</div><div className="min-w-0"><p className="max-w-64 truncate text-xs font-bold text-slate-800">{customer.tradeName || customer.name}</p><p className="mt-1 text-[10px] text-slate-400">{formatDocument(customer.document, customer.type)} · {customer.type === "INDIVIDUAL" ? "Pessoa física" : "Pessoa jurídica"}</p></div></div></td>
                         <td className="px-4 py-3.5"><p className="max-w-52 truncate text-xs font-semibold text-slate-700">{customer.email}</p><p className="mt-1 text-[10px] text-slate-400">{formatPhone(customer.phone)}</p></td>
-                        <td className="px-4 py-3.5 text-xs text-slate-600">{customer.lastPurchaseAt ? dateFormatter.format(new Date(customer.lastPurchaseAt)) : "Nunca"}</td>
-                        <td className="px-4 py-3.5 text-xs font-bold text-slate-800">{currencyFormatter.format(customer.totalSpent)}</td>
+                        <td className="px-4 py-3.5 text-xs text-slate-600">{customer.lastPurchaseAt ? formatDate(new Date(customer.lastPurchaseAt)) : "Nunca"}</td>
+                        <td className="px-4 py-3.5 text-xs font-bold text-slate-800">{formatCurrency(customer.totalSpent)}</td>
                         <td className="px-4 py-3.5"><span className={`inline-flex rounded-full px-2.5 py-1 text-[10px] font-bold ${customer.active ? "bg-green-50 text-green-600" : "bg-slate-100 text-slate-500"}`}>{customer.active ? "Ativo" : "Inativo"}</span></td>
                         <td className="px-4 py-3.5 text-center"><details className="relative inline-block text-left"><summary aria-label={`Ações do cliente ${customer.name}`} className="flex size-8 cursor-pointer list-none items-center justify-center rounded-lg text-slate-400 transition hover:bg-slate-100 hover:text-slate-700"><MoreHorizontal className="size-4" /></summary><div className="absolute right-0 z-20 mt-1 w-36 rounded-xl border border-slate-200 bg-white p-1.5 text-left shadow-xl"><button type="button" onClick={() => setSelectedCustomer(customer)} className="flex h-9 w-full items-center gap-2 rounded-lg px-2.5 text-xs font-semibold text-slate-600 hover:bg-slate-50"><Eye className="size-3.5" />Visualizar</button><Link href={`/clientes?acao=editar&id=${customer.id}`} className="flex h-9 w-full items-center gap-2 rounded-lg px-2.5 text-xs font-semibold text-slate-600 hover:bg-slate-50"><Pencil className="size-3.5" />Editar</Link><button type="button" onClick={() => setCustomerToDelete(customer)} className="flex h-9 w-full items-center gap-2 rounded-lg px-2.5 text-xs font-semibold text-red-600 hover:bg-red-50"><Trash2 className="size-3.5" />Excluir</button></div></details></td>
                       </tr>
@@ -159,43 +136,19 @@ export default function CustomerCatalog() {
       </section>
 
       {selectedCustomer && <CustomerDetails customer={selectedCustomer} onClose={() => setSelectedCustomer(null)} />}
-      {customerToDelete && <DeleteCustomer customer={customerToDelete} loading={deleting} onCancel={() => setCustomerToDelete(null)} onConfirm={() => void confirmDelete()} />}
+      {customerToDelete && <DeleteCustomer customer={customerToDelete} loading={deleteCustomer.isPending} onCancel={() => setCustomerToDelete(null)} onConfirm={() => void confirmDelete()} />}
     </>
   );
 }
 
-function SummaryCard({ icon: Icon, label, value, iconClassName }: { icon: LucideIcon; label: string; value: string; iconClassName: string }) {
-  return <article className="flex items-center gap-3 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm"><div className={`flex size-9 items-center justify-center rounded-xl ${iconClassName}`}><Icon className="size-4" /></div><div><p className="text-[10px] font-semibold text-slate-400">{label}</p><p className="mt-0.5 text-xl font-black text-slate-950">{value}</p></div></article>;
-}
-
-function FilterSelect({ label, value, options, onChange }: { label: string; value: string; options: { value: string; label: string }[]; onChange: (value: string) => void }) {
-  return <label><span className="sr-only">{label}</span><select value={value} onChange={(event) => onChange(event.target.value)} className="h-11 w-full rounded-xl border border-slate-200 bg-slate-50 px-3 text-xs font-semibold text-slate-600 outline-none transition focus:border-orange-300 focus:bg-white focus:ring-4 focus:ring-orange-100"><option value="all">{label}: todos</option>{options.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}</select></label>;
-}
-
-function PageButton({ label, disabled, onClick, children }: { label: string; disabled: boolean; onClick: () => void; children: React.ReactNode }) {
-  return <button type="button" aria-label={label} disabled={disabled} onClick={onClick} className="flex size-9 items-center justify-center rounded-xl border border-slate-200 text-slate-500 transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40">{children}</button>;
-}
-
 function CustomerDetails({ customer, onClose }: { customer: Customer; onClose: () => void }) {
   const location = [customer.street, customer.number, customer.district, customer.city, customer.state].filter(Boolean).join(", ") || "Não informado";
-  const details = [["Documento", formatDocument(customer.document, customer.type)], ["Tipo", customer.type === "INDIVIDUAL" ? "Pessoa física" : "Pessoa jurídica"], ["E-mail", customer.email], ["Telefone", formatPhone(customer.phone)], ["Endereço", location], ["CEP", customer.postalCode ? customer.postalCode.replace(/^(\d{5})(\d{3})$/, "$1-$2") : "Não informado"], ["Total comprado", currencyFormatter.format(customer.totalSpent)], ["Última compra", customer.lastPurchaseAt ? dateFormatter.format(new Date(customer.lastPurchaseAt)) : "Nunca"]];
+  const details = [["Documento", formatDocument(customer.document, customer.type)], ["Tipo", customer.type === "INDIVIDUAL" ? "Pessoa física" : "Pessoa jurídica"], ["E-mail", customer.email], ["Telefone", formatPhone(customer.phone)], ["Endereço", location], ["CEP", customer.postalCode ? customer.postalCode.replace(/^(\d{5})(\d{3})$/, "$1-$2") : "Não informado"], ["Total comprado", formatCurrency(customer.totalSpent)], ["Última compra", customer.lastPurchaseAt ? formatDate(new Date(customer.lastPurchaseAt)) : "Nunca"]];
   return <div onMouseDown={(event) => { if (event.target === event.currentTarget) onClose(); }} className="fixed inset-0 z-[70] flex items-center justify-center bg-slate-950/40 p-4 backdrop-blur-sm"><div role="dialog" aria-modal="true" className="w-full max-w-lg rounded-2xl border border-slate-200 bg-white p-5 shadow-2xl"><div className="flex items-start justify-between gap-4"><div><p className="text-[10px] font-bold uppercase tracking-wider text-orange-600">Detalhes do cliente</p><h2 className="mt-1 text-lg font-black text-slate-950">{customer.tradeName || customer.name}</h2>{customer.tradeName && <p className="mt-1 text-xs text-slate-500">{customer.name}</p>}</div><button type="button" onClick={onClose} aria-label="Fechar detalhes" className="flex size-9 items-center justify-center rounded-xl text-slate-400 hover:bg-slate-100"><X className="size-4" /></button></div><dl className="mt-5 grid gap-3 sm:grid-cols-2">{details.map(([label, value]) => <div key={label} className="min-w-0 rounded-xl bg-slate-50 p-3"><dt className="text-[10px] font-semibold text-slate-400">{label}</dt><dd className="mt-1 break-words text-xs font-bold text-slate-800">{value}</dd></div>)}</dl>{customer.notes && <p className="mt-3 rounded-xl bg-slate-50 p-3 text-xs leading-5 text-slate-600">{customer.notes}</p>}<div className="mt-5 flex justify-end"><Link href={`/clientes?acao=editar&id=${customer.id}`} className="inline-flex h-10 items-center gap-2 rounded-xl bg-orange-600 px-4 text-xs font-bold text-white"><Pencil className="size-3.5" />Editar cliente</Link></div></div></div>;
 }
 
 function DeleteCustomer({ customer, loading, onCancel, onConfirm }: { customer: Customer; loading: boolean; onCancel: () => void; onConfirm: () => void }) {
   return <div onMouseDown={(event) => { if (!loading && event.target === event.currentTarget) onCancel(); }} className="fixed inset-0 z-[70] flex items-center justify-center bg-slate-950/40 p-4 backdrop-blur-sm"><div role="alertdialog" aria-modal="true" className="w-full max-w-sm rounded-2xl border border-slate-200 bg-white p-5 shadow-2xl"><div className="flex size-10 items-center justify-center rounded-xl bg-red-50 text-red-600"><Trash2 className="size-4" /></div><h2 className="mt-4 text-base font-black text-slate-950">Excluir cliente?</h2><p className="mt-2 text-xs leading-5 text-slate-500">O cliente <strong className="text-slate-700">{customer.name}</strong> será removido permanentemente da empresa.</p><div className="mt-5 flex justify-end gap-2"><button type="button" disabled={loading} onClick={onCancel} className="h-10 rounded-xl border border-slate-200 px-4 text-xs font-bold text-slate-600 hover:bg-slate-50 disabled:opacity-60">Cancelar</button><button type="button" disabled={loading} onClick={onConfirm} className="inline-flex h-10 items-center gap-2 rounded-xl bg-red-600 px-4 text-xs font-bold text-white hover:bg-red-700 disabled:opacity-60">{loading && <LoaderCircle className="size-3.5 animate-spin" />}{loading ? "Excluindo..." : "Excluir"}</button></div></div></div>;
-}
-
-function formatDocument(document: string, type: CustomerType) {
-  return type === "INDIVIDUAL"
-    ? document.replace(/^(\d{3})(\d{3})(\d{3})(\d{2})$/, "$1.$2.$3-$4")
-    : document.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/, "$1.$2.$3/$4-$5");
-}
-
-function formatPhone(phone: string) {
-  return phone.length === 11
-    ? phone.replace(/^(\d{2})(\d{5})(\d{4})$/, "($1) $2-$3")
-    : phone.replace(/^(\d{2})(\d{4})(\d{4})$/, "($1) $2-$3");
 }
 
 function getInitials(name: string) {

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   BarChart3,
   Banknote,
@@ -28,8 +28,8 @@ import {
 } from "lucide-react";
 import { roleLabels, type AuthSession, type MembershipRole } from "@/lib/auth/types";
 import BrandLogo from "@/components/brand/BrandLogo";
-import { apiRequest } from "@/lib/api/client";
-import type { UnitGroupResponse } from "@/types/unit";
+import { can } from "@/lib/permissions";
+import { useSwitchCompany, useUnitGroup } from "@/features/units/hooks/useUnits";
 
 type SidebarProps = {
   open: boolean;
@@ -109,23 +109,20 @@ export default function Sidebar({
   session,
 }: SidebarProps) {
   const pathname = usePathname();
+  const { data: group } = useUnitGroup();
+  const switchCompany = useSwitchCompany();
   const [companyOpen, setCompanyOpen] = useState(false);
-  const [units, setUnits] = useState<UnitGroupResponse["units"]>([]);
+  const units = group?.units ?? [];
   const [switching, setSwitching] = useState("");
   const [openGroups, setOpenGroups] = useState<Record<string, boolean>>(() => Object.fromEntries(navigationGroups.map((group) => [group.label, group.items.some((item) => pathname.startsWith(item.href))])));
   const visibleNavigationGroups = navigationGroups.map((group) => ({ ...group, items: group.items.filter((item) => !item.roles || item.roles.includes(session.membership.role)) })).filter((group) => group.items.length > 0);
   const visibleSecondaryNavigation = secondaryNavigation.filter((item) => !item.roles || item.roles.includes(session.membership.role));
 
-  useEffect(() => {
-    if (!companyOpen) return;
-    apiRequest<UnitGroupResponse>("/companies/group").then((data) => setUnits(data.units)).catch(() => setUnits([]));
-  }, [companyOpen]);
-
   async function switchUnit(membershipId: string) {
     if (membershipId === session.membership.id) return setCompanyOpen(false);
     try {
       setSwitching(membershipId);
-      await apiRequest("/auth/switch-company", { method: "POST", body: JSON.stringify({ membershipId }) });
+      await switchCompany.mutateAsync({ membershipId });
       window.location.assign("/dashboard?toast=Unidade%20alterada");
     } finally {
       setSwitching("");
@@ -215,7 +212,7 @@ export default function Sidebar({
               {units.map((unit) => <button key={unit.membershipId} type="button" role="menuitem" disabled={Boolean(switching)} onClick={() => void switchUnit(unit.membershipId)} className={`flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-[11px] font-semibold transition ${unit.current ? "bg-orange-50 text-orange-700" : "text-slate-600 hover:bg-slate-50"}`}><span className={`size-2 rounded-full ${unit.current ? "bg-orange-500" : "bg-slate-300"}`} /><span className="min-w-0 flex-1 truncate">{unit.company.unitCode ? `${unit.company.unitCode} · ` : ""}{unit.company.tradeName}</span>{switching === unit.membershipId && <span className="text-[9px]">Trocando...</span>}</button>)}
               <div className="my-1 h-px bg-slate-100" />
               <Link href="/unidades" role="menuitem" onClick={() => { setCompanyOpen(false); onClose(); }} className="flex rounded-lg px-3 py-2 text-[11px] font-bold text-orange-700 hover:bg-orange-50">Gerenciar lojas e consolidado</Link>
-              {(session.membership.role === "OWNER" || session.membership.role === "ADMIN") && <Link
+              {can(session.membership.role, "company:configure") && <Link
                 href="/configuracoes"
                 role="menuitem"
                 onClick={() => {
@@ -226,7 +223,7 @@ export default function Sidebar({
               >
                 Editar dados da empresa
               </Link>}
-              {session.membership.role === "OWNER" && <Link
+              {can(session.membership.role, "subscription:manage") && <Link
                 href="/assinatura"
                 role="menuitem"
                 onClick={() => {
@@ -304,7 +301,7 @@ export default function Sidebar({
           </div>
         </nav>
 
-        {session.membership.role === "OWNER" && <div className="border-t border-slate-200 p-3">
+        {can(session.membership.role, "subscription:manage") && <div className="border-t border-slate-200 p-3">
           <div className="rounded-xl bg-gradient-to-br from-orange-600 to-amber-600 p-3 text-white">
             <div className="flex items-center gap-2">
               <WalletCards className="size-4 text-orange-100" />

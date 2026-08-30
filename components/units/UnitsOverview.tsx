@@ -1,105 +1,73 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { ArrowRightLeft, Boxes, Building2, CircleDollarSign, LoaderCircle, Plus, ReceiptText, Store, TrendingUp, X } from "lucide-react";
 
-import { apiRequest } from "@/lib/api/client";
-import type { ConsolidatedOverview, UnitGroupResponse } from "@/types/unit";
+import { formatCurrency, formatNumber } from "@/lib/format";
+import { useConsolidated, useCreateGroup, useCreateUnit, useSwitchCompany, useUnitGroup } from "@/features/units/hooks/useUnits";
 
 type Period = "7d" | "30d" | "90d";
-const money = new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" });
-const number = new Intl.NumberFormat("pt-BR");
 
 export default function UnitsOverview() {
-  const [group, setGroup] = useState<UnitGroupResponse | null>(null);
-  const [consolidated, setConsolidated] = useState<ConsolidatedOverview | null>(null);
   const [period, setPeriod] = useState<Period>("30d");
-  const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState(false);
-  const [error, setError] = useState("");
+  const { data: group = null, isLoading: groupLoading, error: groupError } = useUnitGroup();
+  const { data: consolidated = null, isLoading: consolidatedLoading, error: consolidatedError } = useConsolidated(period);
+  const createGroupMutation = useCreateGroup();
+  const createUnitMutation = useCreateUnit();
+  const switchMutation = useSwitchCompany();
+  const loading = groupLoading || consolidatedLoading;
+  const saving = createGroupMutation.isPending || createUnitMutation.isPending || switchMutation.isPending;
+  const [actionError, setActionError] = useState("");
   const [message, setMessage] = useState("");
   const [modalOpen, setModalOpen] = useState(false);
   const [groupName, setGroupName] = useState("");
   const [unit, setUnit] = useState({ tradeName: "", legalName: "", document: "", email: "", copyCatalog: true });
 
-  async function load(nextPeriod: Period) {
-    setLoading(true);
-    setError("");
-    try {
-      const [groupData, consolidatedData] = await Promise.all([
-        apiRequest<UnitGroupResponse>("/companies/group"),
-        apiRequest<ConsolidatedOverview>(`/analytics/consolidated?period=${nextPeriod}`),
-      ]);
-      setGroup(groupData);
-      setConsolidated(consolidatedData);
-      if (groupData.units[0]) setGroupName((currentName) => currentName || groupData.units[0].company.tradeName);
-    } catch (requestError) {
-      setError(requestError instanceof Error ? requestError.message : "Não foi possível carregar as lojas.");
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  useEffect(() => {
-    let mounted = true;
-    Promise.all([
-      apiRequest<UnitGroupResponse>("/companies/group"),
-      apiRequest<ConsolidatedOverview>("/analytics/consolidated?period=30d"),
-    ]).then(([groupData, consolidatedData]) => {
-      if (!mounted) return;
-      setGroup(groupData);
-      setConsolidated(consolidatedData);
-      if (groupData.units[0]) setGroupName(groupData.units[0].company.tradeName);
-    }).catch((requestError: unknown) => {
-      if (mounted) setError(requestError instanceof Error ? requestError.message : "Não foi possível carregar as lojas.");
-    }).finally(() => { if (mounted) setLoading(false); });
-    return () => { mounted = false; };
-  }, []);
+  const errorMessage = actionError
+    || (groupError instanceof Error ? groupError.message : "")
+    || (consolidatedError instanceof Error ? consolidatedError.message : "");
+  const effectiveGroupName = groupName || (group?.units[0]?.company.tradeName ?? "");
 
   async function createGroup() {
-    setSaving(true); setError("");
+    setActionError("");
     try {
-      await apiRequest("/companies/group", { method: "POST", body: JSON.stringify({ name: groupName }) });
+      await createGroupMutation.mutateAsync({ name: effectiveGroupName });
       setMessage("Grupo de lojas ativado. Agora você pode adicionar até duas unidades.");
-      await load(period);
-    } catch (requestError) { setError(requestError instanceof Error ? requestError.message : "Não foi possível ativar o grupo."); }
-    finally { setSaving(false); }
+    } catch (requestError) { setActionError(requestError instanceof Error ? requestError.message : "Não foi possível ativar o grupo."); }
   }
 
   async function createUnit(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault(); setSaving(true); setError("");
+    event.preventDefault(); setActionError("");
     try {
-      await apiRequest("/companies/units", { method: "POST", body: JSON.stringify({ ...unit, document: unit.document || null }) });
+      await createUnitMutation.mutateAsync({ ...unit, document: unit.document || null });
       setUnit({ tradeName: "", legalName: "", document: "", email: "", copyCatalog: true });
       setModalOpen(false); setMessage("Nova loja criada com estoque independente.");
-      await load(period);
-    } catch (requestError) { setError(requestError instanceof Error ? requestError.message : "Não foi possível criar a loja."); }
-    finally { setSaving(false); }
+    } catch (requestError) { setActionError(requestError instanceof Error ? requestError.message : "Não foi possível criar a loja."); }
   }
 
   async function switchUnit(membershipId: string) {
-    setSaving(true); setError("");
+    setActionError("");
     try {
-      await apiRequest("/auth/switch-company", { method: "POST", body: JSON.stringify({ membershipId }) });
+      await switchMutation.mutateAsync({ membershipId });
       window.location.assign("/dashboard?toast=Unidade%20alterada");
-    } catch (requestError) { setError(requestError instanceof Error ? requestError.message : "Não foi possível trocar de loja."); setSaving(false); }
+    } catch (requestError) { setActionError(requestError instanceof Error ? requestError.message : "Não foi possível trocar de loja."); }
   }
 
   const summary = consolidated?.summary;
   return <section className="space-y-5">
     <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
       <div><p className="text-[11px] font-bold uppercase tracking-[0.14em] text-orange-600">Operação multiunidade</p><h1 className="mt-1 text-2xl font-black tracking-tight text-slate-950 sm:text-3xl">Lojas e visão consolidada</h1><p className="mt-1 text-xs text-slate-500">Administre até três lojas, alterne o ambiente e acompanhe o grupo inteiro.</p></div>
-      <div className="flex gap-2"><select value={period} onChange={(event) => { const nextPeriod = event.target.value as Period; setPeriod(nextPeriod); void load(nextPeriod); }} className="h-11 rounded-xl border border-slate-300 bg-white px-3 text-xs font-bold text-slate-700 outline-none focus:border-orange-400 focus:ring-4 focus:ring-orange-100"><option value="7d">Últimos 7 dias</option><option value="30d">Últimos 30 dias</option><option value="90d">Últimos 90 dias</option></select>{group?.canCreateUnit && <button type="button" onClick={() => setModalOpen(true)} className="inline-flex h-11 items-center gap-2 rounded-xl bg-orange-600 px-4 text-xs font-black text-white shadow-lg shadow-orange-200 transition hover:bg-orange-700"><Plus className="size-4" />Adicionar loja</button>}</div>
+      <div className="flex gap-2"><select value={period} onChange={(event) => setPeriod(event.target.value as Period)} className="h-11 rounded-xl border border-slate-300 bg-white px-3 text-xs font-bold text-slate-700 outline-none focus:border-orange-400 focus:ring-4 focus:ring-orange-100"><option value="7d">Últimos 7 dias</option><option value="30d">Últimos 30 dias</option><option value="90d">Últimos 90 dias</option></select>{group?.canCreateUnit && <button type="button" onClick={() => setModalOpen(true)} className="inline-flex h-11 items-center gap-2 rounded-xl bg-orange-600 px-4 text-xs font-black text-white shadow-lg shadow-orange-200 transition hover:bg-orange-700"><Plus className="size-4" />Adicionar loja</button>}</div>
     </div>
 
-    {error && <div role="alert" className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-xs font-semibold text-red-800">{error}</div>}
+    {errorMessage && <div role="alert" className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-xs font-semibold text-red-800">{errorMessage}</div>}
     {message && <div role="status" className="flex items-center justify-between rounded-xl border border-green-200 bg-green-50 px-4 py-3 text-xs font-semibold text-green-800"><span>{message}</span><button type="button" onClick={() => setMessage("")} aria-label="Fechar"><X className="size-4" /></button></div>}
 
-    {!loading && group && !group.group && <article className="overflow-hidden rounded-[1.75rem] border border-[#174c36]/20 bg-[#174c36] p-6 text-white shadow-xl shadow-green-950/10 sm:p-8"><div className="grid gap-6 lg:grid-cols-[1fr_420px] lg:items-center"><div><span className="inline-flex rounded-full bg-yellow-300 px-3 py-1 text-[10px] font-black uppercase tracking-wider text-green-950">Pronto para expandir</span><h2 className="mt-4 max-w-xl text-2xl font-black sm:text-3xl">Transforme sua empresa atual na Loja 1.</h2><p className="mt-2 max-w-xl text-sm leading-6 text-green-50/80">Cada loja terá caixa, vendas e estoque próprios. A visão consolidada reunirá os indicadores sem misturar a operação.</p></div><div className="rounded-2xl border border-white/15 bg-white/10 p-4"><label className="text-[10px] font-bold uppercase tracking-wider text-yellow-200">Nome do grupo</label><input value={groupName} onChange={(event) => setGroupName(event.target.value)} className="mt-2 h-11 w-full rounded-xl border border-white/20 bg-white px-3 text-sm font-bold text-slate-950 outline-none focus:border-yellow-300" placeholder="Ex.: Grupo Mangora" /><button type="button" disabled={saving || groupName.trim().length < 2} onClick={() => void createGroup()} className="mt-3 flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-yellow-300 text-xs font-black text-green-950 transition hover:bg-yellow-200 disabled:opacity-50">{saving && <LoaderCircle className="size-4 animate-spin" />}Ativar gestão de lojas</button></div></div></article>}
+    {!loading && group && !group.group && <article className="overflow-hidden rounded-[1.75rem] border border-[#174c36]/20 bg-[#174c36] p-6 text-white shadow-xl shadow-green-950/10 sm:p-8"><div className="grid gap-6 lg:grid-cols-[1fr_420px] lg:items-center"><div><span className="inline-flex rounded-full bg-yellow-300 px-3 py-1 text-[10px] font-black uppercase tracking-wider text-green-950">Pronto para expandir</span><h2 className="mt-4 max-w-xl text-2xl font-black sm:text-3xl">Transforme sua empresa atual na Loja 1.</h2><p className="mt-2 max-w-xl text-sm leading-6 text-green-50/80">Cada loja terá caixa, vendas e estoque próprios. A visão consolidada reunirá os indicadores sem misturar a operação.</p></div><div className="rounded-2xl border border-white/15 bg-white/10 p-4"><label className="text-[10px] font-bold uppercase tracking-wider text-yellow-200">Nome do grupo</label><input value={effectiveGroupName} onChange={(event) => setGroupName(event.target.value)} className="mt-2 h-11 w-full rounded-xl border border-white/20 bg-white px-3 text-sm font-bold text-slate-950 outline-none focus:border-yellow-300" placeholder="Ex.: Grupo Mangora" /><button type="button" disabled={saving || effectiveGroupName.trim().length < 2} onClick={() => void createGroup()} className="mt-3 flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-yellow-300 text-xs font-black text-green-950 transition hover:bg-yellow-200 disabled:opacity-50">{saving && <LoaderCircle className="size-4 animate-spin" />}Ativar gestão de lojas</button></div></div></article>}
 
     {group?.group && <>
-      <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4"><Metric icon={CircleDollarSign} label="Faturamento consolidado" value={money.format(summary?.revenue ?? 0)} tone="green" /><Metric icon={ReceiptText} label="Vendas do grupo" value={number.format(summary?.sales ?? 0)} tone="orange" /><Metric icon={TrendingUp} label="Ticket médio" value={money.format(summary?.averageTicket ?? 0)} tone="yellow" /><Metric icon={Boxes} label="Estoque total" value={`${number.format(summary?.inventoryUnits ?? 0)} un.`} tone="amber" /></div>
-      <article className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm"><div className="flex flex-wrap items-center justify-between gap-3"><div><h2 className="text-sm font-black text-slate-950">{group.group.name}</h2><p className="mt-1 text-[10px] text-slate-500">{group.units.length} de {group.limit} lojas configuradas · {consolidated?.label}</p></div><span className="rounded-full bg-green-100 px-3 py-1 text-[10px] font-black text-green-800">Dados separados por unidade</span></div><div className="mt-4 grid gap-3 lg:grid-cols-3">{group.units.map((item) => { const metrics = consolidated?.units.find((entry) => entry.id === item.company.id); return <div key={item.company.id} className={`rounded-2xl border p-4 ${item.current ? "border-orange-300 bg-orange-50" : "border-slate-200 bg-slate-50"}`}><div className="flex items-start justify-between gap-3"><div className={`flex size-10 items-center justify-center rounded-xl ${item.current ? "bg-orange-600 text-white" : "bg-white text-green-700"}`}><Store className="size-4" /></div><span className="rounded-full bg-white px-2 py-1 text-[9px] font-black text-slate-600">{item.company.unitCode ?? "UNIDADE"}</span></div><h3 className="mt-4 text-sm font-black text-slate-950">{item.company.tradeName}</h3><p className="mt-1 text-[10px] text-slate-500">{item.current ? "Ambiente atual" : "Ambiente independente"}</p><div className="mt-4 grid grid-cols-2 gap-2"><Small label="Faturamento" value={money.format(metrics?.revenue ?? 0)} /><Small label="Vendas" value={number.format(metrics?.sales ?? 0)} /><Small label="A receber" value={money.format(metrics?.receivable ?? 0)} /><Small label="Estoque" value={`${number.format(metrics?.inventoryUnits ?? 0)} un.`} /></div>{!item.current && <button type="button" disabled={saving} onClick={() => void switchUnit(item.membershipId)} className="mt-4 flex h-9 w-full items-center justify-center gap-2 rounded-xl border border-orange-300 bg-white text-[10px] font-black text-orange-700 hover:bg-orange-100"><ArrowRightLeft className="size-3.5" />Acessar esta loja</button>}</div>; })}</div></article>
+      <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4"><Metric icon={CircleDollarSign} label="Faturamento consolidado" value={formatCurrency(summary?.revenue ?? 0)} tone="green" /><Metric icon={ReceiptText} label="Vendas do grupo" value={formatNumber(summary?.sales ?? 0)} tone="orange" /><Metric icon={TrendingUp} label="Ticket médio" value={formatCurrency(summary?.averageTicket ?? 0)} tone="yellow" /><Metric icon={Boxes} label="Estoque total" value={`${formatNumber(summary?.inventoryUnits ?? 0)} un.`} tone="amber" /></div>
+      <article className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm"><div className="flex flex-wrap items-center justify-between gap-3"><div><h2 className="text-sm font-black text-slate-950">{group.group.name}</h2><p className="mt-1 text-[10px] text-slate-500">{group.units.length} de {group.limit} lojas configuradas · {consolidated?.label}</p></div><span className="rounded-full bg-green-100 px-3 py-1 text-[10px] font-black text-green-800">Dados separados por unidade</span></div><div className="mt-4 grid gap-3 lg:grid-cols-3">{group.units.map((item) => { const metrics = consolidated?.units.find((entry) => entry.id === item.company.id); return <div key={item.company.id} className={`rounded-2xl border p-4 ${item.current ? "border-orange-300 bg-orange-50" : "border-slate-200 bg-slate-50"}`}><div className="flex items-start justify-between gap-3"><div className={`flex size-10 items-center justify-center rounded-xl ${item.current ? "bg-orange-600 text-white" : "bg-white text-green-700"}`}><Store className="size-4" /></div><span className="rounded-full bg-white px-2 py-1 text-[9px] font-black text-slate-600">{item.company.unitCode ?? "UNIDADE"}</span></div><h3 className="mt-4 text-sm font-black text-slate-950">{item.company.tradeName}</h3><p className="mt-1 text-[10px] text-slate-500">{item.current ? "Ambiente atual" : "Ambiente independente"}</p><div className="mt-4 grid grid-cols-2 gap-2"><Small label="Faturamento" value={formatCurrency(metrics?.revenue ?? 0)} /><Small label="Vendas" value={formatNumber(metrics?.sales ?? 0)} /><Small label="A receber" value={formatCurrency(metrics?.receivable ?? 0)} /><Small label="Estoque" value={`${formatNumber(metrics?.inventoryUnits ?? 0)} un.`} /></div>{!item.current && <button type="button" disabled={saving} onClick={() => void switchUnit(item.membershipId)} className="mt-4 flex h-9 w-full items-center justify-center gap-2 rounded-xl border border-orange-300 bg-white text-[10px] font-black text-orange-700 hover:bg-orange-100"><ArrowRightLeft className="size-3.5" />Acessar esta loja</button>}</div>; })}</div></article>
     </>}
 
     {loading && <div className="flex min-h-64 items-center justify-center rounded-2xl border border-slate-200 bg-white"><LoaderCircle className="size-5 animate-spin text-orange-600" /><span className="ml-2 text-xs font-bold text-slate-600">Consolidando as lojas...</span></div>}

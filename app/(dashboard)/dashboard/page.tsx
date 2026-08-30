@@ -14,6 +14,7 @@ import LowStock from "@/components/dashboard/LowStock";
 import QuickActions from "@/components/dashboard/QuickActions";
 import { getCurrentSession } from "@/lib/auth/server";
 import { serverApiRequest } from "@/lib/api/server-client";
+import { formatCurrency, formatDateLong, formatNumber } from "@/lib/format";
 import type { DashboardData } from "@/types/analytics";
 
 export default async function DashboardPage() {
@@ -21,11 +22,7 @@ export default async function DashboardPage() {
     if (!session) redirect("/login");
     const dashboard = await serverApiRequest<DashboardData>("/analytics/dashboard");
     const firstName = session.user.name.split(" ")[0] || session.user.name;
-    const currentDate = new Intl.DateTimeFormat("pt-BR", {
-        weekday: "long",
-        day: "numeric",
-        month: "long",
-    }).format(new Date());
+    const currentDate = formatDateLong(new Date());
 
     return (
             <section className="mangora-dashboard">
@@ -52,7 +49,7 @@ export default async function DashboardPage() {
                 <div className="mt-5 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
                     <MetricCard
                         title="Faturamento hoje"
-                        value={currencyFormatter.format(dashboard.metrics.revenue)}
+                        value={formatCurrency(dashboard.metrics.revenue)}
                         description="Comparado com ontem"
                         variation={`${Math.abs(dashboard.metrics.revenueVariation).toLocaleString("pt-BR")}%`}
                         trend={getTrend(dashboard.metrics.revenueVariation)}
@@ -62,7 +59,7 @@ export default async function DashboardPage() {
 
                     <MetricCard
                         title="Vendas realizadas"
-                        value={dashboard.metrics.sales.toLocaleString("pt-BR")}
+                        value={formatNumber(dashboard.metrics.sales)}
                         description="Comparado com ontem"
                         variation={`${Math.abs(dashboard.metrics.salesVariation).toLocaleString("pt-BR")}%`}
                         trend={getTrend(dashboard.metrics.salesVariation)}
@@ -72,7 +69,7 @@ export default async function DashboardPage() {
 
                     <MetricCard
                         title="Ticket médio"
-                        value={currencyFormatter.format(dashboard.metrics.averageTicket)}
+                        value={formatCurrency(dashboard.metrics.averageTicket)}
                         description="Média por venda realizada"
                         variation={`${Math.abs(dashboard.metrics.ticketVariation).toLocaleString("pt-BR")}%`}
                         trend={getTrend(dashboard.metrics.ticketVariation)}
@@ -82,7 +79,7 @@ export default async function DashboardPage() {
 
                     <MetricCard
                         title="Contas a receber"
-                        value={currencyFormatter.format(dashboard.metrics.receivable)}
+                        value={formatCurrency(dashboard.metrics.receivable)}
                         description={`${dashboard.metrics.receivableCount} recebimento(s) pendente(s)`}
                         variation={`${dashboard.metrics.receivableCount} conta(s)`}
                         trend="neutral"
@@ -99,7 +96,7 @@ export default async function DashboardPage() {
 
                         <MetricCard
                             title="Clientes ativos"
-                            value={dashboard.metrics.activeCustomers.toLocaleString("pt-BR")}
+                            value={formatNumber(dashboard.metrics.activeCustomers)}
                             description={`${dashboard.metrics.newCustomersThisMonth} novo(s) cliente(s) neste mês`}
                             variation={`${dashboard.metrics.newCustomersThisMonth} novo(s)`}
                             trend={dashboard.metrics.newCustomersThisMonth > 0 ? "up" : "neutral"}
@@ -117,5 +114,4 @@ export default async function DashboardPage() {
     );
 }
 
-const currencyFormatter = new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" });
 function getTrend(value: number): "up" | "down" | "neutral" { return value > 0 ? "up" : value < 0 ? "down" : "neutral"; }

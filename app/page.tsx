@@ -23,6 +23,7 @@ import {
 } from "lucide-react";
 import BrandLogo from "@/components/brand/BrandLogo";
 import MascotPose from "@/components/brand/MascotPose";
+import { marketingPlans } from "@/lib/plans";
 
 const resources = [
   {
@@ -62,47 +63,6 @@ const segments = [
   [Wrench, "Assistências técnicas"],
   [Building2, "Prestadores de serviços"],
 ] as const;
-
-const plans = [
-  {
-    name: "Start",
-    price: "60",
-    description: "O essencial para organizar um pequeno negócio.",
-    features: [
-      "1 empresa e até 2 usuários",
-      "Clientes, produtos e serviços",
-      "Vendas, pedidos e estoque básico",
-      "Financeiro e relatórios essenciais",
-      "Página online",
-    ],
-  },
-  {
-    name: "Business",
-    price: "129",
-    description: "Mais controle para uma operação em crescimento.",
-    featured: true,
-    features: [
-      "Tudo do plano Start",
-      "Até 10 usuários",
-      "PDV e controle de caixa",
-      "Estoque e relatórios avançados",
-      "Contas a pagar e receber",
-      "Módulo específico por segmento",
-    ],
-  },
-  {
-    name: "Premium",
-    price: "249",
-    description: "Automação e escala para operações maiores.",
-    features: [
-      "Tudo do plano Business",
-      "Usuários ilimitados e até 3 unidades",
-      "WhatsApp, QR Code e fidelidade",
-      "API para integrações",
-      "Domínio e suporte prioritário",
-    ],
-  },
-];
 
 export default function Home() {
   return (
@@ -333,7 +293,7 @@ export default function Home() {
           </div>
 
           <div className="mt-14 grid gap-5 lg:grid-cols-3">
-            {plans.map((plan) => (
+            {marketingPlans.map((plan) => (
               <article
                 key={plan.name}
                 className={`relative flex flex-col rounded-[2rem] border-2 p-7 sm:p-8 ${

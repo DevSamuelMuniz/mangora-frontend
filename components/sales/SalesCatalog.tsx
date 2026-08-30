@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useCallback, useEffect, useMemo, useState, type ReactNode } from "react";
+import { useMemo, useState } from "react";
 import {
   AlertTriangle,
   Banknote,
@@ -17,53 +17,40 @@ import {
   ShoppingCart,
   X,
   XCircle,
-  type LucideIcon,
 } from "lucide-react";
 
-import { apiRequest } from "@/lib/api/client";
 import { paymentMethodLabels, saleStatusLabels, type PaymentMethod, type Sale, type SaleStatus } from "@/types/sale";
+import { formatCurrency, formatDate, formatTime } from "@/lib/format";
+import { useCancelSale, useSales } from "@/features/sales/hooks/useSales";
+import { FilterSelect } from "@/components/shared/FilterSelect";
+import { PageButton } from "@/components/shared/PageButton";
+import { SummaryCard } from "@/components/shared/SummaryCard";
 
 const PAGE_SIZE = 6;
-const currencyFormatter = new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" });
 const paymentMethods: PaymentMethod[] = ["PIX", "CREDIT_CARD", "DEBIT_CARD", "CASH", "BOLETO", "CHECK", "STORE_CREDIT"];
 
 export default function SalesCatalog() {
-  const [sales, setSales] = useState<Sale[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
+  const { data: sales = [], isLoading: loading, error, refetch: loadSales } = useSales();
+  const cancelSale = useCancelSale();
+  const [actionError, setActionError] = useState("");
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState("all");
   const [paymentMethod, setPaymentMethod] = useState("all");
   const [page, setPage] = useState(1);
   const [selectedSale, setSelectedSale] = useState<Sale | null>(null);
   const [saleToCancel, setSaleToCancel] = useState<Sale | null>(null);
-  const [cancelling, setCancelling] = useState(false);
 
-  const loadSales = useCallback(async () => {
-    try {
-      setLoading(true);
-      setError("");
-      setSales(await apiRequest<Sale[]>("/sales"));
-    } catch (requestError) {
-      setError(requestError instanceof Error ? requestError.message : "Não foi possível carregar as vendas.");
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+  const errorMessage = actionError || (error instanceof Error ? error.message : "");
 
-  useEffect(() => {
-    let mounted = true;
-    apiRequest<Sale[]>("/sales")
-      .then((data) => {
-        if (!mounted) return;
-        setSales(data);
-        const selectedId = new URLSearchParams(window.location.search).get("selecionada");
-        if (selectedId) setSelectedSale(data.find((sale) => sale.id === selectedId) ?? null);
-      })
-      .catch((requestError: unknown) => { if (mounted) setError(requestError instanceof Error ? requestError.message : "Não foi possível carregar as vendas."); })
-      .finally(() => { if (mounted) setLoading(false); });
-    return () => { mounted = false; };
-  }, []);
+  // Ajuste de estado durante o render (padrão do React para estado derivado):
+  // abre a venda apontada por ?selecionada= assim que os dados chegam.
+  const [selectionApplied, setSelectionApplied] = useState(false);
+  if (!selectionApplied && sales.length > 0) {
+    const selectedId = typeof window === "undefined" ? null : new URLSearchParams(window.location.search).get("selecionada");
+    const found = selectedId ? sales.find((sale) => sale.id === selectedId) ?? null : null;
+    if (found) setSelectedSale(found);
+    setSelectionApplied(true);
+  }
 
   const filteredSales = useMemo(() => {
     const normalizedSearch = search.trim().toLocaleLowerCase("pt-BR");
@@ -93,16 +80,12 @@ export default function SalesCatalog() {
   async function confirmCancellation(reason: string) {
     if (!saleToCancel) return;
     try {
-      setCancelling(true);
-      setError("");
-      const cancelled = await apiRequest<Sale>(`/sales/${saleToCancel.id}/cancel`, { method: "POST", body: JSON.stringify({ reason }) });
-      setSales((current) => current.map((sale) => sale.id === cancelled.id ? cancelled : sale));
-      setSelectedSale((current) => current?.id === cancelled.id ? cancelled : current);
+      setActionError("");
+      const cancelled = await cancelSale.mutateAsync({ id: saleToCancel.id, reason });
+      setSelectedSale((current) => (current?.id === cancelled.id ? cancelled : current));
       setSaleToCancel(null);
     } catch (requestError) {
-      setError(requestError instanceof Error ? requestError.message : "Não foi possível cancelar a venda.");
-    } finally {
-      setCancelling(false);
+      setActionError(requestError instanceof Error ? requestError.message : "Não foi possível cancelar a venda.");
     }
   }
 
@@ -121,9 +104,9 @@ export default function SalesCatalog() {
         </div>
 
         <div className="mt-5 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-          <SummaryCard icon={Banknote} label="Faturamento hoje" value={currencyFormatter.format(todayRevenue)} iconClassName="bg-green-50 text-green-600" />
+          <SummaryCard icon={Banknote} label="Faturamento hoje" value={formatCurrency(todayRevenue)} iconClassName="bg-green-50 text-green-600" />
           <SummaryCard icon={ShoppingCart} label="Vendas hoje" value={String(todaySales.length)} iconClassName="bg-orange-50 text-orange-600" />
-          <SummaryCard icon={ReceiptText} label="Ticket médio" value={currencyFormatter.format(averageTicket)} iconClassName="bg-yellow-50 text-yellow-600" />
+          <SummaryCard icon={ReceiptText} label="Ticket médio" value={formatCurrency(averageTicket)} iconClassName="bg-yellow-50 text-yellow-600" />
           <SummaryCard icon={XCircle} label="Vendas canceladas" value={String(cancelledCount)} iconClassName="bg-red-50 text-red-600" />
         </div>
 
@@ -139,13 +122,13 @@ export default function SalesCatalog() {
           </div>
         </div>
 
-        {error && sales.length > 0 && <div role="alert" className="mt-4 flex items-center justify-between gap-3 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-xs font-semibold text-red-700"><span>{error}</span><button type="button" onClick={() => void loadSales()} className="font-bold underline">Tentar novamente</button></div>}
+        {errorMessage && sales.length > 0 && <div role="alert" className="mt-4 flex items-center justify-between gap-3 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-xs font-semibold text-red-700"><span>{errorMessage}</span><button type="button" onClick={() => void loadSales()} className="font-bold underline">Tentar novamente</button></div>}
 
         <div className="mt-4 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
           {loading ? (
             <div className="flex min-h-80 items-center justify-center text-xs font-semibold text-slate-500"><LoaderCircle className="mr-2 size-5 animate-spin text-orange-600" />Carregando vendas...</div>
-          ) : error && sales.length === 0 ? (
-            <div className="flex min-h-80 flex-col items-center justify-center px-6 text-center"><AlertTriangle className="size-6 text-red-500" /><h2 className="mt-3 text-sm font-bold text-slate-900">Não foi possível carregar as vendas</h2><p className="mt-1 text-xs text-slate-500">{error}</p><button type="button" onClick={() => void loadSales()} className="mt-4 inline-flex h-10 items-center gap-2 rounded-xl border border-slate-200 px-4 text-xs font-bold text-orange-600"><RefreshCw className="size-3.5" />Tentar novamente</button></div>
+          ) : errorMessage && sales.length === 0 ? (
+            <div className="flex min-h-80 flex-col items-center justify-center px-6 text-center"><AlertTriangle className="size-6 text-red-500" /><h2 className="mt-3 text-sm font-bold text-slate-900">Não foi possível carregar as vendas</h2><p className="mt-1 text-xs text-slate-500">{errorMessage}</p><button type="button" onClick={() => void loadSales()} className="mt-4 inline-flex h-10 items-center gap-2 rounded-xl border border-slate-200 px-4 text-xs font-bold text-orange-600"><RefreshCw className="size-3.5" />Tentar novamente</button></div>
           ) : visibleSales.length ? (
             <>
               <div className="overflow-x-auto">
@@ -163,7 +146,7 @@ export default function SalesCatalog() {
                           <td className="px-4 py-3.5"><p className="max-w-52 truncate text-xs font-bold text-slate-800">{sale.customerName}</p></td>
                           <td className="px-4 py-3.5"><p className="text-xs text-slate-600">{formatDate(sale.createdAt)}</p><p className="mt-1 text-[10px] text-slate-400">{formatTime(sale.createdAt)}</p></td>
                           <td className="px-4 py-3.5 text-xs text-slate-600">{paymentMethodLabels[sale.paymentMethod]}</td>
-                          <td className="px-4 py-3.5 text-xs font-black text-slate-900">{currencyFormatter.format(sale.total)}</td>
+                          <td className="px-4 py-3.5 text-xs font-black text-slate-900">{formatCurrency(sale.total)}</td>
                           <td className="px-4 py-3.5"><span className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[10px] font-bold ${statusStyle.className}`}><StatusIcon className="size-3" />{saleStatusLabels[sale.status]}</span></td>
                           <td className="px-4 py-3.5 text-center">
                             <details className="relative inline-block text-left">
@@ -201,21 +184,9 @@ export default function SalesCatalog() {
       </section>
 
       {selectedSale && <SaleDetails sale={selectedSale} onClose={() => setSelectedSale(null)} />}
-      {saleToCancel && <CancelSale sale={saleToCancel} loading={cancelling} onCancel={() => setSaleToCancel(null)} onConfirm={(reason) => void confirmCancellation(reason)} />}
+      {saleToCancel && <CancelSale sale={saleToCancel} loading={cancelSale.isPending} onCancel={() => setSaleToCancel(null)} onConfirm={(reason) => void confirmCancellation(reason)} />}
     </>
   );
-}
-
-function SummaryCard({ icon: Icon, label, value, iconClassName }: { icon: LucideIcon; label: string; value: string; iconClassName: string }) {
-  return <article className="flex items-center gap-3 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm"><div className={`flex size-9 items-center justify-center rounded-xl ${iconClassName}`}><Icon className="size-4" /></div><div className="min-w-0"><p className="text-[10px] font-semibold text-slate-400">{label}</p><p className="mt-0.5 truncate text-lg font-black text-slate-950">{value}</p></div></article>;
-}
-
-function FilterSelect({ label, value, options, onChange }: { label: string; value: string; options: readonly { value: string; label: string }[]; onChange: (value: string) => void }) {
-  return <label><span className="sr-only">{label}</span><select value={value} onChange={(event) => onChange(event.target.value)} className="h-11 w-full rounded-xl border border-slate-200 bg-slate-50 px-3 text-xs font-semibold text-slate-600 outline-none transition focus:border-orange-300 focus:bg-white focus:ring-4 focus:ring-orange-100"><option value="all">{label}: todos</option>{options.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}</select></label>;
-}
-
-function PageButton({ label, disabled, onClick, children }: { label: string; disabled: boolean; onClick: () => void; children: ReactNode }) {
-  return <button type="button" aria-label={label} disabled={disabled} onClick={onClick} className="flex size-9 items-center justify-center rounded-xl border border-slate-200 text-slate-500 transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40">{children}</button>;
 }
 
 function SaleDetails({ sale, onClose }: { sale: Sale; onClose: () => void }) {
@@ -224,9 +195,9 @@ function SaleDetails({ sale, onClose }: { sale: Sale; onClose: () => void }) {
       <div role="dialog" aria-modal="true" className="w-full max-w-lg rounded-2xl border border-slate-200 bg-white p-5 shadow-2xl">
         <div className="flex items-start justify-between gap-4"><div><p className="text-[10px] font-bold uppercase tracking-wider text-orange-600">Detalhes da venda</p><h2 className="mt-1 text-lg font-black text-slate-950">Venda {sale.code}</h2><p className="mt-1 text-xs text-slate-500">{sale.customerName} · {formatDate(sale.createdAt)}, {formatTime(sale.createdAt)}</p></div><button type="button" onClick={onClose} aria-label="Fechar detalhes" className="flex size-9 items-center justify-center rounded-xl text-slate-400 hover:bg-slate-100"><X className="size-4" /></button></div>
         <div className="mt-5 overflow-hidden rounded-xl border border-slate-200">
-          {sale.items.map((item) => <div key={item.id} className="flex items-center justify-between gap-4 border-b border-slate-100 px-3 py-3 last:border-0"><div><p className="text-xs font-bold text-slate-800">{item.productName}</p><p className="mt-0.5 text-[10px] text-slate-400">{item.quantity} × {currencyFormatter.format(item.unitPrice)}</p></div><p className="text-xs font-black text-slate-900">{currencyFormatter.format(item.subtotal)}</p></div>)}
+          {sale.items.map((item) => <div key={item.id} className="flex items-center justify-between gap-4 border-b border-slate-100 px-3 py-3 last:border-0"><div><p className="text-xs font-bold text-slate-800">{item.productName}</p><p className="mt-0.5 text-[10px] text-slate-400">{item.quantity} × {formatCurrency(item.unitPrice)}</p></div><p className="text-xs font-black text-slate-900">{formatCurrency(item.subtotal)}</p></div>)}
         </div>
-        <div className="mt-4 grid grid-cols-2 gap-3"><Info label="Pagamento" value={paymentMethodLabels[sale.paymentMethod]} /><Info label="Total" value={currencyFormatter.format(sale.total)} /></div>
+        <div className="mt-4 grid grid-cols-2 gap-3"><Info label="Pagamento" value={paymentMethodLabels[sale.paymentMethod]} /><Info label="Total" value={formatCurrency(sale.total)} /></div>
         {sale.status === "CANCELLED" && <div className="mt-3 rounded-xl bg-red-50 p-3 text-xs text-red-700"><strong>Cancelada:</strong> {sale.cancelReason}</div>}
       </div>
     </div>
@@ -247,10 +218,6 @@ function getStatusStyle(status: SaleStatus) {
   return { className: "bg-red-50 text-red-600", icon: XCircle };
 }
 
-function formatDate(date: string) {
-  return new Intl.DateTimeFormat("pt-BR", { day: "2-digit", month: "short", year: "numeric" }).format(new Date(date));
-}
 
-function formatTime(date: string) {
-  return new Intl.DateTimeFormat("pt-BR", { hour: "2-digit", minute: "2-digit" }).format(new Date(date));
-}
+
+

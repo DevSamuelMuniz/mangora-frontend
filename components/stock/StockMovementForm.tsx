@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { FormEvent, type ReactNode, useEffect, useMemo, useState } from "react";
+import { FormEvent, type ReactNode, useMemo, useState } from "react";
 import {
   ArrowDownToLine,
   ArrowLeft,
@@ -14,13 +14,11 @@ import {
   type LucideIcon,
 } from "lucide-react";
 
-import { apiRequest } from "@/lib/api/client";
 import type {
-  StockMovement,
   StockMovementInput,
   ManualStockMovementType,
-  StockOverviewResponse,
 } from "@/types/stock";
+import { useCreateStockMovement, useStockOverview } from "@/features/stock/hooks/useStockOverview";
 
 const movementOptions: {
   type: ManualStockMovementType;
@@ -41,28 +39,16 @@ const reasons: Record<ManualStockMovementType, string[]> = {
 
 export default function StockMovementForm({ initialProductId = "" }: { initialProductId?: string }) {
   const router = useRouter();
-  const [products, setProducts] = useState<StockOverviewResponse["products"]>([]);
-  const [loadingProducts, setLoadingProducts] = useState(true);
+  const { data: overview, isLoading: loadingProducts, error: loadError } = useStockOverview();
+  const createMovement = useCreateStockMovement();
+  const loading = createMovement.isPending;
+  const products = useMemo(() => overview?.products ?? [], [overview]);
   const [productId, setProductId] = useState(initialProductId);
   const [movementType, setMovementType] = useState<ManualStockMovementType>("ENTRY");
   const [quantity, setQuantity] = useState("");
-  const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  useEffect(() => {
-    let mounted = true;
-    apiRequest<StockOverviewResponse>("/stock")
-      .then((data) => {
-        if (mounted) setProducts(data.products);
-      })
-      .catch((requestError: unknown) => {
-        if (mounted) setError(requestError instanceof Error ? requestError.message : "Não foi possível carregar os produtos.");
-      })
-      .finally(() => {
-        if (mounted) setLoadingProducts(false);
-      });
-    return () => { mounted = false; };
-  }, []);
+  const errorMessage = error || (loadError instanceof Error ? loadError.message : "");
 
   const selectedProduct = useMemo(
     () => products.find((product) => product.id === productId),
@@ -110,17 +96,11 @@ export default function StockMovementForm({ initialProductId = "" }: { initialPr
     };
 
     try {
-      setLoading(true);
-      await apiRequest<StockMovement>("/stock/movements", {
-        method: "POST",
-        body: JSON.stringify(payload),
-      });
+      await createMovement.mutateAsync(payload);
       router.push(`/estoque?toast=${encodeURIComponent("Movimentação registrada")}`);
       router.refresh();
     } catch (requestError) {
       setError(requestError instanceof Error ? requestError.message : "Não foi possível registrar a movimentação.");
-    } finally {
-      setLoading(false);
     }
   }
 
@@ -149,7 +129,7 @@ export default function StockMovementForm({ initialProductId = "" }: { initialPr
           <aside className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:p-5 lg:sticky lg:top-20"><h2 className="text-sm font-bold text-slate-950">Projeção do saldo</h2><p className="mt-0.5 text-[10px] text-slate-400">Confira o impacto antes de registrar.</p>{selectedProduct ? <div className="mt-4"><div className="rounded-xl bg-slate-50 p-3"><p className="truncate text-xs font-bold text-slate-800">{selectedProduct.name}</p><p className="mt-1 text-[10px] text-slate-400">{selectedProduct.sku}</p></div><div className="mt-4 grid grid-cols-[1fr_auto_1fr] items-center gap-3 text-center"><Balance label="Saldo atual" value={selectedProduct.stock} /><ArrowRightLeft className="size-4 text-slate-300" /><Balance label="Saldo projetado" value={Math.max(0, projectedStock)} highlight /></div>{projectedStock < 0 && <p className="mt-3 rounded-lg bg-red-50 px-3 py-2 text-[10px] font-semibold text-red-600">Saldo projetado inválido. Reduza a quantidade.</p>}</div> : <div className="mt-4 flex min-h-36 flex-col items-center justify-center rounded-xl border border-dashed border-slate-200 p-5 text-center">{loadingProducts ? <LoaderCircle className="size-5 animate-spin text-orange-600" /> : <ArrowRightLeft className="size-5 text-slate-300" />}<p className="mt-2 text-xs font-semibold text-slate-500">{loadingProducts ? "Carregando saldos..." : "Selecione um produto para visualizar a projeção."}</p></div>}</aside>
         </div>
 
-        {error && <div role="alert" className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-xs font-semibold text-red-700">{error}</div>}
+        {errorMessage && <div role="alert" className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-xs font-semibold text-red-700">{errorMessage}</div>}
         <div className="flex flex-col-reverse gap-3 sm:flex-row sm:justify-end"><Link href="/estoque" className="flex h-11 items-center justify-center rounded-xl border border-slate-200 bg-white px-5 text-sm font-bold text-slate-600 hover:bg-slate-50">Cancelar</Link><button type="submit" disabled={loading || loadingProducts} className="flex h-11 items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-orange-600 to-amber-600 px-5 text-sm font-bold text-white shadow-lg shadow-orange-200 transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-70 disabled:hover:translate-y-0">{loading ? <><LoaderCircle className="size-4 animate-spin" />Registrando...</> : <><Save className="size-4" />Registrar movimentação</>}</button></div>
       </form>
     </section>

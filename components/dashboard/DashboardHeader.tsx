@@ -16,26 +16,21 @@ import {
 } from "lucide-react";
 import { apiRequest } from "@/lib/api/client";
 import { roleLabels, type AuthSession } from "@/lib/auth/types";
+import { can } from "@/lib/permissions";
+import { useMarkAllNotificationsRead, useNotifications } from "@/features/notifications/hooks/useNotifications";
 
 type DashboardHeaderProps = {
   onOpenSidebar: () => void;
   session: AuthSession;
 };
 
-type NotificationItem = {
-  id: string;
-  title: string;
-  description: string;
-  type: string;
-  readAt: string | null;
-  createdAt: string;
-};
-
 export default function DashboardHeader({ onOpenSidebar, session }: DashboardHeaderProps) {
   const router = useRouter();
+  const { data: notificationsData } = useNotifications();
+  const markAllReadMutation = useMarkAllNotificationsRead();
+  const notifications = notificationsData?.items ?? [];
   const [notificationOpen, setNotificationOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
-  const [notifications, setNotifications] = useState<NotificationItem[]>([]);
   const [logoutLoading, setLogoutLoading] = useState(false);
   const notificationMenuRef = useRef<HTMLDivElement>(null);
   const profileMenuRef = useRef<HTMLDivElement>(null);
@@ -47,14 +42,6 @@ export default function DashboardHeader({ onOpenSidebar, session }: DashboardHea
     .slice(0, 2)
     .map((name) => name[0]?.toUpperCase())
     .join("");
-
-  useEffect(() => {
-    let active = true;
-    void apiRequest<{ items: NotificationItem[] }>("/notifications")
-      .then((response) => { if (active) setNotifications(response.items); })
-      .catch(() => { /* A ausência temporária da API não bloqueia o dashboard. */ });
-    return () => { active = false; };
-  }, []);
 
   useEffect(() => {
     if (!profileOpen) return;
@@ -110,9 +97,7 @@ export default function DashboardHeader({ onOpenSidebar, session }: DashboardHea
   }
 
   async function markAllRead() {
-    await apiRequest<{ updated: number }>("/notifications/read-all", { method: "POST" });
-    const readAt = new Date().toISOString();
-    setNotifications((current) => current.map((notification) => ({ ...notification, readAt: notification.readAt ?? readAt })));
+    await markAllReadMutation.mutateAsync();
   }
 
   async function handleLogout() {
@@ -184,9 +169,9 @@ export default function DashboardHeader({ onOpenSidebar, session }: DashboardHea
             {profileOpen && (
               <div role="menu" aria-label="Menu do perfil" className="absolute right-0 mt-2 w-56 rounded-2xl border border-slate-200 bg-white p-2 shadow-2xl shadow-slate-300/50">
                 <div className="border-b border-slate-100 px-3 py-2"><p className="text-xs font-black text-slate-900">{session.user.name}</p><p className="mt-0.5 truncate text-[10px] text-slate-400">{session.user.email}</p></div>
-                {(session.membership.role === "OWNER" || session.membership.role === "ADMIN") && <Link href="/configuracoes?secao=company" role="menuitem" className="mt-1 flex items-center gap-2 rounded-xl px-3 py-2.5 text-xs font-semibold text-slate-600 hover:bg-slate-50 hover:text-orange-700"><UserRound className="size-4" /> Dados da empresa</Link>}
-                {(session.membership.role === "OWNER" || session.membership.role === "ADMIN") && <Link href="/configuracoes?secao=preferences" role="menuitem" className="flex items-center gap-2 rounded-xl px-3 py-2.5 text-xs font-semibold text-slate-600 hover:bg-slate-50 hover:text-orange-700"><Settings className="size-4" /> Preferências</Link>}
-                {session.membership.role === "OWNER" && <Link href="/assinatura" role="menuitem" className="flex items-center gap-2 rounded-xl px-3 py-2.5 text-xs font-semibold text-slate-600 hover:bg-slate-50 hover:text-orange-700"><CreditCard className="size-4" /> Assinatura</Link>}
+                {can(session.membership.role, "company:configure") && <Link href="/configuracoes?secao=company" role="menuitem" className="mt-1 flex items-center gap-2 rounded-xl px-3 py-2.5 text-xs font-semibold text-slate-600 hover:bg-slate-50 hover:text-orange-700"><UserRound className="size-4" /> Dados da empresa</Link>}
+                {can(session.membership.role, "company:configure") && <Link href="/configuracoes?secao=preferences" role="menuitem" className="flex items-center gap-2 rounded-xl px-3 py-2.5 text-xs font-semibold text-slate-600 hover:bg-slate-50 hover:text-orange-700"><Settings className="size-4" /> Preferências</Link>}
+                {can(session.membership.role, "subscription:manage") && <Link href="/assinatura" role="menuitem" className="flex items-center gap-2 rounded-xl px-3 py-2.5 text-xs font-semibold text-slate-600 hover:bg-slate-50 hover:text-orange-700"><CreditCard className="size-4" /> Assinatura</Link>}
                 <button type="button" role="menuitem" disabled={logoutLoading} onClick={() => void handleLogout()} className="mt-1 flex w-full items-center gap-2 border-t border-slate-100 px-3 py-2.5 text-xs font-semibold text-red-600 hover:bg-red-50 disabled:cursor-wait disabled:opacity-60"><LogOut className="size-4" /> {logoutLoading ? "Saindo..." : "Sair"}</button>
               </div>
             )}

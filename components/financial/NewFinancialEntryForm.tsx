@@ -15,14 +15,15 @@ import {
 } from "lucide-react";
 
 import { expenseCategories, incomeCategories } from "./financial-data";
-import { apiRequest } from "@/lib/api/client";
-import { financialTypeLabels, type FinancialEntry, type FinancialEntryType, type StoredFinancialEntryStatus } from "@/types/financial";
+import { financialTypeLabels, type FinancialEntryType, type StoredFinancialEntryStatus } from "@/types/financial";
+import { useCreateFinancialEntry } from "@/features/financial/hooks/useFinancialEntries";
 
 export default function NewFinancialEntryForm() {
   const router = useRouter();
+  const createEntry = useCreateFinancialEntry();
+  const loading = createEntry.isPending;
   const [entryType, setEntryType] = useState<FinancialEntryType>("INCOME");
   const [entryStatus, setEntryStatus] = useState<StoredFinancialEntryStatus>("PENDING");
-  const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const categories = entryType === "INCOME" ? incomeCategories : expenseCategories;
 
@@ -55,30 +56,24 @@ export default function NewFinancialEntryForm() {
     }
 
     try {
-      setLoading(true);
-      await apiRequest<FinancialEntry>("/financial", {
-        method: "POST",
-        body: JSON.stringify({
-          type: entryType,
-          status: entryStatus,
-          description,
-          category,
-          amount,
-          dueDate: `${dueDate}T12:00:00.000Z`,
-          paidAt: entryStatus === "PAID" ? `${String(formData.get("paymentDate"))}T12:00:00.000Z` : undefined,
-          account: String(formData.get("account")),
-          contact: String(formData.get("contact") ?? "") || undefined,
-          document: String(formData.get("document") ?? "") || undefined,
-          costCenter: String(formData.get("costCenter") ?? "") || undefined,
-          paymentMethod: String(formData.get("paymentMethod") ?? "") || undefined,
-          notes: String(formData.get("notes") ?? "") || undefined,
-        }),
+      await createEntry.mutateAsync({
+        type: entryType,
+        status: entryStatus,
+        description,
+        category,
+        amount,
+        dueDate: `${dueDate}T12:00:00.000Z`,
+        paidAt: entryStatus === "PAID" ? `${String(formData.get("paymentDate"))}T12:00:00.000Z` : undefined,
+        account: String(formData.get("account")),
+        contact: String(formData.get("contact") ?? "") || undefined,
+        document: String(formData.get("document") ?? "") || undefined,
+        costCenter: String(formData.get("costCenter") ?? "") || undefined,
+        paymentMethod: String(formData.get("paymentMethod") ?? "") || undefined,
+        notes: String(formData.get("notes") ?? "") || undefined,
       });
       router.push(`/financeiro?toast=${encodeURIComponent("Lançamento registrado")}`);
     } catch (requestError) {
       setError(requestError instanceof Error ? requestError.message : "Não foi possível salvar o lançamento.");
-    } finally {
-      setLoading(false);
     }
   }
 

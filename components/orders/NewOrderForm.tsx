@@ -2,43 +2,41 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { FormEvent, type ReactNode, useEffect, useMemo, useState } from "react";
+import { FormEvent, type ReactNode, useMemo, useState } from "react";
 import { ArrowLeft, LoaderCircle, Minus, PackagePlus, Plus, Save, ShoppingBag, Trash2 } from "lucide-react";
 
-import { apiRequest } from "@/lib/api/client";
-import type { Customer } from "@/types/customer";
-import { fulfillmentLabels, orderChannelLabels, type FulfillmentMethod, type Order, type OrderChannel } from "@/types/order";
+import { fulfillmentLabels, orderChannelLabels, type FulfillmentMethod, type OrderChannel } from "@/types/order";
 import type { Product } from "@/types/product";
+import { formatCurrency } from "@/lib/format";
+import { useCreateOrder } from "@/features/orders/hooks/useOrders";
+import { useSaleOptions } from "@/features/sales/hooks/useSales";
 
 type CartItem = { product: Product; quantity: number };
-const currencyFormatter = new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" });
 const channels = Object.keys(orderChannelLabels) as OrderChannel[];
 const fulfillments = Object.keys(fulfillmentLabels) as FulfillmentMethod[];
 
 export default function NewOrderForm() {
   const router = useRouter();
-  const [products, setProducts] = useState<Product[]>([]);
-  const [customers, setCustomers] = useState<Customer[]>([]);
+  const { data: options, isLoading: loadingOptions, error: optionsError } = useSaleOptions();
+  const createOrder = useCreateOrder();
+  const loading = createOrder.isPending;
+  const products = useMemo(
+    () => (options?.products ?? []).filter((product) => product.active && (!product.trackStock || product.stock - product.reservedStock > 0)),
+    [options],
+  );
+  const customers = useMemo(() => (options?.customers ?? []).filter((customer) => customer.active), [options]);
   const [selectedProductId, setSelectedProductId] = useState("");
   const [items, setItems] = useState<CartItem[]>([]);
-  const [loadingOptions, setLoadingOptions] = useState(true);
-  const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  useEffect(() => {
-    let mounted = true;
-    Promise.all([apiRequest<Product[]>("/products"), apiRequest<Customer[]>("/customers")])
-      .then(([productData, customerData]) => {
-        if (!mounted) return;
-        const available = productData.filter((product) => product.active && (!product.trackStock || product.stock - product.reservedStock > 0));
-        setProducts(available);
-        setCustomers(customerData.filter((customer) => customer.active));
-        setSelectedProductId(available[0]?.id ?? "");
-      })
-      .catch((requestError: unknown) => { if (mounted) setError(requestError instanceof Error ? requestError.message : "Não foi possível carregar os dados do pedido."); })
-      .finally(() => { if (mounted) setLoadingOptions(false); });
-    return () => { mounted = false; };
-  }, []);
+  const errorMessage = error || (optionsError instanceof Error ? optionsError.message : "");
+
+  // Estado derivado: pré-seleciona o primeiro produto disponível quando as opções carregam.
+  const [selectionApplied, setSelectionApplied] = useState(false);
+  if (!selectionApplied && products[0]) {
+    setSelectedProductId(products[0].id);
+    setSelectionApplied(true);
+  }
 
   const total = useMemo(() => items.reduce((sum, item) => sum + item.product.price * item.quantity, 0), [items]);
 
@@ -75,23 +73,19 @@ export default function NewOrderForm() {
     if (!customerId) return setError("Selecione um cliente.");
     if (!items.length) return setError("Adicione pelo menos um produto ou serviço ao pedido.");
     try {
-      setLoading(true);
-      await apiRequest<Order>("/orders", {
-        method: "POST",
-        body: JSON.stringify({
-          customerId,
-          channel: formData.get("channel"),
-          fulfillment: formData.get("fulfillment"),
-          scheduledAt: new Date(`${scheduledDate}T${scheduledTime}:00`).toISOString(),
-          discount: 0,
-          notes: String(formData.get("notes") ?? "") || undefined,
-          items: items.map((item) => ({ productId: item.product.id, quantity: item.quantity })),
-        }),
+      await createOrder.mutateAsync({
+        customerId,
+        channel: formData.get("channel"),
+        fulfillment: formData.get("fulfillment"),
+        scheduledAt: new Date(`${scheduledDate}T${scheduledTime}:00`).toISOString(),
+        discount: 0,
+        notes: String(formData.get("notes") ?? "") || undefined,
+        items: items.map((item) => ({ productId: item.product.id, quantity: item.quantity })),
       });
       router.push(`/pedidos?toast=${encodeURIComponent("Pedido criado")}`);
     } catch (requestError) {
       setError(requestError instanceof Error ? requestError.message : "Não foi possível salvar o pedido.");
-    } finally { setLoading(false); }
+    }
   }
 
   return (
@@ -114,12 +108,12 @@ export default function NewOrderForm() {
 
           <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:p-5">
             <SectionTitle icon={<PackagePlus className="size-4" />} title="Itens do pedido" description="Produtos e serviços disponíveis" />
-            <div className="mt-4 flex flex-col gap-2 sm:flex-row"><select value={selectedProductId} disabled={loadingOptions || !products.length} onChange={(event) => setSelectedProductId(event.target.value)} className={`${inputClassName} flex-1`}>{products.map((product) => <option key={product.id} value={product.id}>{product.name} · {currencyFormatter.format(product.price)} · {product.trackStock ? `${product.stock - product.reservedStock} disp.` : "serviço"}</option>)}</select><button type="button" disabled={!selectedProductId} onClick={addProduct} className="flex h-11 items-center justify-center gap-2 rounded-xl border border-orange-200 bg-orange-50 px-4 text-xs font-bold text-orange-700 disabled:opacity-50"><Plus className="size-4" />Adicionar item</button></div>
-            {items.length ? <div className="mt-4 overflow-hidden rounded-xl border border-slate-200">{items.map((item) => <div key={item.product.id} className="flex flex-col gap-3 border-b border-slate-100 p-3 last:border-0 sm:flex-row sm:items-center"><div className="min-w-0 flex-1"><p className="truncate text-xs font-bold text-slate-800">{item.product.name}</p><p className="mt-0.5 text-[10px] text-slate-400">{currencyFormatter.format(item.product.price)} por unidade</p></div><div className="flex items-center gap-3"><div className="flex items-center rounded-xl border"><button type="button" onClick={() => changeQuantity(item.product.id, -1)} className="flex size-9 items-center justify-center"><Minus className="size-3.5" /></button><span className="w-8 text-center text-xs font-bold">{item.quantity}</span><button type="button" onClick={() => changeQuantity(item.product.id, 1)} className="flex size-9 items-center justify-center"><Plus className="size-3.5" /></button></div><p className="w-24 text-right text-xs font-black">{currencyFormatter.format(item.product.price * item.quantity)}</p><button type="button" onClick={() => setItems((current) => current.filter((currentItem) => currentItem.product.id !== item.product.id))} aria-label={`Remover ${item.product.name}`} className="flex size-9 items-center justify-center rounded-xl text-red-500 hover:bg-red-50"><Trash2 className="size-3.5" /></button></div></div>)}</div> : <div className="mt-4 rounded-xl border border-dashed border-slate-200 px-4 py-8 text-center text-xs text-slate-500">{loadingOptions ? "Carregando produtos..." : "Nenhum item adicionado."}</div>}
+            <div className="mt-4 flex flex-col gap-2 sm:flex-row"><select value={selectedProductId} disabled={loadingOptions || !products.length} onChange={(event) => setSelectedProductId(event.target.value)} className={`${inputClassName} flex-1`}>{products.map((product) => <option key={product.id} value={product.id}>{product.name} · {formatCurrency(product.price)} · {product.trackStock ? `${product.stock - product.reservedStock} disp.` : "serviço"}</option>)}</select><button type="button" disabled={!selectedProductId} onClick={addProduct} className="flex h-11 items-center justify-center gap-2 rounded-xl border border-orange-200 bg-orange-50 px-4 text-xs font-bold text-orange-700 disabled:opacity-50"><Plus className="size-4" />Adicionar item</button></div>
+            {items.length ? <div className="mt-4 overflow-hidden rounded-xl border border-slate-200">{items.map((item) => <div key={item.product.id} className="flex flex-col gap-3 border-b border-slate-100 p-3 last:border-0 sm:flex-row sm:items-center"><div className="min-w-0 flex-1"><p className="truncate text-xs font-bold text-slate-800">{item.product.name}</p><p className="mt-0.5 text-[10px] text-slate-400">{formatCurrency(item.product.price)} por unidade</p></div><div className="flex items-center gap-3"><div className="flex items-center rounded-xl border"><button type="button" onClick={() => changeQuantity(item.product.id, -1)} className="flex size-9 items-center justify-center"><Minus className="size-3.5" /></button><span className="w-8 text-center text-xs font-bold">{item.quantity}</span><button type="button" onClick={() => changeQuantity(item.product.id, 1)} className="flex size-9 items-center justify-center"><Plus className="size-3.5" /></button></div><p className="w-24 text-right text-xs font-black">{formatCurrency(item.product.price * item.quantity)}</p><button type="button" onClick={() => setItems((current) => current.filter((currentItem) => currentItem.product.id !== item.product.id))} aria-label={`Remover ${item.product.name}`} className="flex size-9 items-center justify-center rounded-xl text-red-500 hover:bg-red-50"><Trash2 className="size-3.5" /></button></div></div>)}</div> : <div className="mt-4 rounded-xl border border-dashed border-slate-200 px-4 py-8 text-center text-xs text-slate-500">{loadingOptions ? "Carregando produtos..." : "Nenhum item adicionado."}</div>}
           </div>
         </div>
 
-        <aside className="xl:sticky xl:top-20"><div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:p-5"><h2 className="text-sm font-bold text-slate-950">Resumo</h2><div className="mt-4 space-y-3 border-y border-slate-100 py-4"><div className="flex justify-between text-xs text-slate-500"><span>Itens</span><strong>{items.reduce((sum, item) => sum + item.quantity, 0)}</strong></div><div className="flex justify-between text-xs text-slate-500"><span>Total</span><strong>{currencyFormatter.format(total)}</strong></div></div>{error && <div role="alert" className="mt-4 rounded-xl border border-red-200 bg-red-50 p-3 text-xs font-semibold text-red-700">{error}</div>}<button type="submit" disabled={loading || loadingOptions} className="mt-4 flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-orange-600 to-amber-600 px-4 text-sm font-bold text-white disabled:opacity-60">{loading ? <><LoaderCircle className="size-4 animate-spin" />Salvando...</> : <><Save className="size-4" />Salvar pedido</>}</button><p className="mt-3 text-center text-[9px] text-slate-400">Os itens controlados serão reservados ao salvar.</p></div></aside>
+        <aside className="xl:sticky xl:top-20"><div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:p-5"><h2 className="text-sm font-bold text-slate-950">Resumo</h2><div className="mt-4 space-y-3 border-y border-slate-100 py-4"><div className="flex justify-between text-xs text-slate-500"><span>Itens</span><strong>{items.reduce((sum, item) => sum + item.quantity, 0)}</strong></div><div className="flex justify-between text-xs text-slate-500"><span>Total</span><strong>{formatCurrency(total)}</strong></div></div>{errorMessage && <div role="alert" className="mt-4 rounded-xl border border-red-200 bg-red-50 p-3 text-xs font-semibold text-red-700">{errorMessage}</div>}<button type="submit" disabled={loading || loadingOptions} className="mt-4 flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-orange-600 to-amber-600 px-4 text-sm font-bold text-white disabled:opacity-60">{loading ? <><LoaderCircle className="size-4 animate-spin" />Salvando...</> : <><Save className="size-4" />Salvar pedido</>}</button><p className="mt-3 text-center text-[9px] text-slate-400">Os itens controlados serão reservados ao salvar.</p></div></aside>
       </form>
     </section>
   );

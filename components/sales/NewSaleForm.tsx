@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { type ReactNode, useEffect, useMemo, useState } from "react";
+import { type ReactNode, useMemo, useState } from "react";
 import {
   ArrowLeft,
   CheckCircle2,
@@ -16,47 +16,33 @@ import {
   WalletCards,
 } from "lucide-react";
 
-import { apiRequest } from "@/lib/api/client";
-import type { Customer } from "@/types/customer";
 import type { Product } from "@/types/product";
-import { paymentMethodLabels, type PaymentMethod, type Sale } from "@/types/sale";
+import { paymentMethodLabels, type PaymentMethod } from "@/types/sale";
+import { formatCurrency } from "@/lib/format";
+import { useCreateSale, useSaleOptions } from "@/features/sales/hooks/useSales";
 
 type CartItem = {
   product: Product;
   quantity: number;
 };
 
-const currencyFormatter = new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" });
 const paymentMethods: PaymentMethod[] = ["PIX", "CREDIT_CARD", "DEBIT_CARD", "CASH", "BOLETO", "CHECK", "STORE_CREDIT"];
 
 export default function NewSaleForm() {
   const router = useRouter();
-  const [products, setProducts] = useState<Product[]>([]);
-  const [customers, setCustomers] = useState<Customer[]>([]);
-  const [loadingOptions, setLoadingOptions] = useState(true);
+  const { data: options, isLoading: loadingOptions, error: optionsError } = useSaleOptions();
+  const createSale = useCreateSale();
+  const products = useMemo(() => options?.products ?? [], [options]);
+  const customers = useMemo(() => options?.customers ?? [], [options]);
   const [cart, setCart] = useState<CartItem[]>([]);
   const [search, setSearch] = useState("");
   const [customerId, setCustomerId] = useState("");
-  const [paymentMethod, setPaymentMethod] = useState("");
+  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod | "">("");
   const [dueDate, setDueDate] = useState("");
   const [discount, setDiscount] = useState("0");
-  const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  useEffect(() => {
-    let mounted = true;
-    Promise.all([apiRequest<Product[]>("/products"), apiRequest<Customer[]>("/customers")])
-      .then(([productData, customerData]) => {
-        if (!mounted) return;
-        setProducts(productData);
-        setCustomers(customerData);
-      })
-      .catch((requestError: unknown) => {
-        if (mounted) setError(requestError instanceof Error ? requestError.message : "Não foi possível carregar os dados da venda.");
-      })
-      .finally(() => { if (mounted) setLoadingOptions(false); });
-    return () => { mounted = false; };
-  }, []);
+  const errorMessage = error || (optionsError instanceof Error ? optionsError.message : "");
 
   const availableProducts = useMemo(() => {
     const normalizedSearch = search.trim().toLocaleLowerCase("pt-BR");
@@ -116,22 +102,16 @@ export default function NewSaleForm() {
     }
 
     try {
-      setLoading(true);
-      const created = await apiRequest<Sale>("/sales", {
-        method: "POST",
-        body: JSON.stringify({
-          customerId: customerId || undefined,
-          paymentMethod,
-          dueDate: deferredPayment ? dueDate : undefined,
-          discount: discountValue,
-          items: cart.map((item) => ({ productId: item.product.id, quantity: item.quantity })),
-        }),
+      const created = await createSale.mutateAsync({
+        customerId: customerId || undefined,
+        paymentMethod,
+        dueDate: deferredPayment ? dueDate : undefined,
+        discount: discountValue,
+        items: cart.map((item) => ({ productId: item.product.id, quantity: item.quantity })),
       });
       router.push(`/vendas?selecionada=${created.id}&toast=${encodeURIComponent("Venda registrada")}`);
     } catch (requestError) {
       setError(requestError instanceof Error ? requestError.message : "Não foi possível concluir a venda.");
-    } finally {
-      setLoading(false);
     }
   }
 
@@ -173,7 +153,7 @@ export default function NewSaleForm() {
                   <button key={product.id} type="button" onClick={() => addProduct(product)} disabled={unavailable} className="group flex min-w-0 items-center gap-3 rounded-xl border border-slate-200 p-3 text-left transition hover:border-orange-200 hover:bg-orange-50/40 disabled:cursor-not-allowed disabled:opacity-50">
                     <div className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-slate-100 text-slate-500 group-hover:bg-orange-100 group-hover:text-orange-600"><Package className="size-4" /></div>
                     <div className="min-w-0 flex-1"><p className="truncate text-xs font-bold text-slate-800">{product.name}</p><p className="mt-0.5 text-[9px] text-slate-400">{product.sku} · {product.trackStock ? `${availableStock} un. disponíveis` : "Sem controle de estoque"}</p></div>
-                    <div className="shrink-0 text-right"><p className="text-xs font-black text-slate-900">{currencyFormatter.format(product.price)}</p><span className="mt-1 inline-flex size-5 items-center justify-center rounded-md bg-orange-50 text-orange-600"><Plus className="size-3" /></span></div>
+                    <div className="shrink-0 text-right"><p className="text-xs font-black text-slate-900">{formatCurrency(product.price)}</p><span className="mt-1 inline-flex size-5 items-center justify-center rounded-md bg-orange-50 text-orange-600"><Plus className="size-3" /></span></div>
                   </button>
                 );
               }) : (
@@ -187,14 +167,14 @@ export default function NewSaleForm() {
             <div className="mt-4 overflow-hidden rounded-xl border border-slate-200">
               {cart.length ? cart.map((item) => (
                 <div key={item.product.id} className="flex flex-col gap-3 border-b border-slate-100 p-3 last:border-0 sm:flex-row sm:items-center">
-                  <div className="min-w-0 flex-1"><p className="truncate text-xs font-bold text-slate-800">{item.product.name}</p><p className="mt-1 text-[10px] text-slate-400">{currencyFormatter.format(item.product.price)} por unidade</p></div>
+                  <div className="min-w-0 flex-1"><p className="truncate text-xs font-bold text-slate-800">{item.product.name}</p><p className="mt-1 text-[10px] text-slate-400">{formatCurrency(item.product.price)} por unidade</p></div>
                   <div className="flex items-center justify-between gap-4 sm:justify-end">
                     <div className="flex items-center rounded-xl border border-slate-200 bg-slate-50 p-1">
                       <button type="button" onClick={() => changeQuantity(item.product.id, -1)} aria-label={`Diminuir ${item.product.name}`} className="flex size-7 items-center justify-center rounded-lg text-slate-500 hover:bg-white"><Minus className="size-3" /></button>
                       <span className="w-8 text-center text-xs font-black text-slate-800">{item.quantity}</span>
                       <button type="button" onClick={() => changeQuantity(item.product.id, 1)} aria-label={`Aumentar ${item.product.name}`} className="flex size-7 items-center justify-center rounded-lg text-slate-500 hover:bg-white"><Plus className="size-3" /></button>
                     </div>
-                    <p className="w-24 text-right text-xs font-black text-slate-900">{currencyFormatter.format(item.product.price * item.quantity)}</p>
+                    <p className="w-24 text-right text-xs font-black text-slate-900">{formatCurrency(item.product.price * item.quantity)}</p>
                     <button type="button" onClick={() => setCart((current) => current.filter((cartItem) => cartItem.product.id !== item.product.id))} aria-label={`Remover ${item.product.name}`} className="flex size-8 items-center justify-center rounded-lg text-slate-400 hover:bg-red-50 hover:text-red-600"><Trash2 className="size-3.5" /></button>
                   </div>
                 </div>
@@ -217,7 +197,7 @@ export default function NewSaleForm() {
                 </select>
               </Field>
               <Field label="Forma de pagamento" id="paymentMethod">
-                <select id="paymentMethod" value={paymentMethod} onChange={(event) => setPaymentMethod(event.target.value)} className={inputClassName}>
+                <select id="paymentMethod" value={paymentMethod} onChange={(event) => setPaymentMethod(event.target.value as PaymentMethod | "")} className={inputClassName}>
                   <option value="">Selecione</option>
                   {paymentMethods.map((method) => <option key={method} value={method}>{paymentMethodLabels[method]}</option>)}
                 </select>
@@ -233,11 +213,11 @@ export default function NewSaleForm() {
             </div>
 
             <div className="my-5 h-px bg-slate-200" />
-            <dl className="space-y-3 text-xs"><div className="flex justify-between gap-4 text-slate-500"><dt>Subtotal</dt><dd className="font-bold text-slate-700">{currencyFormatter.format(subtotal)}</dd></div><div className="flex justify-between gap-4 text-slate-500"><dt>Desconto</dt><dd className="font-bold text-red-600">- {currencyFormatter.format(discountValue)}</dd></div><div className="flex items-end justify-between gap-4 border-t border-slate-100 pt-4"><dt className="font-bold text-slate-800">Total</dt><dd className="text-2xl font-black tracking-tight text-slate-950">{currencyFormatter.format(total)}</dd></div></dl>
+            <dl className="space-y-3 text-xs"><div className="flex justify-between gap-4 text-slate-500"><dt>Subtotal</dt><dd className="font-bold text-slate-700">{formatCurrency(subtotal)}</dd></div><div className="flex justify-between gap-4 text-slate-500"><dt>Desconto</dt><dd className="font-bold text-red-600">- {formatCurrency(discountValue)}</dd></div><div className="flex items-end justify-between gap-4 border-t border-slate-100 pt-4"><dt className="font-bold text-slate-800">Total</dt><dd className="text-2xl font-black tracking-tight text-slate-950">{formatCurrency(total)}</dd></div></dl>
 
-            {error && <div role="alert" className="mt-4 rounded-xl border border-red-200 bg-red-50 px-3 py-2.5 text-xs font-semibold text-red-700">{error}</div>}
-            <button type="button" disabled={loading || loadingOptions} onClick={finishSale} className="mt-5 flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-orange-600 to-amber-600 px-4 text-sm font-bold text-white shadow-lg shadow-orange-200 transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-70 disabled:hover:translate-y-0">
-              {loading ? <><LoaderCircle className="size-4 animate-spin" />Finalizando...</> : <><CheckCircle2 className="size-4" />Finalizar venda</>}
+            {errorMessage && <div role="alert" className="mt-4 rounded-xl border border-red-200 bg-red-50 px-3 py-2.5 text-xs font-semibold text-red-700">{errorMessage}</div>}
+            <button type="button" disabled={createSale.isPending || loadingOptions} onClick={finishSale} className="mt-5 flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-orange-600 to-amber-600 px-4 text-sm font-bold text-white shadow-lg shadow-orange-200 transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-70 disabled:hover:translate-y-0">
+              {createSale.isPending ? <><LoaderCircle className="size-4 animate-spin" />Finalizando...</> : <><CheckCircle2 className="size-4" />Finalizar venda</>}
             </button>
             <p className="mt-3 text-center text-[9px] leading-4 text-slate-400">Ao finalizar, a venda e a baixa de estoque são registradas juntas.</p>
           </div>

@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import {
   AlertTriangle,
   ChevronLeft,
@@ -18,22 +18,20 @@ import {
   X,
 } from "lucide-react";
 
-import { apiRequest } from "@/lib/api/client";
 import type { Product } from "@/types/product";
+import { formatCurrency } from "@/lib/format";
+import { useDeleteProduct, useProducts } from "@/features/products/hooks/useProducts";
+import { FilterSelect } from "@/components/shared/FilterSelect";
 
 const PAGE_SIZE = 6;
-const currencyFormatter = new Intl.NumberFormat("pt-BR", {
-  style: "currency",
-  currency: "BRL",
-});
 
 type StockFilter = "all" | "available" | "low" | "out";
 type StatusFilter = "all" | "active" | "inactive";
 
 export default function ProductCatalog() {
-  const [products, setProducts] = useState<Product[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
+  const { data: products = [], isLoading: loading, error, refetch: loadProducts } = useProducts();
+  const deleteProduct = useDeleteProduct();
+  const [actionError, setActionError] = useState("");
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("all");
   const [status, setStatus] = useState<StatusFilter>("all");
@@ -41,40 +39,8 @@ export default function ProductCatalog() {
   const [page, setPage] = useState(1);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [productToDelete, setProductToDelete] = useState<Product | null>(null);
-  const [deleting, setDeleting] = useState(false);
 
-  const loadProducts = useCallback(async () => {
-    try {
-      setLoading(true);
-      setError("");
-      setProducts((await apiRequest<Product[]>("/products")).filter((item) => item.itemType === "PRODUCT"));
-    } catch (requestError) {
-      setError(requestError instanceof Error ? requestError.message : "Não foi possível carregar os produtos.");
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
-  useEffect(() => {
-    let mounted = true;
-
-    apiRequest<Product[]>("/products")
-      .then((data) => {
-        if (mounted) setProducts(data.filter((item) => item.itemType === "PRODUCT"));
-      })
-      .catch((requestError: unknown) => {
-        if (mounted) {
-          setError(requestError instanceof Error ? requestError.message : "Não foi possível carregar os produtos.");
-        }
-      })
-      .finally(() => {
-        if (mounted) setLoading(false);
-      });
-
-    return () => {
-      mounted = false;
-    };
-  }, []);
+  const errorMessage = actionError || (error instanceof Error ? error.message : "");
 
   const categories = useMemo(
     () => Array.from(new Set(products.map((product) => product.category))).sort(),
@@ -122,16 +88,12 @@ export default function ProductCatalog() {
     if (!productToDelete) return;
 
     try {
-      setDeleting(true);
-      setError("");
-      await apiRequest<void>(`/products/${productToDelete.id}`, { method: "DELETE" });
-      setProducts((current) => current.filter((product) => product.id !== productToDelete.id));
+      setActionError("");
+      await deleteProduct.mutateAsync({ id: productToDelete.id });
       setSelectedProduct((current) => (current?.id === productToDelete.id ? null : current));
       setProductToDelete(null);
     } catch (requestError) {
-      setError(requestError instanceof Error ? requestError.message : "Não foi possível excluir o produto.");
-    } finally {
-      setDeleting(false);
+      setActionError(requestError instanceof Error ? requestError.message : "Não foi possível excluir o produto.");
     }
   }
 
@@ -163,9 +125,9 @@ export default function ProductCatalog() {
           </div>
         </div>
 
-        {error && products.length > 0 && (
+        {errorMessage && products.length > 0 && (
           <div role="alert" className="mt-4 flex items-center justify-between gap-3 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-xs font-semibold text-red-700">
-            <span>{error}</span>
+            <span>{errorMessage}</span>
             <button type="button" onClick={() => void loadProducts()} className="shrink-0 font-bold underline">Tentar novamente</button>
           </div>
         )}
@@ -176,11 +138,11 @@ export default function ProductCatalog() {
               <LoaderCircle className="size-5 animate-spin text-orange-600" />
               <span className="ml-2 text-xs font-semibold">Carregando produtos...</span>
             </div>
-          ) : error && products.length === 0 ? (
+          ) : errorMessage && products.length === 0 ? (
             <div className="flex min-h-80 flex-col items-center justify-center px-6 py-12 text-center">
               <div className="flex size-12 items-center justify-center rounded-2xl bg-red-50 text-red-600"><AlertTriangle className="size-5" /></div>
               <h2 className="mt-4 text-sm font-bold text-slate-900">Não foi possível carregar o catálogo</h2>
-              <p className="mt-1 max-w-sm text-xs leading-5 text-slate-500">{error}</p>
+              <p className="mt-1 max-w-sm text-xs leading-5 text-slate-500">{errorMessage}</p>
               <button type="button" onClick={() => void loadProducts()} className="mt-4 inline-flex h-10 items-center gap-2 rounded-xl border border-slate-200 px-4 text-xs font-bold text-orange-600 hover:bg-orange-50"><RefreshCw className="size-3.5" />Tentar novamente</button>
             </div>
           ) : visibleProducts.length > 0 ? (
@@ -198,7 +160,7 @@ export default function ProductCatalog() {
                         <tr key={product.id} className="transition hover:bg-slate-50">
                           <td className="px-5 py-3.5"><div className="flex items-center gap-3"><div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-orange-50 to-yellow-50 text-orange-600"><Package className="size-4.5" /></div><div className="min-w-0"><p className="max-w-64 truncate text-xs font-bold text-slate-800">{product.name}</p><p className="mt-1 text-[10px] text-slate-400">SKU: {product.sku}</p></div></div></td>
                           <td className="px-4 py-3.5 text-xs text-slate-600">{product.category}</td>
-                          <td className="px-4 py-3.5 text-xs font-bold text-slate-800">{currencyFormatter.format(product.price)}</td>
+                          <td className="px-4 py-3.5 text-xs font-bold text-slate-800">{formatCurrency(product.price)}</td>
                           <td className="px-4 py-3.5"><div className="flex items-center gap-2"><span className={`text-xs font-bold ${product.trackStock && availableStock === 0 ? "text-red-600" : lowStock ? "text-amber-600" : "text-slate-800"}`}>{product.trackStock ? `${availableStock} disp.${product.reservedStock ? ` · ${product.reservedStock} reserv.` : ""}` : "Não controlado"}</span>{lowStock && <AlertTriangle className="size-3.5 text-amber-500" />}</div></td>
                           <td className="px-4 py-3.5"><span className={`inline-flex rounded-full px-2.5 py-1 text-[10px] font-bold ${product.active ? "bg-green-50 text-green-600" : "bg-slate-100 text-slate-500"}`}>{product.active ? "Ativo" : "Inativo"}</span></td>
                           <td className="px-4 py-3.5 text-center">
@@ -238,14 +200,8 @@ export default function ProductCatalog() {
       </section>
 
       {selectedProduct && <ProductDetailsModal product={selectedProduct} onClose={() => setSelectedProduct(null)} />}
-      {productToDelete && <DeleteProductModal product={productToDelete} loading={deleting} onCancel={() => setProductToDelete(null)} onConfirm={() => void confirmDelete()} />}
+      {productToDelete && <DeleteProductModal product={productToDelete} loading={deleteProduct.isPending} onCancel={() => setProductToDelete(null)} onConfirm={() => void confirmDelete()} />}
     </>
-  );
-}
-
-function FilterSelect({ label, value, options, onChange }: { label: string; value: string; options: { value: string; label: string }[]; onChange: (value: string) => void }) {
-  return (
-    <label><span className="sr-only">{label}</span><select value={value} onChange={(event) => onChange(event.target.value)} className="h-11 w-full rounded-xl border border-slate-200 bg-slate-50 px-3 text-xs font-semibold text-slate-600 outline-none transition focus:border-orange-300 focus:bg-white focus:ring-4 focus:ring-orange-100"><option value="all">{label}: todos</option>{options.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}</select></label>
   );
 }
 
@@ -255,7 +211,7 @@ function ProductDetailsModal({ product, onClose }: { product: Product; onClose: 
       <div role="dialog" aria-modal="true" className="w-full max-w-md rounded-2xl border border-slate-200 bg-white p-5 shadow-2xl">
         <div className="flex items-start justify-between gap-4"><div><p className="text-[10px] font-bold uppercase tracking-wider text-orange-600">Detalhes do produto</p><h2 className="mt-1 text-lg font-black text-slate-950">{product.name}</h2></div><button type="button" onClick={onClose} aria-label="Fechar detalhes" className="flex size-9 items-center justify-center rounded-xl text-slate-400 hover:bg-slate-100"><X className="size-4" /></button></div>
         <dl className="mt-5 grid grid-cols-2 gap-3">
-          {[["SKU", product.sku], ["Categoria", product.category], ["Preço", currencyFormatter.format(product.price)], ["Estoque físico", product.trackStock ? `${product.stock} unidade(s)` : "Não controlado"], ["Reservado", `${product.reservedStock} unidade(s)`], ["Disponível", `${product.stock - product.reservedStock} unidade(s)`], ["Estoque mínimo", `${product.minimumStock} unidade(s)`], ["Status", product.active ? "Ativo" : "Inativo"], ["Código de barras", product.barcode || "Não informado"]].map(([label, value]) => <div key={label} className="rounded-xl bg-slate-50 p-3"><dt className="text-[10px] font-semibold text-slate-400">{label}</dt><dd className="mt-1 break-words text-xs font-bold text-slate-800">{value}</dd></div>)}
+          {[["SKU", product.sku], ["Categoria", product.category], ["Preço", formatCurrency(product.price)], ["Estoque físico", product.trackStock ? `${product.stock} unidade(s)` : "Não controlado"], ["Reservado", `${product.reservedStock} unidade(s)`], ["Disponível", `${product.stock - product.reservedStock} unidade(s)`], ["Estoque mínimo", `${product.minimumStock} unidade(s)`], ["Status", product.active ? "Ativo" : "Inativo"], ["Código de barras", product.barcode || "Não informado"]].map(([label, value]) => <div key={label} className="rounded-xl bg-slate-50 p-3"><dt className="text-[10px] font-semibold text-slate-400">{label}</dt><dd className="mt-1 break-words text-xs font-bold text-slate-800">{value}</dd></div>)}
         </dl>
         {product.description && <p className="mt-3 rounded-xl bg-slate-50 p-3 text-xs leading-5 text-slate-600">{product.description}</p>}
         <div className="mt-5 flex justify-end"><Link href={`/produtos?acao=editar&id=${product.id}`} className="inline-flex h-10 items-center gap-2 rounded-xl bg-orange-600 px-4 text-xs font-bold text-white"><Pencil className="size-3.5" />Editar produto</Link></div>

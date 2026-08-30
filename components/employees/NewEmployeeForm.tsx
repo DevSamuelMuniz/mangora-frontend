@@ -4,16 +4,17 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { FormEvent, type ReactNode, useState } from "react";
 import { ArrowLeft, CheckCircle2, Clock3, LoaderCircle, Save, ShieldCheck, UserPlus, type LucideIcon } from "lucide-react";
-import { apiRequest } from "@/lib/api/client";
 import { roleLabels, rolePermissions } from "./employee-data";
-import type { Employee, EmployeeRole } from "@/types/employee";
+import type { EmployeeRole } from "@/types/employee";
+import { useCreateEmployee } from "@/features/employees/hooks/useEmployees";
 
 const roles: EmployeeRole[] = ["ADMIN", "MANAGER", "CASHIER", "SELLER", "EMPLOYEE"];
 
 export default function NewEmployeeForm() {
   const router = useRouter();
+  const createEmployee = useCreateEmployee();
+  const loading = createEmployee.isPending;
   const [role, setRole] = useState<EmployeeRole>("EMPLOYEE");
-  const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
@@ -21,21 +22,17 @@ export default function NewEmployeeForm() {
     const data = new FormData(event.currentTarget);
     setError("");
     try {
-      setLoading(true);
-      await apiRequest<Employee>("/employees", {
-        method: "POST",
-        body: JSON.stringify({
-          name: data.get("name"), email: data.get("email"), phone: data.get("phone"),
-          password: data.get("password"), role, active: data.get("active") === "true",
-          startDate: `${data.get("startDate")}T12:00:00.000Z`, jobTitle: data.get("jobTitle") || undefined,
-          employeeCode: data.get("employeeCode") || undefined, notes: data.get("notes") || undefined,
-        }),
+      await createEmployee.mutateAsync({
+        name: data.get("name"), email: data.get("email"), phone: data.get("phone"),
+        password: data.get("password"), role, active: data.get("active") === "true",
+        startDate: `${data.get("startDate")}T12:00:00.000Z`, jobTitle: data.get("jobTitle") || undefined,
+        employeeCode: data.get("employeeCode") || undefined, notes: data.get("notes") || undefined,
       });
       router.push(`/funcionarios?toast=${encodeURIComponent("Funcionário adicionado")}`);
       router.refresh();
     } catch (cause) {
       setError(cause instanceof Error ? cause.message : "Não foi possível cadastrar o funcionário.");
-    } finally { setLoading(false); }
+    }
   }
 
   return <section className="mx-auto max-w-5xl">
