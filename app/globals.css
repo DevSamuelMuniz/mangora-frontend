@@ -212,25 +212,27 @@ body {
 }
 
 .mangora-sidebar > div:first-of-type a {
-  border-radius: 0.85rem;
-  background: var(--app-cream);
-  padding: 0.45rem 0.7rem;
-  box-shadow: 3px 3px 0 var(--app-gold);
+  display: inline-flex;
+  align-items: center;
+  padding: 0;
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
 }
 
 .mangora-sidebar > div:nth-of-type(2) button {
-  border-color: rgba(255, 255, 255, 0.13);
-  background: rgba(255, 255, 255, 0.07);
+  border-color: rgba(18, 61, 43, 0.12);
+  background: var(--app-cream);
 }
 
 .mangora-sidebar > div:nth-of-type(2) button:hover {
-  border-color: rgba(255, 178, 26, 0.5);
-  background: rgba(255, 178, 26, 0.1);
+  border-color: rgba(255, 178, 26, 0.6);
+  background: #fff2d8;
 }
 
-.mangora-sidebar > div:nth-of-type(2) button p:first-child { color: white; }
+.mangora-sidebar > div:nth-of-type(2) button p:first-child { color: var(--app-ink); }
 .mangora-sidebar > div:nth-of-type(2) button p:last-child,
-.mangora-sidebar > div:nth-of-type(2) button svg { color: rgba(255, 255, 255, 0.55); }
+.mangora-sidebar > div:nth-of-type(2) button svg { color: #3f5c4e; }
 
 .mangora-sidebar nav > p { color: rgba(255, 255, 255, 0.42); }
 .mangora-sidebar nav > div[class*="space-y"] a { color: rgba(255, 255, 255, 0.7); }
