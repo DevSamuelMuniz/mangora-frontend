@@ -10,6 +10,7 @@ import {
   ChevronRight,
   Eye,
   LoaderCircle,
+  MonitorPlay,
   MoreHorizontal,
   ReceiptText,
   RefreshCw,
@@ -98,9 +99,14 @@ export default function SalesCatalog() {
             <h1 className="mt-1 text-2xl font-black tracking-tight text-slate-950 sm:text-3xl">Vendas</h1>
             <p className="mt-1 text-xs text-slate-500">Acompanhe movimentações, pagamentos e resultados.</p>
           </div>
-          <Link href="/vendas?acao=novo" className="inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-orange-600 to-amber-600 px-4 text-sm font-bold text-white shadow-lg shadow-orange-200 transition hover:-translate-y-0.5 hover:shadow-xl">
-            <ShoppingCart className="size-4" />Nova venda
-          </Link>
+          <div className="flex gap-2">
+            <Link href="/vendas/pdv" className="inline-flex h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 text-sm font-bold text-slate-700 shadow-sm transition hover:border-orange-200 hover:bg-orange-50 hover:text-orange-700">
+              <MonitorPlay className="size-4" />Abrir PDV
+            </Link>
+            <Link href="/vendas?acao=novo" className="inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-orange-600 to-amber-600 px-4 text-sm font-bold text-white shadow-lg shadow-orange-200 transition hover:-translate-y-0.5 hover:shadow-xl">
+              <ShoppingCart className="size-4" />Nova venda
+            </Link>
+          </div>
         </div>
 
         <div className="mt-5 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
