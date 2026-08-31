@@ -297,7 +297,7 @@ export default function PdvScreen({ session }: { session: AuthSession }) {
                 )}
 
                 {step === "done" && saleResult && (
-                    <DoneStep sale={saleResult} company={company ? { tradeName: company.tradeName, document: company.document, city: company.city, state: company.state } : null} onFinish={resetSale} />
+                    <DoneStep sale={saleResult} company={company ?? null} onFinish={resetSale} />
                 )}
             </div>
 

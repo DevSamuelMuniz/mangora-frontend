@@ -9,7 +9,7 @@ import { printReceipt } from "@/lib/pdv/print";
 
 type DoneStepProps = {
     sale: Sale;
-    company: Pick<CompanySettings, "tradeName" | "document" | "city" | "state"> | null;
+    company: CompanySettings | null;
     onFinish: () => void;
 };
 
