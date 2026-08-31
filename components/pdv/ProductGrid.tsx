@@ -1,6 +1,6 @@
 "use client";
 
-import { Barcode, LoaderCircle, Plus } from "lucide-react";
+import { Barcode, LoaderCircle, Minus, Plus } from "lucide-react";
 
 import { formatCurrency } from "@/lib/format";
 import type { Product } from "@/types/product";
@@ -10,13 +10,14 @@ type ProductGridProps = {
     loading: boolean;
     cartCounts: Record<string, number>;
     onAdd: (product: Product) => void;
+    onChangeQuantity: (productId: string, delta: number) => void;
 };
 
-/** Grade de produtos do terminal: cards grandes, preço em destaque. */
-export default function ProductGrid({ products, loading, cartCounts, onAdd }: ProductGridProps) {
+/** Grade de produtos do terminal: imagem, preço em destaque e stepper de quantidade. */
+export default function ProductGrid({ products, loading, cartCounts, onAdd, onChangeQuantity }: ProductGridProps) {
     if (loading) {
         return (
-            <div className="flex min-h-64 items-center justify-center text-white/80">
+            <div className="flex min-h-64 items-center justify-center text-white/60">
                 <LoaderCircle className="mr-2 size-5 animate-spin text-orange-400" /> Carregando produtos...
             </div>
         );
@@ -24,45 +25,67 @@ export default function ProductGrid({ products, loading, cartCounts, onAdd }: Pr
 
     if (!products.length) {
         return (
-            <div className="flex min-h-64 flex-col items-center justify-center text-white/70">
-                <Barcode className="mb-3 size-9 text-white/50" />
-                <p className="font-[family-name:var(--font-bricolage)] text-base font-black text-white">Nenhum produto encontrado</p>
+            <div className="flex min-h-64 flex-col items-center justify-center text-white/50">
+                <Barcode className="mb-3 size-9 text-white/30" />
+                <p className="font-[family-name:var(--font-bricolage)] text-base font-black text-white/80">Nenhum produto encontrado</p>
                 <p className="mt-1 text-xs">Aponte o leitor ou digite o código de barras.</p>
             </div>
         );
     }
 
     return (
-        <div className="grid grid-cols-2 gap-3 overflow-y-auto xl:grid-cols-3" style={{ maxHeight: "calc(100vh - 17rem)" }}>
+        <div className="grid grid-cols-2 gap-3 overflow-y-auto xl:grid-cols-3" style={{ maxHeight: "calc(100vh - 18rem)" }}>
             {products.map((product) => {
                 const available = product.stock - product.reservedStock;
                 const inCart = cartCounts[product.id] ?? 0;
                 return (
-                    <button
+                    <div
                         key={product.id}
-                        type="button"
-                        onClick={() => onAdd(product)}
-                        className="group relative flex flex-col rounded-2xl border-2 border-white/10 bg-[#0a2418] p-4 text-left transition hover:-translate-y-0.5 hover:border-[#ffb21a]/60 hover:bg-[#0e2f1f] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ffb21a]"
+                        className={`group relative flex flex-col overflow-hidden rounded-2xl border-2 bg-[#0a2418] transition ${
+                            inCart > 0 ? "border-[#ffb21a]/70" : "border-white/10 hover:border-[#ffb21a]/50"
+                        }`}
                     >
-                        {inCart > 0 && (
-                            <span className="absolute -right-2 -top-2 flex size-8 items-center justify-center rounded-full bg-[#ffb21a] font-[family-name:var(--font-bricolage)] text-sm font-black text-[#123d2b] shadow-lg">
-                                {inCart}
-                            </span>
+                        <button type="button" onClick={() => onAdd(product)} aria-label={`Adicionar ${product.name}`} className="flex flex-1 flex-col text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ffb21a]">
+                            {product.imageUrl ? (
+                                // eslint-disable-next-line @next/next/no-img-element
+                                <img src={product.imageUrl} alt={product.name} className="h-20 w-full object-cover" />
+                            ) : (
+                                <div className="flex h-20 w-full items-center justify-center bg-gradient-to-br from-[#123d2b] to-[#0a2418]">
+                                    <Barcode className="size-6 text-white/20" />
+                                </div>
+                            )}
+                            <div className="flex flex-1 flex-col p-3">
+                                <p className="truncate font-[family-name:var(--font-bricolage)] text-sm font-bold text-white">{product.name}</p>
+                                <p className="mt-0.5 font-mono text-[10px] uppercase tracking-wider text-white/40">{product.sku ?? "—"}</p>
+                                <div className="mt-auto flex items-end justify-between gap-2 pt-3">
+                                    <strong className="font-[family-name:var(--font-bricolage)] text-2xl font-black leading-none text-[#ffb21a]">
+                                        {formatCurrency(product.price)}
+                                    </strong>
+                                    <span className={`rounded-full px-2 py-0.5 font-mono text-[10px] font-bold ${product.trackStock ? (available <= product.minimumStock ? "bg-amber-500/15 text-amber-300" : "bg-white/5 text-white/50") : "bg-white/5 text-white/50"}`}>
+                                        {product.trackStock ? `${available} disp.` : "Serviço"}
+                                    </span>
+                                </div>
+                            </div>
+                        </button>
+
+                        {inCart > 0 ? (
+                            <div className="flex items-center justify-between border-t border-white/10 bg-[#123d2b] px-3 py-2">
+                                <span className="font-mono text-[10px] font-bold text-[#ffb21a]">{inCart} no carrinho</span>
+                                <div className="flex items-center gap-1.5">
+                                    <button type="button" onClick={() => onChangeQuantity(product.id, -1)} aria-label={`Diminuir ${product.name}`} className="flex size-8 items-center justify-center rounded-lg bg-white/10 text-white transition hover:bg-white/20">
+                                        <Minus className="size-4" />
+                                    </button>
+                                    <button type="button" onClick={() => onChangeQuantity(product.id, 1)} aria-label={`Aumentar ${product.name}`} className="flex size-8 items-center justify-center rounded-lg bg-[#ffb21a] text-[#123d2b] transition hover:brightness-110">
+                                        <Plus className="size-4" />
+                                    </button>
+                                </div>
+                            </div>
+                        ) : (
+                            <button type="button" onClick={() => onAdd(product)} className="flex h-9 items-center justify-center gap-1.5 bg-orange-600 text-xs font-black text-white transition hover:brightness-110">
+                                <Plus className="size-3.5" /> Adicionar
+                            </button>
                         )}
-                        <p className="truncate font-[family-name:var(--font-bricolage)] text-sm font-bold text-white">{product.name}</p>
-                        <p className="mt-0.5 font-mono text-[10px] uppercase tracking-wider text-white/70">{product.sku ?? "—"}</p>
-                        <div className="mt-auto flex items-end justify-between gap-2 pt-4">
-                            <strong className="font-[family-name:var(--font-bricolage)] text-2xl font-black leading-none text-[#ffb21a]">
-                                {formatCurrency(product.price)}
-                            </strong>
-                            <span className={`rounded-full px-2 py-0.5 font-mono text-[10px] font-bold ${product.trackStock ? (available <= product.minimumStock ? "bg-amber-500/15 text-amber-300" : "bg-white/5 text-white/80") : "bg-white/5 text-white/80"}`}>
-                                {product.trackStock ? `${available} disp.` : "Serviço"}
-                            </span>
-                        </div>
-                        <span className="mt-3 hidden items-center justify-center gap-1 rounded-xl bg-orange-600 py-2 text-xs font-black text-white group-hover:flex">
-                            <Plus className="size-3.5" /> Adicionar
-                        </span>
-                    </button>
+                    </div>
                 );
             })}
         </div>

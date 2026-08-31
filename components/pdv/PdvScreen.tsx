@@ -17,6 +17,7 @@ import CartPanel, { type CartItem } from "./CartPanel";
 import PaymentStep from "./PaymentPanel";
 import ReviewItems from "./ReviewItems";
 import DoneStep from "./DoneStep";
+import SalePreview from "./SalePreview";
 import NewCustomerModal from "./NewCustomerModal";
 
 type Step = "items" | "review" | "payment" | "processing" | "done";
@@ -35,6 +36,7 @@ export default function PdvScreen({ session }: { session: AuthSession }) {
     const [cart, setCart] = useState<CartItem[]>([]);
     const [scanInput, setScanInput] = useState("");
     const [searchTerm, setSearchTerm] = useState("");
+    const [category, setCategory] = useState("Todos");
     const [customerId, setCustomerId] = useState("");
     const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>(company?.defaultPayment ?? "PIX");
     const [dueDate, setDueDate] = useState(() => {
@@ -69,13 +71,16 @@ export default function PdvScreen({ session }: { session: AuthSession }) {
         const query = searchTerm.trim().toLocaleLowerCase("pt-BR");
         return products
             .filter((product) => product.active && (!product.trackStock || product.stock - product.reservedStock > 0))
+            .filter((product) => category === "Todos" || product.category === category)
             .filter(
                 (product) =>
                     !query ||
                     `${product.name} ${product.sku ?? ""} ${product.barcode ?? ""}`.toLocaleLowerCase("pt-BR").includes(query),
             )
             .slice(0, 40);
-    }, [products, searchTerm]);
+    }, [products, searchTerm, category]);
+
+    const categories = useMemo(() => ["Todos", ...new Set(products.map((product) => product.category))], [products]);
 
     const cartCounts = useMemo(
         () => Object.fromEntries(cart.map((item) => [item.product.id, item.quantity])) as Record<string, number>,
@@ -84,6 +89,8 @@ export default function PdvScreen({ session }: { session: AuthSession }) {
     const subtotal = cart.reduce((sum, item) => sum + item.product.price * item.quantity, 0);
     const discountValue = Math.max(0, Math.min(Number(discount) || 0, company?.maximumDiscount ?? 100));
     const total = Math.max(0, subtotal - discountValue);
+    const selectedCustomer = customers.find((customer) => customer.id === customerId);
+    const selectedCustomerName = selectedCustomer ? selectedCustomer.tradeName || selectedCustomer.name : "Consumidor final";
 
     function addProduct(product: import("@/types/product").Product) {
         setCart((current) => {
@@ -194,7 +201,21 @@ export default function PdvScreen({ session }: { session: AuthSession }) {
                                 </p>
                                 <span className="rounded-full bg-white/5 px-2.5 py-1 font-mono text-[10px] font-bold text-white/60">{availableProducts.length} produto(s)</span>
                             </div>
-                            <ProductGrid products={availableProducts} loading={loadingOptions} cartCounts={cartCounts} onAdd={addProduct} />
+                            <div className="flex flex-wrap gap-1.5">
+                                {categories.map((item) => (
+                                    <button
+                                        key={item}
+                                        type="button"
+                                        onClick={() => setCategory(item)}
+                                        className={`rounded-full px-3 py-1.5 font-mono text-[11px] font-bold transition ${
+                                            category === item ? "bg-[#ffb21a] text-[#123d2b]" : "bg-white/5 text-white/60 hover:bg-white/10"
+                                        }`}
+                                    >
+                                        {item}
+                                    </button>
+                                ))}
+                            </div>
+                            <ProductGrid products={availableProducts} loading={loadingOptions} cartCounts={cartCounts} onAdd={addProduct} onChangeQuantity={changeQuantity} />
                         </section>
                         <aside className="flex flex-col gap-4">
                             <CartPanel
@@ -215,48 +236,63 @@ export default function PdvScreen({ session }: { session: AuthSession }) {
                 )}
 
                 {step === "review" && (
-                    <ReviewItems cart={cart} subtotal={subtotal} discount={discountValue} total={total} onBack={() => setStep("items")} onNext={goToPayment} />
+                    <div className="grid w-full max-w-6xl gap-6 lg:grid-cols-[1fr_340px]">
+                        <div className="flex justify-center">
+                            <ReviewItems cart={cart} subtotal={subtotal} discount={discountValue} total={total} onBack={() => setStep("items")} onNext={goToPayment} />
+                        </div>
+                        <SalePreview cart={cart} subtotal={subtotal} discount={discountValue} total={total} customerName={selectedCustomerName} paymentMethod={paymentMethod} customerDocument={customerDocument || undefined} />
+                    </div>
                 )}
 
                 {step === "payment" && (
-                    <PaymentStep
-                        customers={customers}
-                        requireCustomer={Boolean(company?.requireCustomer)}
-                        customerId={customerId}
-                        onCustomer={setCustomerId}
-                        onNewCustomer={() => setNewCustomerOpen(true)}
-                        paymentMethod={paymentMethod}
-                        onPaymentMethod={setPaymentMethod}
-                        dueDate={dueDate}
-                        onDueDate={setDueDate}
-                        customerDocument={customerDocument}
-                        onCustomerDocument={setCustomerDocument}
-                        total={total}
-                        onPay={pay}
-                    />
+                    <div className="grid w-full max-w-6xl gap-6 lg:grid-cols-[1fr_340px]">
+                        <div className="flex justify-center">
+                            <PaymentStep
+                                customers={customers}
+                                requireCustomer={Boolean(company?.requireCustomer)}
+                                customerId={customerId}
+                                onCustomer={setCustomerId}
+                                onNewCustomer={() => setNewCustomerOpen(true)}
+                                paymentMethod={paymentMethod}
+                                onPaymentMethod={setPaymentMethod}
+                                dueDate={dueDate}
+                                onDueDate={setDueDate}
+                                customerDocument={customerDocument}
+                                onCustomerDocument={setCustomerDocument}
+                                total={total}
+                                onPay={pay}
+                            />
+                        </div>
+                        <SalePreview cart={cart} subtotal={subtotal} discount={discountValue} total={total} customerName={selectedCustomerName} paymentMethod={paymentMethod} customerDocument={customerDocument || undefined} />
+                    </div>
                 )}
 
                 {step === "processing" && (
-                    <div className="mx-auto flex w-full max-w-md flex-col items-center rounded-2xl border-2 border-white/10 bg-[#0a2418] p-8 text-center">
-                        <span className="flex size-16 items-center justify-center rounded-full bg-[#ffb21a]/15 text-[#ffb21a]">
-                            <ShieldCheck className="size-8" />
-                        </span>
-                        <h2 className="mt-4 font-[family-name:var(--font-bricolage)] text-2xl font-black text-white">Pagamento efetuado?</h2>
-                        <p className="mt-2 max-w-xs text-sm leading-6 text-white/60">
-                            Confirme que o pagamento de <strong className="text-[#ffb21a]">{formatCurrency(total)}</strong> foi recebido
-                            ({paymentMethod === "PIX" ? "PIX" : paymentMethod === "CASH" ? "dinheiro" : paymentMethodLabelsSafe(paymentMethod)}).
-                        </p>
-                        {createSale.isPending && (
-                            <p className="mt-4 flex items-center gap-2 font-mono text-xs text-white/50"><LoaderCircle className="size-4 animate-spin" />Finalizando venda...</p>
-                        )}
-                        <div className="mt-6 grid w-full grid-cols-2 gap-2">
-                            <button type="button" onClick={() => setStep("payment")} disabled={createSale.isPending} className="flex h-14 items-center justify-center gap-2 rounded-xl border border-white/15 text-sm font-bold text-white/70 transition hover:bg-white/5 disabled:opacity-50">
-                                <ArrowLeft className="size-4" /> Voltar
-                            </button>
-                            <button type="button" onClick={confirmPayment} disabled={createSale.isPending} className="flex h-14 items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-orange-600 to-amber-600 font-[family-name:var(--font-bricolage)] text-sm font-black text-white transition hover:brightness-110 disabled:opacity-60">
-                                {createSale.isPending ? <><LoaderCircle className="size-4 animate-spin" />Finalizando...</> : <>Confirmar pagamento</>}
-                            </button>
+                    <div className="grid w-full max-w-6xl gap-6 lg:grid-cols-[1fr_340px]">
+                        <div className="flex justify-center">
+                            <div className="mx-auto flex w-full max-w-md flex-col items-center rounded-2xl border-2 border-white/10 bg-[#0a2418] p-8 text-center">
+                                <span className="flex size-16 items-center justify-center rounded-full bg-[#ffb21a]/15 text-[#ffb21a]">
+                                    <ShieldCheck className="size-8" />
+                                </span>
+                                <h2 className="mt-4 font-[family-name:var(--font-bricolage)] text-2xl font-black text-white">Pagamento efetuado?</h2>
+                                <p className="mt-2 max-w-xs text-sm leading-6 text-white/60">
+                                    Confirme que o pagamento de <strong className="text-[#ffb21a]">{formatCurrency(total)}</strong> foi recebido
+                                    ({paymentMethod === "PIX" ? "PIX" : paymentMethod === "CASH" ? "dinheiro" : paymentMethodLabelsSafe(paymentMethod)}).
+                                </p>
+                                {createSale.isPending && (
+                                    <p className="mt-4 flex items-center gap-2 font-mono text-xs text-white/50"><LoaderCircle className="size-4 animate-spin" />Finalizando venda...</p>
+                                )}
+                                <div className="mt-6 grid w-full grid-cols-2 gap-2">
+                                    <button type="button" onClick={() => setStep("payment")} disabled={createSale.isPending} className="flex h-14 items-center justify-center gap-2 rounded-xl border border-white/15 text-sm font-bold text-white/70 transition hover:bg-white/5 disabled:opacity-50">
+                                        <ArrowLeft className="size-4" /> Voltar
+                                    </button>
+                                    <button type="button" onClick={confirmPayment} disabled={createSale.isPending} className="flex h-14 items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-orange-600 to-amber-600 font-[family-name:var(--font-bricolage)] text-sm font-black text-white transition hover:brightness-110 disabled:opacity-60">
+                                        {createSale.isPending ? <><LoaderCircle className="size-4 animate-spin" />Finalizando...</> : <>Confirmar pagamento</>}
+                                    </button>
+                                </div>
+                            </div>
                         </div>
+                        <SalePreview cart={cart} subtotal={subtotal} discount={discountValue} total={total} customerName={selectedCustomerName} paymentMethod={paymentMethod} customerDocument={customerDocument || undefined} />
                     </div>
                 )}
 
