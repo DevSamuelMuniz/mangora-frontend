@@ -11,6 +11,8 @@ import type { Customer } from "@/types/customer";
  */
 
 export const customersQueryKey = ["customers"] as const;
+/** Query do PDV que carrega clientes junto com o catálogo (dropdown da Etapa 3). */
+export const saleOptionsQueryKey = ["sale-options"] as const;
 
 export function useCustomers() {
     return useApiQuery<Customer[]>(customersQueryKey, "/customers");
@@ -22,6 +24,7 @@ export function useDeleteCustomer() {
         mutationFn: ({ id }) => apiRequest<void>(`/customers/${id}`, { method: "DELETE" }),
         onSuccess: () => {
             void queryClient.invalidateQueries({ queryKey: customersQueryKey });
+            void queryClient.invalidateQueries({ queryKey: saleOptionsQueryKey });
         },
     });
 }
@@ -45,6 +48,7 @@ export function useSaveCustomer() {
             }),
         onSuccess: () => {
             void queryClient.invalidateQueries({ queryKey: customersQueryKey });
+            void queryClient.invalidateQueries({ queryKey: saleOptionsQueryKey });
         },
     });
 }

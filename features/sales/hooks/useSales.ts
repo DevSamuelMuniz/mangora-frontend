@@ -5,7 +5,7 @@ import { useApiQuery } from "@/lib/hooks/useApiQuery";
 import type { PaymentMethod, Sale } from "@/types/sale";
 import type { Customer } from "@/types/customer";
 import type { Product } from "@/types/product";
-import { customersQueryKey } from "@/features/customers/hooks/useCustomers";
+import { customersQueryKey, saleOptionsQueryKey } from "@/features/customers/hooks/useCustomers";
 import { financialQueryKey } from "@/features/financial/hooks/useFinancialEntries";
 import { productsQueryKey } from "@/features/products/hooks/useProducts";
 import { stockQueryKey } from "@/features/stock/hooks/useStockOverview";
@@ -28,7 +28,7 @@ export function useSales() {
 /** Opções do formulário de venda: catálogo de produtos e clientes. */
 export function useSaleOptions() {
     return useQuery<{ products: Product[]; customers: Customer[] }, Error>({
-        queryKey: ["sale-options"],
+        queryKey: saleOptionsQueryKey,
         queryFn: async () => {
             const [products, customers] = await Promise.all([
                 apiRequest<Product[]>("/products"),

@@ -1,6 +1,7 @@
 "use client";
 
-import { Banknote, CheckCircle2, ChevronRight, Plus, Trash2, UserPlus, WalletCards } from "lucide-react";
+import { Banknote, CheckCircle2, ChevronRight, Plus, Search, Trash2, UserPlus, WalletCards, X } from "lucide-react";
+import { useState } from "react";
 
 import { formatCurrency, formatDocument, parseCurrency } from "@/lib/format";
 import { paymentMethodLabels, type PaymentMethod } from "@/types/sale";
@@ -49,6 +50,14 @@ export default function PaymentStep({
     onReceivedAmount,
 }: PaymentStepProps) {
     const isSingle = parts.length === 1;
+    const [customerSearch, setCustomerSearch] = useState("");
+    const activeCustomers = customers.filter((customer) => customer.active);
+    const customerQuery = customerSearch.trim().toLocaleLowerCase("pt-BR");
+    const filteredCustomers = customerQuery
+        ? activeCustomers.filter((customer) =>
+              `${customer.name} ${customer.tradeName ?? ""} ${customer.document ?? ""}`.toLocaleLowerCase("pt-BR").includes(customerQuery),
+          )
+        : activeCustomers;
     const deferred = parts.some((part) => DEFERRED.includes(part.method));
     const isCash = parts.some((part) => part.method === "CASH");
     const cashPartAmount = parts
@@ -110,12 +119,34 @@ export default function PaymentStep({
                             <UserPlus className="size-3" /> Novo cliente
                         </button>
                     </div>
+                    <div className="relative mt-2">
+                        <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-pdv-fg/40" />
+                        <input
+                            type="text"
+                            value={customerSearch}
+                            onChange={(event) => setCustomerSearch(event.target.value)}
+                            placeholder="Buscar cliente por nome ou CPF/CNPJ…"
+                            aria-label="Buscar cliente"
+                            className="h-11 w-full rounded-xl border border-pdv-line bg-pdv-field pl-9 pr-9 text-sm font-semibold text-pdv-fg outline-none placeholder:font-normal placeholder:text-pdv-fg/40 focus:border-pdv-gold"
+                        />
+                        {customerSearch && (
+                            <button type="button" onClick={() => setCustomerSearch("")} aria-label="Limpar busca de cliente" className="absolute right-2 top-1/2 flex size-7 -translate-y-1/2 items-center justify-center rounded-md text-pdv-fg/50 transition hover:bg-pdv-line hover:text-pdv-fg">
+                                <X className="size-3.5" />
+                            </button>
+                        )}
+                    </div>
                     <select value={customerId} onChange={(event) => onCustomer(event.target.value)} className="mt-2 h-12 w-full rounded-xl border border-pdv-line bg-pdv-field px-3 text-sm font-semibold text-pdv-fg outline-none focus:border-pdv-gold">
                         <option value="">Consumidor final</option>
-                        {customers.filter((customer) => customer.active).map((customer) => (
+                        {filteredCustomers.map((customer) => (
                             <option key={customer.id} value={customer.id}>{customer.tradeName || customer.name}</option>
                         ))}
+                        {customerQuery && filteredCustomers.length === 0 && (
+                            <option disabled>Nenhum cliente encontrado</option>
+                        )}
                     </select>
+                    {customerQuery && filteredCustomers.length > 0 && (
+                        <p className="mt-1 font-mono text-[10px] text-pdv-fg/50">{filteredCustomers.length} cliente(s) encontrado(s)</p>
+                    )}
 
                     <label className="mt-3 block">
                         <span className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-pdv-fg/70">CPF / CNPJ na nota</span>

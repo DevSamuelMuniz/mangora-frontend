@@ -8,6 +8,7 @@ import { useCompanySettings } from "@/features/settings/hooks/useSettings";
 import { useToast } from "@/components/ui/toast";
 import { formatCurrency, parseCurrency } from "@/lib/format";
 import type { PaymentMethod, Sale } from "@/types/sale";
+import type { Customer } from "@/types/customer";
 import type { AuthSession } from "@/lib/auth/types";
 
 import PdvHeader, { type PdvTheme } from "./PdvHeader";
@@ -65,6 +66,7 @@ export default function PdvScreen({ session }: { session: AuthSession }) {
     const [customerDocument, setCustomerDocument] = useState("");
     const [receivedAmount, setReceivedAmount] = useState("");
     const [newCustomerOpen, setNewCustomerOpen] = useState(false);
+    const [quickCustomers, setQuickCustomers] = useState<Customer[]>([]);
     const [saleResult, setSaleResult] = useState<Sale | null>(null);
     const scanRef = useRef<HTMLInputElement>(null);
 
@@ -131,6 +133,12 @@ export default function PdvScreen({ session }: { session: AuthSession }) {
     const cashChange = isCash ? { received: receivedValue, change: Math.max(0, receivedValue - cashPartAmount) } : undefined;
     const selectedCustomer = customers.find((customer) => customer.id === customerId);
     const selectedCustomerName = selectedCustomer ? selectedCustomer.tradeName || selectedCustomer.name : "Consumidor final";
+    // Clientes cadastrados no terminal aparecem no dropdown imediatamente
+    // (antes mesmo do refetch da query ["sale-options"]).
+    const dropdownCustomers = useMemo(() => {
+        const known = new Set(customers.map((customer) => customer.id));
+        return [...quickCustomers.filter((customer) => !known.has(customer.id)), ...customers];
+    }, [customers, quickCustomers]);
 
     function addProduct(product: import("@/types/product").Product) {
         setCart((current) => {
@@ -295,7 +303,7 @@ export default function PdvScreen({ session }: { session: AuthSession }) {
                     <div className="grid w-full max-w-6xl gap-6 lg:grid-cols-[1fr_340px]">
                         <div className="flex justify-center">
                             <PaymentStep
-                                customers={customers}
+                                customers={dropdownCustomers}
                                 requireCustomer={Boolean(company?.requireCustomer)}
                                 customerId={customerId}
                                 onCustomer={setCustomerId}
@@ -365,7 +373,7 @@ export default function PdvScreen({ session }: { session: AuthSession }) {
             </footer>
 
             {newCustomerOpen && (
-                <NewCustomerModal onCreated={(customer) => { setCustomerId(customer.id); setNewCustomerOpen(false); }} onClose={() => setNewCustomerOpen(false)} />
+                <NewCustomerModal onCreated={(customer) => { setQuickCustomers((prev) => [...prev, customer]); setCustomerId(customer.id); setNewCustomerOpen(false); }} onClose={() => setNewCustomerOpen(false)} />
             )}
         </div>
     );
