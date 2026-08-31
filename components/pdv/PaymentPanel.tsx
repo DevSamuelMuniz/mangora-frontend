@@ -44,27 +44,27 @@ export default function PaymentStep({
     const deferred = DEFERRED.includes(paymentMethod);
 
     return (
-        <div className="mx-auto flex w-full max-w-2xl flex-col gap-4 rounded-2xl border-2 border-white/10 bg-graphite-2 p-6">
+        <div className="mx-auto flex w-full max-w-2xl flex-col gap-4 rounded-2xl border-2 border-pdv-line bg-pdv-panel p-6">
             <div className="flex items-center justify-between gap-3">
                 <div>
                     <p className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-orange-400">Etapa 3 de 4</p>
-                    <h2 className="font-[family-name:var(--font-bricolage)] text-2xl font-black text-white">Pagamento</h2>
+                    <h2 className="font-[family-name:var(--font-bricolage)] text-2xl font-black text-pdv-fg">Pagamento</h2>
                 </div>
                 <div className="text-right">
-                    <p className="font-mono text-[10px] text-white/50">Total a receber</p>
-                    <p className="font-[family-name:var(--font-bricolage)] text-3xl font-black leading-none text-gold">{formatCurrency(total)}</p>
+                    <p className="font-mono text-[10px] text-pdv-fg/50">Total a receber</p>
+                    <p className="font-[family-name:var(--font-bricolage)] text-3xl font-black leading-none text-pdv-gold">{formatCurrency(total)}</p>
                 </div>
             </div>
 
             <div className="grid gap-4 sm:grid-cols-2">
                 <div>
                     <div className="flex items-center justify-between">
-                        <p className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-white/70">Cliente {requireCustomer ? "(obrigatório)" : "(opcional)"}</p>
-                        <button type="button" onClick={onNewCustomer} className="flex h-7 items-center gap-1 rounded-lg border border-white/10 bg-white/5 px-2 text-[10px] font-bold text-white transition hover:border-orange-400/50">
+                        <p className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-pdv-fg/70">Cliente {requireCustomer ? "(obrigatório)" : "(opcional)"}</p>
+                        <button type="button" onClick={onNewCustomer} className="flex h-7 items-center gap-1 rounded-lg border border-pdv-line bg-pdv-line px-2 text-[10px] font-bold text-pdv-fg transition hover:border-orange-400/50">
                             <UserPlus className="size-3" /> Novo cliente
                         </button>
                     </div>
-                    <select value={customerId} onChange={(event) => onCustomer(event.target.value)} className="mt-2 h-12 w-full rounded-xl border border-white/10 bg-graphite-3 px-3 text-sm font-semibold text-white outline-none focus:border-gold">
+                    <select value={customerId} onChange={(event) => onCustomer(event.target.value)} className="mt-2 h-12 w-full rounded-xl border border-pdv-line bg-pdv-field px-3 text-sm font-semibold text-pdv-fg outline-none focus:border-pdv-gold">
                         <option value="">Consumidor final</option>
                         {customers.filter((customer) => customer.active).map((customer) => (
                             <option key={customer.id} value={customer.id}>{customer.tradeName || customer.name}</option>
@@ -72,21 +72,21 @@ export default function PaymentStep({
                     </select>
 
                     <label className="mt-3 block">
-                        <span className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-white/70">CPF / CNPJ na nota</span>
+                        <span className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-pdv-fg/70">CPF / CNPJ na nota</span>
                         <input
                             type="text"
                             inputMode="numeric"
                             value={customerDocument}
                             onChange={(event) => onCustomerDocument(event.target.value.replace(/\D/g, "").slice(0, 14))}
                             placeholder="Opcional"
-                            className="mt-2 h-12 w-full rounded-xl border border-white/10 bg-graphite-3 px-3 font-mono text-base font-bold tracking-widest text-white outline-none placeholder:font-sans placeholder:text-sm placeholder:font-normal placeholder:tracking-normal placeholder:text-white/40 focus:border-gold"
+                            className="mt-2 h-12 w-full rounded-xl border border-pdv-line bg-pdv-field px-3 font-mono text-base font-bold tracking-widest text-pdv-fg outline-none placeholder:font-sans placeholder:text-sm placeholder:font-normal placeholder:tracking-normal placeholder:text-pdv-fg/40 focus:border-pdv-gold"
                         />
-                        {customerDocument && <p className="mt-1 font-mono text-[10px] text-white/50">CPF: {formatDocument(customerDocument, "INDIVIDUAL")}</p>}
+                        {customerDocument && <p className="mt-1 font-mono text-[10px] text-pdv-fg/50">CPF: {formatDocument(customerDocument, "INDIVIDUAL")}</p>}
                     </label>
                 </div>
 
                 <div>
-                    <p className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-white/70">Forma de pagamento</p>
+                    <p className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-pdv-fg/70">Forma de pagamento</p>
                     <div className="mt-2 grid grid-cols-2 gap-2">
                         {PAYMENT_METHODS.map((method) => (
                             <button
@@ -94,7 +94,7 @@ export default function PaymentStep({
                                 type="button"
                                 onClick={() => onPaymentMethod(method)}
                                 className={`flex h-11 items-center justify-center gap-1.5 rounded-xl border-2 text-xs font-bold transition ${
-                                    paymentMethod === method ? "border-gold bg-gold/15 text-gold" : "border-white/10 bg-white/5 text-white/80 hover:bg-white/10"
+                                    paymentMethod === method ? "border-pdv-gold bg-pdv-gold/15 text-pdv-gold" : "border-pdv-line bg-pdv-line text-pdv-fg/80 hover:bg-pdv-line"
                                 }`}
                             >
                                 <WalletCards className="size-3.5" />{paymentMethodLabels[method]}
@@ -103,8 +103,8 @@ export default function PaymentStep({
                     </div>
                     {deferred && (
                         <label className="mt-3 block">
-                            <span className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-white/70">Vencimento</span>
-                            <input type="date" value={dueDate} onChange={(event) => onDueDate(event.target.value)} className="mt-1.5 h-12 w-full rounded-xl border border-white/10 bg-graphite-3 px-3 text-sm font-semibold text-white outline-none focus:border-gold" />
+                            <span className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-pdv-fg/70">Vencimento</span>
+                            <input type="date" value={dueDate} onChange={(event) => onDueDate(event.target.value)} className="mt-1.5 h-12 w-full rounded-xl border border-pdv-line bg-pdv-field px-3 text-sm font-semibold text-pdv-fg outline-none focus:border-pdv-gold" />
                         </label>
                     )}
                 </div>
@@ -114,7 +114,7 @@ export default function PaymentStep({
                 <ChevronRight className="size-5" />Efetuar pagamento — {formatCurrency(total)}
             </button>
 
-            <p className="text-center font-mono text-[10px] text-white/40">
+            <p className="text-center font-mono text-[10px] text-pdv-fg/40">
                 <CheckCircle2 className="mr-1 inline size-3" />Receba o valor no terminal e confirme na próxima etapa.
             </p>
         </div>

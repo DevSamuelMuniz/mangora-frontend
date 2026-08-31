@@ -10,7 +10,7 @@ import { formatCurrency } from "@/lib/format";
 import type { PaymentMethod, Sale } from "@/types/sale";
 import type { AuthSession } from "@/lib/auth/types";
 
-import PdvHeader from "./PdvHeader";
+import PdvHeader, { type PdvTheme } from "./PdvHeader";
 import ScanBar from "./ScanBar";
 import ProductGrid from "./ProductGrid";
 import CartPanel, { type CartItem } from "./CartPanel";
@@ -33,6 +33,22 @@ export default function PdvScreen({ session }: { session: AuthSession }) {
     const customers = useMemo(() => options?.customers ?? [], [options]);
 
     const [step, setStep] = useState<Step>("items");
+    const [theme, setTheme] = useState<PdvTheme>(() => {
+        try {
+            const saved = typeof window !== "undefined" ? window.localStorage.getItem("pdv-theme") : null;
+            return saved === "dark" || saved === "verde" || saved === "light" ? saved : "dark";
+        } catch {
+            return "dark";
+        }
+    });
+    const changeTheme = useCallback((next: PdvTheme) => {
+        setTheme(next);
+        try {
+            window.localStorage.setItem("pdv-theme", next);
+        } catch {
+            // armazenamento indisponível: tema vale só para esta sessão
+        }
+    }, []);
     const [cart, setCart] = useState<CartItem[]>([]);
     const [scanInput, setScanInput] = useState("");
     const [searchTerm, setSearchTerm] = useState("");
@@ -191,7 +207,8 @@ export default function PdvScreen({ session }: { session: AuthSession }) {
 
     return (
         <div
-            className="flex min-h-screen flex-col bg-graphite font-[family-name:var(--font-manrope)] text-white"
+            data-theme={theme}
+            className="flex min-h-screen flex-col bg-pdv-bg font-[family-name:var(--font-manrope)] text-pdv-fg"
             onKeyDown={(event) => {
                 if (event.key === "F4" && !(event.target instanceof HTMLInputElement)) {
                     event.preventDefault();
@@ -199,7 +216,7 @@ export default function PdvScreen({ session }: { session: AuthSession }) {
                 }
             }}
         >
-            <PdvHeader session={session} />
+            <PdvHeader session={session} theme={theme} onThemeChange={changeTheme} />
 
             <div className="flex flex-1 items-start justify-center p-4 lg:p-6">
                 {step === "items" && (
@@ -207,10 +224,10 @@ export default function PdvScreen({ session }: { session: AuthSession }) {
                         <section className="flex flex-col gap-4">
                             <ScanBar value={scanInput} onChange={handleScanInput} onEnter={handleScan} onClear={() => { setScanInput(""); setSearchTerm(""); keepScanFocus(); }} onBlurRefocus={keepScanFocus} ref={scanRef} />
                             <div className="flex items-center justify-between">
-                                <p className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-white/60">
+                                <p className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-pdv-fg/60">
                                     {searchTerm ? `Resultados para "${searchTerm}"` : "Catálogo disponível"}
                                 </p>
-                                <span className="rounded-full bg-white/5 px-2.5 py-1 font-mono text-[10px] font-bold text-white/60">{availableProducts.length} produto(s)</span>
+                                <span className="rounded-full bg-pdv-line px-2.5 py-1 font-mono text-[10px] font-bold text-pdv-fg/60">{availableProducts.length} produto(s)</span>
                             </div>
                             <div className="flex flex-wrap gap-1.5">
                                 {categories.map((item) => (
@@ -219,7 +236,7 @@ export default function PdvScreen({ session }: { session: AuthSession }) {
                                         type="button"
                                         onClick={() => setCategory(item)}
                                         className={`rounded-full px-3 py-1.5 font-mono text-[11px] font-bold transition ${
-                                            category === item ? "bg-gold text-ink" : "bg-white/5 text-white/60 hover:bg-white/10"
+                                            category === item ? "bg-pdv-gold text-ink" : "bg-pdv-line text-pdv-fg/60 hover:bg-pdv-line"
                                         }`}
                                     >
                                         {item}
@@ -241,7 +258,7 @@ export default function PdvScreen({ session }: { session: AuthSession }) {
                             <button type="button" onClick={goToReview} disabled={!cart.length} className="flex h-14 w-full items-center justify-center gap-2 rounded-2xl bg-orange font-[family-name:var(--font-bricolage)] text-base font-black text-white shadow-lg shadow-orange-950/50 transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-40">
                                 Confirmar itens — {formatCurrency(total)}
                             </button>
-                            <p className="text-center font-mono text-[10px] text-white/40">Após confirmar, você escolhe o pagamento e finaliza.</p>
+                            <p className="text-center font-mono text-[10px] text-pdv-fg/40">Após confirmar, você escolhe o pagamento e finaliza.</p>
                         </aside>
                     </div>
                 )}
@@ -281,20 +298,20 @@ export default function PdvScreen({ session }: { session: AuthSession }) {
                 {step === "processing" && (
                     <div className="grid w-full max-w-6xl gap-6 lg:grid-cols-[1fr_340px]">
                         <div className="flex justify-center">
-                            <div className="mx-auto flex w-full max-w-md flex-col items-center rounded-2xl border-2 border-white/10 bg-graphite-2 p-8 text-center">
-                                <span className="flex size-16 items-center justify-center rounded-full bg-gold/15 text-gold">
+                            <div className="mx-auto flex w-full max-w-md flex-col items-center rounded-2xl border-2 border-pdv-line bg-pdv-panel p-8 text-center">
+                                <span className="flex size-16 items-center justify-center rounded-full bg-pdv-gold/15 text-pdv-gold">
                                     <ShieldCheck className="size-8" />
                                 </span>
-                                <h2 className="mt-4 font-[family-name:var(--font-bricolage)] text-2xl font-black text-white">Pagamento efetuado?</h2>
-                                <p className="mt-2 max-w-xs text-sm leading-6 text-white/60">
-                                    Confirme que o pagamento de <strong className="text-gold">{formatCurrency(total)}</strong> foi recebido
+                                <h2 className="mt-4 font-[family-name:var(--font-bricolage)] text-2xl font-black text-pdv-fg">Pagamento efetuado?</h2>
+                                <p className="mt-2 max-w-xs text-sm leading-6 text-pdv-fg/60">
+                                    Confirme que o pagamento de <strong className="text-pdv-gold">{formatCurrency(total)}</strong> foi recebido
                                     ({paymentMethod === "PIX" ? "PIX" : paymentMethod === "CASH" ? "dinheiro" : paymentMethodLabelsSafe(paymentMethod)}).
                                 </p>
                                 {createSale.isPending && (
-                                    <p className="mt-4 flex items-center gap-2 font-mono text-xs text-white/50"><LoaderCircle className="size-4 animate-spin" />Finalizando venda...</p>
+                                    <p className="mt-4 flex items-center gap-2 font-mono text-xs text-pdv-fg/50"><LoaderCircle className="size-4 animate-spin" />Finalizando venda...</p>
                                 )}
                                 <div className="mt-6 grid w-full grid-cols-2 gap-2">
-                                    <button type="button" onClick={() => setStep("payment")} disabled={createSale.isPending} className="flex h-14 items-center justify-center gap-2 rounded-xl border border-white/15 text-sm font-bold text-white/70 transition hover:bg-white/5 disabled:opacity-50">
+                                    <button type="button" onClick={() => setStep("payment")} disabled={createSale.isPending} className="flex h-14 items-center justify-center gap-2 rounded-xl border border-pdv-line text-sm font-bold text-pdv-fg/70 transition hover:bg-pdv-line disabled:opacity-50">
                                         <ArrowLeft className="size-4" /> Voltar
                                     </button>
                                     <button type="button" onClick={confirmPayment} disabled={createSale.isPending} className="flex h-14 items-center justify-center gap-2 rounded-xl bg-orange font-[family-name:var(--font-bricolage)] text-sm font-black text-white transition hover:brightness-110 disabled:opacity-60">
@@ -312,7 +329,7 @@ export default function PdvScreen({ session }: { session: AuthSession }) {
                 )}
             </div>
 
-            <footer className="flex flex-wrap items-center justify-center gap-x-5 gap-y-1 border-t border-white/10 bg-graphite-2 px-4 py-2 font-mono text-[10px] font-semibold text-white/60">
+            <footer className="flex flex-wrap items-center justify-center gap-x-5 gap-y-1 border-t border-pdv-line bg-pdv-panel px-4 py-2 font-mono text-[10px] font-semibold text-pdv-fg/60">
                 {step === "items" ? (
                     <><Kbd>F2</Kbd> ou <Kbd>/</Kbd> focar busca · <Kbd>Enter</Kbd> confirmar leitura · <Kbd>F4</Kbd> confirmar itens · <Kbd>+</Kbd>/<Kbd>−</Kbd> quantidade · <Kbd>⛶</Kbd> tela cheia</>
                 ) : (
@@ -328,7 +345,7 @@ export default function PdvScreen({ session }: { session: AuthSession }) {
 }
 
 function Kbd({ children }: { children: import("react").ReactNode }) {
-    return <kbd className="rounded-md border border-white/15 bg-white/5 px-1.5 py-0.5 text-[10px] text-white">{children}</kbd>;
+    return <kbd className="rounded-md border border-pdv-line bg-pdv-line px-1.5 py-0.5 text-[10px] text-pdv-fg">{children}</kbd>;
 }
 
 function paymentMethodLabelsSafe(method: PaymentMethod): string {

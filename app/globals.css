@@ -14,14 +14,61 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-  /* PDV — superfícies neutras (grafite, sem verde) + acentos da marca */
+  /* PDV — tokens de superfície (definidos por tema em [data-theme]) */
+  --color-pdv-bg: var(--pdv-bg);
+  --color-pdv-panel: var(--pdv-panel);
+  --color-pdv-field: var(--pdv-field);
+  --color-pdv-fg: var(--pdv-fg);
+  --color-pdv-line: var(--pdv-line);
+  --color-pdv-gold: var(--pdv-gold);
+  --color-pdv-ok: var(--pdv-ok);
+  --color-pdv-warn: var(--pdv-warn);
+  /* Acentos fixos da marca */
   --color-graphite: #14161b;
-  --color-graphite-2: #1d2027;
-  --color-graphite-3: #272b34;
   --color-gold: #ffb21a;
   --color-orange: #ff6b1a;
   --color-cream: #fff8ea;
   --color-ink: #123d2b;
+}
+
+/* Tema padrão: escuro (grafite) */
+:root,
+[data-theme="dark"] {
+  --pdv-bg: #14161b;
+  --pdv-panel: #1d2027;
+  --pdv-field: #272b34;
+  --pdv-fg: #f4f6f8;
+  --pdv-line: rgba(255, 255, 255, 0.09);
+  --pdv-gold: #ffb21a;
+  --pdv-ok: #4ade80;
+  --pdv-warn: #fcd34d;
+  color-scheme: dark;
+}
+
+/* Tema verde: identidade original da marca */
+[data-theme="verde"] {
+  --pdv-bg: #0a2418;
+  --pdv-panel: #123d2b;
+  --pdv-field: #1f4a34;
+  --pdv-fg: #f4f6f8;
+  --pdv-line: rgba(255, 255, 255, 0.09);
+  --pdv-gold: #ffb21a;
+  --pdv-ok: #4ade80;
+  --pdv-warn: #fcd34d;
+  color-scheme: dark;
+}
+
+/* Tema claro */
+[data-theme="light"] {
+  --pdv-bg: #f1efe8;
+  --pdv-panel: #ffffff;
+  --pdv-field: #e9e6dd;
+  --pdv-fg: #1d2128;
+  --pdv-line: rgba(29, 33, 40, 0.12);
+  --pdv-gold: #d99a06;
+  --pdv-ok: #15803d;
+  --pdv-warn: #b45309;
+  color-scheme: light;
 }
 
 body {
