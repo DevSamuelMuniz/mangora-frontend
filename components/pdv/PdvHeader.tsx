@@ -1,8 +1,10 @@
 "use client";
 
 import { Maximize, Minimize } from "lucide-react";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 
+import BrandLogo from "@/components/brand/BrandLogo";
 import { useCashRegister } from "@/features/cash-registers/hooks/useCashRegister";
 import { useCompanySettings } from "@/features/settings/hooks/useSettings";
 import type { AuthSession } from "@/lib/auth/types";
@@ -38,9 +40,9 @@ export default function PdvHeader({ session }: { session: AuthSession }) {
     return (
         <header className="flex items-center justify-between gap-4 border-b border-white/10 bg-[#0a2418] px-5 py-3">
             <div className="flex min-w-0 items-center gap-4">
-                <p className="hidden text-[10px] font-black uppercase tracking-[0.2em] text-[#ffb21a] sm:block">
-                    PDV
-                </p>
+                <Link href="/" aria-label="Mangora — página inicial" className="shrink-0">
+                    <BrandLogo className="h-8" />
+                </Link>
                 <div className="min-w-0">
                     <p className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.14em] text-orange-400">
                         {company?.tradeName ?? session.company.tradeName}
