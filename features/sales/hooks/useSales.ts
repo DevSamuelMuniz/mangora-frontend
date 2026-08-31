@@ -43,6 +43,7 @@ export type CreateSaleInput = {
     customerId?: string;
     customerDocument?: string;
     paymentMethod: PaymentMethod;
+    payments?: { method: PaymentMethod; amount: number }[];
     dueDate?: string;
     discount: number;
     items: { productId: string; quantity: number }[];

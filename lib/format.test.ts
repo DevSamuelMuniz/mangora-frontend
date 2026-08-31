@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { formatCurrency, formatDate, formatDateLong, formatDateTime, formatDocument, formatNumber, formatPhone, formatPercent, formatTime } from "./format";
+import { formatCurrency, formatDate, formatDateLong, formatDateTime, formatDocument, formatNumber, formatPhone, formatPercent, formatTime, parseCurrency } from "./format";
 
 describe("formatCurrency", () => {
     it("formata valores em BRL com separadores pt-BR", () => {
@@ -59,5 +59,29 @@ describe("formatPhone", () => {
     });
     it("formata fixo (10 dígitos)", () => {
         expect(formatPhone("8131234567")).toBe("(81) 3123-4567");
+    });
+});
+
+describe("parseCurrency", () => {
+    it("aceita valores inteiros digitados pelo caixa", () => {
+        expect(parseCurrency("50")).toBe(50);
+    });
+    it("aceita vírgula como separador decimal", () => {
+        expect(parseCurrency("50,00")).toBe(50);
+        expect(parseCurrency("12,34")).toBe(12.34);
+    });
+    it("aceita ponto único como decimal (50.00)", () => {
+        expect(parseCurrency("50.00")).toBe(50);
+    });
+    it("remove símbolos de moeda", () => {
+        expect(parseCurrency("R$ 1.234,56")).toBe(1234.56);
+    });
+    it("trata pontos múltiplos como milhar", () => {
+        expect(parseCurrency("1.234,56")).toBe(1234.56);
+        expect(parseCurrency("1.234.567,89")).toBe(1234567.89);
+    });
+    it("retorna 0 para vazio ou inválido", () => {
+        expect(parseCurrency("")).toBe(0);
+        expect(parseCurrency("abc")).toBe(0);
     });
 });

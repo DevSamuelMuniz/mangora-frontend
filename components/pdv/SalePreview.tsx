@@ -3,7 +3,7 @@
 import { ReceiptText, UserRound } from "lucide-react";
 
 import { formatCurrency } from "@/lib/format";
-import type { PaymentMethod } from "@/types/sale";
+import { paymentMethodLabels, type PaymentMethod } from "@/types/sale";
 import type { CartItem } from "./CartPanel";
 
 type SalePreviewProps = {
@@ -12,14 +12,14 @@ type SalePreviewProps = {
     discount: number;
     total: number;
     customerName: string;
-    paymentMethod?: PaymentMethod | null;
+    payments?: { method: PaymentMethod; amount: number }[];
     customerDocument?: string;
     received?: number;
     change?: number;
 };
 
 /** Pré-visualização da venda (mini recibo) — persistente nas etapas 2–4. */
-export default function SalePreview({ cart, subtotal, discount, total, customerName, paymentMethod, customerDocument, received, change }: SalePreviewProps) {
+export default function SalePreview({ cart, subtotal, discount, total, customerName, payments, customerDocument, received, change }: SalePreviewProps) {
     return (
         <div className="sticky top-4 flex flex-col overflow-hidden rounded-2xl bg-cream text-ink shadow-2xl shadow-black/30">
             <div className="flex items-center justify-between border-b-2 border-dashed border-ink/15 px-4 py-3">
@@ -61,7 +61,13 @@ export default function SalePreview({ cart, subtotal, discount, total, customerN
 
             <div className="space-y-1 border-t-2 border-dashed border-ink/15 px-4 py-3 font-mono text-[10px] text-ink/60">
                 <div className="flex items-center gap-1.5"><UserRound className="size-3" /><span>{customerName}</span></div>
-                {paymentMethod && <div className="flex justify-between"><span>Pagamento</span><span>{paymentMethod}</span></div>}
+                {payments?.length ? (
+                    <div className="space-y-0.5 pt-1">
+                        {payments.filter((payment) => payment.amount > 0).map((payment, index) => (
+                            <div key={index} className="flex justify-between"><span>{paymentMethodLabels[payment.method]}</span><span>{formatCurrency(payment.amount)}</span></div>
+                        ))}
+                    </div>
+                ) : null}
                 {customerDocument && <div className="flex justify-between"><span>CPF/CNPJ</span><span>{customerDocument}</span></div>}
             </div>
         </div>

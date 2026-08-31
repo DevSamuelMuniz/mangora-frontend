@@ -70,6 +70,11 @@ export function printReceipt(sale: Sale, company: ReceiptCompany | null, changeI
     <div class="label">Total</div>
     <div class="value">${formatMoney(sale.total)}</div>
   </div>
+  ${sale.payments?.length ? `
+  <div class="divider-solid"></div>
+  <table class="meta">
+    ${sale.payments.map((payment) => `<tr><td>${escapeHtml(paymentMethodLabels[payment.method])}</td><td>${formatMoney(payment.amount)}</td></tr>`).join("")}
+  </table>` : ""}
   ${isCashChange ? `
   <div class="divider-solid"></div>
   <table class="meta">

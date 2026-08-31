@@ -3,7 +3,7 @@
 import { CheckCircle2, Printer, RotateCcw } from "lucide-react";
 
 import { formatCurrency } from "@/lib/format";
-import type { Sale } from "@/types/sale";
+import { paymentMethodLabels, type Sale } from "@/types/sale";
 import type { CompanySettings } from "@/types/settings";
 import { printReceipt } from "@/lib/pdv/print";
 
@@ -31,7 +31,13 @@ export default function DoneStep({ sale, company, received, change, onFinish }: 
                 <div className="mt-3 space-y-1 border-t-2 border-dashed border-ink/15 pt-3 font-mono text-xs text-ink/70">
                     <div className="flex justify-between"><span>Cliente</span><span>{sale.customerName}</span></div>
                     {sale.customerDocument && <div className="flex justify-between"><span>CPF/CNPJ</span><span>{sale.customerDocument}</span></div>}
-                    <div className="flex justify-between"><span>Pagamento</span><span>{sale.paymentMethod}</span></div>
+                    {sale.payments?.length ? (
+                        sale.payments.map((payment, index) => (
+                            <div key={index} className="flex justify-between"><span>{paymentMethodLabels[payment.method]}</span><span>{formatCurrency(payment.amount)}</span></div>
+                        ))
+                    ) : (
+                        <div className="flex justify-between"><span>Pagamento</span><span>{paymentMethodLabels[sale.paymentMethod]}</span></div>
+                    )}
                 </div>
             </div>
 

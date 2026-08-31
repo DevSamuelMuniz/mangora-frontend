@@ -13,6 +13,12 @@ export type SaleItem = {
   trackStock: boolean;
 };
 
+export type SalePayment = {
+  id: string;
+  method: PaymentMethod;
+  amount: number;
+};
+
 export type Sale = {
   id: string;
   companyId: string;
@@ -27,6 +33,7 @@ export type Sale = {
   discount: number;
   total: number;
   paymentMethod: PaymentMethod;
+  payments?: SalePayment[];
   notes: string | null;
   cancelledAt: string | null;
   cancelledByName: string | null;

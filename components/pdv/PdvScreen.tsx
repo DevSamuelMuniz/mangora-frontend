@@ -21,6 +21,7 @@ import SalePreview from "./SalePreview";
 import NewCustomerModal from "./NewCustomerModal";
 
 type Step = "items" | "review" | "payment" | "processing" | "done";
+type PaymentPart = { method: PaymentMethod; amount: string };
 const DEFERRED: PaymentMethod[] = ["CHECK", "STORE_CREDIT"];
 
 export default function PdvScreen({ session }: { session: AuthSession }) {
@@ -54,7 +55,7 @@ export default function PdvScreen({ session }: { session: AuthSession }) {
     const [searchTerm, setSearchTerm] = useState("");
     const [category, setCategory] = useState("Todos");
     const [customerId, setCustomerId] = useState("");
-    const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>(company?.defaultPayment ?? "PIX");
+    const [parts, setParts] = useState<PaymentPart[]>([{ method: company?.defaultPayment ?? "PIX", amount: "" }]);
     const [dueDate, setDueDate] = useState(() => {
         const value = new Date();
         value.setDate(value.getDate() + 1);
@@ -118,8 +119,16 @@ export default function PdvScreen({ session }: { session: AuthSession }) {
     const discountValue = Math.max(0, Math.min(Number(discount) || 0, company?.maximumDiscount ?? 100));
     const total = Math.max(0, subtotal - discountValue);
     const receivedValue = parseCurrency(receivedAmount);
-    const change = receivedValue - total;
-    const cashChange = paymentMethod === "CASH" ? { received: receivedValue, change: Math.max(0, change) } : undefined;
+    const primaryMethod = parts[0]?.method ?? "PIX";
+    const deferred = parts.some((part) => DEFERRED.includes(part.method));
+    const isCash = parts.some((part) => part.method === "CASH");
+    const cashPartAmount = parts
+        .filter((part) => part.method === "CASH")
+        .reduce((sum, part) => sum + parseCurrency(part.amount), 0);
+    const parsedParts = parts.map((part) => ({ method: part.method, amount: parseCurrency(part.amount) }));
+    const splitValid =
+        parts.length === 1 || (parsedParts.every((part) => part.amount > 0) && Math.abs(parsedParts.reduce((sum, part) => sum + part.amount, 0) - total) < 0.01);
+    const cashChange = isCash ? { received: receivedValue, change: Math.max(0, receivedValue - cashPartAmount) } : undefined;
     const selectedCustomer = customers.find((customer) => customer.id === customerId);
     const selectedCustomerName = selectedCustomer ? selectedCustomer.tradeName || selectedCustomer.name : "Consumidor final";
 
@@ -172,19 +181,24 @@ export default function PdvScreen({ session }: { session: AuthSession }) {
     /** Etapa 3 → 4: pagamento efetuado — aguardando confirmação final. */
     function pay() {
         if (company?.requireCustomer && !customerId) return toast.error("Esta empresa exige cliente identificado.");
-        if (DEFERRED.includes(paymentMethod) && !customerId) return toast.error("Cheque ou fiado exige cliente.");
-        if (DEFERRED.includes(paymentMethod) && !dueDate) return toast.error("Informe o vencimento do pagamento.");
+        if (deferred && !customerId) return toast.error("Cheque ou fiado exige cliente.");
+        if (deferred && !dueDate) return toast.error("Informe o vencimento do pagamento.");
+        if (!splitValid) return toast.error("Os valores dos pagamentos não somam o total da venda.");
         setStep("processing");
     }
 
     /** Etapa 4 → 5: confirmação final — envia a venda. */
     function confirmPayment() {
+        const paymentParts = parts
+            .map((part) => ({ method: part.method, amount: Math.round(parseCurrency(part.amount) * 100) / 100 }))
+            .filter((part) => part.amount > 0);
         void createSale
             .mutateAsync({
                 customerId: customerId || undefined,
                 customerDocument: customerDocument || undefined,
-                paymentMethod,
-                dueDate: DEFERRED.includes(paymentMethod) ? dueDate : undefined,
+                paymentMethod: primaryMethod,
+                payments: paymentParts.length ? paymentParts : [{ method: primaryMethod, amount: Math.round(total * 100) / 100 }],
+                dueDate: deferred ? dueDate : undefined,
                 discount: discountValue,
                 items: cart.map((item) => ({ productId: item.product.id, quantity: item.quantity })),
             })
@@ -204,7 +218,7 @@ export default function PdvScreen({ session }: { session: AuthSession }) {
         setScanInput("");
         setCustomerDocument("");
         setReceivedAmount("");
-        setPaymentMethod(company?.defaultPayment ?? "PIX");
+        setParts([{ method: company?.defaultPayment ?? "PIX", amount: "" }]);
         setSaleResult(null);
         setStep("items");
         keepScanFocus();
@@ -273,7 +287,7 @@ export default function PdvScreen({ session }: { session: AuthSession }) {
                         <div className="flex justify-center">
                             <ReviewItems cart={cart} subtotal={subtotal} discount={discountValue} total={total} onBack={() => setStep("items")} onNext={goToPayment} />
                         </div>
-                        <SalePreview cart={cart} subtotal={subtotal} discount={discountValue} total={total} customerName={selectedCustomerName} paymentMethod={paymentMethod} customerDocument={customerDocument || undefined} />
+                        <SalePreview cart={cart} subtotal={subtotal} discount={discountValue} total={total} customerName={selectedCustomerName} payments={parsedParts} customerDocument={customerDocument || undefined} />
                     </div>
                 )}
 
@@ -286,8 +300,8 @@ export default function PdvScreen({ session }: { session: AuthSession }) {
                                 customerId={customerId}
                                 onCustomer={setCustomerId}
                                 onNewCustomer={() => setNewCustomerOpen(true)}
-                                paymentMethod={paymentMethod}
-                                onPaymentMethod={setPaymentMethod}
+                                parts={parts}
+                                onPartsChange={setParts}
                                 dueDate={dueDate}
                                 onDueDate={setDueDate}
                                 customerDocument={customerDocument}
@@ -298,7 +312,7 @@ export default function PdvScreen({ session }: { session: AuthSession }) {
                                 onReceivedAmount={setReceivedAmount}
                             />
                         </div>
-                        <SalePreview cart={cart} subtotal={subtotal} discount={discountValue} total={total} customerName={selectedCustomerName} paymentMethod={paymentMethod} customerDocument={customerDocument || undefined} received={cashChange?.received} change={cashChange?.change} />
+                        <SalePreview cart={cart} subtotal={subtotal} discount={discountValue} total={total} customerName={selectedCustomerName} payments={parsedParts} customerDocument={customerDocument || undefined} received={cashChange?.received} change={cashChange?.change} />
                     </div>
                 )}
 
@@ -312,7 +326,7 @@ export default function PdvScreen({ session }: { session: AuthSession }) {
                                 <h2 className="mt-4 font-[family-name:var(--font-bricolage)] text-2xl font-black text-pdv-fg">Pagamento efetuado?</h2>
                                 <p className="mt-2 max-w-xs text-sm leading-6 text-pdv-fg/60">
                                     Confirme que o pagamento de <strong className="text-pdv-gold">{formatCurrency(total)}</strong> foi recebido
-                                    ({paymentMethod === "PIX" ? "PIX" : paymentMethod === "CASH" ? "dinheiro" : paymentMethodLabelsSafe(paymentMethod)}).
+                                    ({parsedParts.map((part) => `${paymentMethodLabelsSafe(part.method)}${part.amount ? ` ${formatCurrency(part.amount)}` : ""}`).join(" + ")}).
                                 </p>
                                 {cashChange && (
                                     <div className="mt-4 w-full rounded-xl bg-pdv-ok/10 px-4 py-3 font-mono text-sm">
@@ -333,7 +347,7 @@ export default function PdvScreen({ session }: { session: AuthSession }) {
                                 </div>
                             </div>
                         </div>
-                        <SalePreview cart={cart} subtotal={subtotal} discount={discountValue} total={total} customerName={selectedCustomerName} paymentMethod={paymentMethod} customerDocument={customerDocument || undefined} received={cashChange?.received} change={cashChange?.change} />
+                        <SalePreview cart={cart} subtotal={subtotal} discount={discountValue} total={total} customerName={selectedCustomerName} payments={parsedParts} customerDocument={customerDocument || undefined} received={cashChange?.received} change={cashChange?.change} />
                     </div>
                 )}
 
