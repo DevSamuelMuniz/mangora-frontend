@@ -41,6 +41,7 @@ export function useSaleOptions() {
 
 export type CreateSaleInput = {
     customerId?: string;
+    customerDocument?: string;
     paymentMethod: PaymentMethod;
     dueDate?: string;
     discount: number;

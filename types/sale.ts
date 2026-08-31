@@ -20,6 +20,7 @@ export type Sale = {
   number: number;
   code: string;
   customerName: string;
+  customerDocument: string | null;
   createdByName: string;
   status: SaleStatus;
   subtotal: number;

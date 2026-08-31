@@ -214,6 +214,28 @@ export default function ProductCatalog() {
   );
 }
 
+function ProductActionsModal({ product, onClose, onView, onDelete }: { product: Product; onClose: () => void; onView: () => void; onDelete: () => void }) {
+  return (
+    <div onMouseDown={(event) => { if (event.target === event.currentTarget) onClose(); }} className="fixed inset-0 z-[70] flex items-center justify-center bg-slate-950/40 p-4 backdrop-blur-sm">
+      <div role="dialog" aria-modal="true" className="w-full max-w-xs rounded-2xl border border-slate-200 bg-white p-5 shadow-2xl">
+        <div className="flex items-center justify-between gap-3">
+          <div className="min-w-0">
+            <p className="text-[10px] font-bold uppercase tracking-wider text-orange-600">Ações do produto</p>
+            <h2 className="mt-0.5 truncate text-base font-black text-slate-950">{product.name}</h2>
+            <p className="text-[10px] text-slate-400">SKU: {product.sku}</p>
+          </div>
+          <button type="button" onClick={onClose} aria-label="Fechar" className="flex size-9 shrink-0 items-center justify-center rounded-xl text-slate-400 hover:bg-slate-100"><X className="size-4" /></button>
+        </div>
+        <div className="mt-4 space-y-2">
+          <button type="button" onClick={onView} className="flex h-11 w-full items-center gap-2.5 rounded-xl border border-slate-200 px-3 text-xs font-bold text-slate-700 transition hover:bg-slate-50"><Eye className="size-4 text-slate-500" />Visualizar detalhes</button>
+          <Link href={`/produtos?acao=editar&id=${product.id}`} onClick={onClose} className="flex h-11 w-full items-center gap-2.5 rounded-xl border border-slate-200 px-3 text-xs font-bold text-slate-700 transition hover:bg-slate-50"><Pencil className="size-4 text-slate-500" />Editar produto</Link>
+          <button type="button" onClick={onDelete} className="flex h-11 w-full items-center gap-2.5 rounded-xl border border-red-200 px-3 text-xs font-bold text-red-600 transition hover:bg-red-50"><Trash2 className="size-4" />Excluir produto</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function ProductDetailsModal({ product, onClose }: { product: Product; onClose: () => void }) {
   return (
     <div onMouseDown={(event) => { if (event.target === event.currentTarget) onClose(); }} className="fixed inset-0 z-[70] flex items-center justify-center bg-slate-950/40 p-4 backdrop-blur-sm">

@@ -14,6 +14,8 @@ import ScanBar from "./ScanBar";
 import ProductGrid from "./ProductGrid";
 import CartPanel, { type CartItem } from "./CartPanel";
 import PaymentPanel from "./PaymentPanel";
+import ConfirmSaleModal from "./ConfirmSaleModal";
+import NewCustomerModal from "./NewCustomerModal";
 
 const DEFERRED: PaymentMethod[] = ["CHECK", "STORE_CREDIT"];
 
@@ -37,6 +39,9 @@ export default function PdvScreen({ session }: { session: AuthSession }) {
         return value.toISOString().slice(0, 10);
     });
     const [discount, setDiscount] = useState("0");
+    const [customerDocument, setCustomerDocument] = useState("");
+    const [confirming, setConfirming] = useState(false);
+    const [newCustomerOpen, setNewCustomerOpen] = useState(false);
     const scanRef = useRef<HTMLInputElement>(null);
 
     // Campo de scan sempre focado (leitor de código de barras).
@@ -74,6 +79,8 @@ export default function PdvScreen({ session }: { session: AuthSession }) {
     const subtotal = cart.reduce((sum, item) => sum + item.product.price * item.quantity, 0);
     const discountValue = Math.max(0, Math.min(Number(discount) || 0, company?.maximumDiscount ?? 100));
     const total = Math.max(0, subtotal - discountValue);
+    const selectedCustomer = customers.find((customer) => customer.id === customerId);
+    const selectedCustomerName = selectedCustomer ? selectedCustomer.tradeName || selectedCustomer.name : "Consumidor final";
 
     function addProduct(product: import("@/types/product").Product) {
         setCart((current) => {
@@ -110,15 +117,21 @@ export default function PdvScreen({ session }: { session: AuthSession }) {
         }
     }
 
+    /** Abre a confirmação (double check) — nada é enviado ainda. */
     function finishSale() {
         if (!cart.length) return toast.error("Adicione pelo menos um item ao carrinho.");
         if (company?.requireCustomer && !customerId) return toast.error("Esta empresa exige cliente identificado.");
         if (DEFERRED.includes(paymentMethod) && !customerId) return toast.error("Cheque ou fiado exige cliente.");
         if (DEFERRED.includes(paymentMethod) && !dueDate) return toast.error("Informe o vencimento do pagamento.");
+        setConfirming(true);
+    }
 
+    /** Confirmação final — envia a venda com o CPF/CNPJ da nota. */
+    function confirmSale() {
         void createSale
             .mutateAsync({
                 customerId: customerId || undefined,
+                customerDocument: customerDocument || undefined,
                 paymentMethod,
                 dueDate: DEFERRED.includes(paymentMethod) ? dueDate : undefined,
                 discount: discountValue,
@@ -131,6 +144,8 @@ export default function PdvScreen({ session }: { session: AuthSession }) {
                 setDiscount("0");
                 setSearchTerm("");
                 setScanInput("");
+                setCustomerDocument("");
+                setConfirming(false);
                 setPaymentMethod(company?.defaultPayment ?? "PIX");
                 keepScanFocus();
             })
@@ -180,21 +195,43 @@ export default function PdvScreen({ session }: { session: AuthSession }) {
                         requireCustomer={Boolean(company?.requireCustomer)}
                         customerId={customerId}
                         onCustomer={setCustomerId}
+                        onNewCustomer={() => setNewCustomerOpen(true)}
                         paymentMethod={paymentMethod}
                         onPaymentMethod={setPaymentMethod}
                         dueDate={dueDate}
                         onDueDate={setDueDate}
                         total={total}
-                        pending={createSale.isPending}
                         disabled={!cart.length}
-                        onFinish={finishSale}
+                        onReview={finishSale}
                     />
                 </aside>
             </div>
 
-            <footer className="flex flex-wrap items-center justify-center gap-x-5 gap-y-1 border-t border-white/10 bg-[#0a2418] px-4 py-2 font-mono text-[10px] font-semibold text-white/70">
-                <Kbd>F2</Kbd> ou <Kbd>/</Kbd> focar busca · <Kbd>Enter</Kbd> confirmar leitura · <Kbd>F4</Kbd> finalizar venda · <Kbd>+</Kbd>/<Kbd>−</Kbd> quantidade · <Kbd>Esc</Kbd> limpar · <Kbd>⛶</Kbd> tela cheia
+            <footer className="flex flex-wrap items-center justify-center gap-x-5 gap-y-1 border-t border-white/10 bg-[#0a2418] px-4 py-2 font-mono text-[10px] font-semibold text-white/60">
+                <Kbd>F2</Kbd> ou <Kbd>/</Kbd> focar busca · <Kbd>Enter</Kbd> confirmar leitura · <Kbd>F4</Kbd> revisar venda · <Kbd>+</Kbd>/<Kbd>−</Kbd> quantidade · <Kbd>Esc</Kbd> limpar · <Kbd>⛶</Kbd> tela cheia
             </footer>
+
+            {confirming && (
+                <ConfirmSaleModal
+                    customerName={selectedCustomerName}
+                    paymentMethod={paymentMethod}
+                    items={cart.map((item) => ({ name: item.product.name, quantity: item.quantity, price: item.product.price }))}
+                    subtotal={subtotal}
+                    discount={discountValue}
+                    total={total}
+                    customerDocument={customerDocument}
+                    onCustomerDocument={setCustomerDocument}
+                    pending={createSale.isPending}
+                    onConfirm={confirmSale}
+                    onBack={() => setConfirming(false)}
+                />
+            )}
+            {newCustomerOpen && (
+                <NewCustomerModal
+                    onCreated={(customer) => { setCustomerId(customer.id); setNewCustomerOpen(false); }}
+                    onClose={() => setNewCustomerOpen(false)}
+                />
+            )}
         </div>
     );
 }

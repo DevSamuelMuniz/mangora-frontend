@@ -1,6 +1,6 @@
 "use client";
 
-import { CheckCircle2, ChevronRight, LoaderCircle, WalletCards } from "lucide-react";
+import { CheckCircle2, ChevronRight, UserPlus, WalletCards } from "lucide-react";
 
 import { formatCurrency } from "@/lib/format";
 import { paymentMethodLabels, type PaymentMethod } from "@/types/sale";
@@ -14,14 +14,14 @@ type PaymentPanelProps = {
     requireCustomer: boolean;
     customerId: string;
     onCustomer: (id: string) => void;
+    onNewCustomer: () => void;
     paymentMethod: PaymentMethod;
     onPaymentMethod: (method: PaymentMethod) => void;
     dueDate: string;
     onDueDate: (date: string) => void;
     total: number;
-    pending: boolean;
     disabled: boolean;
-    onFinish: () => void;
+    onReview: () => void;
 };
 
 /** Pagamento e finalização do terminal: cliente, forma de pagamento e botão. */
@@ -30,23 +30,32 @@ export default function PaymentPanel({
     requireCustomer,
     customerId,
     onCustomer,
+    onNewCustomer,
     paymentMethod,
     onPaymentMethod,
     dueDate,
     onDueDate,
     total,
-    pending,
     disabled,
-    onFinish,
+    onReview,
 }: PaymentPanelProps) {
     const deferred = DEFERRED.includes(paymentMethod);
 
     return (
         <div className="flex flex-col gap-4 rounded-2xl border-2 border-white/10 bg-[#0a2418] p-4">
             <div>
-                <p className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-white/70">
-                    Cliente {requireCustomer ? "(obrigatório)" : "(opcional)"}
-                </p>
+                <div className="flex items-center justify-between">
+                    <p className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-white/70">
+                        Cliente {requireCustomer ? "(obrigatório)" : "(opcional)"}
+                    </p>
+                    <button
+                        type="button"
+                        onClick={onNewCustomer}
+                        className="flex h-7 items-center gap-1 rounded-lg border border-white/10 bg-white/5 px-2 text-[10px] font-bold text-white transition hover:border-orange-400/50"
+                    >
+                        <UserPlus className="size-3" /> Novo cliente
+                    </button>
+                </div>
                 <select
                     value={customerId}
                     onChange={(event) => onCustomer(event.target.value)}
@@ -87,11 +96,11 @@ export default function PaymentPanel({
 
             <button
                 type="button"
-                onClick={onFinish}
-                disabled={pending || disabled}
+                onClick={onReview}
+                disabled={disabled}
                 className="flex h-16 w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-orange-600 to-amber-600 font-[family-name:var(--font-bricolage)] text-lg font-black text-white shadow-lg shadow-orange-950/50 transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-40"
             >
-                {pending ? <><LoaderCircle className="size-5 animate-spin" />Finalizando...</> : <><ChevronRight className="size-5" />Finalizar venda — {formatCurrency(total)}</>}
+                <ChevronRight className="size-5" />Revisar venda — {formatCurrency(total)}
             </button>
 
             <p className="text-center font-mono text-[10px] text-white/60">
