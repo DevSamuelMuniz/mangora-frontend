@@ -51,12 +51,12 @@ export default function NewCustomerModal({ onCreated, onClose }: NewCustomerModa
         }
     }
 
-    const inputClass = "h-12 w-full rounded-xl border border-white/10 bg-[#123d2b] px-3 text-sm font-semibold text-white outline-none placeholder:text-white/40 focus:border-[#ffb21a]";
+    const inputClass = "h-12 w-full rounded-xl border border-white/10 bg-graphite-3 px-3 text-sm font-semibold text-white outline-none placeholder:text-white/40 focus:border-gold";
     const labelClass = "mb-1.5 block font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-white/60";
 
     return (
         <div onMouseDown={(event) => { if (event.target === event.currentTarget && !saveCustomer.isPending) onClose(); }} className="fixed inset-0 z-[95] flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm">
-            <form onSubmit={submit} role="dialog" aria-modal="true" className="w-full max-w-md rounded-2xl bg-[#0a2418] p-5 shadow-2xl">
+            <form onSubmit={submit} role="dialog" aria-modal="true" className="w-full max-w-md rounded-2xl bg-graphite-2 p-5 shadow-2xl">
                 <div className="flex items-center justify-between gap-3">
                     <div className="flex items-center gap-2">
                         <span className="flex size-9 items-center justify-center rounded-xl bg-orange-500/15 text-orange-400"><UserPlus className="size-4" /></span>
@@ -81,7 +81,7 @@ export default function NewCustomerModal({ onCreated, onClose }: NewCustomerModa
 
                 <div className="mt-5 flex gap-2">
                     <button type="button" onClick={onClose} disabled={saveCustomer.isPending} className="h-12 flex-1 rounded-xl border border-white/15 text-sm font-bold text-white/70 hover:bg-white/5 disabled:opacity-50">Cancelar</button>
-                    <button type="submit" disabled={saveCustomer.isPending} className="flex h-12 flex-1 items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-orange-600 to-amber-600 font-[family-name:var(--font-bricolage)] text-sm font-black text-white hover:brightness-110 disabled:opacity-60">
+                    <button type="submit" disabled={saveCustomer.isPending} className="flex h-12 flex-1 items-center justify-center gap-2 rounded-xl bg-orange font-[family-name:var(--font-bricolage)] text-sm font-black text-white hover:brightness-110 disabled:opacity-60">
                         {saveCustomer.isPending ? <><LoaderCircle className="size-4 animate-spin" />Salvando...</> : <><UserPlus className="size-4" />Cadastrar</>}
                     </button>
                 </div>

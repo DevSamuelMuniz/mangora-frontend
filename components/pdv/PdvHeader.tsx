@@ -38,7 +38,7 @@ export default function PdvHeader({ session }: { session: AuthSession }) {
     const timeLabel = clock.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" });
 
     return (
-        <header className="flex items-center justify-between gap-4 border-b border-white/10 bg-[#0a2418] px-5 py-3">
+        <header className="flex items-center justify-between gap-4 border-b border-white/10 bg-graphite-2 px-5 py-3">
             <div className="flex min-w-0 items-center gap-4">
                 <Link href="/" aria-label="Mangora — página inicial" className="shrink-0">
                     <BrandLogo className="h-8" />
@@ -75,7 +75,7 @@ export default function PdvHeader({ session }: { session: AuthSession }) {
                     type="button"
                     onClick={toggleFullscreen}
                     aria-label={isFullscreen ? "Sair da tela cheia" : "Entrar em tela cheia"}
-                    className="flex size-11 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-white transition hover:border-[#ffb21a]/50 hover:text-white"
+                    className="flex size-11 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-white transition hover:border-gold/50 hover:text-white"
                 >
                     {isFullscreen ? <Minimize className="size-4" /> : <Maximize className="size-4" />}
                 </button>

@@ -67,6 +67,17 @@ export default function PdvScreen({ session }: { session: AuthSession }) {
         return () => window.removeEventListener("keydown", onKey);
     }, [step, keepScanFocus]);
 
+    // Adiciona o produto automaticamente assim que o código de barras completo é lido
+    // (o leitor digita o código caractere a caractere; no último caractere há o match).
+    function handleScanInput(value: string) {
+        setScanInput(value);
+        const exact = products.find((product) => product.barcode && product.barcode === value.trim());
+        if (exact) {
+            addProduct(exact);
+            setScanInput("");
+        }
+    }
+
     const availableProducts = useMemo(() => {
         const query = searchTerm.trim().toLocaleLowerCase("pt-BR");
         return products
@@ -180,7 +191,7 @@ export default function PdvScreen({ session }: { session: AuthSession }) {
 
     return (
         <div
-            className="flex min-h-screen flex-col bg-[#123d2b] font-[family-name:var(--font-manrope)] text-white"
+            className="flex min-h-screen flex-col bg-graphite font-[family-name:var(--font-manrope)] text-white"
             onKeyDown={(event) => {
                 if (event.key === "F4" && !(event.target instanceof HTMLInputElement)) {
                     event.preventDefault();
@@ -194,7 +205,7 @@ export default function PdvScreen({ session }: { session: AuthSession }) {
                 {step === "items" && (
                     <div className="grid w-full max-w-6xl flex-1 gap-4 lg:grid-cols-[1fr_400px]">
                         <section className="flex flex-col gap-4">
-                            <ScanBar value={scanInput} onChange={setScanInput} onEnter={handleScan} onClear={() => { setScanInput(""); setSearchTerm(""); keepScanFocus(); }} ref={scanRef} />
+                            <ScanBar value={scanInput} onChange={handleScanInput} onEnter={handleScan} onClear={() => { setScanInput(""); setSearchTerm(""); keepScanFocus(); }} onBlurRefocus={keepScanFocus} ref={scanRef} />
                             <div className="flex items-center justify-between">
                                 <p className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-white/60">
                                     {searchTerm ? `Resultados para "${searchTerm}"` : "Catálogo disponível"}
@@ -208,7 +219,7 @@ export default function PdvScreen({ session }: { session: AuthSession }) {
                                         type="button"
                                         onClick={() => setCategory(item)}
                                         className={`rounded-full px-3 py-1.5 font-mono text-[11px] font-bold transition ${
-                                            category === item ? "bg-[#ffb21a] text-[#123d2b]" : "bg-white/5 text-white/60 hover:bg-white/10"
+                                            category === item ? "bg-gold text-ink" : "bg-white/5 text-white/60 hover:bg-white/10"
                                         }`}
                                     >
                                         {item}
@@ -227,7 +238,7 @@ export default function PdvScreen({ session }: { session: AuthSession }) {
                                 onQuantity={changeQuantity}
                                 onDiscount={setDiscount}
                             />
-                            <button type="button" onClick={goToReview} disabled={!cart.length} className="flex h-14 w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-orange-600 to-amber-600 font-[family-name:var(--font-bricolage)] text-base font-black text-white shadow-lg shadow-orange-950/50 transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-40">
+                            <button type="button" onClick={goToReview} disabled={!cart.length} className="flex h-14 w-full items-center justify-center gap-2 rounded-2xl bg-orange font-[family-name:var(--font-bricolage)] text-base font-black text-white shadow-lg shadow-orange-950/50 transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-40">
                                 Confirmar itens — {formatCurrency(total)}
                             </button>
                             <p className="text-center font-mono text-[10px] text-white/40">Após confirmar, você escolhe o pagamento e finaliza.</p>
@@ -270,13 +281,13 @@ export default function PdvScreen({ session }: { session: AuthSession }) {
                 {step === "processing" && (
                     <div className="grid w-full max-w-6xl gap-6 lg:grid-cols-[1fr_340px]">
                         <div className="flex justify-center">
-                            <div className="mx-auto flex w-full max-w-md flex-col items-center rounded-2xl border-2 border-white/10 bg-[#0a2418] p-8 text-center">
-                                <span className="flex size-16 items-center justify-center rounded-full bg-[#ffb21a]/15 text-[#ffb21a]">
+                            <div className="mx-auto flex w-full max-w-md flex-col items-center rounded-2xl border-2 border-white/10 bg-graphite-2 p-8 text-center">
+                                <span className="flex size-16 items-center justify-center rounded-full bg-gold/15 text-gold">
                                     <ShieldCheck className="size-8" />
                                 </span>
                                 <h2 className="mt-4 font-[family-name:var(--font-bricolage)] text-2xl font-black text-white">Pagamento efetuado?</h2>
                                 <p className="mt-2 max-w-xs text-sm leading-6 text-white/60">
-                                    Confirme que o pagamento de <strong className="text-[#ffb21a]">{formatCurrency(total)}</strong> foi recebido
+                                    Confirme que o pagamento de <strong className="text-gold">{formatCurrency(total)}</strong> foi recebido
                                     ({paymentMethod === "PIX" ? "PIX" : paymentMethod === "CASH" ? "dinheiro" : paymentMethodLabelsSafe(paymentMethod)}).
                                 </p>
                                 {createSale.isPending && (
@@ -286,7 +297,7 @@ export default function PdvScreen({ session }: { session: AuthSession }) {
                                     <button type="button" onClick={() => setStep("payment")} disabled={createSale.isPending} className="flex h-14 items-center justify-center gap-2 rounded-xl border border-white/15 text-sm font-bold text-white/70 transition hover:bg-white/5 disabled:opacity-50">
                                         <ArrowLeft className="size-4" /> Voltar
                                     </button>
-                                    <button type="button" onClick={confirmPayment} disabled={createSale.isPending} className="flex h-14 items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-orange-600 to-amber-600 font-[family-name:var(--font-bricolage)] text-sm font-black text-white transition hover:brightness-110 disabled:opacity-60">
+                                    <button type="button" onClick={confirmPayment} disabled={createSale.isPending} className="flex h-14 items-center justify-center gap-2 rounded-xl bg-orange font-[family-name:var(--font-bricolage)] text-sm font-black text-white transition hover:brightness-110 disabled:opacity-60">
                                         {createSale.isPending ? <><LoaderCircle className="size-4 animate-spin" />Finalizando...</> : <>Confirmar pagamento</>}
                                     </button>
                                 </div>
@@ -301,7 +312,7 @@ export default function PdvScreen({ session }: { session: AuthSession }) {
                 )}
             </div>
 
-            <footer className="flex flex-wrap items-center justify-center gap-x-5 gap-y-1 border-t border-white/10 bg-[#0a2418] px-4 py-2 font-mono text-[10px] font-semibold text-white/60">
+            <footer className="flex flex-wrap items-center justify-center gap-x-5 gap-y-1 border-t border-white/10 bg-graphite-2 px-4 py-2 font-mono text-[10px] font-semibold text-white/60">
                 {step === "items" ? (
                     <><Kbd>F2</Kbd> ou <Kbd>/</Kbd> focar busca · <Kbd>Enter</Kbd> confirmar leitura · <Kbd>F4</Kbd> confirmar itens · <Kbd>+</Kbd>/<Kbd>−</Kbd> quantidade · <Kbd>⛶</Kbd> tela cheia</>
                 ) : (

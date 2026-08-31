@@ -44,7 +44,7 @@ export default function PaymentStep({
     const deferred = DEFERRED.includes(paymentMethod);
 
     return (
-        <div className="mx-auto flex w-full max-w-2xl flex-col gap-4 rounded-2xl border-2 border-white/10 bg-[#0a2418] p-6">
+        <div className="mx-auto flex w-full max-w-2xl flex-col gap-4 rounded-2xl border-2 border-white/10 bg-graphite-2 p-6">
             <div className="flex items-center justify-between gap-3">
                 <div>
                     <p className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-orange-400">Etapa 3 de 4</p>
@@ -52,7 +52,7 @@ export default function PaymentStep({
                 </div>
                 <div className="text-right">
                     <p className="font-mono text-[10px] text-white/50">Total a receber</p>
-                    <p className="font-[family-name:var(--font-bricolage)] text-3xl font-black leading-none text-[#ffb21a]">{formatCurrency(total)}</p>
+                    <p className="font-[family-name:var(--font-bricolage)] text-3xl font-black leading-none text-gold">{formatCurrency(total)}</p>
                 </div>
             </div>
 
@@ -64,7 +64,7 @@ export default function PaymentStep({
                             <UserPlus className="size-3" /> Novo cliente
                         </button>
                     </div>
-                    <select value={customerId} onChange={(event) => onCustomer(event.target.value)} className="mt-2 h-12 w-full rounded-xl border border-white/10 bg-[#123d2b] px-3 text-sm font-semibold text-white outline-none focus:border-[#ffb21a]">
+                    <select value={customerId} onChange={(event) => onCustomer(event.target.value)} className="mt-2 h-12 w-full rounded-xl border border-white/10 bg-graphite-3 px-3 text-sm font-semibold text-white outline-none focus:border-gold">
                         <option value="">Consumidor final</option>
                         {customers.filter((customer) => customer.active).map((customer) => (
                             <option key={customer.id} value={customer.id}>{customer.tradeName || customer.name}</option>
@@ -79,7 +79,7 @@ export default function PaymentStep({
                             value={customerDocument}
                             onChange={(event) => onCustomerDocument(event.target.value.replace(/\D/g, "").slice(0, 14))}
                             placeholder="Opcional"
-                            className="mt-2 h-12 w-full rounded-xl border border-white/10 bg-[#123d2b] px-3 font-mono text-base font-bold tracking-widest text-white outline-none placeholder:font-sans placeholder:text-sm placeholder:font-normal placeholder:tracking-normal placeholder:text-white/40 focus:border-[#ffb21a]"
+                            className="mt-2 h-12 w-full rounded-xl border border-white/10 bg-graphite-3 px-3 font-mono text-base font-bold tracking-widest text-white outline-none placeholder:font-sans placeholder:text-sm placeholder:font-normal placeholder:tracking-normal placeholder:text-white/40 focus:border-gold"
                         />
                         {customerDocument && <p className="mt-1 font-mono text-[10px] text-white/50">CPF: {formatDocument(customerDocument, "INDIVIDUAL")}</p>}
                     </label>
@@ -94,7 +94,7 @@ export default function PaymentStep({
                                 type="button"
                                 onClick={() => onPaymentMethod(method)}
                                 className={`flex h-11 items-center justify-center gap-1.5 rounded-xl border-2 text-xs font-bold transition ${
-                                    paymentMethod === method ? "border-[#ffb21a] bg-[#ffb21a]/15 text-[#ffb21a]" : "border-white/10 bg-white/5 text-white/80 hover:bg-white/10"
+                                    paymentMethod === method ? "border-gold bg-gold/15 text-gold" : "border-white/10 bg-white/5 text-white/80 hover:bg-white/10"
                                 }`}
                             >
                                 <WalletCards className="size-3.5" />{paymentMethodLabels[method]}
@@ -104,13 +104,13 @@ export default function PaymentStep({
                     {deferred && (
                         <label className="mt-3 block">
                             <span className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-white/70">Vencimento</span>
-                            <input type="date" value={dueDate} onChange={(event) => onDueDate(event.target.value)} className="mt-1.5 h-12 w-full rounded-xl border border-white/10 bg-[#123d2b] px-3 text-sm font-semibold text-white outline-none focus:border-[#ffb21a]" />
+                            <input type="date" value={dueDate} onChange={(event) => onDueDate(event.target.value)} className="mt-1.5 h-12 w-full rounded-xl border border-white/10 bg-graphite-3 px-3 text-sm font-semibold text-white outline-none focus:border-gold" />
                         </label>
                     )}
                 </div>
             </div>
 
-            <button type="button" onClick={onPay} className="mt-1 flex h-16 w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-orange-600 to-amber-600 font-[family-name:var(--font-bricolage)] text-lg font-black text-white shadow-lg shadow-orange-950/50 transition hover:brightness-110">
+            <button type="button" onClick={onPay} className="mt-1 flex h-16 w-full items-center justify-center gap-2 rounded-2xl bg-orange font-[family-name:var(--font-bricolage)] text-lg font-black text-white shadow-lg shadow-orange-950/50 transition hover:brightness-110">
                 <ChevronRight className="size-5" />Efetuar pagamento — {formatCurrency(total)}
             </button>
 

@@ -14,6 +14,14 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  /* PDV — superfícies neutras (grafite, sem verde) + acentos da marca */
+  --color-graphite: #14161b;
+  --color-graphite-2: #1d2027;
+  --color-graphite-3: #272b34;
+  --color-gold: #ffb21a;
+  --color-orange: #ff6b1a;
+  --color-cream: #fff8ea;
+  --color-ink: #123d2b;
 }
 
 body {
