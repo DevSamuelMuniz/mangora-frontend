@@ -39,6 +39,7 @@ export default function ProductCatalog() {
   const [page, setPage] = useState(1);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [productToDelete, setProductToDelete] = useState<Product | null>(null);
+  const [actionsProduct, setActionsProduct] = useState<Product | null>(null);
 
   const errorMessage = actionError || (error instanceof Error ? error.message : "");
 
@@ -164,14 +165,14 @@ export default function ProductCatalog() {
                           <td className="px-4 py-3.5"><div className="flex items-center gap-2"><span className={`text-xs font-bold ${product.trackStock && availableStock === 0 ? "text-red-600" : lowStock ? "text-amber-600" : "text-slate-800"}`}>{product.trackStock ? `${availableStock} disp.${product.reservedStock ? ` · ${product.reservedStock} reserv.` : ""}` : "Não controlado"}</span>{lowStock && <AlertTriangle className="size-3.5 text-amber-500" />}</div></td>
                           <td className="px-4 py-3.5"><span className={`inline-flex rounded-full px-2.5 py-1 text-[10px] font-bold ${product.active ? "bg-green-50 text-green-600" : "bg-slate-100 text-slate-500"}`}>{product.active ? "Ativo" : "Inativo"}</span></td>
                           <td className="px-4 py-3.5 text-center">
-                            <details className="relative inline-block text-left">
-                              <summary aria-label={`Ações do produto ${product.name}`} className="flex size-8 cursor-pointer list-none items-center justify-center rounded-lg text-slate-400 transition hover:bg-slate-100 hover:text-slate-700"><MoreHorizontal className="size-4" /></summary>
-                              <div className="absolute right-0 z-20 mt-1 w-36 rounded-xl border border-slate-200 bg-white p-1.5 text-left shadow-xl">
-                                <button type="button" onClick={() => setSelectedProduct(product)} className="flex h-9 w-full items-center gap-2 rounded-lg px-2.5 text-xs font-semibold text-slate-600 hover:bg-slate-50"><Eye className="size-3.5" />Visualizar</button>
-                                <Link href={`/produtos?acao=editar&id=${product.id}`} className="flex h-9 w-full items-center gap-2 rounded-lg px-2.5 text-xs font-semibold text-slate-600 hover:bg-slate-50"><Pencil className="size-3.5" />Editar</Link>
-                                <button type="button" onClick={() => setProductToDelete(product)} className="flex h-9 w-full items-center gap-2 rounded-lg px-2.5 text-xs font-semibold text-red-600 hover:bg-red-50"><Trash2 className="size-3.5" />Excluir</button>
-                              </div>
-                            </details>
+                            <button
+                              type="button"
+                              onClick={() => setActionsProduct(product)}
+                              aria-label={`Ações do produto ${product.name}`}
+                              className="flex size-8 items-center justify-center rounded-lg text-slate-400 transition hover:bg-slate-100 hover:text-slate-700"
+                            >
+                              <MoreHorizontal className="size-4" />
+                            </button>
                           </td>
                         </tr>
                       );
@@ -200,6 +201,14 @@ export default function ProductCatalog() {
       </section>
 
       {selectedProduct && <ProductDetailsModal product={selectedProduct} onClose={() => setSelectedProduct(null)} />}
+      {actionsProduct && (
+        <ProductActionsModal
+          product={actionsProduct}
+          onClose={() => setActionsProduct(null)}
+          onView={() => { setActionsProduct(null); setSelectedProduct(actionsProduct); }}
+          onDelete={() => { setActionsProduct(null); setProductToDelete(actionsProduct); }}
+        />
+      )}
       {productToDelete && <DeleteProductModal product={productToDelete} loading={deleteProduct.isPending} onCancel={() => setProductToDelete(null)} onConfirm={() => void confirmDelete()} />}
     </>
   );

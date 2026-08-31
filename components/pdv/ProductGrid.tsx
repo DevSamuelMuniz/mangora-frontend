@@ -16,7 +16,7 @@ type ProductGridProps = {
 export default function ProductGrid({ products, loading, cartCounts, onAdd }: ProductGridProps) {
     if (loading) {
         return (
-            <div className="flex min-h-64 items-center justify-center text-slate-400">
+            <div className="flex min-h-64 items-center justify-center text-white/80">
                 <LoaderCircle className="mr-2 size-5 animate-spin text-orange-400" /> Carregando produtos...
             </div>
         );
@@ -24,9 +24,9 @@ export default function ProductGrid({ products, loading, cartCounts, onAdd }: Pr
 
     if (!products.length) {
         return (
-            <div className="flex min-h-64 flex-col items-center justify-center text-slate-500">
-                <Barcode className="mb-3 size-9 text-slate-700" />
-                <p className="font-[family-name:var(--font-bricolage)] text-base font-black text-slate-300">Nenhum produto encontrado</p>
+            <div className="flex min-h-64 flex-col items-center justify-center text-white/70">
+                <Barcode className="mb-3 size-9 text-white/50" />
+                <p className="font-[family-name:var(--font-bricolage)] text-base font-black text-white">Nenhum produto encontrado</p>
                 <p className="mt-1 text-xs">Aponte o leitor ou digite o código de barras.</p>
             </div>
         );
@@ -50,12 +50,12 @@ export default function ProductGrid({ products, loading, cartCounts, onAdd }: Pr
                             </span>
                         )}
                         <p className="truncate font-[family-name:var(--font-bricolage)] text-sm font-bold text-white">{product.name}</p>
-                        <p className="mt-0.5 font-mono text-[10px] uppercase tracking-wider text-slate-500">{product.sku ?? "—"}</p>
+                        <p className="mt-0.5 font-mono text-[10px] uppercase tracking-wider text-white/70">{product.sku ?? "—"}</p>
                         <div className="mt-auto flex items-end justify-between gap-2 pt-4">
                             <strong className="font-[family-name:var(--font-bricolage)] text-2xl font-black leading-none text-[#ffb21a]">
                                 {formatCurrency(product.price)}
                             </strong>
-                            <span className={`rounded-full px-2 py-0.5 font-mono text-[10px] font-bold ${product.trackStock ? (available <= product.minimumStock ? "bg-amber-500/15 text-amber-300" : "bg-white/5 text-slate-400") : "bg-white/5 text-slate-400"}`}>
+                            <span className={`rounded-full px-2 py-0.5 font-mono text-[10px] font-bold ${product.trackStock ? (available <= product.minimumStock ? "bg-amber-500/15 text-amber-300" : "bg-white/5 text-white/80") : "bg-white/5 text-white/80"}`}>
                                 {product.trackStock ? `${available} disp.` : "Serviço"}
                             </span>
                         </div>

@@ -154,10 +154,10 @@ export default function PdvScreen({ session }: { session: AuthSession }) {
                     <ScanBar value={scanInput} onChange={setScanInput} onEnter={handleScan} onClear={() => { setScanInput(""); setSearchTerm(""); keepScanFocus(); }} ref={scanRef} />
 
                     <div className="flex items-center justify-between">
-                        <p className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-slate-500">
+                        <p className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-white/70">
                             {searchTerm ? `Resultados para "${searchTerm}"` : "Catálogo disponível"}
                         </p>
-                        <span className="rounded-full bg-white/5 px-2.5 py-1 font-mono text-[10px] font-bold text-slate-400">
+                        <span className="rounded-full bg-white/5 px-2.5 py-1 font-mono text-[10px] font-bold text-white/80">
                             {availableProducts.length} produto(s)
                         </span>
                     </div>
@@ -192,7 +192,7 @@ export default function PdvScreen({ session }: { session: AuthSession }) {
                 </aside>
             </div>
 
-            <footer className="flex flex-wrap items-center justify-center gap-x-5 gap-y-1 border-t border-white/10 bg-[#0a2418] px-4 py-2 font-mono text-[10px] font-semibold text-slate-500">
+            <footer className="flex flex-wrap items-center justify-center gap-x-5 gap-y-1 border-t border-white/10 bg-[#0a2418] px-4 py-2 font-mono text-[10px] font-semibold text-white/70">
                 <Kbd>F2</Kbd> ou <Kbd>/</Kbd> focar busca · <Kbd>Enter</Kbd> confirmar leitura · <Kbd>F4</Kbd> finalizar venda · <Kbd>+</Kbd>/<Kbd>−</Kbd> quantidade · <Kbd>Esc</Kbd> limpar · <Kbd>⛶</Kbd> tela cheia
             </footer>
         </div>
@@ -200,5 +200,5 @@ export default function PdvScreen({ session }: { session: AuthSession }) {
 }
 
 function Kbd({ children }: { children: import("react").ReactNode }) {
-    return <kbd className="rounded-md border border-white/15 bg-white/5 px-1.5 py-0.5 text-[10px] text-slate-300">{children}</kbd>;
+    return <kbd className="rounded-md border border-white/15 bg-white/5 px-1.5 py-0.5 text-[10px] text-white">{children}</kbd>;
 }

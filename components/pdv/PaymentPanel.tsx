@@ -44,7 +44,7 @@ export default function PaymentPanel({
     return (
         <div className="flex flex-col gap-4 rounded-2xl border-2 border-white/10 bg-[#0a2418] p-4">
             <div>
-                <p className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-slate-500">
+                <p className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-white/70">
                     Cliente {requireCustomer ? "(obrigatório)" : "(opcional)"}
                 </p>
                 <select
@@ -60,7 +60,7 @@ export default function PaymentPanel({
             </div>
 
             <div>
-                <p className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-slate-500">Pagamento</p>
+                <p className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-white/70">Pagamento</p>
                 <div className="mt-2 grid grid-cols-2 gap-2">
                     {PAYMENT_METHODS.map((method) => (
                         <button
@@ -70,7 +70,7 @@ export default function PaymentPanel({
                             className={`flex h-11 items-center justify-center gap-1.5 rounded-xl border-2 text-xs font-bold transition ${
                                 paymentMethod === method
                                     ? "border-[#ffb21a] bg-[#ffb21a]/15 text-[#ffb21a]"
-                                    : "border-white/10 bg-white/5 text-slate-300 hover:bg-white/10"
+                                    : "border-white/10 bg-white/5 text-white hover:bg-white/10"
                             }`}
                         >
                             <WalletCards className="size-3.5" />{paymentMethodLabels[method]}
@@ -79,7 +79,7 @@ export default function PaymentPanel({
                 </div>
                 {deferred && (
                     <label className="mt-3 block">
-                        <span className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-slate-500">Vencimento</span>
+                        <span className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-white/70">Vencimento</span>
                         <input type="date" value={dueDate} onChange={(event) => onDueDate(event.target.value)} className="mt-1.5 h-12 w-full rounded-xl border border-white/10 bg-[#123d2b] px-3 text-sm font-semibold text-white outline-none focus:border-[#ffb21a]" />
                     </label>
                 )}
@@ -94,7 +94,7 @@ export default function PaymentPanel({
                 {pending ? <><LoaderCircle className="size-5 animate-spin" />Finalizando...</> : <><ChevronRight className="size-5" />Finalizar venda — {formatCurrency(total)}</>}
             </button>
 
-            <p className="text-center font-mono text-[10px] text-slate-600">
+            <p className="text-center font-mono text-[10px] text-white/60">
                 <CheckCircle2 className="mr-1 inline size-3" />A venda atualiza estoque, financeiro e dashboard automaticamente.
             </p>
         </div>

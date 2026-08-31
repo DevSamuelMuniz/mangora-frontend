@@ -26,10 +26,10 @@ const ScanBar = forwardRef<HTMLInputElement, ScanBarProps>(function ScanBar({ va
                     }
                 }}
                 placeholder="Leia o código de barras ou busque por nome / SKU — Enter confirma"
-                className="h-16 w-full rounded-2xl border-2 border-white/10 bg-[#0a2418] pl-14 pr-14 font-mono text-lg font-semibold tracking-wide text-white outline-none placeholder:font-sans placeholder:text-sm placeholder:font-medium placeholder:tracking-normal placeholder:text-slate-500 focus:border-[#ffb21a]"
+                className="h-16 w-full rounded-2xl border-2 border-white/10 bg-[#0a2418] pl-14 pr-14 font-mono text-lg font-semibold tracking-wide text-white outline-none placeholder:font-sans placeholder:text-sm placeholder:font-medium placeholder:tracking-normal placeholder:text-white/70 focus:border-[#ffb21a]"
             />
             {value && (
-                <button type="button" onClick={onClear} aria-label="Limpar busca" className="absolute right-3 top-1/2 flex size-9 -translate-y-1/2 items-center justify-center rounded-lg text-slate-400 transition hover:bg-white/5 hover:text-white">
+                <button type="button" onClick={onClear} aria-label="Limpar busca" className="absolute right-3 top-1/2 flex size-9 -translate-y-1/2 items-center justify-center rounded-lg text-white/80 transition hover:bg-white/5 hover:text-white">
                     <X className="size-4" />
                 </button>
             )}
