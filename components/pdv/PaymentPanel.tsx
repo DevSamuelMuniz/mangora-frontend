@@ -3,7 +3,7 @@
 import { Banknote, CheckCircle2, ChevronRight, Plus, Search, Trash2, UserPlus, WalletCards, X } from "lucide-react";
 import { useState } from "react";
 
-import { formatCurrency, formatDocument, parseCurrency } from "@/lib/format";
+import { formatCurrency, formatDocument, formatPhone, parseCurrency } from "@/lib/format";
 import { paymentMethodLabels, type PaymentMethod } from "@/types/sale";
 import type { Customer } from "@/types/customer";
 
@@ -104,6 +104,19 @@ export default function PaymentStep({
         onReceivedAmount((receivedValue + delta).toFixed(2).replace(".", ","));
     }
 
+    /** Busca com auto-seleção: CPF/CNPJ completo digitado já seleciona o cliente. */
+    function handleCustomerSearch(value: string) {
+        setCustomerSearch(value);
+        const digits = value.replace(/\D/g, "");
+        if (digits.length >= 11) {
+            const exact = activeCustomers.find((customer) => customer.document.replace(/\D/g, "") === digits);
+            if (exact) {
+                onCustomer(exact.id);
+                setCustomerSearch("");
+            }
+        }
+    }
+
     return (
         <div className="mx-auto flex w-full max-w-2xl flex-col gap-4 rounded-2xl border-2 border-pdv-line bg-pdv-panel p-6">
             <div className="flex items-center justify-between">
@@ -124,7 +137,7 @@ export default function PaymentStep({
                         <input
                             type="text"
                             value={customerSearch}
-                            onChange={(event) => setCustomerSearch(event.target.value)}
+                            onChange={(event) => handleCustomerSearch(event.target.value)}
                             placeholder="Buscar cliente por nome ou CPF/CNPJ…"
                             aria-label="Buscar cliente"
                             className="h-11 w-full rounded-xl border border-pdv-line bg-pdv-field pl-9 pr-9 text-sm font-semibold text-pdv-fg outline-none placeholder:font-normal placeholder:text-pdv-fg/40 focus:border-pdv-gold"
@@ -135,17 +148,41 @@ export default function PaymentStep({
                             </button>
                         )}
                     </div>
-                    <select value={customerId} onChange={(event) => onCustomer(event.target.value)} className="mt-2 h-12 w-full rounded-xl border border-pdv-line bg-pdv-field px-3 text-sm font-semibold text-pdv-fg outline-none focus:border-pdv-gold">
-                        <option value="">Consumidor final</option>
-                        {filteredCustomers.map((customer) => (
-                            <option key={customer.id} value={customer.id}>{customer.tradeName || customer.name}</option>
-                        ))}
-                        {customerQuery && filteredCustomers.length === 0 && (
-                            <option disabled>Nenhum cliente encontrado</option>
-                        )}
-                    </select>
-                    {customerQuery && filteredCustomers.length > 0 && (
-                        <p className="mt-1 font-mono text-[10px] text-pdv-fg/50">{filteredCustomers.length} cliente(s) encontrado(s)</p>
+
+                    {customerQuery ? (
+                        filteredCustomers.length ? (
+                            <div className="mt-2 max-h-52 overflow-y-auto rounded-xl border border-pdv-line">
+                                {filteredCustomers.map((customer) => (
+                                    <button
+                                        key={customer.id}
+                                        type="button"
+                                        onClick={() => { onCustomer(customer.id); setCustomerSearch(""); }}
+                                        aria-pressed={customerId === customer.id}
+                                        className={`flex w-full items-center justify-between gap-2 border-b border-pdv-line/70 px-3 py-2.5 text-left transition last:border-b-0 hover:bg-pdv-line ${customerId === customer.id ? "bg-pdv-gold/10" : ""}`}
+                                    >
+                                        <span className="min-w-0">
+                                            <p className="truncate text-xs font-bold text-pdv-fg">{customer.tradeName || customer.name}</p>
+                                            <p className="font-mono text-[10px] text-pdv-fg/50">
+                                                {formatDocument(customer.document, customer.type === "COMPANY" ? "COMPANY" : "INDIVIDUAL")}
+                                                {customer.phone ? ` · ${formatPhone(customer.phone)}` : ""}
+                                            </p>
+                                        </span>
+                                        <CheckCircle2 className="size-4 shrink-0 text-pdv-gold" />
+                                    </button>
+                                ))}
+                            </div>
+                        ) : (
+                            <p className="mt-2 rounded-xl border border-pdv-line bg-pdv-field px-3 py-3 text-center font-mono text-[10px] text-pdv-fg/50">
+                                Nenhum cliente encontrado para &ldquo;{customerSearch}&rdquo;
+                            </p>
+                        )
+                    ) : (
+                        <select value={customerId} onChange={(event) => onCustomer(event.target.value)} className="mt-2 h-12 w-full rounded-xl border border-pdv-line bg-pdv-field px-3 text-sm font-semibold text-pdv-fg outline-none focus:border-pdv-gold">
+                            <option value="">Consumidor final</option>
+                            {filteredCustomers.map((customer) => (
+                                <option key={customer.id} value={customer.id}>{customer.tradeName || customer.name}</option>
+                            ))}
+                        </select>
                     )}
 
                     <label className="mt-3 block">
