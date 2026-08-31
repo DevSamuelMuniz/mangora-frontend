@@ -89,3 +89,22 @@ export function formatPhone(phone: string): string {
         ? phone.replace(/^(\d{2})(\d{5})(\d{4})$/, "($1) $2-$3")
         : phone.replace(/^(\d{2})(\d{4})(\d{4})$/, "($1) $2-$3");
 }
+
+/**
+ * Converte texto digitado pelo caixa em valor numérico (pt-BR).
+ * Aceita "50", "50,00", "50.00" e "R$ 1.234,56".
+ */
+export function parseCurrency(value: string): number {
+    const cleaned = value.replace(/[^\d,.]/g, "").trim();
+    if (!cleaned) return 0;
+    let normalized = cleaned;
+    if (normalized.includes(",")) {
+        // vírgula = separador decimal; pontos = milhar
+        normalized = normalized.replace(/\./g, "").replace(",", ".");
+    } else if ((normalized.match(/\./g) ?? []).length > 1) {
+        // múltiplos pontos = milhar
+        normalized = normalized.replace(/\./g, "");
+    }
+    const result = Number(normalized);
+    return Number.isFinite(result) ? result : 0;
+}

@@ -10,11 +10,13 @@ import { printReceipt } from "@/lib/pdv/print";
 type DoneStepProps = {
     sale: Sale;
     company: CompanySettings | null;
+    received?: number;
+    change?: number;
     onFinish: () => void;
 };
 
 /** Etapa final — venda registrada: imprimir a nota fiscal ou concluir. */
-export default function DoneStep({ sale, company, onFinish }: DoneStepProps) {
+export default function DoneStep({ sale, company, received, change, onFinish }: DoneStepProps) {
     return (
         <div className="mx-auto flex w-full max-w-md flex-col items-center rounded-2xl border-2 border-pdv-line bg-pdv-panel p-8 text-center">
             <span className="flex size-16 items-center justify-center rounded-full bg-pdv-ok/15 text-green-400">
@@ -34,7 +36,7 @@ export default function DoneStep({ sale, company, onFinish }: DoneStepProps) {
             </div>
 
             <div className="mt-6 grid w-full grid-cols-2 gap-2">
-                <button type="button" onClick={() => printReceipt(sale, company)} className="flex h-14 items-center justify-center gap-2 rounded-xl border border-pdv-line text-sm font-bold text-pdv-fg/80 transition hover:bg-pdv-line">
+                <button type="button" onClick={() => printReceipt(sale, company, received !== undefined && change !== undefined ? { received, change } : undefined)} className="flex h-14 items-center justify-center gap-2 rounded-xl border border-pdv-line text-sm font-bold text-pdv-fg/80 transition hover:bg-pdv-line">
                     <Printer className="size-4" /> Imprimir nota
                 </button>
                 <button type="button" onClick={onFinish} className="flex h-14 items-center justify-center gap-2 rounded-xl bg-orange font-[family-name:var(--font-bricolage)] text-sm font-black text-white transition hover:brightness-110">

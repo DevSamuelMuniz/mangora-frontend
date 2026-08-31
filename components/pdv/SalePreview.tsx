@@ -14,10 +14,12 @@ type SalePreviewProps = {
     customerName: string;
     paymentMethod?: PaymentMethod | null;
     customerDocument?: string;
+    received?: number;
+    change?: number;
 };
 
 /** Pré-visualização da venda (mini recibo) — persistente nas etapas 2–4. */
-export default function SalePreview({ cart, subtotal, discount, total, customerName, paymentMethod, customerDocument }: SalePreviewProps) {
+export default function SalePreview({ cart, subtotal, discount, total, customerName, paymentMethod, customerDocument, received, change }: SalePreviewProps) {
     return (
         <div className="sticky top-4 flex flex-col overflow-hidden rounded-2xl bg-cream text-ink shadow-2xl shadow-black/30">
             <div className="flex items-center justify-between border-b-2 border-dashed border-ink/15 px-4 py-3">
@@ -49,6 +51,12 @@ export default function SalePreview({ cart, subtotal, discount, total, customerN
                     <span className="font-[family-name:var(--font-bricolage)] text-xs font-black uppercase">Total</span>
                     <strong className="font-[family-name:var(--font-bricolage)] text-2xl font-black leading-none text-orange">{formatCurrency(total)}</strong>
                 </div>
+                {received !== undefined && change !== undefined && (
+                    <>
+                        <div className="flex justify-between pt-1"><span>Valor recebido</span><span>{formatCurrency(received)}</span></div>
+                        <div className="flex justify-between font-bold text-green-700"><span>Troco</span><span>{formatCurrency(change)}</span></div>
+                    </>
+                )}
             </div>
 
             <div className="space-y-1 border-t-2 border-dashed border-ink/15 px-4 py-3 font-mono text-[10px] text-ink/60">

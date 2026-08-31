@@ -7,7 +7,8 @@ type ReceiptCompany = Pick<
 >;
 
 /** Imprime o cupom da venda (80mm) em uma janela dedicada. */
-export function printReceipt(sale: Sale, company: ReceiptCompany | null) {
+export function printReceipt(sale: Sale, company: ReceiptCompany | null, changeInfo?: { received: number; change: number }) {
+    const isCashChange = sale.paymentMethod === "CASH" && changeInfo !== undefined;
     const items = sale.items
         .map((item) => {
             const name = wrapText(escapeHtml(item.productName), 30);
@@ -69,6 +70,12 @@ export function printReceipt(sale: Sale, company: ReceiptCompany | null) {
     <div class="label">Total</div>
     <div class="value">${formatMoney(sale.total)}</div>
   </div>
+  ${isCashChange ? `
+  <div class="divider-solid"></div>
+  <table class="meta">
+    <tr><td>Valor recebido</td><td>${formatMoney(changeInfo.received)}</td></tr>
+    <tr><td style="font-weight:bold">Troco</td><td style="font-weight:bold">${formatMoney(changeInfo.change)}</td></tr>
+  </table>` : ""}
   ${sale.notes ? `<div class="notes">Obs: ${escapeHtml(sale.notes)}</div>` : ""}
   <p class="footer">Obrigado pela preferência!</p>
   <p class="footer muted">Gerado por Mangora</p>

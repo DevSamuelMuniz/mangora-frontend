@@ -1,13 +1,14 @@
 "use client";
 
-import { CheckCircle2, ChevronRight, UserPlus, WalletCards } from "lucide-react";
+import { Banknote, CheckCircle2, ChevronRight, UserPlus, WalletCards } from "lucide-react";
 
-import { formatCurrency, formatDocument } from "@/lib/format";
+import { formatCurrency, formatDocument, parseCurrency } from "@/lib/format";
 import { paymentMethodLabels, type PaymentMethod } from "@/types/sale";
 import type { Customer } from "@/types/customer";
 
 const PAYMENT_METHODS: PaymentMethod[] = ["PIX", "CREDIT_CARD", "DEBIT_CARD", "CASH", "BOLETO", "CHECK", "STORE_CREDIT"];
 const DEFERRED: PaymentMethod[] = ["CHECK", "STORE_CREDIT"];
+const QUICK_AMOUNTS = [1, 5, 10, 20, 50, 100];
 
 type PaymentStepProps = {
     customers: Customer[];
@@ -23,6 +24,8 @@ type PaymentStepProps = {
     onCustomerDocument: (value: string) => void;
     total: number;
     onPay: () => void;
+    receivedAmount: string;
+    onReceivedAmount: (value: string) => void;
 };
 
 /** Etapa 3 — cliente, CPF na nota e forma de pagamento; efetuar o pagamento. */
@@ -40,8 +43,18 @@ export default function PaymentStep({
     onCustomerDocument,
     total,
     onPay,
+    receivedAmount,
+    onReceivedAmount,
 }: PaymentStepProps) {
     const deferred = DEFERRED.includes(paymentMethod);
+    const isCash = paymentMethod === "CASH";
+    const receivedValue = parseCurrency(receivedAmount);
+    const change = receivedValue - total;
+    const insufficient = isCash && receivedValue < total;
+
+    function addQuick(delta: number) {
+        onReceivedAmount((parseCurrency(receivedAmount) + delta).toFixed(2).replace(".", ","));
+    }
 
     return (
         <div className="mx-auto flex w-full max-w-2xl flex-col gap-4 rounded-2xl border-2 border-pdv-line bg-pdv-panel p-6">
@@ -107,10 +120,53 @@ export default function PaymentStep({
                             <input type="date" value={dueDate} onChange={(event) => onDueDate(event.target.value)} className="mt-1.5 h-12 w-full rounded-xl border border-pdv-line bg-pdv-field px-3 text-sm font-semibold text-pdv-fg outline-none focus:border-pdv-gold" />
                         </label>
                     )}
+
+                    {isCash && (
+                        <div className="mt-3 rounded-xl border border-pdv-line bg-pdv-field p-3">
+                            <div className="flex items-center justify-between">
+                                <p className="flex items-center gap-1.5 font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-pdv-fg/70">
+                                    <Banknote className="size-3.5 text-pdv-gold" /> Valor recebido
+                                </p>
+                                <p className="font-mono text-[10px] text-pdv-fg/60">Total: <strong className="text-pdv-fg">{formatCurrency(total)}</strong></p>
+                            </div>
+                            <input
+                                type="text"
+                                inputMode="decimal"
+                                value={receivedAmount}
+                                onChange={(event) => onReceivedAmount(event.target.value.replace(/[^\d,.]/g, "").slice(0, 10))}
+                                onFocus={(event) => event.target.select()}
+                                placeholder="0,00"
+                                aria-label="Valor recebido em dinheiro"
+                                className={`mt-2 h-14 w-full rounded-xl border bg-pdv-bg px-3 text-right font-mono text-2xl font-black tracking-wide outline-none placeholder:text-pdv-fg/30 ${insufficient ? "border-red-400/60 text-red-400" : "border-pdv-line text-pdv-fg focus:border-pdv-gold"}`}
+                            />
+                            <div className="mt-2 flex flex-wrap gap-1.5">
+                                <button type="button" onClick={() => onReceivedAmount(total.toFixed(2).replace(".", ","))} className="rounded-lg border border-pdv-line bg-pdv-panel px-2.5 py-1.5 font-mono text-[11px] font-bold text-pdv-fg transition hover:border-pdv-gold">
+                                    Exato
+                                </button>
+                                {QUICK_AMOUNTS.map((amount) => (
+                                    <button key={amount} type="button" onClick={() => addQuick(amount)} className="rounded-lg border border-pdv-line bg-pdv-panel px-2.5 py-1.5 font-mono text-[11px] font-bold text-pdv-fg transition hover:border-pdv-gold">
+                                        +R${amount}
+                                    </button>
+                                ))}
+                            </div>
+                            <div className={`mt-3 flex items-center justify-between rounded-lg px-3 py-2 ${change >= 0 ? "bg-pdv-ok/10" : "bg-red-500/10"}`}>
+                                <span className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-pdv-fg/70">Troco</span>
+                                <strong className={`font-[family-name:var(--font-bricolage)] text-2xl font-black leading-none ${change >= 0 ? "text-pdv-ok" : "text-red-400"}`}>
+                                    {receivedAmount ? formatCurrency(Math.max(0, change)) : "—"}
+                                </strong>
+                            </div>
+                            {insufficient && <p className="mt-1.5 text-center font-mono text-[10px] text-red-400">Valor recebido menor que o total — falta {formatCurrency(-change)}.</p>}
+                        </div>
+                    )}
                 </div>
             </div>
 
-            <button type="button" onClick={onPay} className="mt-1 flex h-16 w-full items-center justify-center gap-2 rounded-2xl bg-orange font-[family-name:var(--font-bricolage)] text-lg font-black text-white shadow-lg shadow-orange-950/50 transition hover:brightness-110">
+            <button
+                type="button"
+                onClick={onPay}
+                disabled={insufficient}
+                className="mt-1 flex h-16 w-full items-center justify-center gap-2 rounded-2xl bg-orange font-[family-name:var(--font-bricolage)] text-lg font-black text-white shadow-lg shadow-orange-950/50 transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-40"
+            >
                 <ChevronRight className="size-5" />Efetuar pagamento — {formatCurrency(total)}
             </button>
 

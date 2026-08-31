@@ -6,7 +6,7 @@ import { ArrowLeft, LoaderCircle, ShieldCheck } from "lucide-react";
 import { useCreateSale, useSaleOptions } from "@/features/sales/hooks/useSales";
 import { useCompanySettings } from "@/features/settings/hooks/useSettings";
 import { useToast } from "@/components/ui/toast";
-import { formatCurrency } from "@/lib/format";
+import { formatCurrency, parseCurrency } from "@/lib/format";
 import type { PaymentMethod, Sale } from "@/types/sale";
 import type { AuthSession } from "@/lib/auth/types";
 
@@ -62,6 +62,7 @@ export default function PdvScreen({ session }: { session: AuthSession }) {
     });
     const [discount, setDiscount] = useState("0");
     const [customerDocument, setCustomerDocument] = useState("");
+    const [receivedAmount, setReceivedAmount] = useState("");
     const [newCustomerOpen, setNewCustomerOpen] = useState(false);
     const [saleResult, setSaleResult] = useState<Sale | null>(null);
     const scanRef = useRef<HTMLInputElement>(null);
@@ -116,6 +117,9 @@ export default function PdvScreen({ session }: { session: AuthSession }) {
     const subtotal = cart.reduce((sum, item) => sum + item.product.price * item.quantity, 0);
     const discountValue = Math.max(0, Math.min(Number(discount) || 0, company?.maximumDiscount ?? 100));
     const total = Math.max(0, subtotal - discountValue);
+    const receivedValue = parseCurrency(receivedAmount);
+    const change = receivedValue - total;
+    const cashChange = paymentMethod === "CASH" ? { received: receivedValue, change: Math.max(0, change) } : undefined;
     const selectedCustomer = customers.find((customer) => customer.id === customerId);
     const selectedCustomerName = selectedCustomer ? selectedCustomer.tradeName || selectedCustomer.name : "Consumidor final";
 
@@ -199,6 +203,7 @@ export default function PdvScreen({ session }: { session: AuthSession }) {
         setSearchTerm("");
         setScanInput("");
         setCustomerDocument("");
+        setReceivedAmount("");
         setPaymentMethod(company?.defaultPayment ?? "PIX");
         setSaleResult(null);
         setStep("items");
@@ -289,9 +294,11 @@ export default function PdvScreen({ session }: { session: AuthSession }) {
                                 onCustomerDocument={setCustomerDocument}
                                 total={total}
                                 onPay={pay}
+                                receivedAmount={receivedAmount}
+                                onReceivedAmount={setReceivedAmount}
                             />
                         </div>
-                        <SalePreview cart={cart} subtotal={subtotal} discount={discountValue} total={total} customerName={selectedCustomerName} paymentMethod={paymentMethod} customerDocument={customerDocument || undefined} />
+                        <SalePreview cart={cart} subtotal={subtotal} discount={discountValue} total={total} customerName={selectedCustomerName} paymentMethod={paymentMethod} customerDocument={customerDocument || undefined} received={cashChange?.received} change={cashChange?.change} />
                     </div>
                 )}
 
@@ -307,6 +314,12 @@ export default function PdvScreen({ session }: { session: AuthSession }) {
                                     Confirme que o pagamento de <strong className="text-pdv-gold">{formatCurrency(total)}</strong> foi recebido
                                     ({paymentMethod === "PIX" ? "PIX" : paymentMethod === "CASH" ? "dinheiro" : paymentMethodLabelsSafe(paymentMethod)}).
                                 </p>
+                                {cashChange && (
+                                    <div className="mt-4 w-full rounded-xl bg-pdv-ok/10 px-4 py-3 font-mono text-sm">
+                                        <div className="flex justify-between text-pdv-fg/70"><span>Valor recebido</span><span>{formatCurrency(cashChange.received)}</span></div>
+                                        <div className="mt-1 flex justify-between font-bold text-pdv-ok"><span>Troco a devolver</span><span>{formatCurrency(cashChange.change)}</span></div>
+                                    </div>
+                                )}
                                 {createSale.isPending && (
                                     <p className="mt-4 flex items-center gap-2 font-mono text-xs text-pdv-fg/50"><LoaderCircle className="size-4 animate-spin" />Finalizando venda...</p>
                                 )}
@@ -320,12 +333,12 @@ export default function PdvScreen({ session }: { session: AuthSession }) {
                                 </div>
                             </div>
                         </div>
-                        <SalePreview cart={cart} subtotal={subtotal} discount={discountValue} total={total} customerName={selectedCustomerName} paymentMethod={paymentMethod} customerDocument={customerDocument || undefined} />
+                        <SalePreview cart={cart} subtotal={subtotal} discount={discountValue} total={total} customerName={selectedCustomerName} paymentMethod={paymentMethod} customerDocument={customerDocument || undefined} received={cashChange?.received} change={cashChange?.change} />
                     </div>
                 )}
 
                 {step === "done" && saleResult && (
-                    <DoneStep sale={saleResult} company={company ?? null} onFinish={resetSale} />
+                    <DoneStep sale={saleResult} company={company ?? null} received={cashChange?.received} change={cashChange?.change} onFinish={resetSale} />
                 )}
             </div>
 
