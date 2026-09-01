@@ -61,9 +61,9 @@ export const metadata: Metadata = {
     images: ["/mangora-share.png"],
   },
   icons: {
-    icon: "/favicon.png",
-    shortcut: "/favicon.png",
-    apple: "/favicon.png",
+    icon: [{ url: "/favicon.ico", type: "image/x-icon" }],
+    shortcut: "/favicon.ico",
+    apple: "/apple-icon.png",
   },
 };
 
@@ -87,7 +87,7 @@ export default function RootLayout({
             alternateName: "Sistema Mangora",
             url: "https://www.mangora.com.br",
             image: "https://www.mangora.com.br/mangora-share.png",
-            logo: "https://www.mangora.com.br/favicon.png",
+            logo: "https://www.mangora.com.br/icon.png",
             description: "Sistema de gestão para vendas, estoque, clientes, caixa e financeiro.",
             applicationCategory: "BusinessApplication",
             operatingSystem: "Web",
