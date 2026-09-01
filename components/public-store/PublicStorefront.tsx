@@ -28,6 +28,7 @@ export default function PublicStorefront({ store, editable = false, onEdit }: Pu
   const [confirmation, setConfirmation] = useState<PublicOrderConfirmation | null>(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [focusField, setFocusField] = useState<string | null>(null);
+  const [focusColorField, setFocusColorField] = useState<string | null>(null);
 
   const company = store.company;
   const dark = company.theme === "dark";
@@ -83,9 +84,10 @@ export default function PublicStorefront({ store, editable = false, onEdit }: Pu
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
   }
 
-  function startEdit(field: string) {
+  function startEdit(field?: string, colorField?: string) {
     if (!editable) return;
-    setFocusField(field);
+    setFocusField(field ?? null);
+    setFocusColorField(colorField ?? null);
     setDrawerOpen(true);
   }
 
@@ -308,19 +310,23 @@ export default function PublicStorefront({ store, editable = false, onEdit }: Pu
       )}
 
       {/* Drawer de edição */}
-      <EditDrawer open={editable && drawerOpen} focusField={focusField} company={company} onClose={() => setDrawerOpen(false)} onSave={saveOne} onSelectField={setFocusField} />
+      <EditDrawer open={editable && drawerOpen} focusField={focusField} focusColorField={focusColorField} company={company} onClose={() => setDrawerOpen(false)} onSave={saveOne} onSelectField={(field) => { setFocusField(field); setFocusColorField(null); }} />
     </main>
   );
 }
 
 /** Região editável: ao passar o mouse mostra contorno + lápis; clicar abre o editor inline. */
-function EditableRegion({ editable, onStart, field, colorField, color, children }: { editable: boolean; onStart: (field: string) => void; field?: string; colorField?: string; color?: string; children: ReactNode }) {
+function EditableRegion({ editable, onStart, field, colorField, color, children }: { editable: boolean; onStart: (field?: string, colorField?: string) => void; field?: string; colorField?: string; color?: string; children: ReactNode }) {
   if (!editable) return <>{children}</>;
+  const openEditor = (event?: { stopPropagation: () => void }) => { event?.stopPropagation(); onStart(field, colorField); };
   return (
-    <div role={field ? "button" : undefined} tabIndex={field ? 0 : undefined} aria-label={field ? "Editar" : undefined} onClick={(event) => { event.stopPropagation(); if (field) onStart(field); }} onKeyDown={(event) => { if (field && event.key === "Enter") { event.stopPropagation(); onStart(field); } }} className={`group/ed relative rounded-lg ${field ? "cursor-pointer transition hover:ring-2 hover:ring-[var(--brand)]" : ""}`}>
+    <div role={field ? "button" : undefined} tabIndex={field ? 0 : undefined} aria-label={field ? "Editar" : undefined} onClick={openEditor} onKeyDown={(event) => { if (field && event.key === "Enter") openEditor(); }} className={`group/ed relative rounded-lg ${field ? "cursor-pointer transition hover:ring-2 hover:ring-[var(--brand)]" : ""}`}>
       {children}
-      {field && <span className="pointer-events-none absolute -right-2 -top-2 z-10 flex size-6 items-center justify-center rounded-full text-white opacity-0 shadow-lg transition group-hover/ed:opacity-100" style={{ backgroundColor: "var(--brand)" }}><Pencil className="size-3" /></span>}
-      {colorField && <button type="button" title="Editar cor deste elemento" aria-label="Editar cor deste elemento" onClick={(event) => { event.stopPropagation(); onStart(colorField); }} className="absolute -left-2 -top-2 z-10 flex size-6 items-center justify-center rounded-full border-2 border-white/70 opacity-0 shadow-lg transition group-hover/ed:opacity-100" style={{ backgroundColor: color || "transparent" }}><span className="sr-only">cor</span></button>}
+      {(field || colorField) && (
+        <button type="button" title="Editar" aria-label="Editar este componente" onClick={openEditor} className="absolute -right-2 -top-2 z-10 flex size-7 items-center justify-center rounded-full text-white opacity-0 shadow-lg transition group-hover/ed:opacity-100" style={{ backgroundColor: color || "var(--brand)" }}>
+          <Pencil className="size-3.5" />
+        </button>
+      )}
     </div>
   );
 }

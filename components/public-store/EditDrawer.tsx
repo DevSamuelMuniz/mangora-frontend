@@ -38,9 +38,6 @@ const FIELD_INFO: Record<string, FieldInfo> = {
     publicCoverEnabled: { label: "Fundo do topo", type: "toggle" },
 };
 
-/** Cores relacionadas desativadas: cada texto tem a cor individual via elementColor. */
-const RELATED_COLOR: Record<string, string> = {};
-
 const STORE_KEY: Record<string, keyof PublicStore["company"]> = {
     tradeName: "tradeName",
     publicLogoUrl: "logoUrl",
@@ -89,6 +86,7 @@ function optionLabel(field: string, value: string): string {
 type EditDrawerProps = {
     open: boolean;
     focusField: string | null;
+    focusColorField?: string | null;
     company: PublicStore["company"];
     onClose: () => void;
     onSave: (field: string, value: string) => Promise<void>;
@@ -96,7 +94,7 @@ type EditDrawerProps = {
 };
 
 /** Drawer lateral que desliza com a edição apenas do componente clicado. */
-export default function EditDrawer({ open, focusField, company, onClose, onSave, onSelectField }: EditDrawerProps) {
+export default function EditDrawer({ open, focusField, focusColorField, company, onClose, onSave, onSelectField }: EditDrawerProps) {
     const info = focusField ? fieldInfo(focusField) : null;
     return (
         <div className={`fixed inset-0 z-[70] ${open ? "" : "pointer-events-none"}`} aria-hidden={!open}>
@@ -109,7 +107,7 @@ export default function EditDrawer({ open, focusField, company, onClose, onSave,
             >
                 {open && focusField === "__all" && <FieldMenu onClose={onClose} onSelect={onSelectField} />}
                 {open && info && focusField && (
-                    <FieldEditor key={focusField} field={focusField} info={info} company={company} onClose={onClose} onSave={onSave} />
+                    <FieldEditor key={`${focusField}:${focusColorField ?? ""}`} field={focusField} info={info} colorField={focusColorField} company={company} onClose={onClose} onSave={onSave} />
                 )}
             </aside>
         </div>
@@ -138,9 +136,9 @@ function FieldMenu({ onClose, onSelect }: { onClose: () => void; onSelect: (fiel
     return <><div className="flex items-center justify-between border-b border-[var(--line)] px-5 py-4"><div><p className="text-sm font-black">Personalizar página</p><p className="mt-0.5 text-[9px] text-[var(--muted)]">Escolha o que deseja ajustar.</p></div><button type="button" onClick={onClose} aria-label="Fechar" className="grid size-8 place-items-center rounded-lg hover:bg-[var(--line)]"><X className="size-4" /></button></div><div className="flex-1 space-y-6 overflow-y-auto p-5">{GROUPS.map(({ title, icon: Icon, fields }) => <section key={title}><div className="mb-2 flex items-center gap-2 text-[10px] font-black uppercase tracking-[.14em] text-[var(--muted)]"><Icon className="size-3.5" />{title}</div><div className="grid grid-cols-2 gap-2">{fields.map((field) => <button key={field} type="button" onClick={() => onSelect(field)} className="min-h-11 rounded-xl border border-[var(--line)] bg-[var(--bg)] px-3 py-2 text-left text-[10px] font-bold text-[var(--ink)] transition hover:border-[var(--brand)] hover:text-[var(--brand)]">{labelFor(field)}</button>)}</div></section>)}</div></>;
 }
 
-function FieldEditor({ field, info, company, onClose, onSave }: { field: string; info: FieldInfo; company: PublicStore["company"]; onClose: () => void; onSave: (field: string, value: string) => Promise<void> }) {
-    const related = RELATED_COLOR[field] ?? null;
-    const relatedInfo = related ? FIELD_INFO[related] : null;
+function FieldEditor({ field, info, colorField, company, onClose, onSave }: { field: string; info: FieldInfo; colorField?: string | null; company: PublicStore["company"]; onClose: () => void; onSave: (field: string, value: string) => Promise<void> }) {
+    const related = colorField && colorField !== field ? colorField : null;
+    const relatedInfo = related ? fieldInfo(related) : null;
     const [draft, setDraft] = useState<Record<string, string>>(() => {
         const base: Record<string, string> = { [field]: valueOf(company, field) };
         if (related) base[related] = valueOf(company, related);
