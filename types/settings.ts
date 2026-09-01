@@ -20,5 +20,6 @@ export type CompanySettings = {
   publicIconStyle: "rounded" | "square" | "outline"; publicBackgroundPattern: "none" | "dots" | "grid" | "waves";
   publicHeaderColor: string | null; publicAnnouncementColor: string | null;
   publicButtonColor: string | null; publicPriceColor: string | null; publicCardColor: string | null;
+  publicElementColors: Record<string, string>;
   sessionTimeout: number; loginAttempts: number; status: "ACTIVE" | "SUSPENDED";
 };

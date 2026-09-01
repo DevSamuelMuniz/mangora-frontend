@@ -73,6 +73,10 @@ export default function StorefrontEditor() {
             buttonColor: pick("publicButtonColor", company.publicButtonColor),
             priceColor: pick("publicPriceColor", company.publicPriceColor),
             cardColor: pick("publicCardColor", company.publicCardColor),
+            elementColors: {
+                ...(company.publicElementColors ?? {}),
+                ...Object.fromEntries(Object.entries(overrides).filter(([key]) => key.startsWith("elementColor:")).map(([key, value]) => [key.slice(14), value])),
+            },
         },
         products,
     };
@@ -84,7 +88,12 @@ export default function StorefrontEditor() {
         }
         setOverrides((prev) => ({ ...prev, [field]: value }));
         try {
-            await save.mutateAsync(field === "publicCoverEnabled" ? { [field]: value === "true" } : { [field]: value || null });
+            const payload = field.startsWith("elementColor:")
+                ? { publicElementColors: { ...(company?.publicElementColors ?? {}), [field.slice(14)]: value } }
+                : field === "publicCoverEnabled"
+                    ? { [field]: value === "true" }
+                    : { [field]: value || null };
+            await save.mutateAsync(payload);
             toast.success("Salvo");
         } catch (cause) {
             setOverrides((prev) => { const next = { ...prev }; delete next[field]; return next; });

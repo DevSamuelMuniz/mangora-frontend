@@ -31,6 +31,7 @@ export type PublicStore = {  company: {
     buttonColor: string | null;
     priceColor: string | null;
     cardColor: string | null;
+    elementColors: Record<string, string>;
   };
   products: {
     id: string;

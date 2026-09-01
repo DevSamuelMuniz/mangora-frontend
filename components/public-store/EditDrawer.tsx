@@ -4,6 +4,7 @@ import { useState } from "react";
 import { ImageIcon, LayoutTemplate, LoaderCircle, Palette, Pencil, Type, X } from "lucide-react";
 
 import { STORE_FONTS, type PublicStore } from "@/types/public-store";
+import { ELEMENTS, elementLabel } from "./storeElements";
 
 type FieldType = "text" | "textarea" | "url" | "color" | "select" | "toggle";
 type FieldInfo = { label: string; type: FieldType; options?: string[] };
@@ -74,7 +75,9 @@ function valueOf(company: PublicStore["company"], field: string): string {
         case "publicButtonColor": return company.buttonColor ?? "";
         case "publicPriceColor": return company.priceColor ?? "";
         case "publicCardColor": return company.cardColor ?? "";
-        default: return String(company[STORE_KEY[field]] ?? "");
+        default:
+            if (field.startsWith("elementColor:")) return company.elementColors?.[field.slice(14)] ?? "";
+            return String(company[STORE_KEY[field]] ?? "");
     }
 }
 
@@ -97,7 +100,7 @@ type EditDrawerProps = {
 
 /** Drawer lateral que desliza com a edição apenas do componente clicado. */
 export default function EditDrawer({ open, focusField, company, onClose, onSave, onSelectField }: EditDrawerProps) {
-    const info = focusField ? FIELD_INFO[focusField] : null;
+    const info = focusField ? fieldInfo(focusField) : null;
     return (
         <div className={`fixed inset-0 z-[70] ${open ? "" : "pointer-events-none"}`} aria-hidden={!open}>
             <div onClick={onClose} className={`absolute inset-0 bg-black/50 backdrop-blur-sm transition-opacity duration-300 ${open ? "opacity-100" : "opacity-0"}`} />
@@ -116,15 +119,26 @@ export default function EditDrawer({ open, focusField, company, onClose, onSave,
     );
 }
 
+function fieldInfo(field: string): FieldInfo {
+    if (field.startsWith("elementColor:")) return { label: `Cor de ${elementLabel(field.slice(14))}`, type: "color" };
+    return FIELD_INFO[field];
+}
+
+function labelFor(field: string): string {
+    if (field.startsWith("elementColor:")) return `Cor de ${elementLabel(field.slice(14))}`;
+    return FIELD_INFO[field]?.label ?? field;
+}
+
 const GROUPS = [
     { title: "Textos", icon: Type, fields: ["tradeName", "publicTagline", "publicDescription", "publicAnnouncement", "publicHours", "publicOrderNote", "publicFooterNote", "publicInstagram", "publicWhatsapp"] },
     { title: "Imagens", icon: ImageIcon, fields: ["publicLogoUrl", "publicCoverUrl", "publicCoverEnabled"] },
     { title: "Cores", icon: Palette, fields: ["publicBrandColor", "publicTitleColor", "publicTextColor", "publicBackgroundColor", "publicPanelColor", "publicHeaderColor", "publicAnnouncementColor", "publicButtonColor", "publicPriceColor", "publicCardColor"] },
+    { title: "Cores por elemento", icon: Palette, fields: ELEMENTS.map((item) => `elementColor:${item.id}`) },
     { title: "Estilo", icon: LayoutTemplate, fields: ["publicTheme", "publicFont", "publicIconStyle", "publicBackgroundPattern"] },
 ];
 
 function FieldMenu({ onClose, onSelect }: { onClose: () => void; onSelect: (field: string) => void }) {
-    return <><div className="flex items-center justify-between border-b border-[var(--line)] px-5 py-4"><div><p className="text-sm font-black">Personalizar página</p><p className="mt-0.5 text-[9px] text-[var(--muted)]">Escolha o que deseja ajustar.</p></div><button type="button" onClick={onClose} aria-label="Fechar" className="grid size-8 place-items-center rounded-lg hover:bg-[var(--line)]"><X className="size-4" /></button></div><div className="flex-1 space-y-6 overflow-y-auto p-5">{GROUPS.map(({ title, icon: Icon, fields }) => <section key={title}><div className="mb-2 flex items-center gap-2 text-[10px] font-black uppercase tracking-[.14em] text-[var(--muted)]"><Icon className="size-3.5" />{title}</div><div className="grid grid-cols-2 gap-2">{fields.map((field) => <button key={field} type="button" onClick={() => onSelect(field)} className="min-h-11 rounded-xl border border-[var(--line)] bg-[var(--bg)] px-3 py-2 text-left text-[10px] font-bold text-[var(--ink)] transition hover:border-[var(--brand)] hover:text-[var(--brand)]">{FIELD_INFO[field]?.label}</button>)}</div></section>)}</div></>;
+    return <><div className="flex items-center justify-between border-b border-[var(--line)] px-5 py-4"><div><p className="text-sm font-black">Personalizar página</p><p className="mt-0.5 text-[9px] text-[var(--muted)]">Escolha o que deseja ajustar.</p></div><button type="button" onClick={onClose} aria-label="Fechar" className="grid size-8 place-items-center rounded-lg hover:bg-[var(--line)]"><X className="size-4" /></button></div><div className="flex-1 space-y-6 overflow-y-auto p-5">{GROUPS.map(({ title, icon: Icon, fields }) => <section key={title}><div className="mb-2 flex items-center gap-2 text-[10px] font-black uppercase tracking-[.14em] text-[var(--muted)]"><Icon className="size-3.5" />{title}</div><div className="grid grid-cols-2 gap-2">{fields.map((field) => <button key={field} type="button" onClick={() => onSelect(field)} className="min-h-11 rounded-xl border border-[var(--line)] bg-[var(--bg)] px-3 py-2 text-left text-[10px] font-bold text-[var(--ink)] transition hover:border-[var(--brand)] hover:text-[var(--brand)]">{labelFor(field)}</button>)}</div></section>)}</div></>;
 }
 
 function FieldEditor({ field, info, company, onClose, onSave }: { field: string; info: FieldInfo; company: PublicStore["company"]; onClose: () => void; onSave: (field: string, value: string) => Promise<void> }) {
