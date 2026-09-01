@@ -53,7 +53,12 @@ export default function AuthVisualPanel({ variant }: AuthVisualPanelProps) {
       </div>
 
       <div className={`absolute bottom-[-4.5rem] right-[-1.5rem] z-10 w-[48%] max-w-[25rem] xl:right-2 xl:w-[50%] ${variant === "register" ? "translate-x-6" : ""}`}>
-        <MascotPose pose={panel.pose} label={panel.label} className="drop-shadow-[0_28px_25px_rgba(0,0,0,0.3)]" />
+        {variant === "login" ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src="/mangora-mascote-login.png" alt={panel.label} className="w-full drop-shadow-[0_28px_25px_rgba(0,0,0,0.3)]" />
+        ) : (
+            <MascotPose pose={panel.pose} label={panel.label} className="drop-shadow-[0_28px_25px_rgba(0,0,0,0.3)]" />
+        )}
       </div>
 
       <div className="absolute bottom-8 right-8 z-20 flex items-center gap-2 rounded-full bg-white/10 px-3 py-2 text-[10px] font-black uppercase tracking-[0.13em] text-white/70 backdrop-blur xl:right-10"><ShieldCheck className="size-3.5 text-[#ffd56a]" />Ambiente protegido</div>
