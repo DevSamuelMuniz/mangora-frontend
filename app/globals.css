@@ -128,7 +128,7 @@ body {
   --app-line: rgba(18, 61, 43, 0.19);
   --app-canvas: #e9dfd2;
   --app-paper: #fffdf8;
-  --app-field: #eee5d9;
+  --app-field: #ffffff;
   --app-cream: #fff8ea;
   --app-mango: #ce4a0a;
   --app-mango-text: #a93a05;
@@ -449,7 +449,7 @@ body {
 .mangora-public select,
 .mangora-public textarea {
   border-color: rgba(18, 61, 43, 0.16);
-  background: #eee5d9;
+  background: #ffffff;
   color: var(--app-ink);
 }
 
