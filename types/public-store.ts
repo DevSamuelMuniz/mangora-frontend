@@ -15,6 +15,10 @@ export type PublicStore = {
     announcement: string | null;
     hours: string | null;
     footerNote: string | null;
+    tagline: string | null;
+    instagram: string | null;
+    theme: "light" | "dark";
+    orderNote: string | null;
   };
   products: {
     id: string;

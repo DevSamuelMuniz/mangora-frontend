@@ -12,5 +12,7 @@ export type CompanySettings = {
   publicPickupEnabled: boolean; publicDeliveryEnabled: boolean;
   publicBrandColor: string; publicLogoUrl: string | null; publicCoverUrl: string | null;
   publicAnnouncement: string | null; publicHours: string | null; publicFooterNote: string | null;
+  publicTagline: string | null; publicInstagram: string | null;
+  publicTheme: "light" | "dark"; publicOrderNote: string | null;
   sessionTimeout: number; loginAttempts: number; status: "ACTIVE" | "SUSPENDED";
 };

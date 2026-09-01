@@ -70,6 +70,8 @@ export default function SettingsPanel({ initialTab = "company" }: { initialTab?:
       publicBrandColor: data.get("publicBrandColor"), publicLogoUrl: data.get("publicLogoUrl"),
       publicCoverUrl: data.get("publicCoverUrl"), publicAnnouncement: data.get("publicAnnouncement"),
       publicHours: data.get("publicHours"), publicFooterNote: data.get("publicFooterNote"),
+      publicTagline: data.get("publicTagline"), publicInstagram: data.get("publicInstagram"),
+      publicTheme: data.get("publicTheme"), publicOrderNote: data.get("publicOrderNote"),
     };
     else payload = { sessionTimeout: Number(data.get("sessionTimeout")), loginAttempts: Number(data.get("loginAttempts")) };
 
@@ -117,13 +119,16 @@ function OnlineStoreForm({ company }: { company: CompanySettings }) {
     </div></SettingsGroup>
 
     <SettingsGroup title="Conteúdo"><div className="grid gap-4 px-4 py-3 sm:grid-cols-2">
+      <Field label="Lema / subtítulo" id="publicTagline"><input id="publicTagline" name="publicTagline" defaultValue={company.publicTagline ?? ""} maxLength={120} placeholder="Ex.: Sabor de casa, todos os dias" className={inputClass} /></Field>
+      <Field label="Tema da página" id="publicTheme"><select id="publicTheme" name="publicTheme" defaultValue={company.publicTheme ?? "light"} className={inputClass}><option value="light">Claro</option><option value="dark">Escuro</option></select></Field>
       <div className="sm:col-span-2"><Field label="Descrição da página" id="publicDescription"><textarea id="publicDescription" name="publicDescription" rows={3} maxLength={500} defaultValue={company.publicDescription ?? ""} placeholder="Conte aos clientes o que sua empresa oferece." className="w-full resize-none rounded-xl border border-slate-200 p-3 text-sm outline-none focus:border-orange-400 focus:ring-4 focus:ring-orange-100" /></Field></div>
       <Field label="Anúncio (barra no topo)" id="publicAnnouncement"><input id="publicAnnouncement" name="publicAnnouncement" defaultValue={company.publicAnnouncement ?? ""} maxLength={200} placeholder="Ex.: Frete grátis acima de R$ 100" className={inputClass} /></Field>
       <Field label="Horário de funcionamento" id="publicHours"><input id="publicHours" name="publicHours" defaultValue={company.publicHours ?? ""} maxLength={160} placeholder="Ex.: Seg a Sáb, 9h às 19h" className={inputClass} /></Field>
       <div className="sm:col-span-2"><Field label="Mensagem do rodapé" id="publicFooterNote"><input id="publicFooterNote" name="publicFooterNote" defaultValue={company.publicFooterNote ?? ""} maxLength={200} placeholder="Ex.: Pedidos confirmados pelo WhatsApp" className={inputClass} /></Field></div>
+      <div className="sm:col-span-2"><Field label="Mensagem de confirmação do pedido" id="publicOrderNote"><input id="publicOrderNote" name="publicOrderNote" defaultValue={company.publicOrderNote ?? ""} maxLength={240} placeholder="Ex.: Assim que enviar, entraremos em contato para confirmar 😊" className={inputClass} /></Field></div>
     </div></SettingsGroup>
 
-    <SettingsGroup title="Contato e pedidos"><div className="grid gap-4 px-4 py-3 sm:grid-cols-2"><Field label="WhatsApp público" id="publicWhatsapp"><input id="publicWhatsapp" name="publicWhatsapp" inputMode="tel" defaultValue={company.publicWhatsapp ?? ""} placeholder="(81) 99999-9999" className={inputClass} /></Field><div className="flex items-end pb-1 text-[10px] text-slate-400">Usado no rodapé da página para os clientes chamarem.</div></div></SettingsGroup>
+    <SettingsGroup title="Contato e pedidos"><div className="grid gap-4 px-4 py-3 sm:grid-cols-2"><Field label="WhatsApp público" id="publicWhatsapp"><input id="publicWhatsapp" name="publicWhatsapp" inputMode="tel" defaultValue={company.publicWhatsapp ?? ""} placeholder="(81) 99999-9999" className={inputClass} /></Field><Field label="Instagram (nome de usuário)" id="publicInstagram"><input id="publicInstagram" name="publicInstagram" defaultValue={company.publicInstagram ?? ""} maxLength={120} placeholder="ex.: @sua.loja" className={inputClass} /></Field></div></SettingsGroup>
 
     <SettingsGroup title="Disponibilidade"><Toggle name="publicPageEnabled" title="Ativar página online" description="Publica o catálogo e permite receber pedidos." defaultChecked={company.publicPageEnabled} /><Toggle name="publicPickupEnabled" title="Permitir retirada" description="Cliente retira o pedido no estabelecimento." defaultChecked={company.publicPickupEnabled} /><Toggle name="publicDeliveryEnabled" title="Permitir entrega" description="A empresa combinará a entrega com o cliente." defaultChecked={company.publicDeliveryEnabled} /></SettingsGroup>
 
