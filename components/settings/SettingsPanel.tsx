@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { FormEvent, useState, type ReactNode } from "react";
-import { Activity, Bell, Building2, CheckCircle2, ExternalLink, Globe2, KeyRound, LoaderCircle, Monitor, RefreshCw, Save, ShieldCheck, ShoppingCart, SlidersHorizontal, type LucideIcon } from "lucide-react";
+import { Activity, Bell, Building2, CheckCircle2, ExternalLink, Globe2, KeyRound, LoaderCircle, Monitor, Pencil, RefreshCw, Save, ShieldCheck, ShoppingCart, SlidersHorizontal, type LucideIcon } from "lucide-react";
 import type { CompanySettings, SettingsTab } from "@/types/settings";
 import { formatDateTime } from "@/lib/format";
 import {
@@ -107,7 +107,7 @@ function OnlineStoreForm({ company }: { company: CompanySettings }) {
   return <div className="space-y-5">
     <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-orange-100 bg-orange-50 p-4">
       <div><p className="text-xs font-black text-orange-950">mangora.com.br/loja/{company.slug}</p><p className="mt-1 text-[10px] text-orange-700">Sua página de vendas pública — os clientes escolhem os itens e pedem direto por aqui.</p></div>
-      <div className="flex items-center gap-2"><span className={`rounded-full px-3 py-1 text-[10px] font-black ${company.publicPageEnabled ? "bg-green-100 text-green-700" : "bg-slate-100 text-slate-500"}`}>{company.publicPageEnabled ? "● Página publicada" : "○ Página desativada"}</span><Link href={`/loja/${company.slug}`} target="_blank" className="flex h-9 items-center gap-2 rounded-xl bg-white px-3 text-[10px] font-bold text-orange-700 shadow-sm"><ExternalLink className="size-3.5" />Visualizar página</Link></div>
+      <div className="flex items-center gap-2"><span className={`rounded-full px-3 py-1 text-[10px] font-black ${company.publicPageEnabled ? "bg-green-100 text-green-700" : "bg-slate-100 text-slate-500"}`}>{company.publicPageEnabled ? "● Página publicada" : "○ Página desativada"}</span><Link href="/loja/editar" className="flex h-9 items-center gap-2 rounded-xl bg-[#123d2b] px-3 text-[10px] font-black text-white shadow-sm transition hover:bg-[#147a45]"><Pencil className="size-3.5" />Editar página</Link><Link href={`/loja/${company.slug}`} target="_blank" className="flex h-9 items-center gap-2 rounded-xl bg-white px-3 text-[10px] font-bold text-orange-700 shadow-sm"><ExternalLink className="size-3.5" />Visualizar página</Link></div>
     </div>
     {noFulfillment && <div className="rounded-xl border border-amber-200 bg-amber-50 p-3 text-[10px] font-bold text-amber-700">Sem retirada nem entrega, a página fica indisponível para pedidos. Ative pelo menos um canal abaixo.</div>}
 
