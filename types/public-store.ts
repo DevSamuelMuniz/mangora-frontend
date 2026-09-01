@@ -1,3 +1,6 @@
+export type StoreReview = { id: string; reviewerName: string; rating: number; comment: string; createdAt: string };
+export type StoreTrust = { verified: boolean; salesCount: number; sinceYear: number; ratingCount: number; averageRating: number };
+
 export type PublicStore = {  company: {
     tradeName: string;
     slug: string;
@@ -33,6 +36,8 @@ export type PublicStore = {  company: {
     cardColor: string | null;
     elementColors: Record<string, string>;
   };
+  trust: StoreTrust;
+  reviews: StoreReview[];
   products: {
     id: string;
     name: string;

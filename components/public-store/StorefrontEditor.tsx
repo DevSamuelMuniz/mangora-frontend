@@ -78,6 +78,8 @@ export default function StorefrontEditor() {
                 ...Object.fromEntries(Object.entries(overrides).filter(([key]) => key.startsWith("elementColor:")).map(([key, value]) => [key.slice(14), value])),
             },
         },
+        trust: { verified: Boolean(company.document), salesCount: 0, sinceYear: new Date().getFullYear(), ratingCount: 0, averageRating: 0 },
+        reviews: [],
         products,
     };
 

@@ -1,11 +1,12 @@
 "use client";
 
 import { FormEvent, useMemo, useState, type CSSProperties, type ReactNode } from "react";
-import { AtSign, CheckCircle2, ChevronDown, Clock3, LoaderCircle, MapPin, Minus, Package, Phone, Plus, Search, ShoppingBag, Trash2 } from "lucide-react";
+import { AtSign, CheckCircle2, ChevronDown, Clock3, LoaderCircle, MapPin, Minus, Package, Phone, Plus, Search, ShieldCheck, ShoppingBag, Star, Trash2 } from "lucide-react";
 import { STORE_FONTS, type PublicStore } from "@/types/public-store";
 import StorefrontSidebar from "./StorefrontSidebar";
 import { elementColor } from "./storeElements";
-import { formatCurrency } from "@/lib/format";
+import { apiRequest } from "@/lib/api/client";
+import { formatCurrency, formatDate } from "@/lib/format";
 import { useCreatePublicOrder, type PublicOrderConfirmation } from "@/features/public-store/hooks/usePublicStore";
 
 type Cart = Record<string, number>;
@@ -25,6 +26,13 @@ export default function PublicStorefront({ store, editable = false, onEdit }: Pu
   const [category, setCategory] = useState("Todos");
   const [error, setError] = useState("");
   const [confirmation, setConfirmation] = useState<PublicOrderConfirmation | null>(null);
+  const [reviews, setReviews] = useState(store.reviews);
+  const [reviewName, setReviewName] = useState("");
+  const [reviewRating, setReviewRating] = useState(5);
+  const [reviewComment, setReviewComment] = useState("");
+  const [reviewBusy, setReviewBusy] = useState(false);
+  const [reviewError, setReviewError] = useState("");
+  const [reviewDone, setReviewDone] = useState(false);
 
 
   const company = store.company;
@@ -83,6 +91,22 @@ export default function PublicStorefront({ store, editable = false, onEdit }: Pu
 
   async function saveOne(field: string, value: string) {
     await onEdit?.(field, value);
+  }
+
+  async function submitReview() {
+    if (reviewName.trim().length < 3) { setReviewError("Informe seu nome para avaliar."); return; }
+    setReviewBusy(true); setReviewError(""); setReviewDone(false);
+    try {
+      const created = await apiRequest<{ id: string; reviewerName: string; rating: number; comment: string; createdAt: string }>(`/public/stores/${company.slug}/reviews`, { method: "POST", body: JSON.stringify({ reviewerName: reviewName.trim(), rating: reviewRating, comment: reviewComment.trim() }) });
+      setReviews((prev) => [created, ...prev]);
+      setReviewName(""); setReviewRating(5); setReviewComment("");
+      setReviewDone(true);
+      window.setTimeout(() => setReviewDone(false), 3000);
+    } catch (cause) {
+      setReviewError(cause instanceof Error ? cause.message : "Não foi possível enviar a avaliação.");
+    } finally {
+      setReviewBusy(false);
+    }
   }
 
   async function submit(event: FormEvent<HTMLFormElement>) {
@@ -163,10 +187,14 @@ export default function PublicStorefront({ store, editable = false, onEdit }: Pu
               <div className="mt-6 flex flex-wrap items-center justify-center gap-2 text-[11px] font-semibold" style={{ color: showCover ? "rgba(255,255,255,0.85)" : "var(--muted)" }}>
                 {cityLine && <span className="flex items-center gap-1.5"><MapPin className="size-3.5" />{cityLine}</span>}
                 {company.hours && (
-                  <EditableRegion editable={editable} field="publicHours">
-                    <EditableRegion editable={editable} field="publicHours" colorField="elementColor:hours"><span className="flex items-center gap-1.5"><Clock3 className="size-3.5" />{company.hours}</span></EditableRegion>
-                  </EditableRegion>
+                  <EditableRegion editable={editable} field="publicHours" colorField="elementColor:hours"><span className="flex items-center gap-1.5"><Clock3 className="size-3.5" />{company.hours}</span></EditableRegion>
                 )}
+              </div>
+              <div className="mt-4 flex flex-wrap items-center justify-center gap-2">
+                {store.trust.verified && <span className="inline-flex items-center gap-1.5 rounded-full border border-white/40 bg-white/10 px-3 py-1 text-[10px] font-black text-white backdrop-blur"><ShieldCheck className="size-3.5" />Loja verificada</span>}
+                {store.trust.salesCount > 0 && <span className="inline-flex items-center gap-1.5 rounded-full border border-white/40 bg-white/10 px-3 py-1 text-[10px] font-black text-white backdrop-blur"><ShoppingBag className="size-3.5" />{store.trust.salesCount} pedidos</span>}
+                {store.trust.ratingCount > 0 && <span className="inline-flex items-center gap-1.5 rounded-full border border-white/40 bg-white/10 px-3 py-1 text-[10px] font-black text-white backdrop-blur"><Star className="size-3.5 fill-[#ffd56a] text-[#ffd56a]" />{store.trust.averageRating.toFixed(1)} ({store.trust.ratingCount})</span>}
+                <span className="inline-flex items-center gap-1.5 rounded-full border border-white/40 bg-white/10 px-3 py-1 text-[10px] font-black text-white backdrop-blur">Desde {store.trust.sinceYear}</span>
               </div>
               <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
                 <EditableRegion editable={editable} colorField="elementColor:cta">
@@ -256,6 +284,53 @@ export default function PublicStorefront({ store, editable = false, onEdit }: Pu
           {confirmation && <div role="status" className="mt-4 rounded-2xl border border-green-200 bg-green-50 p-4 text-green-800"><CheckCircle2 className="size-5" /><p className="mt-2 text-xs font-black">Pedido {confirmation.code} recebido!</p><p className="mt-1 text-[10px] leading-4">{company.orderNote || `Total de ${formatCurrency(confirmation.total)}. A empresa entrará em contato para confirmar.`}</p></div>}
         </aside></EditableRegion>
       </div>
+
+      {/* Avaliações — confiança e reputação */}
+      <section className="mx-auto max-w-7xl px-4 py-10 sm:px-6">
+        <div className="flex flex-wrap items-end justify-between gap-4">
+          <div>
+            <p className="font-mono text-[9px] font-black uppercase tracking-[0.16em]" style={{ color: "var(--brand)" }}>Reputação</p>
+            <h2 className="mt-1 font-[family-name:var(--font-display)] text-2xl font-black">O que dizem por aqui</h2>
+          </div>
+          <div className="flex items-center gap-2 rounded-2xl border border-[var(--line)] bg-[var(--panel)] px-4 py-2">
+            <span className="font-[family-name:var(--font-display)] text-3xl font-black" style={{ color: "var(--brand)" }}>{store.trust.ratingCount ? store.trust.averageRating.toFixed(1) : "—"}</span>
+            <div>
+              <div className="flex">{Array.from({ length: 5 }, (_, i) => <Star key={i} className={`size-3.5 ${i < Math.round(store.trust.averageRating) ? "fill-[var(--brand)] text-[var(--brand)]" : "text-[var(--muted)]"}`} />)}</div>
+              <p className="mt-0.5 font-mono text-[9px] text-[var(--muted)]">{store.trust.ratingCount ? `${store.trust.ratingCount} avaliação(ões)` : "Ainda sem avaliações"}</p>
+            </div>
+          </div>
+        </div>
+
+        <div className="mt-5 grid gap-5 lg:grid-cols-[1fr_340px]">
+          <div className="grid gap-3 sm:grid-cols-2">
+            {reviews.length ? reviews.map((review) => (
+              <div key={review.id} className="rounded-2xl border border-[var(--line)] bg-[var(--panel)] p-4">
+                <div className="flex items-center justify-between gap-2">
+                  <p className="truncate text-xs font-black">{review.reviewerName}</p>
+                  <div className="flex">{Array.from({ length: 5 }, (_, i) => <Star key={i} className={`size-3 ${i < review.rating ? "fill-[var(--brand)] text-[var(--brand)]" : "text-[var(--muted)]"}`} />)}</div>
+                </div>
+                {review.comment && <p className="mt-2 text-[11px] leading-5 text-[var(--muted)]">{review.comment}</p>}
+                <p className="mt-3 font-mono text-[9px] text-[var(--muted)]">{formatDate(review.createdAt)}</p>
+              </div>
+            )) : <div className="col-span-full rounded-2xl border border-dashed border-[var(--line)] bg-[var(--panel)] p-8 text-center font-mono text-[10px] text-[var(--muted)]">Seja a primeira avaliação desta loja.</div>}
+          </div>
+
+          <div className="rounded-2xl border-2 border-[var(--line)] bg-[var(--panel-2)] p-4">
+            <h3 className="font-[family-name:var(--font-display)] text-sm font-black">Avalie esta loja</h3>
+            <p className="mt-1 text-[10px] text-[var(--muted)]">Sua avaliação ajuda outros clientes a confiarem.</p>
+            <div className="mt-3 flex items-center gap-1">{Array.from({ length: 5 }, (_, i) => (
+              <button key={i} type="button" onClick={() => setReviewRating(i + 1)} aria-label={`${i + 1} estrelas`} className="transition hover:scale-110"><Star className={`size-6 ${i < reviewRating ? "fill-[var(--brand)] text-[var(--brand)]" : "text-[var(--muted)]"}`} /></button>
+            ))}</div>
+            <input value={reviewName} onChange={(event) => setReviewName(event.target.value)} placeholder="Seu nome" className={inputClass} />
+            <textarea value={reviewComment} onChange={(event) => setReviewComment(event.target.value)} rows={3} maxLength={500} placeholder="O que achou? (opcional)" className={`${inputClass} mt-2 h-auto resize-none py-2.5`} />
+            {reviewError && <p role="alert" className="mt-2 rounded-lg bg-red-50 p-2 text-[10px] font-semibold text-red-700">{reviewError}</p>}
+            <button type="button" onClick={() => void submitReview()} disabled={reviewBusy} className="mt-3 flex h-11 w-full items-center justify-center gap-2 rounded-xl text-xs font-black text-white disabled:opacity-60" style={{ backgroundColor: "var(--brand)" }}>
+              {reviewBusy ? <LoaderCircle className="size-4 animate-spin" /> : reviewDone ? <CheckCircle2 className="size-4" /> : <Star className="size-4" />}
+              {reviewBusy ? "Enviando..." : reviewDone ? "Obrigado!" : "Enviar avaliação"}
+            </button>
+          </div>
+        </div>
+      </section>
 
       {/* Rodapé */}
       <footer className="border-t border-[var(--line)] bg-[var(--panel)]">
