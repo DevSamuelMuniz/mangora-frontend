@@ -25,7 +25,7 @@ export default function PublicStorefront({ store, editable = false, onEdit }: Pu
   const [category, setCategory] = useState("Todos");
   const [error, setError] = useState("");
   const [confirmation, setConfirmation] = useState<PublicOrderConfirmation | null>(null);
-  const [selectedField, setSelectedField] = useState<string | null>(null);
+
 
   const company = store.company;
   const dark = company.theme === "dark";
@@ -81,11 +81,6 @@ export default function PublicStorefront({ store, editable = false, onEdit }: Pu
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
   }
 
-  function selectEdit(field?: string, colorField?: string) {
-    if (!editable) return;
-    setSelectedField(field ?? colorField ?? null);
-  }
-
   async function saveOne(field: string, value: string) {
     await onEdit?.(field, value);
   }
@@ -104,15 +99,15 @@ export default function PublicStorefront({ store, editable = false, onEdit }: Pu
     <main className={`mangora-public store-pattern-${company.backgroundPattern} store-icons-${company.iconStyle} min-h-screen bg-[var(--bg)] font-[family-name:var(--font-body)] text-[var(--ink)] transition-colors ${editable ? "sm:pr-[21.5rem]" : ""}`} style={vars}>
       {company.announcement && (
         <div className="bg-[var(--announcement)] px-4 py-2 text-center text-[11px] font-bold text-white">
-          <EditableRegion editable={editable} onStart={selectEdit} field="publicAnnouncement" colorField="publicAnnouncementColor"><span className="inline-block">{company.announcement}</span></EditableRegion>
+          <EditableRegion editable={editable} field="publicAnnouncement" colorField="publicAnnouncementColor"><span className="inline-block">{company.announcement}</span></EditableRegion>
         </div>
       )}
 
       <header className="sticky top-0 z-30 border-b border-[var(--line)] bg-[var(--header)]/95 backdrop-blur">
-        <EditableRegion editable={editable} onStart={selectEdit} colorField="publicHeaderColor">
+        <EditableRegion editable={editable} colorField="publicHeaderColor">
         <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-3 px-4 sm:px-6">
           <button type="button" onClick={() => (editable ? undefined : scrollToId("cardapio"))} className="flex min-w-0 shrink items-center gap-2.5 text-left" aria-label={`Voltar ao cardápio de ${company.tradeName}`}>
-            <EditableRegion editable={editable} onStart={selectEdit} field="publicLogoUrl">
+            <EditableRegion editable={editable} field="publicLogoUrl">
               {company.logoUrl ? (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img src={company.logoUrl} alt={`Logo de ${company.tradeName}`} className="h-9 w-auto max-w-28 object-contain sm:max-w-36" />
@@ -120,7 +115,7 @@ export default function PublicStorefront({ store, editable = false, onEdit }: Pu
                 <span className="flex size-9 shrink-0 items-center justify-center rounded-xl font-[family-name:var(--font-display)] text-base font-black text-white" style={{ backgroundColor: brand }}>{company.tradeName.charAt(0).toUpperCase()}</span>
               )}
             </EditableRegion>
-            <EditableRegion editable={editable} onStart={selectEdit} field="tradeName" colorField="elementColor:headerName">
+            <EditableRegion editable={editable} field="tradeName" colorField="elementColor:headerName">
               <span className="min-w-0">
                 <span className="block truncate font-[family-name:var(--font-display)] text-sm font-black leading-tight" style={{ color: elementColor(company, "headerName") }}>{company.tradeName}</span>
                 <span className="block font-mono text-[9px] uppercase tracking-[0.14em] text-[var(--muted)]">Página online</span>
@@ -128,7 +123,7 @@ export default function PublicStorefront({ store, editable = false, onEdit }: Pu
             </EditableRegion>
           </button>
           <div className="flex shrink-0 items-center gap-2">
-            {whatsappUrl && <EditableRegion editable={editable} onStart={selectEdit} colorField="elementColor:whatsappHeader"><a href={whatsappUrl} target="_blank" rel="noreferrer" className="flex h-9 items-center gap-1.5 rounded-xl px-3 text-[10px] font-black text-white transition hover:brightness-110" style={{ backgroundColor: elementColor(company, "whatsappHeader") }}><Phone className="size-3.5" /><span className="hidden sm:inline">WhatsApp</span></a></EditableRegion>}
+            {whatsappUrl && <EditableRegion editable={editable} colorField="elementColor:whatsappHeader"><a href={whatsappUrl} target="_blank" rel="noreferrer" className="flex h-9 items-center gap-1.5 rounded-xl px-3 text-[10px] font-black text-white transition hover:brightness-110" style={{ backgroundColor: elementColor(company, "whatsappHeader") }}><Phone className="size-3.5" /><span className="hidden sm:inline">WhatsApp</span></a></EditableRegion>}
           </div>
         </div>
         </EditableRegion>
@@ -136,7 +131,7 @@ export default function PublicStorefront({ store, editable = false, onEdit }: Pu
 
       {/* Hero — identidade do cliente */}
       <section className="relative overflow-hidden">
-        <EditableRegion editable={editable} onStart={selectEdit} field="publicCoverUrl">
+        <EditableRegion editable={editable} field="publicCoverUrl">
           <div className="relative">
             {showCover && (
               // eslint-disable-next-line @next/next/no-img-element
@@ -144,7 +139,7 @@ export default function PublicStorefront({ store, editable = false, onEdit }: Pu
             )}
             {showCover && <div className="absolute inset-0" style={company.coverUrl ? { backgroundImage: `linear-gradient(180deg, rgba(10,20,16,0.35) 0%, rgba(10,20,16,0.82) 100%)` } : { backgroundImage: `linear-gradient(155deg, ${brand} 0%, #123d2b 78%)`, minHeight: "26rem" }} />}
             <div className="relative mx-auto flex max-w-7xl flex-col items-center px-4 py-16 text-center sm:px-6 sm:py-24">
-              <EditableRegion editable={editable} onStart={selectEdit} field="publicLogoUrl">
+              <EditableRegion editable={editable} field="publicLogoUrl">
                 {company.logoUrl ? (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img src={company.logoUrl} alt={`Logo de ${company.tradeName}`} className="h-24 w-auto max-w-60 rounded-3xl bg-white/95 object-contain p-2.5 shadow-2xl" />
@@ -152,29 +147,29 @@ export default function PublicStorefront({ store, editable = false, onEdit }: Pu
                   <span className="flex size-24 items-center justify-center rounded-[1.75rem] bg-white/95 font-[family-name:var(--font-display)] text-4xl font-black shadow-2xl" style={{ color: brand }}>{company.tradeName.charAt(0).toUpperCase()}</span>
                 )}
               </EditableRegion>
-              <EditableRegion editable={editable} onStart={selectEdit} field="tradeName" colorField="elementColor:heroTitle">
+              <EditableRegion editable={editable} field="tradeName" colorField="elementColor:heroTitle">
                 <h1 className="mt-7 max-w-3xl text-balance font-[family-name:var(--font-display)] text-5xl font-extrabold leading-[0.95] tracking-tight sm:text-6xl" style={{ color: heroTitleColor }}>{company.tradeName}</h1>
               </EditableRegion>
               {company.tagline && (
-                <EditableRegion editable={editable} onStart={selectEdit} field="publicTagline">
-                  <EditableRegion editable={editable} onStart={selectEdit} colorField="elementColor:tagline"><p className="mt-4 max-w-2xl text-lg font-semibold" style={{ color: elementColor(company, "tagline") }}>{company.tagline}</p></EditableRegion>
+                <EditableRegion editable={editable} field="publicTagline">
+                  <EditableRegion editable={editable} colorField="elementColor:tagline"><p className="mt-4 max-w-2xl text-lg font-semibold" style={{ color: elementColor(company, "tagline") }}>{company.tagline}</p></EditableRegion>
                 </EditableRegion>
               )}
               {company.description && (
-                <EditableRegion editable={editable} onStart={selectEdit} field="publicDescription">
-                  <EditableRegion editable={editable} onStart={selectEdit} colorField="elementColor:description"><p className="mt-2 max-w-2xl text-sm leading-6" style={{ color: elementColor(company, "description") }}>{company.description}</p></EditableRegion>
+                <EditableRegion editable={editable} field="publicDescription">
+                  <EditableRegion editable={editable} colorField="elementColor:description"><p className="mt-2 max-w-2xl text-sm leading-6" style={{ color: elementColor(company, "description") }}>{company.description}</p></EditableRegion>
                 </EditableRegion>
               )}
               <div className="mt-6 flex flex-wrap items-center justify-center gap-2 text-[11px] font-semibold" style={{ color: showCover ? "rgba(255,255,255,0.85)" : "var(--muted)" }}>
                 {cityLine && <span className="flex items-center gap-1.5"><MapPin className="size-3.5" />{cityLine}</span>}
                 {company.hours && (
-                  <EditableRegion editable={editable} onStart={selectEdit} field="publicHours">
-                    <EditableRegion editable={editable} onStart={selectEdit} field="publicHours" colorField="elementColor:hours"><span className="flex items-center gap-1.5"><Clock3 className="size-3.5" />{company.hours}</span></EditableRegion>
+                  <EditableRegion editable={editable} field="publicHours">
+                    <EditableRegion editable={editable} field="publicHours" colorField="elementColor:hours"><span className="flex items-center gap-1.5"><Clock3 className="size-3.5" />{company.hours}</span></EditableRegion>
                   </EditableRegion>
                 )}
               </div>
               <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
-                <EditableRegion editable={editable} onStart={selectEdit} colorField="elementColor:cta">
+                <EditableRegion editable={editable} colorField="elementColor:cta">
                 <button type="button" onClick={() => (editable ? undefined : scrollToId("cardapio"))} className="inline-flex h-13 items-center gap-2 rounded-2xl px-8 font-[family-name:var(--font-display)] text-sm font-black text-white shadow-[0_6px_0_rgba(0,0,0,0.25)] transition hover:-translate-y-0.5 hover:brightness-110" style={{ backgroundColor: elementColor(company, "cta") }}><ShoppingBag className="size-4" />Ver cardápio<ChevronDown className="size-4" /></button>
                 </EditableRegion>
                 {whatsappUrl && <a href={whatsappUrl} target="_blank" rel="noreferrer" className="inline-flex h-13 items-center gap-2 rounded-2xl border-2 px-6 text-sm font-bold transition" style={{ borderColor: showCover ? "rgba(255,255,255,0.6)" : "var(--line)", color: showCover ? "#fff" : "var(--ink)" }}><Phone className="size-4" />Pedir no WhatsApp</a>}
@@ -197,18 +192,18 @@ export default function PublicStorefront({ store, editable = false, onEdit }: Pu
               const soldOut = product.available === 0;
               return (
                 <article key={product.id} className={`group flex flex-col overflow-hidden rounded-3xl border border-[var(--line)] bg-[var(--card)] shadow-sm transition hover:-translate-y-0.5 hover:shadow-lg ${soldOut ? "opacity-80" : ""}`}>
-                  <EditableRegion editable={editable} onStart={selectEdit} colorField="publicCardColor">
+                  <EditableRegion editable={editable} colorField="publicCardColor">
                   <div className="relative flex h-40 items-center justify-center bg-[var(--panel-2)] bg-cover bg-center" style={product.imageUrl ? { backgroundImage: `url(${product.imageUrl})` } : undefined}>
                     {!product.imageUrl && <Package className="size-9 text-[var(--brand)]/40" />}
                     {soldOut && <span className="absolute left-3 top-3 rounded-full bg-[#123d2b] px-2.5 py-1 text-[9px] font-black uppercase tracking-wider text-white">Esgotado</span>}
                   </div>
                   </EditableRegion>
                   <div className="flex flex-1 flex-col p-4">
-                    <EditableRegion editable={editable} onStart={selectEdit} colorField="elementColor:category"><p className="text-[9px] font-black uppercase tracking-[0.16em]" style={{ color: elementColor(company, "category") }}>{product.category}</p></EditableRegion>
-                    <EditableRegion editable={editable} onStart={selectEdit} colorField="elementColor:productName"><h2 className="mt-1 truncate font-[family-name:var(--font-display)] text-sm font-bold" style={{ color: elementColor(company, "productName") }}>{product.name}</h2></EditableRegion>
-                    <EditableRegion editable={editable} onStart={selectEdit} colorField="elementColor:productDesc"><p className="mt-1 line-clamp-2 min-h-8 text-[10px] leading-4" style={{ color: elementColor(company, "productDesc") }}>{product.description || "Item disponível para pedido."}</p></EditableRegion>
+                    <EditableRegion editable={editable} colorField="elementColor:category"><p className="text-[9px] font-black uppercase tracking-[0.16em]" style={{ color: elementColor(company, "category") }}>{product.category}</p></EditableRegion>
+                    <EditableRegion editable={editable} colorField="elementColor:productName"><h2 className="mt-1 truncate font-[family-name:var(--font-display)] text-sm font-bold" style={{ color: elementColor(company, "productName") }}>{product.name}</h2></EditableRegion>
+                    <EditableRegion editable={editable} colorField="elementColor:productDesc"><p className="mt-1 line-clamp-2 min-h-8 text-[10px] leading-4" style={{ color: elementColor(company, "productDesc") }}>{product.description || "Item disponível para pedido."}</p></EditableRegion>
                     <div className="mt-3 flex items-center justify-between gap-3 border-t border-dashed border-[var(--line)] pt-3">
-                      <EditableRegion editable={editable} onStart={selectEdit} colorField="elementColor:price"><strong className="font-mono text-base font-black" style={{ color: elementColor(company, "price") }}>{formatCurrency(product.price)}</strong></EditableRegion>
+                      <EditableRegion editable={editable} colorField="elementColor:price"><strong className="font-mono text-base font-black" style={{ color: elementColor(company, "price") }}>{formatCurrency(product.price)}</strong></EditableRegion>
                       {soldOut ? (
                         <span className="rounded-xl bg-[var(--line)] px-3.5 py-2 text-[10px] font-bold text-[var(--muted)]">Indisponível</span>
                       ) : cart[product.id] ? (
@@ -218,7 +213,7 @@ export default function PublicStorefront({ store, editable = false, onEdit }: Pu
                           <button type="button" onClick={() => change(product.id, 1)} aria-label={`Aumentar ${product.name}`} className="flex size-8 items-center justify-center"><Plus className="size-3.5" /></button>
                         </div>
                       ) : (
-                        <EditableRegion editable={editable} onStart={selectEdit} colorField="elementColor:addButton"><button type="button" onClick={() => change(product.id, 1)} className="flex h-9 items-center gap-1.5 rounded-xl px-3.5 text-[11px] font-black text-white transition hover:brightness-110" style={{ backgroundColor: elementColor(company, "addButton") }}><Plus className="size-3.5" />Adicionar</button></EditableRegion>
+                        <EditableRegion editable={editable} colorField="elementColor:addButton"><button type="button" onClick={() => change(product.id, 1)} className="flex h-9 items-center gap-1.5 rounded-xl px-3.5 text-[11px] font-black text-white transition hover:brightness-110" style={{ backgroundColor: elementColor(company, "addButton") }}><Plus className="size-3.5" />Adicionar</button></EditableRegion>
                       )}
                     </div>
                   </div>
@@ -230,10 +225,10 @@ export default function PublicStorefront({ store, editable = false, onEdit }: Pu
         </section>
 
         {/* Pedido — recibo */}
-        <EditableRegion editable={editable} onStart={selectEdit} colorField="publicPanelColor"><aside id="pedido" className="scroll-mt-20 rounded-3xl border-2 border-[var(--line)] bg-[var(--panel-2)] p-4 shadow-lg lg:sticky lg:top-20">
+        <EditableRegion editable={editable} colorField="publicPanelColor"><aside id="pedido" className="scroll-mt-20 rounded-3xl border-2 border-[var(--line)] bg-[var(--panel-2)] p-4 shadow-lg lg:sticky lg:top-20">
           <div className="flex items-center gap-3 border-b-2 border-dashed border-[var(--line)] pb-3">
             <span className="flex size-10 items-center justify-center rounded-2xl text-white" style={{ backgroundColor: brand }}><ShoppingBag className="size-4" /></span>
-            <div><EditableRegion editable={editable} onStart={selectEdit} colorField="elementColor:orderTitle"><h2 className="font-[family-name:var(--font-display)] text-sm font-black" style={{ color: elementColor(company, "orderTitle") }}>Seu pedido</h2></EditableRegion><p className="font-mono text-[9px] text-[var(--muted)]">{itemCount} item(ns)</p></div>
+            <div><EditableRegion editable={editable} colorField="elementColor:orderTitle"><h2 className="font-[family-name:var(--font-display)] text-sm font-black" style={{ color: elementColor(company, "orderTitle") }}>Seu pedido</h2></EditableRegion><p className="font-mono text-[9px] text-[var(--muted)]">{itemCount} item(ns)</p></div>
           </div>
 
           <div className="max-h-64 divide-y divide-dashed divide-[var(--line)] overflow-y-auto">
@@ -255,7 +250,7 @@ export default function PublicStorefront({ store, editable = false, onEdit }: Pu
             <select name="fulfillment" required className={inputClass}>{company.pickupEnabled && <option value="PICKUP">Retirada no estabelecimento</option>}{company.deliveryEnabled && <option value="DELIVERY">Entrega a combinar</option>}</select>
             <textarea name="notes" rows={2} maxLength={500} placeholder="Observações (opcional)" className="w-full resize-none rounded-xl border border-[var(--line)] bg-[var(--panel)] p-3 text-xs text-[var(--ink)] outline-none placeholder:text-[var(--muted)] focus:border-[var(--brand)] focus:ring-4 focus:ring-[var(--brand)]/15" />
             {error && <div role="alert" className="rounded-xl bg-red-50 p-3 text-[10px] font-semibold text-red-700">{error}</div>}
-            <EditableRegion editable={editable} onStart={selectEdit} colorField="elementColor:submitButton"><button disabled={loading || !cartItems.length} className="flex h-12 w-full items-center justify-center gap-2 rounded-2xl text-sm font-black text-white transition hover:brightness-110 disabled:opacity-50" style={{ backgroundColor: elementColor(company, "submitButton") }}>{loading ? <LoaderCircle className="size-4 animate-spin" /> : <ShoppingBag className="size-4" />}Enviar pedido</button></EditableRegion>
+            <EditableRegion editable={editable} colorField="elementColor:submitButton"><button disabled={loading || !cartItems.length} className="flex h-12 w-full items-center justify-center gap-2 rounded-2xl text-sm font-black text-white transition hover:brightness-110 disabled:opacity-50" style={{ backgroundColor: elementColor(company, "submitButton") }}>{loading ? <LoaderCircle className="size-4 animate-spin" /> : <ShoppingBag className="size-4" />}Enviar pedido</button></EditableRegion>
           </form>
 
           {confirmation && <div role="status" className="mt-4 rounded-2xl border border-green-200 bg-green-50 p-4 text-green-800"><CheckCircle2 className="size-5" /><p className="mt-2 text-xs font-black">Pedido {confirmation.code} recebido!</p><p className="mt-1 text-[10px] leading-4">{company.orderNote || `Total de ${formatCurrency(confirmation.total)}. A empresa entrará em contato para confirmar.`}</p></div>}
@@ -265,20 +260,20 @@ export default function PublicStorefront({ store, editable = false, onEdit }: Pu
       {/* Rodapé */}
       <footer className="border-t border-[var(--line)] bg-[var(--panel)]">
         <div className="mx-auto flex max-w-7xl flex-col items-center gap-2 px-4 py-8 text-center sm:px-6">
-          <EditableRegion editable={editable} onStart={selectEdit} colorField="elementColor:footerName"><p className="font-[family-name:var(--font-display)] text-sm font-black" style={{ color: elementColor(company, "footerName") }}>{company.tradeName}</p></EditableRegion>
+          <EditableRegion editable={editable} colorField="elementColor:footerName"><p className="font-[family-name:var(--font-display)] text-sm font-black" style={{ color: elementColor(company, "footerName") }}>{company.tradeName}</p></EditableRegion>
           {company.hours && (
-            <EditableRegion editable={editable} onStart={selectEdit} field="publicHours">
+            <EditableRegion editable={editable} field="publicHours">
               <p className="flex items-center gap-1.5 font-mono text-[10px] text-[var(--muted)]"><Clock3 className="size-3.5" />{company.hours}</p>
             </EditableRegion>
           )}
           {company.footerNote && (
-            <EditableRegion editable={editable} onStart={selectEdit} field="publicFooterNote">
+            <EditableRegion editable={editable} field="publicFooterNote">
               <p className="text-[10px] text-[var(--muted)]">{company.footerNote}</p>
             </EditableRegion>
           )}
           <div className="mt-1 flex flex-wrap items-center justify-center gap-2">
-            {whatsappUrl && <EditableRegion editable={editable} onStart={selectEdit} colorField="elementColor:footerWhatsapp"><a href={whatsappUrl} target="_blank" rel="noreferrer" className="inline-flex h-10 items-center gap-2 rounded-xl px-4 text-[11px] font-bold text-white" style={{ backgroundColor: elementColor(company, "footerWhatsapp") }}><Phone className="size-3.5" />Pedir pelo WhatsApp</a></EditableRegion>}
-            {instagramUrl && <EditableRegion editable={editable} onStart={selectEdit} field="publicInstagram"><a href={instagramUrl} target="_blank" rel="noreferrer" className="inline-flex h-10 items-center gap-2 rounded-xl border border-[var(--line)] px-4 text-[11px] font-bold text-[var(--ink)] transition hover:border-[var(--brand)]"><AtSign className="size-3.5" />@{instagramHandle}</a></EditableRegion>}
+            {whatsappUrl && <EditableRegion editable={editable} colorField="elementColor:footerWhatsapp"><a href={whatsappUrl} target="_blank" rel="noreferrer" className="inline-flex h-10 items-center gap-2 rounded-xl px-4 text-[11px] font-bold text-white" style={{ backgroundColor: elementColor(company, "footerWhatsapp") }}><Phone className="size-3.5" />Pedir pelo WhatsApp</a></EditableRegion>}
+            {instagramUrl && <EditableRegion editable={editable} field="publicInstagram"><a href={instagramUrl} target="_blank" rel="noreferrer" className="inline-flex h-10 items-center gap-2 rounded-xl border border-[var(--line)] px-4 text-[11px] font-bold text-[var(--ink)] transition hover:border-[var(--brand)]"><AtSign className="size-3.5" />@{instagramHandle}</a></EditableRegion>}
           </div>
           <p className="mt-4 font-mono text-[9px] text-[var(--muted)]">Página criada com Mangora</p>
         </div>
@@ -293,20 +288,14 @@ export default function PublicStorefront({ store, editable = false, onEdit }: Pu
       )}
 
       {/* Drawer de edição */}
-      {editable && <StorefrontSidebar company={company} selectedField={selectedField} onSelectField={setSelectedField} onSave={saveOne} />}
+      {editable && <StorefrontSidebar company={company} onSave={saveOne} />}
     </main>
   );
 }
 
 /** Região editável: ao passar o mouse mostra contorno + lápis; clicar abre o editor inline. */
-function EditableRegion({ editable, onStart, field, colorField, children }: { editable: boolean; onStart: (field?: string, colorField?: string) => void; field?: string; colorField?: string; children: ReactNode }) {
-  if (!editable) return <>{children}</>;
-  const openEditor = (event?: { stopPropagation: () => void }) => { event?.stopPropagation(); onStart(field, colorField); };
-  return (
-    <div role={field ? "button" : undefined} tabIndex={field ? 0 : undefined} aria-label={field ? "Editar" : undefined} onClick={openEditor} onKeyDown={(event) => { if (field && event.key === "Enter") openEditor(); }} className={`group/ed relative rounded-lg ${field ? "cursor-pointer transition hover:ring-2 hover:ring-[var(--brand)]" : ""}`}>
-      {children}
-    </div>
-  );
+function EditableRegion({ children }: { onStart?: (field?: string, colorField?: string) => void; editable?: boolean; field?: string; colorField?: string; children: ReactNode }) {
+  return <>{children}</>;
 }
 
 const inputClass = "h-12 w-full rounded-xl border border-[var(--line)] bg-[var(--panel)] px-3.5 text-xs text-[var(--ink)] outline-none placeholder:text-[var(--muted)] focus:border-[var(--brand)] focus:ring-4 focus:ring-[var(--brand)]/15";
