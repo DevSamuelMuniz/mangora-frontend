@@ -30,9 +30,34 @@ const manrope = Manrope({
 });
 
 export const metadata: Metadata = {
-  title: "Mangora | Gestão inteligente",
+  metadataBase: new URL("https://www.mangora.com.br"),
+  title: {
+    default: "Mangora | Gestão inteligente para o seu negócio",
+    template: "%s | Mangora",
+  },
   description:
-    "Gestão completa para vendas, estoque, clientes e financeiro da sua empresa.",
+    "Conheça a Mangora: vendas, estoque, clientes e financeiro trabalhando juntos. Comece com 7 dias grátis, sem cartão.",
+  applicationName: "Mangora",
+  keywords: ["gestão empresarial", "sistema de vendas", "controle de estoque", "PDV", "financeiro", "Mangora"],
+  authors: [{ name: "Mangora", url: "https://www.mangora.com.br" }],
+  creator: "Mangora",
+  publisher: "Mangora",
+  alternates: { canonical: "/" },
+  openGraph: {
+    type: "website",
+    locale: "pt_BR",
+    url: "/",
+    siteName: "Mangora",
+    title: "Conheça a Mangora — seu negócio flui, você respira",
+    description: "Vendas, estoque, clientes e financeiro em um só lugar. Conheça o sistema e teste gratuitamente por 7 dias, sem cartão.",
+    images: [{ url: "/mangora-share.png", width: 500, height: 500, alt: "Mascote da Mangora trabalhando no computador" }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Conheça a Mangora — gestão que acompanha seu negócio",
+    description: "Organize vendas, estoque, clientes e financeiro. Teste a Mangora gratuitamente por 7 dias.",
+    images: ["/mangora-share.png"],
+  },
   icons: {
     icon: "/favicon.png",
     shortcut: "/favicon.png",
