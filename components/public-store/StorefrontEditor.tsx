@@ -64,6 +64,8 @@ export default function StorefrontEditor() {
             textColor: pick("publicTextColor", company.publicTextColor),
             backgroundColor: pick("publicBackgroundColor", company.publicBackgroundColor),
             panelColor: pick("publicPanelColor", company.publicPanelColor),
+            font: pick("publicFont", company.publicFont) || "moderno",
+            coverEnabled: "publicCoverEnabled" in overrides ? overrides.publicCoverEnabled === "true" : company.publicCoverEnabled,
         },
         products,
     };
@@ -75,7 +77,7 @@ export default function StorefrontEditor() {
         }
         setOverrides((prev) => ({ ...prev, [field]: value }));
         try {
-            await save.mutateAsync({ [field]: value || null });
+            await save.mutateAsync(field === "publicCoverEnabled" ? { [field]: value === "true" } : { [field]: value || null });
             toast.success("Salvo");
         } catch (cause) {
             setOverrides((prev) => { const next = { ...prev }; delete next[field]; return next; });

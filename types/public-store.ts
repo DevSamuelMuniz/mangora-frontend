@@ -1,5 +1,4 @@
-export type PublicStore = {
-  company: {
+export type PublicStore = {  company: {
     tradeName: string;
     slug: string;
     description: string | null;
@@ -23,6 +22,8 @@ export type PublicStore = {
     textColor: string | null;
     backgroundColor: string | null;
     panelColor: string | null;
+    font: string;
+    coverEnabled: boolean;
   };
   products: {
     id: string;
@@ -34,4 +35,11 @@ export type PublicStore = {
     imageUrl: string | null;
     available: number | null;
   }[];
+};
+
+/** Presets de fonte da página pública (sem carregar fontes novas — usa as da marca ou system). */
+export const STORE_FONTS: Record<string, { label: string; display: string; body: string }> = {
+    moderno: { label: "Moderno", display: "var(--font-bricolage), sans-serif", body: "var(--font-manrope), sans-serif" },
+    classico: { label: "Clássico", display: "'Georgia', 'Times New Roman', serif", body: "'Georgia', serif" },
+    mono: { label: "Tecnológico", display: "var(--font-geist-mono), monospace", body: "var(--font-geist-mono), monospace" },
 };

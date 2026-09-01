@@ -74,6 +74,7 @@ export default function SettingsPanel({ initialTab = "company" }: { initialTab?:
       publicTheme: data.get("publicTheme"), publicOrderNote: data.get("publicOrderNote"),
       publicTitleColor: data.get("publicTitleColor"), publicTextColor: data.get("publicTextColor"),
       publicBackgroundColor: data.get("publicBackgroundColor"), publicPanelColor: data.get("publicPanelColor"),
+      publicFont: data.get("publicFont"), publicCoverEnabled: data.get("publicCoverEnabled") === "on",
     };
     else payload = { sessionTimeout: Number(data.get("sessionTimeout")), loginAttempts: Number(data.get("loginAttempts")) };
 
@@ -128,6 +129,8 @@ function OnlineStoreForm({ company }: { company: CompanySettings }) {
       <div className="sm:col-span-2"><Field label="Mensagem do rodapé" id="publicFooterNote"><input id="publicFooterNote" name="publicFooterNote" defaultValue={company.publicFooterNote ?? ""} maxLength={200} placeholder="Ex.: Pedidos confirmados pelo WhatsApp" className={inputClass} /></Field></div>
       <div className="sm:col-span-2"><Field label="Mensagem de confirmação do pedido" id="publicOrderNote"><input id="publicOrderNote" name="publicOrderNote" defaultValue={company.publicOrderNote ?? ""} maxLength={240} placeholder="Ex.: Assim que enviar, entraremos em contato para confirmar 😊" className={inputClass} /></Field></div>
     </div></SettingsGroup>
+
+    <SettingsGroup title="Aparência"><div className="px-4 py-3"><Field label="Fonte da página" id="publicFont"><select id="publicFont" name="publicFont" defaultValue={company.publicFont ?? "moderno"} className={inputClass}><option value="moderno">Moderno</option><option value="classico">Clássico (serifa)</option><option value="mono">Tecnológico (monoespaçada)</option></select></Field></div><Toggle name="publicCoverEnabled" title="Fundo do topo" description="Exibe a imagem de capa e o gradiente no topo da página. Desligue para fundo sólido." defaultChecked={company.publicCoverEnabled} /></SettingsGroup>
 
     <SettingsGroup title="Contato e pedidos"><div className="grid gap-4 px-4 py-3 sm:grid-cols-2"><Field label="WhatsApp público" id="publicWhatsapp"><input id="publicWhatsapp" name="publicWhatsapp" inputMode="tel" defaultValue={company.publicWhatsapp ?? ""} placeholder="(81) 99999-9999" className={inputClass} /></Field><Field label="Instagram (nome de usuário)" id="publicInstagram"><input id="publicInstagram" name="publicInstagram" defaultValue={company.publicInstagram ?? ""} maxLength={120} placeholder="ex.: @sua.loja" className={inputClass} /></Field></div></SettingsGroup>
 

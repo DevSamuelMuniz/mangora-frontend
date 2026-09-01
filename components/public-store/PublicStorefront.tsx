@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { FormEvent, useMemo, useState, type CSSProperties, type ReactNode } from "react";
 import { AtSign, CheckCircle2, ChevronDown, Clock3, LoaderCircle, MapPin, Minus, Package, Pencil, Phone, Plus, Search, ShoppingBag, Trash2, X } from "lucide-react";
-import type { PublicStore } from "@/types/public-store";
+import { STORE_FONTS, type PublicStore } from "@/types/public-store";
 import { formatCurrency } from "@/lib/format";
 import { useCreatePublicOrder, type PublicOrderConfirmation } from "@/features/public-store/hooks/usePublicStore";
 
@@ -53,6 +53,9 @@ export default function PublicStorefront({ store, editable = false, onEdit }: Pu
     ? { bg: "#12141b", panel: "#1b1e26", panel2: "#232833", ink: "#f2f4f8", muted: "rgba(242,244,248,0.62)", line: "rgba(255,255,255,0.12)" }
     : { bg: "#fffdf8", panel: "#ffffff", panel2: "#fff8ea", ink: "#123d2b", muted: "rgba(18,61,43,0.58)", line: "rgba(18,61,43,0.14)" };
   const titleColor = company.titleColor || defaults.ink;
+  const fonts = STORE_FONTS[company.font] ?? STORE_FONTS.moderno;
+  const showCover = company.coverEnabled && Boolean(company.coverUrl);
+  const heroTitleColor = company.titleColor || (showCover ? "#ffffff" : defaults.ink);
   const vars = {
     "--brand": brand,
     "--title": titleColor,
@@ -62,6 +65,8 @@ export default function PublicStorefront({ store, editable = false, onEdit }: Pu
     "--ink": company.textColor || defaults.ink,
     "--muted": defaults.muted,
     "--line": defaults.line,
+    "--font-display": fonts.display,
+    "--font-body": fonts.body,
   } as CSSProperties;
 
   function change(productId: string, delta: number) {
@@ -100,7 +105,7 @@ export default function PublicStorefront({ store, editable = false, onEdit }: Pu
   }
 
   return (
-    <main className="mangora-public min-h-screen bg-[var(--bg)] font-[family-name:var(--font-manrope)] text-[var(--ink)] transition-colors" style={vars}>
+    <main className="mangora-public min-h-screen bg-[var(--bg)] font-[family-name:var(--font-body)] text-[var(--ink)] transition-colors" style={vars}>
       {/* Barra de edição */}
       {editable && (
         <div className="fixed inset-x-0 top-0 z-50 flex h-14 items-center gap-2 border-b border-[var(--line)] bg-[var(--bg)]/95 px-4 backdrop-blur">
@@ -111,6 +116,8 @@ export default function PublicStorefront({ store, editable = false, onEdit }: Pu
               <button key={field} type="button" title={`Cor ${label}`} aria-label={`Editar cor ${label}`} onClick={() => startEdit(field, `cor ${label}`, "color", pick(company) ?? "")} className="size-6 rounded-full border-2 border-[var(--line)] transition hover:scale-110" style={{ backgroundColor: pick(company) || "transparent" }} />
             ))}
             <button type="button" onClick={() => startEdit("publicTheme", "tema da página", "select", company.theme, ["light", "dark"])} className="ml-1 flex h-8 items-center rounded-xl border border-[var(--line)] px-3 text-[10px] font-bold">{company.theme === "dark" ? "🌙 Escuro" : "☀️ Claro"}</button>
+            <button type="button" onClick={() => startEdit("publicFont", "fonte", "select", company.font, ["moderno", "classico", "mono"])} className="flex h-8 items-center rounded-xl border border-[var(--line)] px-3 text-[10px] font-bold">{STORE_FONTS[company.font]?.label ?? "Fonte"}</button>
+            <button type="button" onClick={() => void onEdit?.("publicCoverEnabled", company.coverEnabled ? "false" : "true")} className="flex h-8 items-center rounded-xl border border-[var(--line)] px-3 text-[10px] font-bold">{company.coverEnabled ? "🖼 Fundo do topo: ligado" : "🚫 Fundo do topo: desligado"}</button>
             <Link href="/configuracoes" className="ml-1 flex h-8 items-center rounded-xl px-3 text-[10px] font-black text-white" style={{ backgroundColor: brand }}>Concluir</Link>
           </div>
         </div>
@@ -130,12 +137,12 @@ export default function PublicStorefront({ store, editable = false, onEdit }: Pu
                 // eslint-disable-next-line @next/next/no-img-element
                 <img src={company.logoUrl} alt={`Logo de ${company.tradeName}`} className="h-9 w-auto max-w-28 object-contain sm:max-w-36" />
               ) : (
-                <span className="flex size-9 shrink-0 items-center justify-center rounded-xl font-[family-name:var(--font-bricolage)] text-base font-black text-white" style={{ backgroundColor: brand }}>{company.tradeName.charAt(0).toUpperCase()}</span>
+                <span className="flex size-9 shrink-0 items-center justify-center rounded-xl font-[family-name:var(--font-display)] text-base font-black text-white" style={{ backgroundColor: brand }}>{company.tradeName.charAt(0).toUpperCase()}</span>
               )}
             </EditableRegion>
             <EditableRegion editable={editable} onStart={startEdit} field="tradeName" label="nome da loja" type="text" value={company.tradeName}>
               <span className="min-w-0">
-                <span className="block truncate font-[family-name:var(--font-bricolage)] text-sm font-black leading-tight text-[var(--title)]">{company.tradeName}</span>
+                <span className="block truncate font-[family-name:var(--font-display)] text-sm font-black leading-tight text-[var(--title)]">{company.tradeName}</span>
                 <span className="block font-mono text-[9px] uppercase tracking-[0.14em] text-[var(--muted)]">Página online</span>
               </span>
             </EditableRegion>
@@ -150,34 +157,34 @@ export default function PublicStorefront({ store, editable = false, onEdit }: Pu
       <section className="relative overflow-hidden">
         <EditableRegion editable={editable} onStart={startEdit} field="publicCoverUrl" label="imagem de capa" type="url" value={company.coverUrl ?? ""}>
           <div className="relative">
-            {company.coverUrl && (
+            {showCover && (
               // eslint-disable-next-line @next/next/no-img-element
-              <img src={company.coverUrl} alt={`Capa de ${company.tradeName}`} className="h-[26rem] w-full object-cover" />
+              <img src={company.coverUrl ?? undefined} alt={`Capa de ${company.tradeName}`} className="h-[26rem] w-full object-cover" />
             )}
-            <div className="absolute inset-0" style={company.coverUrl ? { backgroundImage: `linear-gradient(180deg, rgba(10,20,16,0.35) 0%, rgba(10,20,16,0.82) 100%)` } : { backgroundImage: `linear-gradient(155deg, ${brand} 0%, #123d2b 78%)`, minHeight: "26rem" }} />
+            {showCover && <div className="absolute inset-0" style={company.coverUrl ? { backgroundImage: `linear-gradient(180deg, rgba(10,20,16,0.35) 0%, rgba(10,20,16,0.82) 100%)` } : { backgroundImage: `linear-gradient(155deg, ${brand} 0%, #123d2b 78%)`, minHeight: "26rem" }} />}
             <div className="relative mx-auto flex max-w-7xl flex-col items-center px-4 py-16 text-center sm:px-6 sm:py-24">
               <EditableRegion editable={editable} onStart={startEdit} field="publicLogoUrl" label="logo" type="url" value={company.logoUrl ?? ""}>
                 {company.logoUrl ? (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img src={company.logoUrl} alt={`Logo de ${company.tradeName}`} className="h-24 w-auto max-w-60 rounded-3xl bg-white/95 object-contain p-2.5 shadow-2xl" />
                 ) : (
-                  <span className="flex size-24 items-center justify-center rounded-[1.75rem] bg-white/95 font-[family-name:var(--font-bricolage)] text-4xl font-black shadow-2xl" style={{ color: brand }}>{company.tradeName.charAt(0).toUpperCase()}</span>
+                  <span className="flex size-24 items-center justify-center rounded-[1.75rem] bg-white/95 font-[family-name:var(--font-display)] text-4xl font-black shadow-2xl" style={{ color: brand }}>{company.tradeName.charAt(0).toUpperCase()}</span>
                 )}
               </EditableRegion>
               <EditableRegion editable={editable} onStart={startEdit} field="tradeName" label="nome da loja" type="text" value={company.tradeName}>
-                <h1 className="mt-7 max-w-3xl text-balance font-[family-name:var(--font-bricolage)] text-5xl font-extrabold leading-[0.95] tracking-tight sm:text-6xl" style={{ color: company.titleColor || "#ffffff" }}>{company.tradeName}</h1>
+                <h1 className="mt-7 max-w-3xl text-balance font-[family-name:var(--font-display)] text-5xl font-extrabold leading-[0.95] tracking-tight sm:text-6xl" style={{ color: heroTitleColor }}>{company.tradeName}</h1>
               </EditableRegion>
               {company.tagline && (
                 <EditableRegion editable={editable} onStart={startEdit} field="publicTagline" label="lema" type="text" value={company.tagline ?? ""}>
-                  <p className="mt-4 max-w-2xl text-lg font-semibold text-white/90">{company.tagline}</p>
+                  <p className="mt-4 max-w-2xl text-lg font-semibold" style={{ color: showCover ? "rgba(255,255,255,0.9)" : "var(--ink)" }}>{company.tagline}</p>
                 </EditableRegion>
               )}
               {company.description && (
                 <EditableRegion editable={editable} onStart={startEdit} field="publicDescription" label="descrição" type="textarea" value={company.description ?? ""}>
-                  <p className="mt-2 max-w-2xl text-sm leading-6 text-white/75">{company.description}</p>
+                  <p className="mt-2 max-w-2xl text-sm leading-6" style={{ color: showCover ? "rgba(255,255,255,0.75)" : "var(--muted)" }}>{company.description}</p>
                 </EditableRegion>
               )}
-              <div className="mt-6 flex flex-wrap items-center justify-center gap-2 text-[11px] font-semibold text-white/85">
+              <div className="mt-6 flex flex-wrap items-center justify-center gap-2 text-[11px] font-semibold" style={{ color: showCover ? "rgba(255,255,255,0.85)" : "var(--muted)" }}>
                 {cityLine && <span className="flex items-center gap-1.5"><MapPin className="size-3.5" />{cityLine}</span>}
                 {company.hours && (
                   <EditableRegion editable={editable} onStart={startEdit} field="publicHours" label="horário" type="text" value={company.hours ?? ""}>
@@ -186,8 +193,8 @@ export default function PublicStorefront({ store, editable = false, onEdit }: Pu
                 )}
               </div>
               <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
-                <button type="button" onClick={() => (editable ? undefined : scrollToId("cardapio"))} className="inline-flex h-13 items-center gap-2 rounded-2xl bg-[var(--brand)] px-8 font-[family-name:var(--font-bricolage)] text-sm font-black text-white shadow-[0_6px_0_rgba(0,0,0,0.25)] transition hover:-translate-y-0.5 hover:brightness-110"><ShoppingBag className="size-4" />Ver cardápio<ChevronDown className="size-4" /></button>
-                {whatsappUrl && <a href={whatsappUrl} target="_blank" rel="noreferrer" className="inline-flex h-13 items-center gap-2 rounded-2xl border-2 border-white/60 px-6 text-sm font-bold text-white transition hover:bg-white/10"><Phone className="size-4" />Pedir no WhatsApp</a>}
+                <button type="button" onClick={() => (editable ? undefined : scrollToId("cardapio"))} className="inline-flex h-13 items-center gap-2 rounded-2xl bg-[var(--brand)] px-8 font-[family-name:var(--font-display)] text-sm font-black text-white shadow-[0_6px_0_rgba(0,0,0,0.25)] transition hover:-translate-y-0.5 hover:brightness-110"><ShoppingBag className="size-4" />Ver cardápio<ChevronDown className="size-4" /></button>
+                {whatsappUrl && <a href={whatsappUrl} target="_blank" rel="noreferrer" className="inline-flex h-13 items-center gap-2 rounded-2xl border-2 px-6 text-sm font-bold transition" style={{ borderColor: showCover ? "rgba(255,255,255,0.6)" : "var(--line)", color: showCover ? "#fff" : "var(--ink)" }}><Phone className="size-4" />Pedir no WhatsApp</a>}
               </div>
             </div>
           </div>
@@ -213,7 +220,7 @@ export default function PublicStorefront({ store, editable = false, onEdit }: Pu
                   </div>
                   <div className="flex flex-1 flex-col p-4">
                     <p className="text-[9px] font-black uppercase tracking-[0.16em]" style={{ color: brand }}>{product.category}</p>
-                    <h2 className="mt-1 truncate font-[family-name:var(--font-bricolage)] text-sm font-bold">{product.name}</h2>
+                    <h2 className="mt-1 truncate font-[family-name:var(--font-display)] text-sm font-bold">{product.name}</h2>
                     <p className="mt-1 line-clamp-2 min-h-8 text-[10px] leading-4 text-[var(--muted)]">{product.description || "Item disponível para pedido."}</p>
                     <div className="mt-3 flex items-center justify-between gap-3 border-t border-dashed border-[var(--line)] pt-3">
                       <strong className="font-mono text-base font-black" style={{ color: brand }}>{formatCurrency(product.price)}</strong>
@@ -241,7 +248,7 @@ export default function PublicStorefront({ store, editable = false, onEdit }: Pu
         <aside id="pedido" className="scroll-mt-20 rounded-3xl border-2 border-[var(--line)] bg-[var(--panel-2)] p-4 shadow-lg lg:sticky lg:top-20">
           <div className="flex items-center gap-3 border-b-2 border-dashed border-[var(--line)] pb-3">
             <span className="flex size-10 items-center justify-center rounded-2xl text-white" style={{ backgroundColor: brand }}><ShoppingBag className="size-4" /></span>
-            <div><h2 className="font-[family-name:var(--font-bricolage)] text-sm font-black">Seu pedido</h2><p className="font-mono text-[9px] text-[var(--muted)]">{itemCount} item(ns)</p></div>
+            <div><h2 className="font-[family-name:var(--font-display)] text-sm font-black">Seu pedido</h2><p className="font-mono text-[9px] text-[var(--muted)]">{itemCount} item(ns)</p></div>
           </div>
 
           <div className="max-h-64 divide-y divide-dashed divide-[var(--line)] overflow-y-auto">
@@ -273,7 +280,7 @@ export default function PublicStorefront({ store, editable = false, onEdit }: Pu
       {/* Rodapé */}
       <footer className="border-t border-[var(--line)] bg-[var(--panel)]">
         <div className="mx-auto flex max-w-7xl flex-col items-center gap-2 px-4 py-8 text-center sm:px-6">
-          <p className="font-[family-name:var(--font-bricolage)] text-sm font-black text-[var(--title)]">{company.tradeName}</p>
+          <p className="font-[family-name:var(--font-display)] text-sm font-black text-[var(--title)]">{company.tradeName}</p>
           {company.hours && (
             <EditableRegion editable={editable} onStart={startEdit} field="publicHours" label="horário" type="text" value={company.hours ?? ""}>
               <p className="flex items-center gap-1.5 font-mono text-[10px] text-[var(--muted)]"><Clock3 className="size-3.5" />{company.hours}</p>
@@ -315,7 +322,7 @@ export default function PublicStorefront({ store, editable = false, onEdit }: Pu
             </div>
           ) : editing.type === "select" ? (
             <select value={editing.value} onChange={(event) => setEditing({ ...editing, value: event.target.value })} className="mt-3 h-11 w-full rounded-xl border border-[var(--line)] bg-white px-3 text-xs font-bold outline-none focus:border-[var(--brand)]">
-              {editing.options?.map((option) => <option key={option} value={option}>{option === "dark" ? "🌙 Escuro" : "☀️ Claro"}</option>)}
+              {editing.options?.map((option) => <option key={option} value={option}>{option === "dark" ? "🌙 Escuro" : option === "light" ? "☀️ Claro" : (STORE_FONTS[option]?.label ?? option)}</option>)}
             </select>
           ) : editing.type === "textarea" ? (
             <textarea value={editing.value} onChange={(event) => setEditing({ ...editing, value: event.target.value })} rows={4} autoFocus className="mt-3 w-full resize-none rounded-xl border border-[var(--line)] bg-white p-3 text-xs outline-none focus:border-[var(--brand)]" />
