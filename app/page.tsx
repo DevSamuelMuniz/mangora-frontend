@@ -78,7 +78,7 @@ export default function Home() {
           <div className="relative z-10 max-w-2xl">
             <p className="inline-flex -rotate-1 items-center gap-2 rounded-full border-2 border-[#123d2b]/10 bg-white px-4 py-2 text-xs font-extrabold uppercase tracking-[0.16em] text-[#147a45] shadow-[3px_3px_0_#ffb21a] sm:text-sm">
               <span className="size-2 rounded-full bg-[#ff6b1a]" />
-              Gestão que cabe na rotina
+              7 dias grátis para colocar a casa em ordem
             </p>
 
             <h1 className="mt-8 max-w-[760px] text-balance font-[family-name:var(--font-bricolage)] text-[clamp(3.25rem,7vw,6.8rem)] font-extrabold leading-[0.88] tracking-[-0.065em] text-[#123d2b]">
@@ -102,8 +102,8 @@ export default function Home() {
             </h1>
 
             <p className="mt-10 max-w-xl text-lg font-medium leading-8 text-[#315847] sm:text-xl">
-              Vendas, estoque, clientes e financeiro conversando entre si —
-              sem planilhas espalhadas e sem complicar o que já funciona.
+              Teste vendas, estoque, clientes e financeiro trabalhando juntos
+              por 7 dias. Sem cartão e sem compromisso para começar.
             </p>
 
             <div className="mt-9 flex flex-col gap-3 sm:flex-row sm:items-center">
@@ -111,7 +111,7 @@ export default function Home() {
                 href="/cadastro"
                 className="group inline-flex min-h-14 items-center justify-center gap-3 rounded-2xl bg-[#ff6b1a] px-7 font-extrabold text-white shadow-[0_8px_0_#c9460b] transition hover:-translate-y-1 hover:shadow-[0_12px_0_#c9460b] focus-visible:outline-4 focus-visible:outline-offset-4 focus-visible:outline-[#ffb21a]"
               >
-                Começar meu teste
+                Começar meus 7 dias grátis
                 <ArrowRight className="size-5 transition group-hover:translate-x-1" />
               </Link>
               <Link
@@ -124,9 +124,9 @@ export default function Home() {
             </div>
 
             <div className="mt-8 flex flex-wrap gap-x-6 gap-y-3 text-sm font-semibold text-[#4a695c]">
-              <Benefit>Sem instalação</Benefit>
-              <Benefit>Acesso pelo celular</Benefit>
-              <Benefit>A partir de R$ 60/mês</Benefit>
+              <Benefit>7 dias com acesso completo</Benefit>
+              <Benefit>Sem cartão para começar</Benefit>
+              <Benefit>Depois, continue no Free</Benefit>
             </div>
           </div>
 
@@ -281,7 +281,7 @@ export default function Home() {
             <SectionHeading
               tag="Planos sem labirinto"
               title="Comece do tamanho certo."
-              copy="Todos os planos reúnem as ferramentas essenciais. Você evolui quando a operação pedir."
+              copy="Use tudo por 7 dias grátis. Depois, continue no Free sem prazo ou escolha um plano para crescer."
               align="left"
             />
             <div className="relative hidden w-44 lg:block">
@@ -292,7 +292,7 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="mt-14 grid gap-5 lg:grid-cols-3">
+          <div className="mt-14 grid gap-5 md:grid-cols-2 xl:grid-cols-4">
             {marketingPlans.map((plan) => (
               <article
                 key={plan.name}
@@ -316,7 +316,7 @@ export default function Home() {
                 <div className="mt-7 flex items-end gap-2 border-b border-[#123d2b]/10 pb-7">
                   <span className="pb-1 text-sm font-bold text-[#597064]">R$</span>
                   <strong className="font-[family-name:var(--font-bricolage)] text-6xl leading-none tracking-[-0.06em] text-[#123d2b]">
-                    {plan.price}
+                    {plan.price === "0" ? "0" : plan.price}
                   </strong>
                   <span className="pb-1 text-sm text-[#597064]">/mês</span>
                 </div>
@@ -338,7 +338,7 @@ export default function Home() {
                       : "bg-[#123d2b] text-white hover:bg-[#147a45]"
                   }`}
                 >
-                  Escolher {plan.name}
+                  {plan.id === "free" ? "Começar no Free" : "Testar 7 dias grátis"}
                   <ArrowRight className="size-4" />
                 </Link>
               </article>
@@ -346,8 +346,8 @@ export default function Home() {
           </div>
 
           <p className="mt-8 text-center text-xs leading-5 text-[#6a7d73]">
-            Integrações externas, emissão fiscal e serviços de terceiros podem
-            ter cobranças adicionais.
+            Nenhuma cobrança é feita durante o teste. No 8º dia, sua conta
+            continua no Free; você só paga se escolher outro plano. Integrações externas podem ter custos próprios.
           </p>
         </div>
       </section>
@@ -365,15 +365,15 @@ export default function Home() {
               Coloque a casa em ordem. Depois, faça barulho.
             </h2>
             <p className="mt-6 max-w-xl text-lg leading-8 text-white/75">
-              Crie sua conta e experimente uma gestão que acompanha o ritmo do
-              seu negócio.
+              São 7 dias para vender, organizar e sentir a diferença na rotina.
+              Você começa sem cartão e decide depois.
             </p>
             <div className="mt-9 flex flex-col gap-3 sm:flex-row">
               <Link
                 href="/cadastro"
                 className="group inline-flex min-h-14 items-center justify-center gap-3 rounded-2xl bg-[#ffb21a] px-7 font-extrabold text-[#123d2b] shadow-[0_7px_0_#a85d00] transition hover:-translate-y-1 hover:shadow-[0_10px_0_#a85d00]"
               >
-                Criar minha conta
+                Começar 7 dias grátis
                 <ArrowRight className="size-5 transition group-hover:translate-x-1" />
               </Link>
               <Link
@@ -428,7 +428,7 @@ function Header() {
             href="/cadastro"
             className="inline-flex items-center gap-2 rounded-xl bg-[#123d2b] px-4 py-3 text-sm font-extrabold text-white transition hover:bg-[#147a45] sm:px-5"
           >
-            <span className="hidden sm:inline">Testar grátis</span>
+            <span className="hidden sm:inline">7 dias grátis</span>
             <span className="sm:hidden">Testar</span>
             <ArrowRight className="size-4" />
           </Link>

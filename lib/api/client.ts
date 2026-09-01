@@ -49,6 +49,8 @@ function describeError(status: number, raw?: string): string {
       return "Os dados enviados são inválidos. Confira os campos e tente novamente.";
     case 401:
       return "Sua sessão expirou ou você não tem permissão. Faça login novamente.";
+    case 402:
+      return "Seu período gratuito terminou. Assine um plano para continuar usando a Mangora.";
     case 403:
       return "Você não tem permissão para realizar esta ação.";
     case 404:

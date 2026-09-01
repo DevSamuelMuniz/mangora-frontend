@@ -7,6 +7,7 @@ import { useCreateSale, useSaleOptions } from "@/features/sales/hooks/useSales";
 import { useCompanySettings } from "@/features/settings/hooks/useSettings";
 import { useToast } from "@/components/ui/toast";
 import { formatCurrency, parseCurrency } from "@/lib/format";
+import { addDaysToBrazilDateKey, brazilDateTimeToIso } from "@/lib/timezone";
 import type { PaymentMethod, Sale } from "@/types/sale";
 import type { Customer } from "@/types/customer";
 import type { AuthSession } from "@/lib/auth/types";
@@ -57,11 +58,7 @@ export default function PdvScreen({ session }: { session: AuthSession }) {
     const [category, setCategory] = useState("Todos");
     const [customerId, setCustomerId] = useState("");
     const [parts, setParts] = useState<PaymentPart[]>([{ method: company?.defaultPayment ?? "PIX", amount: "" }]);
-    const [dueDate, setDueDate] = useState(() => {
-        const value = new Date();
-        value.setDate(value.getDate() + 1);
-        return value.toISOString().slice(0, 10);
-    });
+    const [dueDate, setDueDate] = useState(() => addDaysToBrazilDateKey(1));
     const [discount, setDiscount] = useState("0");
     const [customerDocument, setCustomerDocument] = useState("");
     const [receivedAmount, setReceivedAmount] = useState("");
@@ -208,7 +205,7 @@ export default function PdvScreen({ session }: { session: AuthSession }) {
                 customerDocument: customerDocument || undefined,
                 paymentMethod: primaryMethod,
                 payments: paymentParts.length ? paymentParts : [{ method: primaryMethod, amount: Math.round(total * 100) / 100 }],
-                dueDate: deferred ? dueDate : undefined,
+                dueDate: deferred ? brazilDateTimeToIso(dueDate) : undefined,
                 discount: discountValue,
                 items: cart.map((item) => ({ productId: item.product.id, quantity: item.quantity })),
             })

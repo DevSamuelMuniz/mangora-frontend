@@ -19,6 +19,7 @@ import {
 import type { Product } from "@/types/product";
 import { paymentMethodLabels, type PaymentMethod } from "@/types/sale";
 import { formatCurrency } from "@/lib/format";
+import { brazilDateKey, brazilDateTimeToIso } from "@/lib/timezone";
 import { useToast } from "@/components/ui/toast";
 import { useCreateSale, useSaleOptions } from "@/features/sales/hooks/useSales";
 
@@ -107,7 +108,7 @@ export default function NewSaleForm() {
       const created = await createSale.mutateAsync({
         customerId: customerId || undefined,
         paymentMethod,
-        dueDate: deferredPayment ? dueDate : undefined,
+        dueDate: deferredPayment ? brazilDateTimeToIso(dueDate) : undefined,
         discount: discountValue,
         items: cart.map((item) => ({ productId: item.product.id, quantity: item.quantity })),
       });
@@ -210,7 +211,7 @@ export default function NewSaleForm() {
               {paymentMethod === "CASH" && <p className="rounded-xl bg-amber-50 p-3 text-[10px] leading-4 text-amber-700">Vendas em dinheiro são registradas no caixa aberto da empresa.</p>}
               {(paymentMethod === "CHECK" || paymentMethod === "STORE_CREDIT") && <>
                 <p className="rounded-xl bg-amber-50 p-3 text-[10px] leading-4 text-amber-700">O valor ficará em contas a receber e poderá ser baixado parcialmente.</p>
-                <Field label="Vencimento" id="dueDate"><input id="dueDate" type="date" required min={new Date().toLocaleDateString("en-CA")} value={dueDate} onChange={(event) => setDueDate(event.target.value)} className={inputClassName} /></Field>
+                <Field label="Vencimento" id="dueDate"><input id="dueDate" type="date" required min={brazilDateKey()} value={dueDate} onChange={(event) => setDueDate(event.target.value)} className={inputClassName} /></Field>
               </>}
               <Field label="Desconto" id="discount">
                 <div className="relative"><span className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-xs font-bold text-slate-400">R$</span><input id="discount" type="number" min="0" step="0.01" value={discount} onChange={(event) => setDiscount(event.target.value)} className={`${inputClassName} pl-10`} /></div>

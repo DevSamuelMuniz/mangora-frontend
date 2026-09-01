@@ -22,6 +22,7 @@ import {
 
 import { paymentMethodLabels, saleStatusLabels, type PaymentMethod, type Sale, type SaleStatus } from "@/types/sale";
 import { formatCurrency, formatDate, formatTime } from "@/lib/format";
+import { brazilDateKey } from "@/lib/timezone";
 import { useCancelSale, useSales } from "@/features/sales/hooks/useSales";
 import { useToast } from "@/components/ui/toast";
 import { FilterSelect } from "@/components/shared/FilterSelect";
@@ -64,8 +65,8 @@ export default function SalesCatalog() {
   }, [paymentMethod, sales, search, status]);
 
   const completedSales = sales.filter((sale) => sale.status === "COMPLETED");
-  const todayKey = new Date().toLocaleDateString("en-CA");
-  const todaySales = completedSales.filter((sale) => new Date(sale.createdAt).toLocaleDateString("en-CA") === todayKey);
+  const todayKey = brazilDateKey();
+  const todaySales = completedSales.filter((sale) => brazilDateKey(sale.createdAt) === todayKey);
   const todayRevenue = todaySales.reduce((total, sale) => total + sale.total, 0);
   const averageTicket = completedSales.length ? completedSales.reduce((total, sale) => total + sale.total, 0) / completedSales.length : 0;
   const cancelledCount = sales.filter((sale) => sale.status === "CANCELLED").length;
@@ -228,7 +229,6 @@ function getStatusStyle(status: SaleStatus) {
   if (status === "COMPLETED") return { className: "bg-green-50 text-green-600", icon: CheckCircle2 };
   return { className: "bg-red-50 text-red-600", icon: XCircle };
 }
-
 
 
 

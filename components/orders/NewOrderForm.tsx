@@ -8,6 +8,7 @@ import { ArrowLeft, LoaderCircle, Minus, PackagePlus, Plus, Save, ShoppingBag, T
 import { fulfillmentLabels, orderChannelLabels, type FulfillmentMethod, type OrderChannel } from "@/types/order";
 import type { Product } from "@/types/product";
 import { formatCurrency } from "@/lib/format";
+import { brazilDateKey, brazilDateTimeToIso } from "@/lib/timezone";
 import { useCreateOrder } from "@/features/orders/hooks/useOrders";
 import { useSaleOptions } from "@/features/sales/hooks/useSales";
 
@@ -77,7 +78,7 @@ export default function NewOrderForm() {
         customerId,
         channel: formData.get("channel"),
         fulfillment: formData.get("fulfillment"),
-        scheduledAt: new Date(`${scheduledDate}T${scheduledTime}:00`).toISOString(),
+        scheduledAt: brazilDateTimeToIso(scheduledDate, scheduledTime),
         discount: 0,
         notes: String(formData.get("notes") ?? "") || undefined,
         items: items.map((item) => ({ productId: item.product.id, quantity: item.quantity })),
@@ -122,4 +123,4 @@ export default function NewOrderForm() {
 const inputClassName = "h-11 w-full rounded-xl border border-slate-200 bg-white px-3.5 text-sm text-slate-950 outline-none transition focus:border-orange-400 focus:ring-4 focus:ring-orange-100";
 function Field({ label, id, children, className = "" }: { label: string; id: string; children: ReactNode; className?: string }) { return <div className={className}><label htmlFor={id} className="mb-1.5 block text-xs font-bold text-slate-700">{label}</label>{children}</div>; }
 function SectionTitle({ icon, title, description }: { icon: ReactNode; title: string; description: string }) { return <div className="flex items-center gap-3 border-b border-slate-100 pb-4"><div className="flex size-9 items-center justify-center rounded-xl bg-orange-50 text-orange-600">{icon}</div><div><h2 className="text-sm font-bold text-slate-950">{title}</h2><p className="mt-0.5 text-[10px] text-slate-400">{description}</p></div></div>; }
-function localDateValue() { const now = new Date(); return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`; }
+function localDateValue() { return brazilDateKey(); }

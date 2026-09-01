@@ -5,22 +5,26 @@
  * duplicados em ~20 arquivos do frontend. Use SEMPRE estas funções nas
  * telas em vez de criar formatters locais.
  */
+import { BRAZIL_TIME_ZONE } from "./timezone";
 
 const currency = new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" });
 
 const dateLong = new Intl.DateTimeFormat("pt-BR", {
+    timeZone: BRAZIL_TIME_ZONE,
     weekday: "long",
     day: "numeric",
     month: "long",
 });
 
 const dateShort = new Intl.DateTimeFormat("pt-BR", {
+    timeZone: BRAZIL_TIME_ZONE,
     day: "2-digit",
     month: "2-digit",
     year: "numeric",
 });
 
 const dateTime = new Intl.DateTimeFormat("pt-BR", {
+    timeZone: BRAZIL_TIME_ZONE,
     day: "2-digit",
     month: "2-digit",
     year: "numeric",
@@ -29,6 +33,7 @@ const dateTime = new Intl.DateTimeFormat("pt-BR", {
 });
 
 const timeOnly = new Intl.DateTimeFormat("pt-BR", {
+    timeZone: BRAZIL_TIME_ZONE,
     hour: "2-digit",
     minute: "2-digit",
 });

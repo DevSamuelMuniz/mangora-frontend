@@ -16,13 +16,13 @@ const content = {
     items: ["Dados protegidos", "Rotina sincronizada", "Acesso pelo celular"],
   },
   register: {
-    eyebrow: "Comece sem complicação",
-    title: "Sua empresa organizada desde o primeiro dia.",
-    copy: "Conte um pouco sobre o seu negócio. A Mangora prepara o espaço para você começar.",
+    eyebrow: "7 dias grátis · sem cartão",
+    title: "Sete dias para mudar sua rotina.",
+    copy: "Use vendas, estoque, clientes e financeiro por 7 dias. Depois, continue no Free ou escolha o plano que fizer sentido.",
     pose: "point" as const,
     label: "Mascote Mangora apontando para o cadastro",
-    note: "Leva poucos minutos. Depois é só começar.",
-    items: ["Cadastre sua empresa", "Configure sua rotina", "Acompanhe os resultados"],
+    note: "Hoje você começa. O Free continua depois do teste.",
+    items: ["Acesso completo por 7 dias", "Free sem prazo para acabar", "Sem cartão no cadastro"],
   },
 };
 

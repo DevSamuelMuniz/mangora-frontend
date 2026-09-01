@@ -7,6 +7,7 @@ import { AlertTriangle, CheckCircle2, ChevronLeft, ChevronRight, CircleDollarSig
 import { paymentMethodLabels, type PaymentMethod } from "@/types/sale";
 import { fulfillmentLabels, orderChannelLabels, orderStatusLabels, type Order, type OrderChannel, type OrderStatus } from "@/types/order";
 import { formatCurrency, formatDateTime } from "@/lib/format";
+import { brazilDateKey } from "@/lib/timezone";
 import { useCancelOrder, useConvertOrder, useOrderStatus, useOrders } from "@/features/orders/hooks/useOrders";
 import { FilterSelect } from "@/components/shared/FilterSelect";
 import { PageButton } from "@/components/shared/PageButton";
@@ -38,8 +39,8 @@ export default function OrderCatalog() {
     return orders.filter((order) => (!query || `${order.code} ${order.customerName}`.toLocaleLowerCase("pt-BR").includes(query)) && (status === "all" || order.status === status) && (channel === "all" || order.channel === channel));
   }, [channel, orders, search, status]);
   const active = orders.filter((order) => !["COMPLETED", "CANCELLED"].includes(order.status));
-  const todayKey = new Date().toLocaleDateString("en-CA");
-  const today = orders.filter((order) => new Date(order.createdAt).toLocaleDateString("en-CA") === todayKey && order.status !== "CANCELLED");
+  const todayKey = brazilDateKey();
+  const today = orders.filter((order) => brazilDateKey(order.createdAt) === todayKey && order.status !== "CANCELLED");
   const delivery = active.filter((order) => order.fulfillment === "DELIVERY");
   const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
   const currentPage = Math.min(page, totalPages);

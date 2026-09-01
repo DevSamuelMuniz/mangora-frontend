@@ -27,13 +27,11 @@ describe("formatDate / formatDateTime / formatTime", () => {
     it("formata data curta dd/mm/aaaa", () => {
         expect(formatDate("2026-08-30T12:00:00.000Z")).toBe("30/08/2026");
     });
-    it("formata data e hora (local)", () => {
-        const local = new Date(2026, 7, 30, 14, 5);
-        expect(formatDateTime(local)).toContain("14:05");
+    it("formata data e hora no horário de Brasília", () => {
+        expect(formatDateTime("2026-08-30T17:05:00.000Z")).toContain("14:05");
     });
-    it("formata hora (local)", () => {
-        const local = new Date(2026, 7, 30, 14, 5);
-        expect(formatTime(local)).toBe("14:05");
+    it("formata hora no horário de Brasília", () => {
+        expect(formatTime("2026-08-30T17:05:00.000Z")).toBe("14:05");
     });
 });
 

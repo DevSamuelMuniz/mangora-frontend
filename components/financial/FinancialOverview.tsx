@@ -27,6 +27,7 @@ import {
 import { financialStatusLabels, financialTypeLabels, type FinancialEntry, type FinancialEntryStatus, type FinancialOverview as FinancialOverviewData } from "@/types/financial";
 import { paymentMethodLabels, type PaymentMethod } from "@/types/sale";
 import { formatCurrency, formatDate } from "@/lib/format";
+import { brazilDateKey, brazilDateTimeToIso } from "@/lib/timezone";
 import { useFinancialOverview, usePayFinancialEntry } from "@/features/financial/hooks/useFinancialEntries";
 import { FilterSelect } from "@/components/shared/FilterSelect";
 import { PageButton } from "@/components/shared/PageButton";
@@ -76,7 +77,7 @@ export default function FinancialOverview() {
     if (!entryToPay) return;
     try {
       setActionError("");
-      await payEntry.mutateAsync({ id: entryToPay.id, input });
+      await payEntry.mutateAsync({ id: entryToPay.id, input: { ...input, paidAt: brazilDateTimeToIso(input.paidAt) } });
       setEntryToPay(null);
     } catch (requestError) {
       setActionError(requestError instanceof Error ? requestError.message : "Não foi possível confirmar o pagamento.");
@@ -145,7 +146,7 @@ function EntryDetails({ entry, onClose, onPay }: { entry: FinancialEntry; onClos
 function ConfirmPayment({ entry, loading, onCancel, onConfirm }: { entry: FinancialEntry; loading: boolean; onCancel: () => void; onConfirm: (input: { amount: number; paymentMethod: PaymentMethod; paidAt: string; notes?: string }) => void }) {
   const [amount, setAmount] = useState(String(entry.outstandingAmount));
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("PIX");
-  const [paidAt, setPaidAt] = useState(new Date().toLocaleDateString("en-CA"));
+  const [paidAt, setPaidAt] = useState(() => brazilDateKey());
   const [notes, setNotes] = useState("");
   const numericAmount = Number(amount);
   const valid = numericAmount > 0 && numericAmount <= entry.outstandingAmount;
@@ -153,4 +154,3 @@ function ConfirmPayment({ entry, loading, onCancel, onConfirm }: { entry: Financ
 }
 
 function getStatusStyle(status: FinancialEntryStatus) { if (status === "PAID") return { className: "bg-green-50 text-green-600", icon: CheckCircle2 }; if (status === "OVERDUE" || status === "CANCELLED") return { className: "bg-red-50 text-red-600", icon: XCircle }; return { className: "bg-amber-50 text-amber-600", icon: Clock3 }; }
-

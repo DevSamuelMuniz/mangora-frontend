@@ -17,6 +17,7 @@ import {
 import { expenseCategories, incomeCategories } from "./financial-data";
 import { financialTypeLabels, type FinancialEntryType, type StoredFinancialEntryStatus } from "@/types/financial";
 import { useCreateFinancialEntry } from "@/features/financial/hooks/useFinancialEntries";
+import { brazilDateTimeToIso } from "@/lib/timezone";
 
 export default function NewFinancialEntryForm() {
   const router = useRouter();
@@ -62,8 +63,8 @@ export default function NewFinancialEntryForm() {
         description,
         category,
         amount,
-        dueDate: `${dueDate}T12:00:00.000Z`,
-        paidAt: entryStatus === "PAID" ? `${String(formData.get("paymentDate"))}T12:00:00.000Z` : undefined,
+        dueDate: brazilDateTimeToIso(dueDate),
+        paidAt: entryStatus === "PAID" ? brazilDateTimeToIso(String(formData.get("paymentDate"))) : undefined,
         account: String(formData.get("account")),
         contact: String(formData.get("contact") ?? "") || undefined,
         document: String(formData.get("document") ?? "") || undefined,

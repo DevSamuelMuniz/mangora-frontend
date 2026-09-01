@@ -1,5 +1,6 @@
 import type { CompanySettings } from "@/types/settings";
 import { paymentMethodLabels, type Sale } from "@/types/sale";
+import { formatDateTime } from "@/lib/format";
 
 type ReceiptCompany = Pick<
     CompanySettings,
@@ -53,7 +54,7 @@ export function printReceipt(sale: Sale, company: ReceiptCompany | null, changeI
   <div class="divider-solid"></div>
   <table class="meta">
     <tr><td>Venda</td><td>${escapeHtml(sale.code)}</td></tr>
-    <tr><td>Data</td><td>${new Date(sale.createdAt).toLocaleString("pt-BR")}</td></tr>
+    <tr><td>Data</td><td>${formatDateTime(sale.createdAt)}</td></tr>
     ${sale.createdByName ? `<tr><td>Operador</td><td>${escapeHtml(sale.createdByName)}</td></tr>` : ""}
     <tr><td>Cliente</td><td>${escapeHtml(sale.customerName)}</td></tr>
     ${sale.customerDocument ? `<tr><td>CPF/CNPJ</td><td>${escapeHtml(sale.customerDocument)}</td></tr>` : ""}

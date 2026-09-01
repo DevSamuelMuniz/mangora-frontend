@@ -1,4 +1,4 @@
-export type PlanId = "start" | "business" | "premium" | "enterprise";
+export type PlanId = "free" | "start" | "business" | "premium" | "enterprise";
 
 export type SubscriptionPlan = {
   id: PlanId;
@@ -28,9 +28,13 @@ export type SubscriptionInvoice = {
 };
 
 export type SubscriptionOverview = {
-  plan: "START" | "BUSINESS" | "PREMIUM" | "ENTERPRISE";
+  plan: "FREE" | "START" | "BUSINESS" | "PREMIUM" | "ENTERPRISE";
   planName: string;
-  status: "PENDING" | "ACTIVE" | "PAST_DUE" | "CANCELLED";
+  status: "TRIAL" | "PENDING" | "ACTIVE" | "PAST_DUE" | "CANCELLED";
+  trialEndsAt: string | null;
+  trialDaysRemaining: number;
+  trialExpired: boolean;
+  accessBlocked: boolean;
   price: number;
   nextBillingAt: string | null;
   paymentMethod: string | null;

@@ -5,6 +5,7 @@ import Sidebar from "./Sidebar";
 import DashboardHeader from "./DashboardHeader";
 import type { AuthSession } from "@/lib/auth/types";
 import RouteToast from "@/components/ui/RouteToast";
+import TrialAccessGate from "@/components/subscription/TrialAccessGate";
 
 type DashboardShellProps = {
   children: ReactNode;
@@ -31,6 +32,7 @@ export default function DashboardShell({
           onOpenSidebar={() => setSidebarOpen(true)}
           session={session}
         />
+        <TrialAccessGate session={session} />
 
         <main className="mangora-content px-4 py-5 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-[1600px]">

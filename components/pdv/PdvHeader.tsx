@@ -8,6 +8,7 @@ import BrandLogo from "@/components/brand/BrandLogo";
 import { useCashRegister } from "@/features/cash-registers/hooks/useCashRegister";
 import { useCompanySettings } from "@/features/settings/hooks/useSettings";
 import type { AuthSession } from "@/lib/auth/types";
+import { formatDateLong, formatTime } from "@/lib/format";
 
 export type PdvTheme = "dark" | "verde" | "light";
 
@@ -55,8 +56,8 @@ export default function PdvHeader({ session, theme, onThemeChange }: { session: 
     const CurrentIcon = currentTheme.icon;
 
     const clock = new Date();
-    const dateLabel = clock.toLocaleDateString("pt-BR", { weekday: "long", day: "2-digit", month: "long" });
-    const timeLabel = clock.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" });
+    const dateLabel = formatDateLong(clock);
+    const timeLabel = formatTime(clock);
 
     return (
         <header className="flex items-center justify-between gap-4 border-b border-pdv-line bg-pdv-panel px-5 py-3">

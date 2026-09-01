@@ -7,6 +7,7 @@ import { ArrowLeft, CheckCircle2, Clock3, LoaderCircle, Save, ShieldCheck, UserP
 import { roleLabels, rolePermissions } from "./employee-data";
 import type { EmployeeRole } from "@/types/employee";
 import { useCreateEmployee } from "@/features/employees/hooks/useEmployees";
+import { brazilDateTimeToIso } from "@/lib/timezone";
 
 const roles: EmployeeRole[] = ["ADMIN", "MANAGER", "CASHIER", "SELLER", "EMPLOYEE"];
 
@@ -25,7 +26,7 @@ export default function NewEmployeeForm() {
       await createEmployee.mutateAsync({
         name: data.get("name"), email: data.get("email"), phone: data.get("phone"),
         password: data.get("password"), role, active: data.get("active") === "true",
-        startDate: `${data.get("startDate")}T12:00:00.000Z`, jobTitle: data.get("jobTitle") || undefined,
+        startDate: brazilDateTimeToIso(String(data.get("startDate"))), jobTitle: data.get("jobTitle") || undefined,
         employeeCode: data.get("employeeCode") || undefined, notes: data.get("notes") || undefined,
       });
       router.push(`/funcionarios?toast=${encodeURIComponent("Funcionário adicionado")}`);

@@ -10,6 +10,20 @@ import type { SubscriptionPlan } from "@/types/subscription";
  */
 export const subscriptionPlans: SubscriptionPlan[] = [
     {
+        id: "free",
+        name: "Free",
+        price: 0,
+        description: "Para começar, testar a rotina e manter o essencial organizado.",
+        features: [
+            "1 empresa e 1 unidade",
+            "1 usuário proprietário",
+            "Clientes, produtos e serviços",
+            "Vendas e estoque básico",
+            "Dashboard essencial",
+            "Acesso contínuo, sem cartão",
+        ],
+    },
+    {
         id: "start",
         name: "Start",
         price: 60,
@@ -69,6 +83,7 @@ export const subscriptionPlans: SubscriptionPlan[] = [
 
 /** Visão de marketing (landing): exclui Enterprise e expõe preço como texto de exibição. */
 export type MarketingPlan = {
+    id: Exclude<SubscriptionPlan["id"], "enterprise">;
     name: string;
     price: string;
     description: string;
@@ -79,6 +94,7 @@ export type MarketingPlan = {
 export const marketingPlans: MarketingPlan[] = subscriptionPlans
     .filter((plan) => plan.id !== "enterprise")
     .map((plan) => ({
+        id: plan.id as MarketingPlan["id"],
         name: plan.name,
         price: String(plan.price),
         description: plan.description,
