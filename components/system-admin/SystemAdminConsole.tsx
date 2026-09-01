@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
-import { Activity, ArrowLeft, Building2, CheckCircle2, CreditCard, LayoutDashboard, LoaderCircle, LockKeyhole, Pencil, RefreshCw, Search, ShieldCheck, Users, X } from "lucide-react";
+import { Activity, ArrowLeft, Building2, CheckCircle2, CreditCard, KeyRound, LayoutDashboard, LifeBuoy, LoaderCircle, LockKeyhole, LogOut, Pencil, RefreshCw, Search, ShieldCheck, Unlock, Users, X } from "lucide-react";
 import BrandLogo from "@/components/brand/BrandLogo";
 import { ApiError, apiRequest } from "@/lib/api/client";
 import { formatCurrency, formatDate, formatNumber } from "@/lib/format";
@@ -11,6 +11,7 @@ type Tab = "overview" | "companies" | "users" | "plans";
 type Overview = { metrics: { users: number; activeUsers: number; companies: number; activeCompanies: number; newCompanies: number; monthlyRecurringRevenue: number }; plans: Plan[]; recentCompanies: Company[] };
 type Plan = { id: string; name: string; price: number | null; employeeLimit: number | null; unitLimit: number | null; companies: number };
 type User = { id: string; name: string; email: string; phone: string | null; status: string; isSystemAdmin: boolean; failedLoginAttempts: number; lockedUntil: string | null; createdAt: string; _count: { memberships: number; sessions: number } };
+type UserDetail = { id: string; name: string; email: string; phone: string | null; status: string; isSystemAdmin: boolean; failedLoginAttempts: number; lockedUntil: string | null; passwordChangedAt: string | null; createdAt: string; updatedAt: string; memberships: Array<{ id: string; role: string; active: boolean; createdAt: string; company: { id: string; tradeName: string; slug: string; status: string; subscriptionPlan: string; subscriptionStatus: string } }>; sessions: Array<{ id: string; ipAddress: string | null; createdAt: string }> };
 type Company = { id: string; tradeName: string; slug: string; email?: string | null; document?: string | null; status: string; subscriptionPlan: string; subscriptionStatus: string; subscriptionPrice?: number | string; trialEndsAt?: string | null; nextBillingAt?: string | null; createdAt: string; _count: { memberships: number; sales?: number } };
 
 const nav = [
@@ -31,6 +32,7 @@ export default function SystemAdminConsole({ operatorName }: { operatorName: str
   const [message, setMessage] = useState("");
   const [search, setSearch] = useState("");
   const [editingUser, setEditingUser] = useState<User | null>(null);
+  const [supportingUser, setSupportingUser] = useState<User | null>(null);
   const [editingCompany, setEditingCompany] = useState<Company | null>(null);
 
   async function load() {
@@ -91,13 +93,14 @@ export default function SystemAdminConsole({ operatorName }: { operatorName: str
             {(tab === "companies" || tab === "users") && <SearchBar value={search} onChange={setSearch} placeholder={tab === "companies" ? "Buscar por empresa, e-mail ou documento" : "Buscar por nome ou e-mail"} />}
             {tab === "overview" && <OverviewPanel data={overview} onCompanies={() => setTab("companies")} />}
             {tab === "companies" && <CompaniesPanel items={visibleCompanies} onEdit={setEditingCompany} />}
-            {tab === "users" && <UsersPanel items={visibleUsers} onEdit={setEditingUser} />}
+            {tab === "users" && <UsersPanel items={visibleUsers} onEdit={setEditingUser} onSupport={setSupportingUser} />}
             {tab === "plans" && <PlansPanel plans={overview.plans} />}
           </>}
         </div>
       </section>
     </div>
     {editingUser && <UserEditor user={editingUser} onClose={() => setEditingUser(null)} onSaved={(updated) => { setUsers((items) => items.map((item) => item.id === updated.id ? { ...item, ...updated } : item)); setEditingUser(null); notify("Usuário atualizado."); }} />}
+    {supportingUser && <SupportEditor user={supportingUser} onClose={() => setSupportingUser(null)} onChanged={(next) => { setUsers((items) => items.map((item) => item.id === next.id ? { ...item, ...next } : item)); }} notify={notify} />}
     {editingCompany && <CompanyEditor company={editingCompany} onClose={() => setEditingCompany(null)} onSaved={(updated) => { setCompanies((items) => items.map((item) => item.id === updated.id ? { ...item, ...updated } : item)); setEditingCompany(null); notify("Empresa e assinatura atualizadas."); void load(); }} />}
   </main>;
 }
@@ -112,7 +115,7 @@ function OverviewPanel({ data, onCompanies }: { data: Overview; onCompanies: () 
 function SearchBar({ value, onChange, placeholder }: { value: string; onChange: (value: string) => void; placeholder: string }) { return <label className="mb-4 flex h-11 max-w-xl items-center gap-2 rounded-xl border border-[#123d2b]/15 bg-white px-3 shadow-sm"><Search className="size-4 text-[#597064]" /><input value={value} onChange={(event) => onChange(event.target.value)} placeholder={placeholder} className="h-full min-w-0 flex-1 border-0 bg-transparent text-xs outline-none" /></label>; }
 function CompaniesPanel({ items, onEdit }: { items: Company[]; onEdit: (item: Company) => void }) { return <section className="overflow-hidden rounded-2xl border border-[#123d2b]/15 bg-[#fffdf8] shadow-sm"><PanelTitle title="Empresas e assinaturas" description={`${items.length} registros exibidos · até 100 contas recentes`} /><CompanyRows items={items} onEdit={onEdit} /></section>; }
 function CompanyRows({ items, onEdit, compact = false }: { items: Company[]; onEdit: ((item: Company) => void) | (() => void); compact?: boolean }) { return <div className="divide-y divide-[#123d2b]/10">{items.map((company) => <div key={company.id} className="grid gap-3 px-5 py-4 hover:bg-[#ffb21a]/5 md:grid-cols-[minmax(0,1.5fr)_1fr_1fr_auto] md:items-center"><div><p className="truncate text-xs font-black text-[#123d2b]">{company.tradeName}</p><p className="mt-1 truncate text-[9px] text-[#597064]">{company.email ?? company.slug} · desde {formatDate(company.createdAt)}</p></div><div><Badge value={company.status} /><p className="mt-1 text-[9px] text-[#597064]">{company._count.memberships} usuário(s)</p></div><div><p className="text-[10px] font-black text-[#a93a05]">{company.subscriptionPlan}</p><p className="mt-1 text-[9px] text-[#597064]">{company.subscriptionStatus}</p></div><button onClick={() => onEdit(company)} className="flex h-8 items-center justify-center gap-1 rounded-lg border border-[#123d2b]/15 bg-white px-3 text-[10px] font-bold hover:border-[#ce4a0a] hover:text-[#a93a05]"><Pencil className="size-3" />{compact ? "Abrir" : "Editar"}</button></div>)}{!items.length && <Empty text="Nenhuma empresa encontrada." />}</div>; }
-function UsersPanel({ items, onEdit }: { items: User[]; onEdit: (item: User) => void }) { return <section className="overflow-hidden rounded-2xl border border-[#123d2b]/15 bg-[#fffdf8] shadow-sm"><PanelTitle title="Usuários da plataforma" description={`${items.length} registros exibidos · edite dados e controle acessos`} /><div className="divide-y divide-[#123d2b]/10">{items.map((user) => <div key={user.id} className="grid gap-3 px-5 py-4 hover:bg-[#ffb21a]/5 md:grid-cols-[minmax(0,1.5fr)_1fr_1fr_auto] md:items-center"><div><div className="flex items-center gap-2"><p className="truncate text-xs font-black">{user.name}</p>{user.isSystemAdmin && <ShieldCheck className="size-3.5 text-[#147a45]" />}</div><p className="mt-1 truncate text-[9px] text-[#597064]">{user.email}</p></div><div><Badge value={user.status} /><p className="mt-1 text-[9px] text-[#597064]">{user._count.memberships} empresa(s)</p></div><div><p className="text-[10px] font-bold">{user._count.sessions} sessões</p><p className="mt-1 text-[9px] text-[#597064]">desde {formatDate(user.createdAt)}</p></div><button onClick={() => onEdit(user)} className="flex h-8 items-center justify-center gap-1 rounded-lg border border-[#123d2b]/15 bg-white px-3 text-[10px] font-bold hover:border-[#ce4a0a] hover:text-[#a93a05]"><Pencil className="size-3" />Editar</button></div>)}{!items.length && <Empty text="Nenhum usuário encontrado." />}</div></section>; }
+function UsersPanel({ items, onEdit, onSupport }: { items: User[]; onEdit: (item: User) => void; onSupport: (item: User) => void }) { return <section className="overflow-hidden rounded-2xl border border-[#123d2b]/15 bg-[#fffdf8] shadow-sm"><PanelTitle title="Usuários da plataforma" description={`${items.length} registros exibidos · edite dados e controle acessos`} /><div className="divide-y divide-[#123d2b]/10">{items.map((user) => <div key={user.id} className="grid gap-3 px-5 py-4 hover:bg-[#ffb21a]/5 md:grid-cols-[minmax(0,1.5fr)_1fr_1fr_auto] md:items-center"><div><div className="flex items-center gap-2"><p className="truncate text-xs font-black">{user.name}</p>{user.isSystemAdmin && <ShieldCheck className="size-3.5 text-[#147a45]" />}</div><p className="mt-1 truncate text-[9px] text-[#597064]">{user.email}</p></div><div><Badge value={user.status} /><p className="mt-1 text-[9px] text-[#597064]">{user._count.memberships} empresa(s)</p></div><div><p className="text-[10px] font-bold">{user._count.sessions} sessões</p><p className="mt-1 text-[9px] text-[#597064]">desde {formatDate(user.createdAt)}</p></div><div className="flex gap-2"><button onClick={() => onSupport(user)} className="flex h-8 items-center justify-center gap-1 rounded-lg border border-[#147a45]/25 bg-[#dff4e7] px-3 text-[10px] font-black text-[#147a45] hover:bg-[#c9ecd6]"><LifeBuoy className="size-3" />Suporte</button><button onClick={() => onEdit(user)} className="flex h-8 items-center justify-center gap-1 rounded-lg border border-[#123d2b]/15 bg-white px-3 text-[10px] font-bold hover:border-[#ce4a0a] hover:text-[#a93a05]"><Pencil className="size-3" />Editar</button></div></div>)}{!items.length && <Empty text="Nenhum usuário encontrado." />}</div></section>; }
 function PlansPanel({ plans }: { plans: Plan[] }) { return <div><div className="mb-5"><p className="text-[9px] font-black uppercase tracking-[.16em] text-[#a93a05]">Catálogo comercial</p><h2 className="mt-1 text-2xl font-black">Planos da Mangora</h2><p className="mt-1 text-xs text-[#597064]">Valores e limites vigentes no backend. A distribuição atual é calculada pelas empresas cadastradas.</p></div><div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">{plans.map((plan, index) => <article key={plan.id} className={`rounded-2xl border-2 p-5 ${index === 2 ? "border-[#ce4a0a] bg-[#fff8ea] shadow-[5px_5px_0_#ffb21a]" : "border-[#123d2b]/15 bg-[#fffdf8]"}`}><div className="flex items-start justify-between"><div><p className="text-[9px] font-black uppercase tracking-[.14em] text-[#597064]">{plan.id}</p><h3 className="mt-1 text-xl font-black">{plan.name}</h3></div><span className="rounded-full bg-[#d4ecdc] px-2.5 py-1 text-[9px] font-black text-[#147a45]">{plan.companies} empresa(s)</span></div><p className="mt-6 text-2xl font-black text-[#ce4a0a]">{plan.price === null ? "Sob consulta" : plan.price === 0 ? "Grátis" : `${formatCurrency(plan.price)}/mês`}</p><div className="mt-5 grid grid-cols-2 gap-2 border-t border-[#123d2b]/10 pt-4 text-[10px]"><span className="text-[#597064]">Usuários<strong className="mt-1 block text-xs text-[#123d2b]">{plan.employeeLimit ?? "Ilimitado"}</strong></span><span className="text-[#597064]">Unidades<strong className="mt-1 block text-xs text-[#123d2b]">{plan.unitLimit ?? "Ilimitadas"}</strong></span></div></article>)}</div><p className="mt-5 rounded-xl border border-amber-200 bg-amber-50 p-4 text-[10px] leading-4 text-amber-800">Para evitar divergência de cobrança, a edição do catálogo deve permanecer versionada no backend. Nesta central você pode atribuir qualquer plano e valor diretamente a uma empresa.</p></div>; }
 
 function UserEditor({ user, onClose, onSaved }: { user: User; onClose: () => void; onSaved: (user: Partial<User> & { id: string }) => void }) { const [form, setForm] = useState({ name: user.name, email: user.email, phone: user.phone ?? "", status: user.status, isSystemAdmin: user.isSystemAdmin }); return <Editor title="Editar usuário" description={form.isSystemAdmin ? "Administrador global da plataforma" : "Conta de acesso Mangora"} onClose={onClose} onSave={async () => { const updated = await apiRequest<Partial<User> & { id: string }>(`/system-admin/users/${user.id}`, { method: "PATCH", body: JSON.stringify(form) }); onSaved(updated); }}><Field label="Nome"><input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} /></Field><Field label="E-mail"><input type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} /></Field><Field label="Telefone"><input value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} /></Field><Field label="Status"><select value={form.status} onChange={(e) => setForm({ ...form, status: e.target.value })}><option value="ACTIVE">Ativo</option><option value="BLOCKED">Bloqueado</option></select></Field><label className="flex cursor-pointer items-center justify-between gap-3 rounded-xl border border-[#123d2b]/15 bg-white px-4 py-3 sm:col-span-2"><span className="flex items-center gap-2 text-[10px] font-bold text-[#315847]"><ShieldCheck className="size-4 text-[#147a45]" />Administrador do sistema</span><input type="checkbox" checked={form.isSystemAdmin} onChange={(e) => setForm({ ...form, isSystemAdmin: e.target.checked })} className="size-5 accent-[#147a45]" /></label></Editor>; }
@@ -125,3 +128,104 @@ function Loading() { return <div className="grid min-h-[55vh] place-items-center
 function Denied({ message }: { message: string }) { return <div className="mx-auto mt-12 max-w-lg rounded-3xl border-2 border-[#123d2b] bg-[#fffdf8] p-7 text-center shadow-[7px_8px_0_#ffb21a]"><LockKeyhole className="mx-auto size-9 text-[#ce4a0a]" /><h2 className="mt-4 text-xl font-black">Área restrita</h2><p className="mt-2 text-xs leading-5 text-[#597064]">{message}</p><Link href="/dashboard" className="mt-5 inline-flex h-10 items-center rounded-xl bg-[#123d2b] px-5 text-xs font-black text-white">Voltar ao dashboard</Link></div>; }
 function RestrictedPage({ message }: { message: string }) { return <main className="mangora-public grid min-h-screen place-items-center bg-[#e9dfd2] p-5"><section className="w-full max-w-md rounded-3xl border-2 border-[#123d2b] bg-[#fffdf8] p-7 text-center shadow-[7px_8px_0_#ffb21a] sm:p-9"><div className="mx-auto grid size-14 place-items-center rounded-2xl bg-[#ffe4c7] text-[#ce4a0a]"><LockKeyhole className="size-7" /></div><p className="mt-5 text-[9px] font-black uppercase tracking-[.18em] text-[#a93a05]">Acesso protegido</p><h1 className="mt-2 text-2xl font-black text-[#123d2b]">Área restrita</h1><p className="mt-3 text-xs leading-5 text-[#597064]">{message}</p><Link href="/dashboard" className="mt-6 inline-flex h-11 items-center gap-2 rounded-xl bg-[#123d2b] px-5 text-xs font-black text-white transition hover:-translate-y-0.5"><ArrowLeft className="size-4" />Voltar ao dashboard</Link></section></main>; }
 function Empty({ text }: { text: string }) { return <div className="p-10 text-center text-xs font-bold text-[#597064]">{text}</div>; }
+
+function SupportEditor({ user, onClose, onChanged, notify }: { user: User; onClose: () => void; onChanged: (user: Partial<User> & { id: string }) => void; notify: (text: string) => void }) {
+  const [detail, setDetail] = useState<UserDetail | null>(null);
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState("");
+  useEffect(() => {
+    let alive = true;
+    apiRequest<UserDetail>(`/system-admin/users/${user.id}`)
+      .then((data) => { if (alive) setDetail(data); })
+      .catch((cause) => { if (alive) setError(cause instanceof Error ? cause.message : "Não foi possível carregar o diagnóstico."); });
+    return () => { alive = false; };
+  }, [user.id]);
+
+  async function runAction(actionName: string, successText: string) {
+    setBusy(true);
+    setError("");
+    try {
+      const result = await apiRequest<{ revoked?: number; previewUrl?: string }>(`/system-admin/users/${user.id}/${actionName}`, { method: "POST" });
+      if (actionName === "revoke-sessions") notify(`Sessões encerradas: ${result.revoked ?? 0}.`);
+      else notify(successText);
+      if (result.previewUrl) notify(`Link de redefinição (dev): ${result.previewUrl}`);
+      const fresh = await apiRequest<UserDetail>(`/system-admin/users/${user.id}`);
+      setDetail(fresh);
+      onChanged(fresh);
+    } catch (cause) {
+      setError(cause instanceof Error ? cause.message : "Falha na ação de suporte.");
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  const locked = detail ? detail.status !== "ACTIVE" || Boolean(detail.lockedUntil) || detail.failedLoginAttempts > 0 : false;
+  return (
+    <div className="fixed inset-0 z-50 grid place-items-center bg-[#082016]/60 p-4 backdrop-blur-sm" onMouseDown={(event) => { if (event.target === event.currentTarget && !busy) onClose(); }}>
+      <div className="mangora-app max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-3xl border-2 border-[#123d2b] bg-[#fffdf8] p-5 shadow-[8px_9px_0_#ffb21a] sm:p-6">
+        <div className="flex items-start justify-between">
+          <div>
+            <p className="text-[9px] font-black uppercase tracking-[.16em] text-[#a93a05]">Central de suporte</p>
+            <h2 className="mt-1 text-xl font-black">{user.name}</h2>
+            <p className="mt-1 text-[10px] text-[#597064]">{user.email}</p>
+          </div>
+          <button type="button" onClick={onClose} disabled={busy} className="grid size-8 place-items-center rounded-lg border border-[#123d2b]/15 bg-white disabled:opacity-50"><X className="size-4" /></button>
+        </div>
+
+        {error && <p role="alert" className="mt-4 rounded-xl border border-red-200 bg-red-50 p-3 text-xs font-bold text-red-700">{error}</p>}
+
+        {!detail ? (
+          <div className="flex min-h-40 items-center justify-center text-xs text-[#597064]"><LoaderCircle className="mr-2 size-4 animate-spin" />Carregando diagnóstico...</div>
+        ) : (
+          <>
+            <div className="mt-5 grid grid-cols-2 gap-2 sm:grid-cols-3">
+              <InfoCard label="Status da conta"><Badge value={detail.status} /></InfoCard>
+              <InfoCard label="Admin do sistema">{detail.isSystemAdmin ? <span className="flex items-center gap-1 text-[10px] font-black text-[#147a45]"><ShieldCheck className="size-3.5" />Sim</span> : <span className="text-[10px] font-bold text-[#597064]">Não</span>}</InfoCard>
+              <InfoCard label="Tentativas de login">{detail.failedLoginAttempts > 0 ? <span className="text-[10px] font-black text-red-600">{detail.failedLoginAttempts}</span> : <span className="text-[10px] font-bold text-[#597064]">0</span>}</InfoCard>
+              <InfoCard label="Bloqueado até">{detail.lockedUntil ? <span className="text-[10px] font-black text-red-600">{formatDate(detail.lockedUntil)}</span> : <span className="text-[10px] font-bold text-[#597064]">—</span>}</InfoCard>
+              <InfoCard label="Senha alterada em">{detail.passwordChangedAt ? <span className="text-[10px] font-bold text-[#315847]">{formatDate(detail.passwordChangedAt)}</span> : <span className="text-[10px] font-bold text-[#597064]">nunca</span>}</InfoCard>
+              <InfoCard label="Cadastro">{formatDate(detail.createdAt)}</InfoCard>
+            </div>
+
+            <div className="mt-5">
+              <p className="text-[9px] font-black uppercase tracking-[.16em] text-[#315847]">Empresas do usuário ({detail.memberships.length})</p>
+              <div className="mt-2 space-y-2">
+                {detail.memberships.length ? detail.memberships.map((membership) => (
+                  <div key={membership.id} className="flex items-center justify-between gap-3 rounded-xl border border-[#123d2b]/10 bg-white px-4 py-3">
+                    <div className="min-w-0">
+                      <p className="truncate text-xs font-black">{membership.company.tradeName}</p>
+                      <p className="mt-0.5 font-mono text-[9px] text-[#597064]">{membership.company.slug} · {membership.role}</p>
+                    </div>
+                    <div className="shrink-0 text-right">
+                      <p className="text-[10px] font-black text-[#a93a05]">{membership.company.subscriptionPlan}</p>
+                      <p className="mt-0.5 text-[9px] text-[#597064]">{membership.active ? "Vínculo ativo" : "Vínculo inativo"} · {membership.company.status}</p>
+                    </div>
+                  </div>
+                )) : <p className="rounded-xl border border-dashed border-[#123d2b]/15 px-4 py-3 text-center text-[10px] text-[#597064]">Usuário sem vínculo com nenhuma empresa.</p>}
+              </div>
+            </div>
+
+            <div className="mt-5">
+              <p className="text-[9px] font-black uppercase tracking-[.16em] text-[#315847]">Sessões ativas ({detail.sessions.length})</p>
+              <div className="mt-2 space-y-1.5">
+                {detail.sessions.length ? detail.sessions.slice(0, 5).map((session) => (
+                  <div key={session.id} className="flex items-center justify-between rounded-lg bg-white px-3 py-2 font-mono text-[9px] text-[#597064]">
+                    <span>{session.ipAddress ?? "IP não registrado"}</span><span>{formatDate(session.createdAt)}</span>
+                  </div>
+                )) : <p className="rounded-xl border border-dashed border-[#123d2b]/15 px-4 py-3 text-center text-[10px] text-[#597064]">Nenhuma sessão ativa.</p>}
+              </div>
+            </div>
+
+            <div className="mt-6 grid gap-2 sm:grid-cols-3">
+              <ActionButton disabled={busy} onClick={() => void runAction("unlock", "Acesso desbloqueado.")} tone={locked ? "bg-[#147a45]" : "bg-[#123d2b]/40"}><Unlock className="size-4" />Desbloquear acesso</ActionButton>
+              <ActionButton disabled={busy || !detail.sessions.length} onClick={() => void runAction("revoke-sessions", "Sessões encerradas.")} tone="bg-[#ce4a0a]"><LogOut className="size-4" />Encerrar sessões</ActionButton>
+              <ActionButton disabled={busy} onClick={() => void runAction("reset-password", "E-mail de redefinição de senha enviado.")} tone="bg-[#123d2b]"><KeyRound className="size-4" />Redefinir senha</ActionButton>
+            </div>
+          </>
+        )}
+      </div>
+    </div>
+  );
+}
+function InfoCard({ label, children }: { label: string; children: React.ReactNode }) { return <div className="rounded-xl border border-[#123d2b]/10 bg-white p-3"><p className="text-[9px] text-[#597064]">{label}</p><div className="mt-1.5">{children}</div></div>; }
+function ActionButton({ children, disabled, onClick, tone }: { children: React.ReactNode; disabled?: boolean; onClick: () => void; tone: string }) { return <button type="button" disabled={disabled} onClick={onClick} className={`flex h-11 items-center justify-center gap-2 rounded-xl px-3 text-[10px] font-black text-white transition disabled:cursor-not-allowed disabled:opacity-40 ${tone}`}>{children}</button>; }
