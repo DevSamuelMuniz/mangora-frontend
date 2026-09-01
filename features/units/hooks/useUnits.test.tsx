@@ -12,7 +12,7 @@ describe("useCreateUnit", () => {
         vi.stubGlobal("fetch", fetchMock);
 
         const { result } = renderHook(() => useCreateUnit(), { wrapper: createWrapper() });
-        await result.current.mutateAsync({ tradeName: "Loja 2", document: "12345678" });
+        await result.current.mutateAsync({ tradeName: "Loja 2", document: "12345678", confirmAdditionalCharge: true });
 
         const [, init] = fetchMock.mock.calls[0] as unknown as [string, RequestInit];
         const body = JSON.parse(String(init.body)) as Record<string, unknown>;
@@ -28,7 +28,7 @@ describe("useCreateUnit", () => {
         vi.stubGlobal("fetch", fetchMock);
 
         const { result } = renderHook(() => useCreateUnit(), { wrapper: createWrapper() });
-        await result.current.mutateAsync({ tradeName: "Loja 2", document: "12345678000195", email: "" });
+        await result.current.mutateAsync({ tradeName: "Loja 2", document: "12345678000195", email: "", confirmAdditionalCharge: true });
 
         const [, init] = fetchMock.mock.calls[0] as unknown as [string, RequestInit];
         const body = JSON.parse(String(init.body)) as Record<string, unknown>;

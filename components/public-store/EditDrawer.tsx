@@ -37,6 +37,12 @@ const FIELD_INFO: Record<string, FieldInfo> = {
     publicCoverEnabled: { label: "Fundo do topo", type: "toggle" },
 };
 
+/** Cor relacionada de um componente de texto (mostrada junto no sidebar). */
+const RELATED_COLOR: Record<string, string> = {
+    tradeName: "publicTitleColor",
+    publicAnnouncement: "publicAnnouncementColor",
+};
+
 const STORE_KEY: Record<string, keyof PublicStore["company"]> = {
     tradeName: "tradeName",
     publicLogoUrl: "logoUrl",
@@ -122,14 +128,26 @@ function FieldMenu({ onClose, onSelect }: { onClose: () => void; onSelect: (fiel
 }
 
 function FieldEditor({ field, info, company, onClose, onSave }: { field: string; info: FieldInfo; company: PublicStore["company"]; onClose: () => void; onSave: (field: string, value: string) => Promise<void> }) {
-    const [value, setValue] = useState(() => valueOf(company, field));
+    const related = RELATED_COLOR[field] ?? null;
+    const relatedInfo = related ? FIELD_INFO[related] : null;
+    const [draft, setDraft] = useState<Record<string, string>>(() => {
+        const base: Record<string, string> = { [field]: valueOf(company, field) };
+        if (related) base[related] = valueOf(company, related);
+        return base;
+    });
     const [saving, setSaving] = useState(false);
     const [error, setError] = useState("");
+
+    function setValue(key: string, value: string) {
+        setDraft((prev) => ({ ...prev, [key]: value }));
+    }
 
     async function save() {
         setSaving(true); setError("");
         try {
-            await onSave(field, value);
+            for (const [key, value] of Object.entries(draft)) {
+                if (value !== valueOf(company, key)) await onSave(key, value);
+            }
             onClose();
         } catch (cause) {
             setError(cause instanceof Error ? cause.message : "Não foi possível salvar.");
@@ -145,8 +163,9 @@ function FieldEditor({ field, info, company, onClose, onSave }: { field: string;
                 <button type="button" onClick={onClose} aria-label="Fechar editor" className="flex size-8 items-center justify-center rounded-lg text-[var(--muted)] transition hover:bg-[var(--line)]"><X className="size-4" /></button>
             </div>
 
-            <div className="flex-1 overflow-y-auto px-5 py-6">
-                <FieldRow field={field} info={info} value={value} onChange={setValue} />
+            <div className="flex-1 space-y-5 overflow-y-auto px-5 py-6">
+                <FieldRow field={field} info={info} value={draft[field] ?? valueOf(company, field)} onChange={(value) => setValue(field, value)} />
+                {related && relatedInfo && <FieldRow field={related} info={relatedInfo} value={draft[related] ?? valueOf(company, related)} onChange={(value) => setValue(related, value)} />}
             </div>
 
             <div className="border-t border-[var(--line)] px-5 py-4">
