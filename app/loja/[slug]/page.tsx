@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
-import { notFound } from "next/navigation";
 import PublicStorefront from "@/components/public-store/PublicStorefront";
+import StoreUnavailable from "@/components/public-store/StoreUnavailable";
 import type { PublicStore } from "@/types/public-store";
 import { API_BASE_URL } from "@/lib/api/config";
 
@@ -14,11 +14,11 @@ async function loadStore(slug: string) {
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params; const store = await loadStore(slug);
-  return store ? { title: `${store.company.tradeName} | Mangora`, description: store.company.description || `Catálogo e pedidos de ${store.company.tradeName}.` } : { title: "Página não encontrada | Mangora" };
+  return store ? { title: `${store.company.tradeName} | Mangora`, description: store.company.description || `Catálogo e pedidos de ${store.company.tradeName}.` } : { title: "Página indisponível | Mangora", robots: { index: false, follow: false } };
 }
 
 export default async function PublicStorePage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params; const store = await loadStore(slug);
-  if (!store) notFound();
+  if (!store) return <StoreUnavailable />;
   return <PublicStorefront store={store} />;
 }
