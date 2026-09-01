@@ -16,6 +16,14 @@ type PublicStorefrontProps = {
   onEdit?: (field: string, value: string) => void | Promise<unknown>;
 };
 
+const FIELD_LABELS: Record<string, string> = {
+  publicBrandColor: "principal",
+  publicTitleColor: "título",
+  publicTextColor: "texto",
+  publicBackgroundColor: "fundo",
+  publicPanelColor: "superfícies",
+};
+
 /** Página de vendas v2 — identidade total do cliente + modo edição inline. */
 export default function PublicStorefront({ store, editable = false, onEdit }: PublicStorefrontProps) {
   const createOrder = useCreatePublicOrder();
@@ -78,10 +86,8 @@ export default function PublicStorefront({ store, editable = false, onEdit }: Pu
     setDrawerOpen(true);
   }
 
-  async function saveAll(changes: Record<string, string>) {
-    for (const [field, value] of Object.entries(changes)) {
-      await onEdit?.(field, value);
-    }
+  async function saveOne(field: string, value: string) {
+    await onEdit?.(field, value);
   }
 
   async function submit(event: FormEvent<HTMLFormElement>) {
@@ -101,8 +107,12 @@ export default function PublicStorefront({ store, editable = false, onEdit }: Pu
         <div className="fixed inset-x-0 top-0 z-50 flex h-14 items-center gap-2 border-b border-[var(--line)] bg-[var(--bg)]/95 px-4 backdrop-blur">
           <span className="flex items-center gap-1.5 text-[11px] font-black"><Pencil className="size-3.5 text-[var(--brand)]" />Editar página</span>
           <span className="hidden text-[10px] text-[var(--muted)] md:block">Clique em um texto, imagem ou cor para alterar.</span>
-          <div className="ml-auto flex items-center gap-2">
-            <Link href="/configuracoes" className="flex h-8 items-center rounded-xl px-3 text-[10px] font-black text-white" style={{ backgroundColor: brand }}>Concluir</Link>
+          <div className="ml-auto flex items-center gap-1.5">
+            {(["publicBrandColor", "publicTitleColor", "publicTextColor", "publicBackgroundColor", "publicPanelColor"] as const).map((field) => {
+              const color = field === "publicBrandColor" ? brand : field === "publicTitleColor" ? (company.titleColor ?? defaults.ink) : field === "publicTextColor" ? (company.textColor ?? defaults.ink) : field === "publicBackgroundColor" ? (company.backgroundColor ?? defaults.bg) : (company.panelColor ?? defaults.panel);
+              return <button key={field} type="button" title={`Cor ${FIELD_LABELS[field]}`} aria-label={`Editar cor ${FIELD_LABELS[field]}`} onClick={() => startEdit(field)} className="size-6 rounded-full border-2 border-[var(--line)] transition hover:scale-110" style={{ backgroundColor: color || "transparent" }} />;
+            })}
+            <Link href="/configuracoes" className="ml-1 flex h-8 items-center rounded-xl px-3 text-[10px] font-black text-white" style={{ backgroundColor: brand }}>Concluir</Link>
           </div>
         </div>
       )}
@@ -292,7 +302,7 @@ export default function PublicStorefront({ store, editable = false, onEdit }: Pu
       )}
 
       {/* Drawer de edição */}
-      <EditDrawer open={editable && drawerOpen} focusField={focusField} company={company} onClose={() => setDrawerOpen(false)} onSave={saveAll} />
+      <EditDrawer open={editable && drawerOpen} focusField={focusField} company={company} onClose={() => setDrawerOpen(false)} onSave={saveOne} />
     </main>
   );
 }
