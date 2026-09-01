@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { FormEvent, useState, type ReactNode } from "react";
-import { Activity, Bell, Building2, CheckCircle2, Globe2, KeyRound, LoaderCircle, Monitor, Pencil, RefreshCw, Save, ShieldCheck, ShoppingCart, SlidersHorizontal, type LucideIcon } from "lucide-react";
+import { Activity, Bell, Building2, CheckCircle2, Copy, Globe2, KeyRound, LoaderCircle, Monitor, Pencil, RefreshCw, Save, ShieldCheck, ShoppingCart, SlidersHorizontal, type LucideIcon } from "lucide-react";
 import type { CompanySettings, SettingsTab } from "@/types/settings";
 import { formatDateTime } from "@/lib/format";
 import {
@@ -108,17 +108,41 @@ function PreferencesForm({ company }: { company: CompanySettings }) { return <di
 function SalesForm({ company }: { company: CompanySettings }) { return <div className="space-y-5"><div className="grid gap-4 sm:grid-cols-2"><Field label="Pagamento padrão" id="defaultPayment"><select id="defaultPayment" name="defaultPayment" defaultValue={company.defaultPayment} className={inputClass}><option value="PIX">PIX</option><option value="CASH">Dinheiro</option><option value="DEBIT_CARD">Cartão de débito</option><option value="CREDIT_CARD">Cartão de crédito</option><option value="BOLETO">Boleto</option></select></Field><Field label="Desconto máximo (%)" id="maximumDiscount"><input id="maximumDiscount" name="maximumDiscount" type="number" min={0} max={100} step="0.5" defaultValue={company.maximumDiscount} className={inputClass} /></Field></div><SettingsGroup title="Regras aplicadas"><Toggle name="requireCustomer" title="Exigir cliente identificado" description="Bloqueia venda e pedido sem cliente cadastrado." defaultChecked={company.requireCustomer} /><Toggle name="allowPendingSales" title="Permitir vendas pendentes" description="Preferência preparada para o fluxo de recebimentos." defaultChecked={company.allowPendingSales} /></SettingsGroup></div>; }
 function NotificationsForm({ company }: { company: CompanySettings }) { return <div className="space-y-5"><SettingsGroup title="Alertas no sistema"><Toggle name="lowStockNotification" title="Estoque baixo" description="Avisa gestores quando produtos atingem o estoque mínimo." defaultChecked={company.lowStockNotification} /><Toggle name="overdueAccountNotification" title="Contas vencidas" description="Avisa gestores sobre compromissos financeiros atrasados." defaultChecked={company.overdueAccountNotification} /><Toggle name="saleNotification" title="Novas vendas" description="Registra a preferência para alertas comerciais." defaultChecked={company.saleNotification} /></SettingsGroup><div className="grid gap-4 sm:grid-cols-2"><Field label="E-mail para resumos" id="summaryEmail"><input id="summaryEmail" name="summaryEmail" type="email" defaultValue={company.summaryEmail ?? ""} className={inputClass} /></Field><Field label="Frequência" id="summaryFrequency"><select id="summaryFrequency" name="summaryFrequency" defaultValue={company.summaryFrequency} className={inputClass}><option value="daily">Diariamente</option><option value="weekly">Semanalmente</option><option value="disabled">Desativado</option></select></Field></div><p className="text-[10px] text-slate-400">Os resumos são processados automaticamente, sem duplicação, e os e-mails com falha entram em reenvio gradual.</p></div>; }
 function OnlineStoreForm({ company }: { company: CompanySettings }) {
+  const [copied, setCopied] = useState(false);
+  const pageUrl = `${typeof window !== "undefined" ? window.location.origin : "https://mangora.com.br"}/loja/${company.slug}`;
+  async function copyLink() {
+    try {
+      await navigator.clipboard.writeText(pageUrl);
+      setCopied(true);
+      window.setTimeout(() => setCopied(false), 2500);
+    } catch {
+      // clipboard indisponível — o link continua visível para copiar manualmente
+    }
+  }
   return <div className="space-y-5">
-    <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-orange-100 bg-orange-50 p-4">
-      <div><p className="text-xs font-black text-orange-950">mangora.com.br/loja/{company.slug}</p><p className="mt-1 text-[10px] text-orange-700">Toda a edição da sua página acontece no editor visual.</p></div>
-      <Link href="/loja/editar" className="flex h-11 items-center gap-2 rounded-xl bg-[#123d2b] px-4 text-xs font-black text-white shadow-sm transition hover:bg-[#147a45]"><Pencil className="size-3.5" />Abrir editor da página</Link>
+    <div className="overflow-hidden rounded-2xl border-2 border-[#123d2b] bg-[#fff8ea] shadow-[6px_7px_0_#ffb21a]">
+      <div className="flex flex-wrap items-center justify-between gap-3 border-b-2 border-dashed border-[#123d2b]/15 px-5 py-4">
+        <div><p className="text-[10px] font-black uppercase tracking-[0.16em] text-[#ff6b1a]">Sua página online</p><p className="mt-1 text-sm font-black text-[#123d2b]">Compartilhe este link com seus clientes</p></div>
+        <span className={`rounded-full px-3 py-1 text-[10px] font-black ${company.publicPageEnabled ? "bg-green-100 text-green-700" : "bg-slate-200 text-slate-500"}`}>{company.publicPageEnabled ? "● Publicada" : "○ Desativada"}</span>
+      </div>
+      <div className="px-5 py-4">
+        <p className="font-mono text-[9px] font-bold uppercase tracking-[0.14em] text-[#597064]">Link da página</p>
+        <div className="mt-1.5 flex items-center gap-2">
+          <code className="min-w-0 flex-1 truncate rounded-xl bg-[#123d2b] px-3.5 py-3 font-mono text-sm font-bold text-[#ffd56a]">{pageUrl}</code>
+          <button type="button" onClick={() => void copyLink()} className={`flex h-11 shrink-0 items-center gap-1.5 rounded-xl px-4 text-xs font-black text-white transition ${copied ? "bg-green-600" : "bg-[#ff6b1a] hover:brightness-110"}`}>{copied ? <CheckCircle2 className="size-4" /> : <Copy className="size-4" />}{copied ? "Copiado!" : "Copiar link"}</button>
+        </div>
+        <div className="mt-3 flex flex-wrap gap-2">
+          <Link href={`/loja/${company.slug}`} target="_blank" className="flex h-10 items-center gap-2 rounded-xl border-2 border-[#123d2b] bg-white px-4 text-xs font-black text-[#123d2b] transition hover:border-[#ff6b1a] hover:text-[#a93a05]">Abrir página</Link>
+          <Link href="/loja/editar" className="flex h-10 items-center gap-2 rounded-xl bg-[#123d2b] px-4 text-xs font-black text-white shadow-sm transition hover:bg-[#147a45]"><Pencil className="size-3.5" />Editar página</Link>
+        </div>
+      </div>
     </div>
     <div className="grid gap-3 sm:grid-cols-3">
-      <div className="rounded-xl border border-slate-200 bg-white p-4"><p className="text-[10px] font-bold text-slate-500">Status</p><p className={`mt-1 text-xs font-black ${company.publicPageEnabled ? "text-green-600" : "text-slate-400"}`}>{company.publicPageEnabled ? "● Publicada" : "○ Desativada"}</p></div>
       <div className="rounded-xl border border-slate-200 bg-white p-4"><p className="text-[10px] font-bold text-slate-500">Identidade</p><p className="mt-1 text-xs font-black text-slate-800">{company.tradeName}</p></div>
       <div className="rounded-xl border border-slate-200 bg-white p-4"><p className="text-[10px] font-bold text-slate-500">Tema</p><p className="mt-1 text-xs font-black text-slate-800">{company.publicTheme === "dark" ? "Escuro" : "Claro"} · {company.publicFont}</p></div>
+      <div className="rounded-xl border border-slate-200 bg-white p-4"><p className="text-[10px] font-bold text-slate-500">Edição</p><p className="mt-1 text-xs font-black text-slate-800">No editor visual da página</p></div>
     </div>
-    <p className="text-[10px] leading-4 text-slate-400">Edite textos, cores, imagens, tema e fonte direto na página, no painel fixo à direita. O status da página e a visibilidade dos produtos continuam aqui.</p>
+    <p className="text-[10px] leading-4 text-slate-400">Textos, cores, imagens, tema e fonte são editados direto na página, no painel fixo à direita. A visibilidade dos produtos continua no cadastro de cada item.</p>
   </div>;
 }
 
