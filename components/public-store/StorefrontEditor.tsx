@@ -103,7 +103,7 @@ export default function StorefrontEditor() {
     }
 
     return (
-        <div className="pt-14">
+        <div>
             <PublicStorefront store={store} editable onEdit={handleEdit} />
         </div>
     );
