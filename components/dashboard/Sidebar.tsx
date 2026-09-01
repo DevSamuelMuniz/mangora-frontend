@@ -18,6 +18,7 @@ import {
   Package,
   Settings,
   ShoppingBag,
+  Star,
   Store,
   Truck,
   Wrench,
@@ -67,6 +68,7 @@ const navigationGroups: NavigationGroup[] = [
     { label: "Financeiro", href: "/financeiro", icon: CircleDollarSign, roles: ["OWNER", "ADMIN", "MANAGER"] },
     { label: "Relatórios", href: "/relatorios", icon: BarChart3, roles: ["OWNER", "ADMIN", "MANAGER"] },
     { label: "Notas fiscais", href: "/notas-fiscais", icon: FileText, roles: ["OWNER", "ADMIN", "MANAGER"] },
+    { label: "Avaliações", href: "/avaliacoes", icon: Star },
   ] },
 ];
 
