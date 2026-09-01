@@ -124,10 +124,12 @@ export default function PdvScreen({ session }: { session: AuthSession }) {
     const primaryMethod = parts[0]?.method ?? "PIX";
     const deferred = parts.some((part) => DEFERRED.includes(part.method));
     const isCash = parts.some((part) => part.method === "CASH");
-    const cashPartAmount = parts
+    // Parte única = total (o valor fica travado na tela); parte em divisão = valor digitado.
+    const partAmount = (part: PaymentPart) => (parts.length === 1 ? total : parseCurrency(part.amount));
+    const parsedParts = parts.map((part) => ({ method: part.method, amount: partAmount(part) }));
+    const cashPartAmount = parsedParts
         .filter((part) => part.method === "CASH")
-        .reduce((sum, part) => sum + parseCurrency(part.amount), 0);
-    const parsedParts = parts.map((part) => ({ method: part.method, amount: parseCurrency(part.amount) }));
+        .reduce((sum, part) => sum + part.amount, 0);
     const splitValid =
         parts.length === 1 || (parsedParts.every((part) => part.amount > 0) && Math.abs(parsedParts.reduce((sum, part) => sum + part.amount, 0) - total) < 0.01);
     const cashChange = isCash ? { received: receivedValue, change: Math.max(0, receivedValue - cashPartAmount) } : undefined;
@@ -197,9 +199,9 @@ export default function PdvScreen({ session }: { session: AuthSession }) {
 
     /** Etapa 4 → 5: confirmação final — envia a venda. */
     function confirmPayment() {
-        const paymentParts = parts
-            .map((part) => ({ method: part.method, amount: Math.round(parseCurrency(part.amount) * 100) / 100 }))
-            .filter((part) => part.amount > 0);
+        const paymentParts = parsedParts
+            .filter((part) => part.amount > 0)
+            .map((part) => ({ method: part.method, amount: Math.round(part.amount * 100) / 100 }));
         void createSale
             .mutateAsync({
                 customerId: customerId || undefined,

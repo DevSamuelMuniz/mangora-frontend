@@ -60,9 +60,11 @@ export default function PaymentStep({
         : activeCustomers;
     const deferred = parts.some((part) => DEFERRED.includes(part.method));
     const isCash = parts.some((part) => part.method === "CASH");
+    // Parte única = total (valor travado na tela); parte em divisão = valor digitado.
+    const partAmount = (part: PaymentPart) => (isSingle ? total : parseCurrency(part.amount));
     const cashPartAmount = parts
         .filter((part) => part.method === "CASH")
-        .reduce((sum, part) => sum + parseCurrency(part.amount), 0);
+        .reduce((sum, part) => sum + partAmount(part), 0);
     const receivedValue = parseCurrency(receivedAmount);
     const change = receivedValue - cashPartAmount;
     const insufficient = isCash && receivedValue < cashPartAmount;
