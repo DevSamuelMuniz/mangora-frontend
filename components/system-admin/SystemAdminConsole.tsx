@@ -27,13 +27,14 @@ export default function SystemAdminConsole({ operatorName }: { operatorName: str
   const [companies, setCompanies] = useState<Company[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [accessDenied, setAccessDenied] = useState(false);
   const [message, setMessage] = useState("");
   const [search, setSearch] = useState("");
   const [editingUser, setEditingUser] = useState<User | null>(null);
   const [editingCompany, setEditingCompany] = useState<Company | null>(null);
 
   async function load() {
-    setLoading(true); setError("");
+    setLoading(true); setError(""); setAccessDenied(false);
     try {
       const [summary, userList, companyList] = await Promise.all([
         apiRequest<Overview>("/system-admin/overview"),
@@ -42,7 +43,9 @@ export default function SystemAdminConsole({ operatorName }: { operatorName: str
       ]);
       setOverview(summary); setUsers(userList); setCompanies(companyList);
     } catch (cause) {
-      setError(cause instanceof ApiError && cause.status === 403 ? "Sua conta está autenticada, mas não possui permissão de administrador da plataforma." : cause instanceof Error ? cause.message : "Não foi possível carregar a central.");
+      const denied = cause instanceof ApiError && cause.status === 403;
+      setAccessDenied(denied);
+      setError(denied ? "Sua conta está autenticada, mas não possui permissão de administrador da plataforma." : cause instanceof Error ? cause.message : "Não foi possível carregar a central.");
     } finally { setLoading(false); }
   }
   useEffect(() => {
@@ -56,7 +59,9 @@ export default function SystemAdminConsole({ operatorName }: { operatorName: str
       setOverview(summary); setUsers(userList); setCompanies(companyList); setLoading(false);
     }).catch((cause: unknown) => {
       if (!active) return;
-      setError(cause instanceof ApiError && cause.status === 403 ? "Sua conta está autenticada, mas não possui permissão de administrador da plataforma." : cause instanceof Error ? cause.message : "Não foi possível carregar a central.");
+      const denied = cause instanceof ApiError && cause.status === 403;
+      setAccessDenied(denied);
+      setError(denied ? "Sua conta está autenticada, mas não possui permissão de administrador da plataforma." : cause instanceof Error ? cause.message : "Não foi possível carregar a central.");
       setLoading(false);
     });
     return () => { active = false; };
@@ -67,6 +72,8 @@ export default function SystemAdminConsole({ operatorName }: { operatorName: str
   const title = nav.find((item) => item.id === tab)?.label ?? "Central";
 
   function notify(text: string) { setMessage(text); window.setTimeout(() => setMessage(""), 3500); }
+
+  if (accessDenied) return <RestrictedPage message={error} />;
 
   return <main className="mangora-app min-h-screen bg-[#e9dfd2]">
     <div className="min-h-screen lg:grid lg:grid-cols-[248px_1fr]">
@@ -116,4 +123,5 @@ function PanelTitle({ title, description }: { title: string; description: string
 function Badge({ value }: { value: string }) { const positive = value === "ACTIVE"; return <span className={`inline-flex rounded-full px-2 py-1 text-[8px] font-black uppercase tracking-wider ${positive ? "bg-green-50 text-green-700" : "bg-amber-50 text-amber-800"}`}>{value}</span>; }
 function Loading() { return <div className="grid min-h-[55vh] place-items-center"><div className="text-center"><LoaderCircle className="mx-auto size-7 animate-spin text-[#ce4a0a]" /><p className="mt-3 text-xs font-bold text-[#597064]">Carregando a operação…</p></div></div>; }
 function Denied({ message }: { message: string }) { return <div className="mx-auto mt-12 max-w-lg rounded-3xl border-2 border-[#123d2b] bg-[#fffdf8] p-7 text-center shadow-[7px_8px_0_#ffb21a]"><LockKeyhole className="mx-auto size-9 text-[#ce4a0a]" /><h2 className="mt-4 text-xl font-black">Área restrita</h2><p className="mt-2 text-xs leading-5 text-[#597064]">{message}</p><Link href="/dashboard" className="mt-5 inline-flex h-10 items-center rounded-xl bg-[#123d2b] px-5 text-xs font-black text-white">Voltar ao dashboard</Link></div>; }
+function RestrictedPage({ message }: { message: string }) { return <main className="mangora-public grid min-h-screen place-items-center bg-[#e9dfd2] p-5"><section className="w-full max-w-md rounded-3xl border-2 border-[#123d2b] bg-[#fffdf8] p-7 text-center shadow-[7px_8px_0_#ffb21a] sm:p-9"><div className="mx-auto grid size-14 place-items-center rounded-2xl bg-[#ffe4c7] text-[#ce4a0a]"><LockKeyhole className="size-7" /></div><p className="mt-5 text-[9px] font-black uppercase tracking-[.18em] text-[#a93a05]">Acesso protegido</p><h1 className="mt-2 text-2xl font-black text-[#123d2b]">Área restrita</h1><p className="mt-3 text-xs leading-5 text-[#597064]">{message}</p><Link href="/dashboard" className="mt-6 inline-flex h-11 items-center gap-2 rounded-xl bg-[#123d2b] px-5 text-xs font-black text-white transition hover:-translate-y-0.5"><ArrowLeft className="size-4" />Voltar ao dashboard</Link></section></main>; }
 function Empty({ text }: { text: string }) { return <div className="p-10 text-center text-xs font-bold text-[#597064]">{text}</div>; }
