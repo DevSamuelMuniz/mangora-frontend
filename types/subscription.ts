@@ -41,7 +41,7 @@ export type SubscriptionOverview = {
   pendingPlan: "START" | "BUSINESS" | "PREMIUM" | null;
   provider: { name: "ASAAS"; configured: boolean; environment: "sandbox" | "production"; customerConnected: boolean; subscriptionConnected: boolean };
   usage: Array<{ key: string; label: string; current: number; limit: number | null }>;
-  plans: Array<{ id: string; name: string; price: number | null; employeeLimit: number | null; unitLimit: number | null }>;
+  plans: Array<{ id: string; name: string; price: number | null; ownerLimit: number | null; employeeLimit: number | null; unitLimit: number | null }>;
   requests: Array<{ id: string; type: "PLAN_CHANGE" | "CANCELLATION" | "CONTACT"; targetPlan: string | null; status: string; requestedByName: string; createdAt: string }>;
   invoices: SubscriptionInvoice[];
 };

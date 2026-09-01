@@ -12,7 +12,7 @@ export type UnitCompany = {
 
 export type UnitGroupResponse = {
   group: { id: string; name: string; createdAt: string } | null;
-  limit: number;
+  limit: number | null;
   canCreateUnit: boolean;
   units: Array<{
     membershipId: string;
