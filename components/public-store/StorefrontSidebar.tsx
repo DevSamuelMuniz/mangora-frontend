@@ -135,14 +135,14 @@ export default function StorefrontSidebar({ company, onSave }: StorefrontSidebar
     return (
         <aside className="fixed inset-y-0 right-0 z-50 flex w-full flex-col border-l border-[var(--line)] bg-[var(--panel)] shadow-2xl sm:w-[22rem]">
             <div className="flex items-center justify-between gap-3 border-b border-[var(--line)] px-4 py-3">
-                <div className="flex items-center gap-2"><span className="flex size-8 items-center justify-center rounded-xl text-white" style={{ backgroundColor: "var(--brand)" }}><Pencil className="size-4" /></span><div><p className="text-sm font-black">Editar página</p><p className="text-[9px] text-[var(--muted)]">Tudo editável por aqui.</p></div></div>
+                <div className="flex items-center gap-2"><span className="flex size-8 items-center justify-center rounded-xl text-white" style={{ backgroundColor: "var(--brand)" }}><Pencil className="size-4" /></span><div><p className="text-sm font-black">Editar página</p><p className="text-[9px] text-[var(--ink)]/80">Tudo editável por aqui.</p></div></div>
                 <Link href="/configuracoes" className="flex h-8 items-center rounded-xl px-3 text-[10px] font-black text-white" style={{ backgroundColor: "var(--brand)" }}>Concluir</Link>
             </div>
 
             <div className="flex-1 overflow-y-auto px-4 py-4">
                 {GROUPS.map(({ title, icon: Icon, fields }) => (
                     <section key={title} className="mb-5">
-                        <div className="mb-2 flex items-center gap-2 text-[10px] font-black uppercase tracking-[.14em] text-[var(--muted)]"><Icon className="size-3.5" />{title}</div>
+                        <div className="mb-2 flex items-center gap-2 text-[10px] font-black uppercase tracking-[.14em] text-[var(--ink)]"><Icon className="size-3.5" />{title}</div>
                         <div className="space-y-2">
                             {fields.map((field) => (
                                 <FieldRow key={field} field={field} label={labelFor(field)} value={draft[field] ?? valueOf(company, field)} onChange={(value) => setValue(field, value)} />
@@ -168,7 +168,7 @@ function FieldRow({ field, label, value, onChange }: { field: string; label: str
     const inputClass = "h-10 w-full rounded-lg border border-[var(--line)] bg-[var(--bg)] px-3 text-xs text-[var(--ink)] outline-none transition focus:border-[var(--brand)] focus:ring-2 focus:ring-[var(--brand)]/30";
     return (
         <div className="rounded-lg border border-[var(--line)] bg-[var(--bg)] p-2">
-            <p className="mb-1.5 px-0.5 text-[9px] font-bold text-[var(--muted)]">{label}</p>
+            <p className="mb-1.5 px-0.5 text-[9px] font-bold text-[var(--ink)]">{label}</p>
             {info.type === "textarea" ? (
                 <textarea value={value} onChange={(event) => onChange(event.target.value)} rows={3} className={`${inputClass} h-auto resize-none py-2`} />
             ) : info.type === "select" ? (
