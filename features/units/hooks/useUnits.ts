@@ -37,7 +37,7 @@ export function useCreateGroup() {
 
 export function useCreateUnit() {
     const queryClient = useQueryClient();
-    return useMutation<void, Error, { tradeName: string; legalName?: string; document?: string | null; email?: string; copyCatalog?: boolean }>({
+    return useMutation<void, Error, { tradeName: string; legalName?: string; document?: string | null; email?: string; copyCatalog?: boolean; confirmAdditionalCharge: true }>({
         mutationFn: (input) => {
             // O DTO exige documento com exatamente 11 (CPF) ou 14 (CNPJ) dígitos.
             // Dígitos parciais causariam 400 — só enviamos quando completo.

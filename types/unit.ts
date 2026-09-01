@@ -13,6 +13,9 @@ export type UnitCompany = {
 export type UnitGroupResponse = {
   group: { id: string; name: string; createdAt: string } | null;
   limit: number | null;
+  unitPrice: number | null;
+  currentMonthlyPrice: number | null;
+  nextMonthlyPrice: number | null;
   canCreateUnit: boolean;
   units: Array<{
     membershipId: string;
