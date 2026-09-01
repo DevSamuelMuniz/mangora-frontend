@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { CheckCircle2, ImageIcon, LayoutTemplate, LoaderCircle, Palette, Pencil, Type } from "lucide-react";
+import { CheckCircle2, ExternalLink, ImageIcon, LayoutTemplate, LoaderCircle, Palette, Pencil, Type } from "lucide-react";
 import Link from "next/link";
 
 import { STORE_FONTS, type PublicStore } from "@/types/public-store";
@@ -137,6 +137,13 @@ export default function StorefrontSidebar({ company, onSave }: StorefrontSidebar
             <div className="flex items-center justify-between gap-3 border-b border-[var(--line)] px-4 py-3">
                 <div className="flex items-center gap-2"><span className="flex size-8 items-center justify-center rounded-xl text-white" style={{ backgroundColor: "var(--brand)" }}><Pencil className="size-4" /></span><div><p className="text-sm font-black">Editar página</p><p className="text-[9px] text-[var(--ink)]/80">Tudo editável por aqui.</p></div></div>
                 <Link href="/configuracoes" className="flex h-8 items-center rounded-xl px-3 text-[10px] font-black text-white" style={{ backgroundColor: "var(--brand)" }}>Concluir</Link>
+            </div>
+
+            <div className="border-b border-[var(--line)] px-4 py-3">
+                <a href={`/loja/${company.slug}`} target="_blank" rel="noreferrer" className="flex h-12 items-center justify-between gap-2 rounded-xl px-4 text-xs font-black text-white shadow-lg transition hover:brightness-110" style={{ backgroundColor: "var(--brand)" }}>
+                    <span className="flex items-center gap-2"><ExternalLink className="size-4" />Veja sua página</span>
+                    <span className="truncate font-mono text-[10px]">/loja/{company.slug}</span>
+                </a>
             </div>
 
             <div className="flex-1 overflow-y-auto px-4 py-4">
