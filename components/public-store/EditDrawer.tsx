@@ -24,6 +24,11 @@ const FIELD_INFO: Record<string, FieldInfo> = {
     publicTextColor: { label: "Cor do texto", type: "color" },
     publicBackgroundColor: { label: "Cor de fundo", type: "color" },
     publicPanelColor: { label: "Cor das superfícies", type: "color" },
+    publicHeaderColor: { label: "Cor do cabeçalho", type: "color" },
+    publicAnnouncementColor: { label: "Cor do anúncio", type: "color" },
+    publicButtonColor: { label: "Cor dos botões", type: "color" },
+    publicPriceColor: { label: "Cor dos preços", type: "color" },
+    publicCardColor: { label: "Cor dos cards", type: "color" },
     publicTheme: { label: "Tema", type: "select", options: ["light", "dark"] },
     publicFont: { label: "Fonte", type: "select", options: ["moderno", "classico", "mono"] },
     publicCoverEnabled: { label: "Fundo do topo", type: "toggle" },
@@ -52,6 +57,11 @@ function valueOf(company: PublicStore["company"], field: string): string {
         case "publicTheme": return company.theme;
         case "publicFont": return company.font;
         case "publicCoverEnabled": return company.coverEnabled ? "true" : "false";
+        case "publicHeaderColor": return company.headerColor ?? "";
+        case "publicAnnouncementColor": return company.announcementColor ?? "";
+        case "publicButtonColor": return company.buttonColor ?? "";
+        case "publicPriceColor": return company.priceColor ?? "";
+        case "publicCardColor": return company.cardColor ?? "";
         default: return String(company[STORE_KEY[field]] ?? "");
     }
 }

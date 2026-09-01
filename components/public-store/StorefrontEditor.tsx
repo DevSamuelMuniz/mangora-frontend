@@ -66,6 +66,11 @@ export default function StorefrontEditor() {
             panelColor: pick("publicPanelColor", company.publicPanelColor),
             font: pick("publicFont", company.publicFont) || "moderno",
             coverEnabled: "publicCoverEnabled" in overrides ? overrides.publicCoverEnabled === "true" : company.publicCoverEnabled,
+            headerColor: pick("publicHeaderColor", company.publicHeaderColor),
+            announcementColor: pick("publicAnnouncementColor", company.publicAnnouncementColor),
+            buttonColor: pick("publicButtonColor", company.publicButtonColor),
+            priceColor: pick("publicPriceColor", company.publicPriceColor),
+            cardColor: pick("publicCardColor", company.publicCardColor),
         },
         products,
     };

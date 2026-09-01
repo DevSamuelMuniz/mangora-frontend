@@ -24,6 +24,11 @@ export type PublicStore = {  company: {
     panelColor: string | null;
     font: string;
     coverEnabled: boolean;
+    headerColor: string | null;
+    announcementColor: string | null;
+    buttonColor: string | null;
+    priceColor: string | null;
+    cardColor: string | null;
   };
   products: {
     id: string;

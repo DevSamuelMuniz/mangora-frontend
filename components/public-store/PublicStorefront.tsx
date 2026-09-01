@@ -57,15 +57,25 @@ export default function PublicStorefront({ store, editable = false, onEdit }: Pu
   const fonts = STORE_FONTS[company.font] ?? STORE_FONTS.moderno;
   const showCover = company.coverEnabled && Boolean(company.coverUrl);
   const heroTitleColor = company.titleColor || (showCover ? "#ffffff" : defaults.ink);
+  const headerColor = company.headerColor || defaults.panel;
+  const announcementColor = company.announcementColor || brand;
+  const buttonColor = company.buttonColor || brand;
+  const priceColor = company.priceColor || brand;
+  const cardColor = company.cardColor || defaults.panel;
   const vars = {
     "--brand": brand,
     "--title": titleColor,
     "--bg": company.backgroundColor || defaults.bg,
     "--panel": company.panelColor || defaults.panel,
-    "--panel-2": defaults.panel2,
+    "--panel-2": company.panelColor || defaults.panel2,
     "--ink": company.textColor || defaults.ink,
     "--muted": defaults.muted,
     "--line": defaults.line,
+    "--header": headerColor,
+    "--announcement": announcementColor,
+    "--button": buttonColor,
+    "--price": priceColor,
+    "--card": cardColor,
     "--font-display": fonts.display,
     "--font-body": fonts.body,
   } as CSSProperties;
@@ -118,12 +128,13 @@ export default function PublicStorefront({ store, editable = false, onEdit }: Pu
       )}
 
       {company.announcement && (
-        <div className="bg-[var(--brand)] px-4 py-2 text-center text-[11px] font-bold text-white">
-          <EditableRegion editable={editable} onStart={startEdit} field="publicAnnouncement"><span className="inline-block">{company.announcement}</span></EditableRegion>
+        <div className="bg-[var(--announcement)] px-4 py-2 text-center text-[11px] font-bold text-white">
+          <EditableRegion editable={editable} onStart={startEdit} field="publicAnnouncement" colorField="publicAnnouncementColor" color={announcementColor}><span className="inline-block">{company.announcement}</span></EditableRegion>
         </div>
       )}
 
-      <header className={`sticky z-30 border-b border-[var(--line)] bg-[var(--bg)]/90 backdrop-blur ${editable ? "top-14" : "top-0"}`}>
+      <header className={`sticky z-30 border-b border-[var(--line)] bg-[var(--header)]/95 backdrop-blur ${editable ? "top-14" : "top-0"}`}>
+        <EditableRegion editable={editable} onStart={startEdit} colorField="publicHeaderColor" color={headerColor}>
         <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-3 px-4 sm:px-6">
           <button type="button" onClick={() => (editable ? undefined : scrollToId("cardapio"))} className="flex min-w-0 shrink items-center gap-2.5 text-left" aria-label={`Voltar ao cardápio de ${company.tradeName}`}>
             <EditableRegion editable={editable} onStart={startEdit} field="publicLogoUrl">
@@ -142,9 +153,10 @@ export default function PublicStorefront({ store, editable = false, onEdit }: Pu
             </EditableRegion>
           </button>
           <div className="flex shrink-0 items-center gap-2">
-            {whatsappUrl && <a href={whatsappUrl} target="_blank" rel="noreferrer" className="flex h-9 items-center gap-1.5 rounded-xl px-3 text-[10px] font-black text-white transition hover:brightness-110" style={{ backgroundColor: brand }}><Phone className="size-3.5" /><span className="hidden sm:inline">WhatsApp</span></a>}
+            {whatsappUrl && <a href={whatsappUrl} target="_blank" rel="noreferrer" className="flex h-9 items-center gap-1.5 rounded-xl px-3 text-[10px] font-black text-white transition hover:brightness-110" style={{ backgroundColor: "var(--button)" }}><Phone className="size-3.5" /><span className="hidden sm:inline">WhatsApp</span></a>}
           </div>
         </div>
+        </EditableRegion>
       </header>
 
       {/* Hero — identidade do cliente */}
@@ -165,7 +177,7 @@ export default function PublicStorefront({ store, editable = false, onEdit }: Pu
                   <span className="flex size-24 items-center justify-center rounded-[1.75rem] bg-white/95 font-[family-name:var(--font-display)] text-4xl font-black shadow-2xl" style={{ color: brand }}>{company.tradeName.charAt(0).toUpperCase()}</span>
                 )}
               </EditableRegion>
-              <EditableRegion editable={editable} onStart={startEdit} field="tradeName">
+              <EditableRegion editable={editable} onStart={startEdit} field="tradeName" colorField="publicTitleColor" color={company.titleColor || heroTitleColor}>
                 <h1 className="mt-7 max-w-3xl text-balance font-[family-name:var(--font-display)] text-5xl font-extrabold leading-[0.95] tracking-tight sm:text-6xl" style={{ color: heroTitleColor }}>{company.tradeName}</h1>
               </EditableRegion>
               {company.tagline && (
@@ -187,7 +199,9 @@ export default function PublicStorefront({ store, editable = false, onEdit }: Pu
                 )}
               </div>
               <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
-                <button type="button" onClick={() => (editable ? undefined : scrollToId("cardapio"))} className="inline-flex h-13 items-center gap-2 rounded-2xl bg-[var(--brand)] px-8 font-[family-name:var(--font-display)] text-sm font-black text-white shadow-[0_6px_0_rgba(0,0,0,0.25)] transition hover:-translate-y-0.5 hover:brightness-110"><ShoppingBag className="size-4" />Ver cardápio<ChevronDown className="size-4" /></button>
+                <EditableRegion editable={editable} onStart={startEdit} colorField="publicButtonColor" color={buttonColor}>
+                <button type="button" onClick={() => (editable ? undefined : scrollToId("cardapio"))} className="inline-flex h-13 items-center gap-2 rounded-2xl bg-[var(--button)] px-8 font-[family-name:var(--font-display)] text-sm font-black text-white shadow-[0_6px_0_rgba(0,0,0,0.25)] transition hover:-translate-y-0.5 hover:brightness-110"><ShoppingBag className="size-4" />Ver cardápio<ChevronDown className="size-4" /></button>
+                </EditableRegion>
                 {whatsappUrl && <a href={whatsappUrl} target="_blank" rel="noreferrer" className="inline-flex h-13 items-center gap-2 rounded-2xl border-2 px-6 text-sm font-bold transition" style={{ borderColor: showCover ? "rgba(255,255,255,0.6)" : "var(--line)", color: showCover ? "#fff" : "var(--ink)" }}><Phone className="size-4" />Pedir no WhatsApp</a>}
               </div>
             </div>
@@ -207,27 +221,29 @@ export default function PublicStorefront({ store, editable = false, onEdit }: Pu
             {products.map((product) => {
               const soldOut = product.available === 0;
               return (
-                <article key={product.id} className={`group flex flex-col overflow-hidden rounded-3xl border border-[var(--line)] bg-[var(--panel)] shadow-sm transition hover:-translate-y-0.5 hover:shadow-lg ${soldOut ? "opacity-80" : ""}`}>
+                <article key={product.id} className={`group flex flex-col overflow-hidden rounded-3xl border border-[var(--line)] bg-[var(--card)] shadow-sm transition hover:-translate-y-0.5 hover:shadow-lg ${soldOut ? "opacity-80" : ""}`}>
+                  <EditableRegion editable={editable} onStart={startEdit} colorField="publicCardColor" color={cardColor}>
                   <div className="relative flex h-40 items-center justify-center bg-[var(--panel-2)] bg-cover bg-center" style={product.imageUrl ? { backgroundImage: `url(${product.imageUrl})` } : undefined}>
                     {!product.imageUrl && <Package className="size-9 text-[var(--brand)]/40" />}
                     {soldOut && <span className="absolute left-3 top-3 rounded-full bg-[#123d2b] px-2.5 py-1 text-[9px] font-black uppercase tracking-wider text-white">Esgotado</span>}
                   </div>
+                  </EditableRegion>
                   <div className="flex flex-1 flex-col p-4">
                     <p className="text-[9px] font-black uppercase tracking-[0.16em]" style={{ color: brand }}>{product.category}</p>
                     <h2 className="mt-1 truncate font-[family-name:var(--font-display)] text-sm font-bold">{product.name}</h2>
                     <p className="mt-1 line-clamp-2 min-h-8 text-[10px] leading-4 text-[var(--muted)]">{product.description || "Item disponível para pedido."}</p>
                     <div className="mt-3 flex items-center justify-between gap-3 border-t border-dashed border-[var(--line)] pt-3">
-                      <strong className="font-mono text-base font-black" style={{ color: brand }}>{formatCurrency(product.price)}</strong>
+                      <EditableRegion editable={editable} onStart={startEdit} colorField="publicPriceColor" color={priceColor}><strong className="font-mono text-base font-black" style={{ color: "var(--price)" }}>{formatCurrency(product.price)}</strong></EditableRegion>
                       {soldOut ? (
                         <span className="rounded-xl bg-[var(--line)] px-3.5 py-2 text-[10px] font-bold text-[var(--muted)]">Indisponível</span>
                       ) : cart[product.id] ? (
-                        <div className="flex items-center rounded-xl border p-1" style={{ borderColor: `color-mix(in srgb, ${brand} 40%, transparent)`, backgroundColor: `color-mix(in srgb, ${brand} 8%, ${dark ? "#1b1e26" : "white"})` }}>
+                        <div className="flex items-center rounded-xl border p-1" style={{ borderColor: "color-mix(in srgb, var(--button) 40%, transparent)", backgroundColor: "color-mix(in srgb, var(--button) 8%, var(--panel))" }}>
                           <button type="button" onClick={() => change(product.id, -1)} aria-label={`Diminuir ${product.name}`} className="flex size-8 items-center justify-center"><Minus className="size-3.5" /></button>
                           <span className="w-6 text-center font-mono text-xs font-black">{cart[product.id]}</span>
                           <button type="button" onClick={() => change(product.id, 1)} aria-label={`Aumentar ${product.name}`} className="flex size-8 items-center justify-center"><Plus className="size-3.5" /></button>
                         </div>
                       ) : (
-                        <button type="button" onClick={() => change(product.id, 1)} className="flex h-9 items-center gap-1.5 rounded-xl px-3.5 text-[11px] font-black text-white transition hover:brightness-110" style={{ backgroundColor: brand }}><Plus className="size-3.5" />Adicionar</button>
+                        <button type="button" onClick={() => change(product.id, 1)} className="flex h-9 items-center gap-1.5 rounded-xl px-3.5 text-[11px] font-black text-white transition hover:brightness-110" style={{ backgroundColor: "var(--button)" }}><Plus className="size-3.5" />Adicionar</button>
                       )}
                     </div>
                   </div>
@@ -239,7 +255,7 @@ export default function PublicStorefront({ store, editable = false, onEdit }: Pu
         </section>
 
         {/* Pedido — recibo */}
-        <aside id="pedido" className="scroll-mt-20 rounded-3xl border-2 border-[var(--line)] bg-[var(--panel-2)] p-4 shadow-lg lg:sticky lg:top-20">
+        <EditableRegion editable={editable} onStart={startEdit} colorField="publicPanelColor" color={company.panelColor || defaults.panel2}><aside id="pedido" className="scroll-mt-20 rounded-3xl border-2 border-[var(--line)] bg-[var(--panel-2)] p-4 shadow-lg lg:sticky lg:top-20">
           <div className="flex items-center gap-3 border-b-2 border-dashed border-[var(--line)] pb-3">
             <span className="flex size-10 items-center justify-center rounded-2xl text-white" style={{ backgroundColor: brand }}><ShoppingBag className="size-4" /></span>
             <div><h2 className="font-[family-name:var(--font-display)] text-sm font-black">Seu pedido</h2><p className="font-mono text-[9px] text-[var(--muted)]">{itemCount} item(ns)</p></div>
@@ -264,11 +280,11 @@ export default function PublicStorefront({ store, editable = false, onEdit }: Pu
             <select name="fulfillment" required className={inputClass}>{company.pickupEnabled && <option value="PICKUP">Retirada no estabelecimento</option>}{company.deliveryEnabled && <option value="DELIVERY">Entrega a combinar</option>}</select>
             <textarea name="notes" rows={2} maxLength={500} placeholder="Observações (opcional)" className="w-full resize-none rounded-xl border border-[var(--line)] bg-[var(--panel)] p-3 text-xs text-[var(--ink)] outline-none placeholder:text-[var(--muted)] focus:border-[var(--brand)] focus:ring-4 focus:ring-[var(--brand)]/15" />
             {error && <div role="alert" className="rounded-xl bg-red-50 p-3 text-[10px] font-semibold text-red-700">{error}</div>}
-            <button disabled={loading || !cartItems.length} className="flex h-12 w-full items-center justify-center gap-2 rounded-2xl text-sm font-black text-white transition hover:brightness-110 disabled:opacity-50" style={{ backgroundColor: brand }}>{loading ? <LoaderCircle className="size-4 animate-spin" /> : <ShoppingBag className="size-4" />}Enviar pedido</button>
+            <button disabled={loading || !cartItems.length} className="flex h-12 w-full items-center justify-center gap-2 rounded-2xl text-sm font-black text-white transition hover:brightness-110 disabled:opacity-50" style={{ backgroundColor: "var(--button)" }}>{loading ? <LoaderCircle className="size-4 animate-spin" /> : <ShoppingBag className="size-4" />}Enviar pedido</button>
           </form>
 
           {confirmation && <div role="status" className="mt-4 rounded-2xl border border-green-200 bg-green-50 p-4 text-green-800"><CheckCircle2 className="size-5" /><p className="mt-2 text-xs font-black">Pedido {confirmation.code} recebido!</p><p className="mt-1 text-[10px] leading-4">{company.orderNote || `Total de ${formatCurrency(confirmation.total)}. A empresa entrará em contato para confirmar.`}</p></div>}
-        </aside>
+        </aside></EditableRegion>
       </div>
 
       {/* Rodapé */}
@@ -286,7 +302,7 @@ export default function PublicStorefront({ store, editable = false, onEdit }: Pu
             </EditableRegion>
           )}
           <div className="mt-1 flex flex-wrap items-center justify-center gap-2">
-            {whatsappUrl && <a href={whatsappUrl} target="_blank" rel="noreferrer" className="inline-flex h-10 items-center gap-2 rounded-xl px-4 text-[11px] font-bold text-white" style={{ backgroundColor: brand }}><Phone className="size-3.5" />Pedir pelo WhatsApp</a>}
+            {whatsappUrl && <a href={whatsappUrl} target="_blank" rel="noreferrer" className="inline-flex h-10 items-center gap-2 rounded-xl px-4 text-[11px] font-bold text-white" style={{ backgroundColor: "var(--button)" }}><Phone className="size-3.5" />Pedir pelo WhatsApp</a>}
             {instagramUrl && <EditableRegion editable={editable} onStart={startEdit} field="publicInstagram"><a href={instagramUrl} target="_blank" rel="noreferrer" className="inline-flex h-10 items-center gap-2 rounded-xl border border-[var(--line)] px-4 text-[11px] font-bold text-[var(--ink)] transition hover:border-[var(--brand)]"><AtSign className="size-3.5" />@{instagramHandle}</a></EditableRegion>}
           </div>
           <p className="mt-4 font-mono text-[9px] text-[var(--muted)]">Página criada com Mangora</p>
@@ -308,12 +324,13 @@ export default function PublicStorefront({ store, editable = false, onEdit }: Pu
 }
 
 /** Região editável: ao passar o mouse mostra contorno + lápis; clicar abre o editor inline. */
-function EditableRegion({ editable, onStart, field, children }: { editable: boolean; onStart: (field: string) => void; field: string; children: ReactNode }) {
+function EditableRegion({ editable, onStart, field, colorField, color, children }: { editable: boolean; onStart: (field: string) => void; field?: string; colorField?: string; color?: string; children: ReactNode }) {
   if (!editable) return <>{children}</>;
   return (
-    <div role="button" tabIndex={0} aria-label={`Editar ${field}`} onClick={() => onStart(field)} onKeyDown={(event) => { if (event.key === "Enter") onStart(field); }} className="group/ed relative cursor-pointer rounded-lg transition hover:ring-2 hover:ring-[var(--brand)]">
+    <div role={field ? "button" : undefined} tabIndex={field ? 0 : undefined} aria-label={field ? "Editar" : undefined} onClick={() => { if (field) onStart(field); }} onKeyDown={(event) => { if (field && event.key === "Enter") onStart(field); }} className={`group/ed relative rounded-lg ${field ? "cursor-pointer transition hover:ring-2 hover:ring-[var(--brand)]" : ""}`}>
       {children}
-      <span className="pointer-events-none absolute -right-2 -top-2 flex size-6 items-center justify-center rounded-full text-white opacity-0 shadow-lg transition group-hover/ed:opacity-100" style={{ backgroundColor: "var(--brand)" }}><Pencil className="size-3" /></span>
+      {field && <span className="pointer-events-none absolute -right-2 -top-2 z-10 flex size-6 items-center justify-center rounded-full text-white opacity-0 shadow-lg transition group-hover/ed:opacity-100" style={{ backgroundColor: "var(--brand)" }}><Pencil className="size-3" /></span>}
+      {colorField && <button type="button" title="Editar cor deste elemento" aria-label="Editar cor deste elemento" onClick={(event) => { event.stopPropagation(); onStart(colorField); }} className="absolute -left-2 -top-2 z-10 flex size-6 items-center justify-center rounded-full border-2 border-white/70 opacity-0 shadow-lg transition group-hover/ed:opacity-100" style={{ backgroundColor: color || "transparent" }}><span className="sr-only">cor</span></button>}
     </div>
   );
 }

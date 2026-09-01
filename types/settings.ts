@@ -17,5 +17,7 @@ export type CompanySettings = {
   publicTitleColor: string | null; publicTextColor: string | null;
   publicBackgroundColor: string | null; publicPanelColor: string | null;
   publicFont: "moderno" | "classico" | "mono"; publicCoverEnabled: boolean;
+  publicHeaderColor: string | null; publicAnnouncementColor: string | null;
+  publicButtonColor: string | null; publicPriceColor: string | null; publicCardColor: string | null;
   sessionTimeout: number; loginAttempts: number; status: "ACTIVE" | "SUSPENDED";
 };
