@@ -32,14 +32,19 @@ export default function PublicStorefront({ store }: { store: PublicStore }) {
   const instagramUrl = instagramHandle ? `https://instagram.com/${instagramHandle}` : null;
   const cityLine = [company.city, company.state].filter(Boolean).join(" - ");
 
+  const defaults = dark
+    ? { bg: "#12141b", panel: "#1b1e26", panel2: "#232833", ink: "#f2f4f8", muted: "rgba(242,244,248,0.62)", line: "rgba(255,255,255,0.12)" }
+    : { bg: "#fffdf8", panel: "#ffffff", panel2: "#fff8ea", ink: "#123d2b", muted: "rgba(18,61,43,0.58)", line: "rgba(18,61,43,0.14)" };
+  const titleColor = company.titleColor || defaults.ink;
   const vars = {
     "--brand": brand,
-    "--bg": dark ? "#12141b" : "#fffdf8",
-    "--panel": dark ? "#1b1e26" : "#ffffff",
-    "--panel-2": dark ? "#232833" : "#fff8ea",
-    "--ink": dark ? "#f2f4f8" : "#123d2b",
-    "--muted": dark ? "rgba(242,244,248,0.62)" : "rgba(18,61,43,0.58)",
-    "--line": dark ? "rgba(255,255,255,0.12)" : "rgba(18,61,43,0.14)",
+    "--title": titleColor,
+    "--bg": company.backgroundColor || defaults.bg,
+    "--panel": company.panelColor || defaults.panel,
+    "--panel-2": defaults.panel2,
+    "--ink": company.textColor || defaults.ink,
+    "--muted": defaults.muted,
+    "--line": defaults.line,
   } as CSSProperties;
 
   function change(productId: string, delta: number) {
@@ -70,17 +75,20 @@ export default function PublicStorefront({ store }: { store: PublicStore }) {
 
       <header className="sticky top-0 z-30 border-b border-[var(--line)] bg-[var(--bg)]/90 backdrop-blur">
         <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-3 px-4 sm:px-6">
-          <button type="button" onClick={() => scrollToId("cardapio")} className="flex shrink-0 items-center gap-2.5" aria-label={`Voltar ao cardápio de ${company.tradeName}`}>
+          <button type="button" onClick={() => scrollToId("cardapio")} className="flex min-w-0 shrink items-center gap-2.5 text-left" aria-label={`Voltar ao cardápio de ${company.tradeName}`}>
             {company.logoUrl ? (
               // eslint-disable-next-line @next/next/no-img-element
-              <img src={company.logoUrl} alt={`Logo de ${company.tradeName}`} className="h-9 w-auto max-w-36 object-contain" />
+              <img src={company.logoUrl} alt={`Logo de ${company.tradeName}`} className="h-9 w-auto max-w-28 object-contain sm:max-w-36" />
             ) : (
-              <span className="flex size-9 items-center justify-center rounded-xl font-[family-name:var(--font-bricolage)] text-base font-black text-white" style={{ backgroundColor: brand }}>{company.tradeName.charAt(0).toUpperCase()}</span>
+              <span className="flex size-9 shrink-0 items-center justify-center rounded-xl font-[family-name:var(--font-bricolage)] text-base font-black text-white" style={{ backgroundColor: brand }}>{company.tradeName.charAt(0).toUpperCase()}</span>
             )}
+            <span className="min-w-0">
+              <span className="block truncate font-[family-name:var(--font-bricolage)] text-sm font-black leading-tight text-[var(--title)]">{company.tradeName}</span>
+              <span className="block font-mono text-[9px] uppercase tracking-[0.14em] text-[var(--muted)]">Página online</span>
+            </span>
           </button>
-          <div className="flex min-w-0 items-center gap-2">
-            <p className="hidden truncate text-xs font-black sm:block">{company.tradeName}</p>
-            {whatsappUrl && <a href={whatsappUrl} target="_blank" rel="noreferrer" className="flex h-9 shrink-0 items-center gap-1.5 rounded-xl px-3 text-[10px] font-black text-white transition hover:brightness-110" style={{ backgroundColor: brand }}><Phone className="size-3.5" /><span className="hidden sm:inline">WhatsApp</span></a>}
+          <div className="flex shrink-0 items-center gap-2">
+            {whatsappUrl && <a href={whatsappUrl} target="_blank" rel="noreferrer" className="flex h-9 items-center gap-1.5 rounded-xl px-3 text-[10px] font-black text-white transition hover:brightness-110" style={{ backgroundColor: brand }}><Phone className="size-3.5" /><span className="hidden sm:inline">WhatsApp</span></a>}
           </div>
         </div>
       </header>
@@ -99,7 +107,7 @@ export default function PublicStorefront({ store }: { store: PublicStore }) {
           ) : (
             <span className="flex size-24 items-center justify-center rounded-[1.75rem] bg-white/95 font-[family-name:var(--font-bricolage)] text-4xl font-black shadow-2xl" style={{ color: brand }}>{company.tradeName.charAt(0).toUpperCase()}</span>
           )}
-          <h1 className="mt-7 max-w-3xl text-balance font-[family-name:var(--font-bricolage)] text-5xl font-extrabold leading-[0.95] tracking-tight text-white sm:text-6xl">{company.tradeName}</h1>
+          <h1 className="mt-7 max-w-3xl text-balance font-[family-name:var(--font-bricolage)] text-5xl font-extrabold leading-[0.95] tracking-tight sm:text-6xl" style={{ color: company.titleColor || "#ffffff" }}>{company.tradeName}</h1>
           {company.tagline && <p className="mt-4 max-w-2xl text-lg font-semibold text-white/90">{company.tagline}</p>}
           {company.description && <p className="mt-2 max-w-2xl text-sm leading-6 text-white/75">{company.description}</p>}
           <div className="mt-6 flex flex-wrap items-center justify-center gap-2 text-[11px] font-semibold text-white/85">
@@ -192,7 +200,7 @@ export default function PublicStorefront({ store }: { store: PublicStore }) {
       {/* Rodapé */}
       <footer className="border-t border-[var(--line)] bg-[var(--panel)]">
         <div className="mx-auto flex max-w-7xl flex-col items-center gap-2 px-4 py-8 text-center sm:px-6">
-          <p className="font-[family-name:var(--font-bricolage)] text-sm font-black" style={{ color: brand }}>{company.tradeName}</p>
+          <p className="font-[family-name:var(--font-bricolage)] text-sm font-black text-[var(--title)]">{company.tradeName}</p>
           {company.hours && <p className="flex items-center gap-1.5 font-mono text-[10px] text-[var(--muted)]"><Clock3 className="size-3.5" />{company.hours}</p>}
           {company.footerNote && <p className="text-[10px] text-[var(--muted)]">{company.footerNote}</p>}
           <div className="mt-1 flex flex-wrap items-center justify-center gap-2">

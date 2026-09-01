@@ -14,5 +14,7 @@ export type CompanySettings = {
   publicAnnouncement: string | null; publicHours: string | null; publicFooterNote: string | null;
   publicTagline: string | null; publicInstagram: string | null;
   publicTheme: "light" | "dark"; publicOrderNote: string | null;
+  publicTitleColor: string | null; publicTextColor: string | null;
+  publicBackgroundColor: string | null; publicPanelColor: string | null;
   sessionTimeout: number; loginAttempts: number; status: "ACTIVE" | "SUSPENDED";
 };

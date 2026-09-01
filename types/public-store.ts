@@ -19,6 +19,10 @@ export type PublicStore = {
     instagram: string | null;
     theme: "light" | "dark";
     orderNote: string | null;
+    titleColor: string | null;
+    textColor: string | null;
+    backgroundColor: string | null;
+    panelColor: string | null;
   };
   products: {
     id: string;
