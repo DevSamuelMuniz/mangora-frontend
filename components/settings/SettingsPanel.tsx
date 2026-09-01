@@ -75,6 +75,7 @@ export default function SettingsPanel({ initialTab = "company" }: { initialTab?:
       publicTitleColor: data.get("publicTitleColor"), publicTextColor: data.get("publicTextColor"),
       publicBackgroundColor: data.get("publicBackgroundColor"), publicPanelColor: data.get("publicPanelColor"),
       publicFont: data.get("publicFont"), publicCoverEnabled: data.get("publicCoverEnabled") === "on",
+      publicIconStyle: data.get("publicIconStyle"), publicBackgroundPattern: data.get("publicBackgroundPattern"),
       publicHeaderColor: data.get("publicHeaderColor"), publicAnnouncementColor: data.get("publicAnnouncementColor"),
       publicButtonColor: data.get("publicButtonColor"), publicPriceColor: data.get("publicPriceColor"),
       publicCardColor: data.get("publicCardColor"),

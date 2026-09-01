@@ -23,6 +23,8 @@ export type PublicStore = {  company: {
     backgroundColor: string | null;
     panelColor: string | null;
     font: string;
+    iconStyle: "rounded" | "square" | "outline";
+    backgroundPattern: "none" | "dots" | "grid" | "waves";
     coverEnabled: boolean;
     headerColor: string | null;
     announcementColor: string | null;

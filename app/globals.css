@@ -487,3 +487,19 @@ body {
   .mangora-app .mangora-workspace { padding-left: 16rem; }
   .mangora-app .mangora-content { padding: 1.75rem 2rem 3.5rem; }
 }
+
+/* Editor da página online: texturas e linguagem dos ícones */
+.store-pattern-dots {
+  background-image: radial-gradient(color-mix(in srgb, var(--brand) 20%, transparent) 1px, transparent 1px);
+  background-size: 18px 18px;
+}
+.store-pattern-grid {
+  background-image: linear-gradient(color-mix(in srgb, var(--ink) 8%, transparent) 1px, transparent 1px), linear-gradient(90deg, color-mix(in srgb, var(--ink) 8%, transparent) 1px, transparent 1px);
+  background-size: 30px 30px;
+}
+.store-pattern-waves {
+  background-image: radial-gradient(ellipse at 50% 100%, transparent 58%, color-mix(in srgb, var(--brand) 10%, transparent) 60%, transparent 63%);
+  background-size: 48px 24px;
+}
+.store-icons-square svg { stroke-linecap: square; stroke-linejoin: miter; }
+.store-icons-outline svg { stroke-width: 1.35; }

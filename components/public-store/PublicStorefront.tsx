@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { FormEvent, useMemo, useState, type CSSProperties, type ReactNode } from "react";
-import { AtSign, CheckCircle2, ChevronDown, Clock3, LoaderCircle, MapPin, Minus, Package, Pencil, Phone, Plus, Search, ShoppingBag, Trash2 } from "lucide-react";
+import { AtSign, CheckCircle2, ChevronDown, Clock3, LoaderCircle, MapPin, Minus, Package, Pencil, Phone, Plus, Search, ShoppingBag, SlidersHorizontal, Trash2 } from "lucide-react";
 import { STORE_FONTS, type PublicStore } from "@/types/public-store";
 import EditDrawer from "./EditDrawer";
 import { formatCurrency } from "@/lib/format";
@@ -111,13 +111,14 @@ export default function PublicStorefront({ store, editable = false, onEdit }: Pu
   }
 
   return (
-    <main className="mangora-public min-h-screen bg-[var(--bg)] font-[family-name:var(--font-body)] text-[var(--ink)] transition-colors" style={vars}>
+    <main className={`mangora-public store-pattern-${company.backgroundPattern} store-icons-${company.iconStyle} min-h-screen bg-[var(--bg)] font-[family-name:var(--font-body)] text-[var(--ink)] transition-colors`} style={vars}>
       {/* Barra de edição */}
       {editable && (
         <div className="fixed inset-x-0 top-0 z-50 flex h-14 items-center gap-2 border-b border-[var(--line)] bg-[var(--bg)]/95 px-4 backdrop-blur">
           <span className="flex items-center gap-1.5 text-[11px] font-black"><Pencil className="size-3.5 text-[var(--brand)]" />Editar página</span>
           <span className="hidden text-[10px] text-[var(--muted)] md:block">Clique em um texto, imagem ou cor para alterar.</span>
           <div className="ml-auto flex items-center gap-1.5">
+            <button type="button" onClick={() => startEdit("__all")} className="mr-1 flex h-8 items-center gap-1.5 rounded-xl border border-[var(--line)] bg-[var(--panel)] px-3 text-[10px] font-black text-[var(--ink)] transition hover:border-[var(--brand)]"><SlidersHorizontal className="size-3.5" /><span className="hidden sm:inline">Personalizar</span></button>
             {(["publicBrandColor", "publicTitleColor", "publicTextColor", "publicBackgroundColor", "publicPanelColor"] as const).map((field) => {
               const color = field === "publicBrandColor" ? brand : field === "publicTitleColor" ? (company.titleColor ?? defaults.ink) : field === "publicTextColor" ? (company.textColor ?? defaults.ink) : field === "publicBackgroundColor" ? (company.backgroundColor ?? defaults.bg) : (company.panelColor ?? defaults.panel);
               return <button key={field} type="button" title={`Cor ${FIELD_LABELS[field]}`} aria-label={`Editar cor ${FIELD_LABELS[field]}`} onClick={() => startEdit(field)} className="size-6 rounded-full border-2 border-[var(--line)] transition hover:scale-110" style={{ backgroundColor: color || "transparent" }} />;
@@ -318,7 +319,7 @@ export default function PublicStorefront({ store, editable = false, onEdit }: Pu
       )}
 
       {/* Drawer de edição */}
-      <EditDrawer open={editable && drawerOpen} focusField={focusField} company={company} onClose={() => setDrawerOpen(false)} onSave={saveOne} />
+      <EditDrawer open={editable && drawerOpen} focusField={focusField} company={company} onClose={() => setDrawerOpen(false)} onSave={saveOne} onSelectField={setFocusField} />
     </main>
   );
 }

@@ -65,6 +65,8 @@ export default function StorefrontEditor() {
             backgroundColor: pick("publicBackgroundColor", company.publicBackgroundColor),
             panelColor: pick("publicPanelColor", company.publicPanelColor),
             font: pick("publicFont", company.publicFont) || "moderno",
+            iconStyle: (pick("publicIconStyle", company.publicIconStyle) || "rounded") as PublicStore["company"]["iconStyle"],
+            backgroundPattern: (pick("publicBackgroundPattern", company.publicBackgroundPattern) || "none") as PublicStore["company"]["backgroundPattern"],
             coverEnabled: "publicCoverEnabled" in overrides ? overrides.publicCoverEnabled === "true" : company.publicCoverEnabled,
             headerColor: pick("publicHeaderColor", company.publicHeaderColor),
             announcementColor: pick("publicAnnouncementColor", company.publicAnnouncementColor),
