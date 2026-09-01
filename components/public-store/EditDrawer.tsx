@@ -38,11 +38,8 @@ const FIELD_INFO: Record<string, FieldInfo> = {
     publicCoverEnabled: { label: "Fundo do topo", type: "toggle" },
 };
 
-/** Cor relacionada de um componente de texto (mostrada junto no sidebar). */
-const RELATED_COLOR: Record<string, string> = {
-    tradeName: "publicTitleColor",
-    publicAnnouncement: "publicAnnouncementColor",
-};
+/** Cores relacionadas desativadas: cada texto tem a cor individual via elementColor. */
+const RELATED_COLOR: Record<string, string> = {};
 
 const STORE_KEY: Record<string, keyof PublicStore["company"]> = {
     tradeName: "tradeName",
@@ -132,7 +129,7 @@ function labelFor(field: string): string {
 const GROUPS = [
     { title: "Textos", icon: Type, fields: ["tradeName", "publicTagline", "publicDescription", "publicAnnouncement", "publicHours", "publicOrderNote", "publicFooterNote", "publicInstagram", "publicWhatsapp"] },
     { title: "Imagens", icon: ImageIcon, fields: ["publicLogoUrl", "publicCoverUrl", "publicCoverEnabled"] },
-    { title: "Cores", icon: Palette, fields: ["publicBrandColor", "publicTitleColor", "publicTextColor", "publicBackgroundColor", "publicPanelColor", "publicHeaderColor", "publicAnnouncementColor", "publicButtonColor", "publicPriceColor", "publicCardColor"] },
+    { title: "Cores padrão", icon: Palette, fields: ["publicBrandColor", "publicTitleColor", "publicTextColor", "publicBackgroundColor", "publicPanelColor", "publicHeaderColor", "publicAnnouncementColor", "publicButtonColor", "publicPriceColor", "publicCardColor"] },
     { title: "Cores por elemento", icon: Palette, fields: ELEMENTS.map((item) => `elementColor:${item.id}`) },
     { title: "Estilo", icon: LayoutTemplate, fields: ["publicTheme", "publicFont", "publicIconStyle", "publicBackgroundPattern"] },
 ];

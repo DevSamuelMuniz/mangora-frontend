@@ -17,14 +17,6 @@ type PublicStorefrontProps = {
   onEdit?: (field: string, value: string) => void | Promise<unknown>;
 };
 
-const FIELD_LABELS: Record<string, string> = {
-  publicBrandColor: "principal",
-  publicTitleColor: "título",
-  publicTextColor: "texto",
-  publicBackgroundColor: "fundo",
-  publicPanelColor: "superfícies",
-};
-
 /** Página de vendas v2 — identidade total do cliente + modo edição inline. */
 export default function PublicStorefront({ store, editable = false, onEdit }: PublicStorefrontProps) {
   const createOrder = useCreatePublicOrder();
@@ -120,10 +112,6 @@ export default function PublicStorefront({ store, editable = false, onEdit }: Pu
           <span className="hidden text-[10px] text-[var(--muted)] md:block">Clique em um texto, imagem ou cor para alterar.</span>
           <div className="ml-auto flex items-center gap-1.5">
             <button type="button" onClick={() => startEdit("__all")} className="mr-1 flex h-8 items-center gap-1.5 rounded-xl border border-[var(--line)] bg-[var(--panel)] px-3 text-[10px] font-black text-[var(--ink)] transition hover:border-[var(--brand)]"><SlidersHorizontal className="size-3.5" /><span className="hidden sm:inline">Personalizar</span></button>
-            {(["publicBrandColor", "publicTitleColor", "publicTextColor", "publicBackgroundColor", "publicPanelColor"] as const).map((field) => {
-              const color = field === "publicBrandColor" ? brand : field === "publicTitleColor" ? (company.titleColor ?? defaults.ink) : field === "publicTextColor" ? (company.textColor ?? defaults.ink) : field === "publicBackgroundColor" ? (company.backgroundColor ?? defaults.bg) : (company.panelColor ?? defaults.panel);
-              return <button key={field} type="button" title={`Cor ${FIELD_LABELS[field]}`} aria-label={`Editar cor ${FIELD_LABELS[field]}`} onClick={() => startEdit(field)} className="size-6 rounded-full border-2 border-[var(--line)] transition hover:scale-110" style={{ backgroundColor: color || "transparent" }} />;
-            })}
             <Link href="/configuracoes" className="ml-1 flex h-8 items-center rounded-xl px-3 text-[10px] font-black text-white" style={{ backgroundColor: brand }}>Concluir</Link>
           </div>
         </div>
@@ -147,7 +135,7 @@ export default function PublicStorefront({ store, editable = false, onEdit }: Pu
                 <span className="flex size-9 shrink-0 items-center justify-center rounded-xl font-[family-name:var(--font-display)] text-base font-black text-white" style={{ backgroundColor: brand }}>{company.tradeName.charAt(0).toUpperCase()}</span>
               )}
             </EditableRegion>
-            <EditableRegion editable={editable} onStart={startEdit} field="tradeName">
+            <EditableRegion editable={editable} onStart={startEdit} field="tradeName" colorField="elementColor:headerName" color={elementColor(company, "headerName")}>
               <span className="min-w-0">
                 <span className="block truncate font-[family-name:var(--font-display)] text-sm font-black leading-tight" style={{ color: elementColor(company, "headerName") }}>{company.tradeName}</span>
                 <span className="block font-mono text-[9px] uppercase tracking-[0.14em] text-[var(--muted)]">Página online</span>
@@ -155,7 +143,7 @@ export default function PublicStorefront({ store, editable = false, onEdit }: Pu
             </EditableRegion>
           </button>
           <div className="flex shrink-0 items-center gap-2">
-            {whatsappUrl && <a href={whatsappUrl} target="_blank" rel="noreferrer" className="flex h-9 items-center gap-1.5 rounded-xl px-3 text-[10px] font-black text-white transition hover:brightness-110" style={{ backgroundColor: elementColor(company, "whatsappHeader") }}><Phone className="size-3.5" /><span className="hidden sm:inline">WhatsApp</span></a>}
+            {whatsappUrl && <EditableRegion editable={editable} onStart={startEdit} colorField="elementColor:whatsappHeader" color={elementColor(company, "whatsappHeader")}><a href={whatsappUrl} target="_blank" rel="noreferrer" className="flex h-9 items-center gap-1.5 rounded-xl px-3 text-[10px] font-black text-white transition hover:brightness-110" style={{ backgroundColor: elementColor(company, "whatsappHeader") }}><Phone className="size-3.5" /><span className="hidden sm:inline">WhatsApp</span></a></EditableRegion>}
           </div>
         </div>
         </EditableRegion>
@@ -184,19 +172,19 @@ export default function PublicStorefront({ store, editable = false, onEdit }: Pu
               </EditableRegion>
               {company.tagline && (
                 <EditableRegion editable={editable} onStart={startEdit} field="publicTagline">
-                  <p className="mt-4 max-w-2xl text-lg font-semibold" style={{ color: company.elementColors?.tagline || (showCover ? "rgba(255,255,255,0.9)" : "var(--ink)") }}>{company.tagline}</p>
+                  <EditableRegion editable={editable} onStart={startEdit} colorField="elementColor:tagline" color={elementColor(company, "tagline")}><p className="mt-4 max-w-2xl text-lg font-semibold" style={{ color: elementColor(company, "tagline") }}>{company.tagline}</p></EditableRegion>
                 </EditableRegion>
               )}
               {company.description && (
                 <EditableRegion editable={editable} onStart={startEdit} field="publicDescription">
-                  <p className="mt-2 max-w-2xl text-sm leading-6" style={{ color: company.elementColors?.description || (showCover ? "rgba(255,255,255,0.75)" : "var(--muted)") }}>{company.description}</p>
+                  <EditableRegion editable={editable} onStart={startEdit} colorField="elementColor:description" color={elementColor(company, "description")}><p className="mt-2 max-w-2xl text-sm leading-6" style={{ color: elementColor(company, "description") }}>{company.description}</p></EditableRegion>
                 </EditableRegion>
               )}
               <div className="mt-6 flex flex-wrap items-center justify-center gap-2 text-[11px] font-semibold" style={{ color: showCover ? "rgba(255,255,255,0.85)" : "var(--muted)" }}>
                 {cityLine && <span className="flex items-center gap-1.5"><MapPin className="size-3.5" />{cityLine}</span>}
                 {company.hours && (
                   <EditableRegion editable={editable} onStart={startEdit} field="publicHours">
-                    <span className="flex items-center gap-1.5"><Clock3 className="size-3.5" />{company.hours}</span>
+                    <EditableRegion editable={editable} onStart={startEdit} field="publicHours" colorField="elementColor:hours" color={elementColor(company, "hours")}><span className="flex items-center gap-1.5"><Clock3 className="size-3.5" />{company.hours}</span></EditableRegion>
                   </EditableRegion>
                 )}
               </div>
@@ -231,9 +219,9 @@ export default function PublicStorefront({ store, editable = false, onEdit }: Pu
                   </div>
                   </EditableRegion>
                   <div className="flex flex-1 flex-col p-4">
-                    <p className="text-[9px] font-black uppercase tracking-[0.16em]" style={{ color: elementColor(company, "category") }}>{product.category}</p>
-                    <h2 className="mt-1 truncate font-[family-name:var(--font-display)] text-sm font-bold" style={{ color: elementColor(company, "productName") }}>{product.name}</h2>
-                    <p className="mt-1 line-clamp-2 min-h-8 text-[10px] leading-4" style={{ color: elementColor(company, "productDesc") }}>{product.description || "Item disponível para pedido."}</p>
+                    <EditableRegion editable={editable} onStart={startEdit} colorField="elementColor:category" color={elementColor(company, "category")}><p className="text-[9px] font-black uppercase tracking-[0.16em]" style={{ color: elementColor(company, "category") }}>{product.category}</p></EditableRegion>
+                    <EditableRegion editable={editable} onStart={startEdit} colorField="elementColor:productName" color={elementColor(company, "productName")}><h2 className="mt-1 truncate font-[family-name:var(--font-display)] text-sm font-bold" style={{ color: elementColor(company, "productName") }}>{product.name}</h2></EditableRegion>
+                    <EditableRegion editable={editable} onStart={startEdit} colorField="elementColor:productDesc" color={elementColor(company, "productDesc")}><p className="mt-1 line-clamp-2 min-h-8 text-[10px] leading-4" style={{ color: elementColor(company, "productDesc") }}>{product.description || "Item disponível para pedido."}</p></EditableRegion>
                     <div className="mt-3 flex items-center justify-between gap-3 border-t border-dashed border-[var(--line)] pt-3">
                       <EditableRegion editable={editable} onStart={startEdit} colorField="elementColor:price" color={elementColor(company, "price")}><strong className="font-mono text-base font-black" style={{ color: elementColor(company, "price") }}>{formatCurrency(product.price)}</strong></EditableRegion>
                       {soldOut ? (
