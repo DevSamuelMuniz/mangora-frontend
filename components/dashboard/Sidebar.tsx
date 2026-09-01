@@ -116,7 +116,7 @@ export default function Sidebar({
   const [companyOpen, setCompanyOpen] = useState(false);
   const units = group?.units ?? [];
   const [switching, setSwitching] = useState("");
-  const [openGroups, setOpenGroups] = useState<Record<string, boolean>>(() => Object.fromEntries(navigationGroups.map((group) => [group.label, group.items.some((item) => pathname.startsWith(item.href))])));
+  const [openGroups, setOpenGroups] = useState<Record<string, boolean>>(() => Object.fromEntries(navigationGroups.map((group) => [group.label, group.items.some((item) => pathname === item.href || pathname.startsWith(item.href + "/"))])));
   const visibleNavigationGroups = navigationGroups.map((group) => ({ ...group, items: group.items.filter((item) => !item.roles || item.roles.includes(session.membership.role)) })).filter((group) => group.items.length > 0);
   const visibleSecondaryNavigation = secondaryNavigation.filter((item) => !item.roles || item.roles.includes(session.membership.role));
 
@@ -136,7 +136,8 @@ export default function Sidebar({
       return pathname === href;
     }
 
-    return pathname.startsWith(href);
+    // Casa por segmento: /configuracoes não ativa /configuracoes-fiscais
+    return pathname === href || pathname.startsWith(href + "/");
   }
 
   return (
