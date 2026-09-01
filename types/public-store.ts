@@ -9,6 +9,12 @@ export type PublicStore = {
     state: string | null;
     pickupEnabled: boolean;
     deliveryEnabled: boolean;
+    brandColor: string;
+    logoUrl: string | null;
+    coverUrl: string | null;
+    announcement: string | null;
+    hours: string | null;
+    footerNote: string | null;
   };
   products: {
     id: string;

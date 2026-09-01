@@ -10,5 +10,7 @@ export type CompanySettings = {
   summaryEmail: string | null; summaryFrequency: "daily" | "weekly" | "disabled";
   publicPageEnabled: boolean; publicDescription: string | null; publicWhatsapp: string | null;
   publicPickupEnabled: boolean; publicDeliveryEnabled: boolean;
+  publicBrandColor: string; publicLogoUrl: string | null; publicCoverUrl: string | null;
+  publicAnnouncement: string | null; publicHours: string | null; publicFooterNote: string | null;
   sessionTimeout: number; loginAttempts: number; status: "ACTIVE" | "SUSPENDED";
 };
