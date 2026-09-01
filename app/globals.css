@@ -23,6 +23,9 @@
   --color-pdv-gold: var(--pdv-gold);
   --color-pdv-ok: var(--pdv-ok);
   --color-pdv-warn: var(--pdv-warn);
+  /* PDV — campos de entrada: sempre papel branco com tinta escura */
+  --color-pdv-input: var(--pdv-input-bg);
+  --color-pdv-input-fg: var(--pdv-input-fg);
   /* Acentos fixos da marca */
   --color-graphite: #14161b;
   --color-gold: #ffb21a;
@@ -42,6 +45,8 @@
   --pdv-gold: #ffb21a;
   --pdv-ok: #4ade80;
   --pdv-warn: #fcd34d;
+  --pdv-input-bg: #ffffff;
+  --pdv-input-fg: #1d2128;
   color-scheme: dark;
 }
 

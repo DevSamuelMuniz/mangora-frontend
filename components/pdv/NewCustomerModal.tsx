@@ -51,7 +51,7 @@ export default function NewCustomerModal({ onCreated, onClose }: NewCustomerModa
         }
     }
 
-    const inputClass = "h-12 w-full rounded-xl border border-pdv-line bg-pdv-field px-3 text-sm font-semibold text-pdv-fg outline-none placeholder:text-pdv-fg/40 focus:border-pdv-gold";
+    const inputClass = "h-12 w-full rounded-xl border border-pdv-line bg-pdv-input px-3 text-sm font-semibold text-pdv-input-fg outline-none placeholder:text-pdv-input-fg/40 focus:border-pdv-gold";
     const labelClass = "mb-1.5 block font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-pdv-fg/60";
 
     return (

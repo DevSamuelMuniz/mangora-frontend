@@ -142,7 +142,7 @@ export default function PaymentStep({
                             onChange={(event) => handleCustomerSearch(event.target.value)}
                             placeholder="Buscar cliente por nome ou CPF/CNPJ…"
                             aria-label="Buscar cliente"
-                            className="h-11 w-full rounded-xl border border-pdv-line bg-pdv-field pl-9 pr-9 text-sm font-semibold text-pdv-fg outline-none placeholder:font-normal placeholder:text-pdv-fg/40 focus:border-pdv-gold"
+                            className="h-11 w-full rounded-xl border border-pdv-line bg-pdv-input pl-9 pr-9 text-sm font-semibold text-pdv-input-fg outline-none placeholder:font-normal placeholder:text-pdv-input-fg/40 focus:border-pdv-gold"
                         />
                         {customerSearch && (
                             <button type="button" onClick={() => setCustomerSearch("")} aria-label="Limpar busca de cliente" className="absolute right-2 top-1/2 flex size-7 -translate-y-1/2 items-center justify-center rounded-md text-pdv-fg/50 transition hover:bg-pdv-line hover:text-pdv-fg">
@@ -179,7 +179,7 @@ export default function PaymentStep({
                             </p>
                         )
                     ) : (
-                        <select value={customerId} onChange={(event) => onCustomer(event.target.value)} className="mt-2 h-12 w-full rounded-xl border border-pdv-line bg-pdv-field px-3 text-sm font-semibold text-pdv-fg outline-none focus:border-pdv-gold">
+                        <select value={customerId} onChange={(event) => onCustomer(event.target.value)} className="mt-2 h-12 w-full rounded-xl border border-pdv-line bg-pdv-input px-3 text-sm font-semibold text-pdv-input-fg outline-none focus:border-pdv-gold">
                             <option value="">Consumidor final</option>
                             {filteredCustomers.map((customer) => (
                                 <option key={customer.id} value={customer.id}>{customer.tradeName || customer.name}</option>
@@ -195,7 +195,7 @@ export default function PaymentStep({
                             value={customerDocument}
                             onChange={(event) => onCustomerDocument(event.target.value.replace(/\D/g, "").slice(0, 14))}
                             placeholder="Opcional"
-                            className="mt-2 h-12 w-full rounded-xl border border-pdv-line bg-pdv-field px-3 font-mono text-base font-bold tracking-widest text-pdv-fg outline-none placeholder:font-sans placeholder:text-sm placeholder:font-normal placeholder:tracking-normal placeholder:text-pdv-fg/40 focus:border-pdv-gold"
+                            className="mt-2 h-12 w-full rounded-xl border border-pdv-line bg-pdv-input px-3 font-mono text-base font-bold tracking-widest text-pdv-input-fg outline-none placeholder:font-sans placeholder:text-sm placeholder:font-normal placeholder:tracking-normal placeholder:text-pdv-input-fg/40 focus:border-pdv-gold"
                         />
                         {customerDocument && <p className="mt-1 font-mono text-[10px] text-pdv-fg/50">CPF: {formatDocument(customerDocument, "INDIVIDUAL")}</p>}
                     </label>
@@ -215,7 +215,7 @@ export default function PaymentStep({
                                 )}
                             </div>
                             <div className="mt-1.5 flex gap-2">
-                                <select value={part.method} onChange={(event) => updateMethod(index, event.target.value as PaymentMethod)} className="h-11 flex-1 rounded-lg border border-pdv-line bg-pdv-bg px-2 text-xs font-bold text-pdv-fg outline-none focus:border-pdv-gold">
+                                <select value={part.method} onChange={(event) => updateMethod(index, event.target.value as PaymentMethod)} className="h-11 flex-1 rounded-lg border border-pdv-line bg-pdv-input px-2 text-xs font-bold text-pdv-input-fg outline-none focus:border-pdv-gold">
                                     {PAYMENT_METHODS.map((method) => (
                                         <option key={method} value={method}>{paymentMethodLabels[method]}</option>
                                     ))}
@@ -232,7 +232,7 @@ export default function PaymentStep({
                                         onChange={(event) => updateAmount(index, event.target.value.replace(/[^\d,.]/g, "").slice(0, 10))}
                                         onFocus={(event) => event.target.select()}
                                         aria-label={`Valor do ${index + 1}º pagamento`}
-                                        className="h-11 w-24 shrink-0 rounded-lg border border-pdv-line bg-pdv-bg px-2 text-right font-mono text-sm font-bold text-pdv-fg outline-none focus:border-pdv-gold"
+                                        className="h-11 w-24 shrink-0 rounded-lg border border-pdv-line bg-pdv-input px-2 text-right font-mono text-sm font-bold text-pdv-input-fg outline-none focus:border-pdv-gold"
                                     />
                                 )}
                             </div>
@@ -253,7 +253,7 @@ export default function PaymentStep({
                     {deferred && (
                         <label className="mt-3 block">
                             <span className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-pdv-fg/70">Vencimento (cheque / fiado)</span>
-                            <input type="date" value={dueDate} onChange={(event) => onDueDate(event.target.value)} className="mt-1.5 h-12 w-full rounded-xl border border-pdv-line bg-pdv-field px-3 text-sm font-semibold text-pdv-fg outline-none focus:border-pdv-gold" />
+                            <input type="date" value={dueDate} onChange={(event) => onDueDate(event.target.value)} className="mt-1.5 h-12 w-full rounded-xl border border-pdv-line bg-pdv-input px-3 text-sm font-semibold text-pdv-input-fg outline-none focus:border-pdv-gold" />
                         </label>
                     )}
 
@@ -273,7 +273,7 @@ export default function PaymentStep({
                                 onFocus={(event) => event.target.select()}
                                 placeholder="0,00"
                                 aria-label="Valor recebido em dinheiro"
-                                className={`mt-2 h-14 w-full rounded-xl border bg-pdv-bg px-3 text-right font-mono text-2xl font-black tracking-wide outline-none placeholder:text-pdv-fg/30 ${insufficient ? "border-red-400/60 text-red-400" : "border-pdv-line text-pdv-fg focus:border-pdv-gold"}`}
+                                className={`mt-2 h-14 w-full rounded-xl border bg-pdv-input px-3 text-right font-mono text-2xl font-black tracking-wide outline-none placeholder:text-pdv-input-fg/30 ${insufficient ? "border-red-400/60 text-red-400" : "border-pdv-line text-pdv-input-fg focus:border-pdv-gold"}`}
                             />
                             <div className="mt-2 flex flex-wrap gap-1.5">
                                 <button type="button" onClick={() => onReceivedAmount(cashPartAmount.toFixed(2).replace(".", ","))} className="rounded-lg border border-pdv-line bg-pdv-panel px-2.5 py-1.5 font-mono text-[11px] font-bold text-pdv-fg transition hover:border-pdv-gold">
