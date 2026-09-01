@@ -2,27 +2,19 @@
 
 import Link from "next/link";
 import { FormEvent, useMemo, useState, type CSSProperties, type ReactNode } from "react";
-import { AtSign, CheckCircle2, ChevronDown, Clock3, LoaderCircle, MapPin, Minus, Package, Pencil, Phone, Plus, Search, ShoppingBag, Trash2, X } from "lucide-react";
+import { AtSign, CheckCircle2, ChevronDown, Clock3, LoaderCircle, MapPin, Minus, Package, Pencil, Phone, Plus, Search, ShoppingBag, Trash2 } from "lucide-react";
 import { STORE_FONTS, type PublicStore } from "@/types/public-store";
+import EditDrawer from "./EditDrawer";
 import { formatCurrency } from "@/lib/format";
 import { useCreatePublicOrder, type PublicOrderConfirmation } from "@/features/public-store/hooks/usePublicStore";
 
 type Cart = Record<string, number>;
-type EditType = "text" | "textarea" | "url" | "color" | "select";
 
 type PublicStorefrontProps = {
   store: PublicStore;
   editable?: boolean;
   onEdit?: (field: string, value: string) => void | Promise<unknown>;
 };
-
-const COLOR_FIELDS: { field: string; label: string; pick: (c: PublicStore["company"]) => string | null }[] = [
-  { field: "publicBrandColor", label: "principal", pick: (c) => c.brandColor },
-  { field: "publicTitleColor", label: "título", pick: (c) => c.titleColor },
-  { field: "publicTextColor", label: "texto", pick: (c) => c.textColor },
-  { field: "publicBackgroundColor", label: "fundo", pick: (c) => c.backgroundColor },
-  { field: "publicPanelColor", label: "superfícies", pick: (c) => c.panelColor },
-];
 
 /** Página de vendas v2 — identidade total do cliente + modo edição inline. */
 export default function PublicStorefront({ store, editable = false, onEdit }: PublicStorefrontProps) {
@@ -33,7 +25,8 @@ export default function PublicStorefront({ store, editable = false, onEdit }: Pu
   const [category, setCategory] = useState("Todos");
   const [error, setError] = useState("");
   const [confirmation, setConfirmation] = useState<PublicOrderConfirmation | null>(null);
-  const [editing, setEditing] = useState<{ field: string; label: string; type: EditType; value: string; options?: string[] } | null>(null);
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const [focusField, setFocusField] = useState<string | null>(null);
 
   const company = store.company;
   const dark = company.theme === "dark";
@@ -79,18 +72,15 @@ export default function PublicStorefront({ store, editable = false, onEdit }: Pu
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
   }
 
-  function startEdit(field: string, label: string, type: EditType, value: string, options?: string[]) {
+  function startEdit(field: string) {
     if (!editable) return;
-    setEditing({ field, label, type, value, options });
+    setFocusField(field);
+    setDrawerOpen(true);
   }
 
-  async function saveEdit() {
-    if (!editing) return;
-    try {
-      await onEdit?.(editing.field, editing.value);
-      setEditing(null);
-    } catch {
-      // mantém o editor aberto para o usuário corrigir
+  async function saveAll(changes: Record<string, string>) {
+    for (const [field, value] of Object.entries(changes)) {
+      await onEdit?.(field, value);
     }
   }
 
@@ -111,28 +101,22 @@ export default function PublicStorefront({ store, editable = false, onEdit }: Pu
         <div className="fixed inset-x-0 top-0 z-50 flex h-14 items-center gap-2 border-b border-[var(--line)] bg-[var(--bg)]/95 px-4 backdrop-blur">
           <span className="flex items-center gap-1.5 text-[11px] font-black"><Pencil className="size-3.5 text-[var(--brand)]" />Editar página</span>
           <span className="hidden text-[10px] text-[var(--muted)] md:block">Clique em um texto, imagem ou cor para alterar.</span>
-          <div className="ml-auto flex items-center gap-1.5">
-            {COLOR_FIELDS.map(({ field, label, pick }) => (
-              <button key={field} type="button" title={`Cor ${label}`} aria-label={`Editar cor ${label}`} onClick={() => startEdit(field, `cor ${label}`, "color", pick(company) ?? "")} className="size-6 rounded-full border-2 border-[var(--line)] transition hover:scale-110" style={{ backgroundColor: pick(company) || "transparent" }} />
-            ))}
-            <button type="button" onClick={() => startEdit("publicTheme", "tema da página", "select", company.theme, ["light", "dark"])} className="ml-1 flex h-8 items-center rounded-xl border border-[var(--line)] px-3 text-[10px] font-bold">{company.theme === "dark" ? "🌙 Escuro" : "☀️ Claro"}</button>
-            <button type="button" onClick={() => startEdit("publicFont", "fonte", "select", company.font, ["moderno", "classico", "mono"])} className="flex h-8 items-center rounded-xl border border-[var(--line)] px-3 text-[10px] font-bold">{STORE_FONTS[company.font]?.label ?? "Fonte"}</button>
-            <button type="button" onClick={() => void onEdit?.("publicCoverEnabled", company.coverEnabled ? "false" : "true")} className="flex h-8 items-center rounded-xl border border-[var(--line)] px-3 text-[10px] font-bold">{company.coverEnabled ? "🖼 Fundo do topo: ligado" : "🚫 Fundo do topo: desligado"}</button>
-            <Link href="/configuracoes" className="ml-1 flex h-8 items-center rounded-xl px-3 text-[10px] font-black text-white" style={{ backgroundColor: brand }}>Concluir</Link>
+          <div className="ml-auto flex items-center gap-2">
+            <Link href="/configuracoes" className="flex h-8 items-center rounded-xl px-3 text-[10px] font-black text-white" style={{ backgroundColor: brand }}>Concluir</Link>
           </div>
         </div>
       )}
 
       {company.announcement && (
         <div className="bg-[var(--brand)] px-4 py-2 text-center text-[11px] font-bold text-white">
-          <EditableRegion editable={editable} onStart={startEdit} field="publicAnnouncement" label="anúncio" type="text" value={company.announcement ?? ""}><span className="inline-block">{company.announcement}</span></EditableRegion>
+          <EditableRegion editable={editable} onStart={startEdit} field="publicAnnouncement"><span className="inline-block">{company.announcement}</span></EditableRegion>
         </div>
       )}
 
       <header className={`sticky z-30 border-b border-[var(--line)] bg-[var(--bg)]/90 backdrop-blur ${editable ? "top-14" : "top-0"}`}>
         <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-3 px-4 sm:px-6">
           <button type="button" onClick={() => (editable ? undefined : scrollToId("cardapio"))} className="flex min-w-0 shrink items-center gap-2.5 text-left" aria-label={`Voltar ao cardápio de ${company.tradeName}`}>
-            <EditableRegion editable={editable} onStart={startEdit} field="publicLogoUrl" label="logo" type="url" value={company.logoUrl ?? ""}>
+            <EditableRegion editable={editable} onStart={startEdit} field="publicLogoUrl">
               {company.logoUrl ? (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img src={company.logoUrl} alt={`Logo de ${company.tradeName}`} className="h-9 w-auto max-w-28 object-contain sm:max-w-36" />
@@ -140,7 +124,7 @@ export default function PublicStorefront({ store, editable = false, onEdit }: Pu
                 <span className="flex size-9 shrink-0 items-center justify-center rounded-xl font-[family-name:var(--font-display)] text-base font-black text-white" style={{ backgroundColor: brand }}>{company.tradeName.charAt(0).toUpperCase()}</span>
               )}
             </EditableRegion>
-            <EditableRegion editable={editable} onStart={startEdit} field="tradeName" label="nome da loja" type="text" value={company.tradeName}>
+            <EditableRegion editable={editable} onStart={startEdit} field="tradeName">
               <span className="min-w-0">
                 <span className="block truncate font-[family-name:var(--font-display)] text-sm font-black leading-tight text-[var(--title)]">{company.tradeName}</span>
                 <span className="block font-mono text-[9px] uppercase tracking-[0.14em] text-[var(--muted)]">Página online</span>
@@ -155,7 +139,7 @@ export default function PublicStorefront({ store, editable = false, onEdit }: Pu
 
       {/* Hero — identidade do cliente */}
       <section className="relative overflow-hidden">
-        <EditableRegion editable={editable} onStart={startEdit} field="publicCoverUrl" label="imagem de capa" type="url" value={company.coverUrl ?? ""}>
+        <EditableRegion editable={editable} onStart={startEdit} field="publicCoverUrl">
           <div className="relative">
             {showCover && (
               // eslint-disable-next-line @next/next/no-img-element
@@ -163,7 +147,7 @@ export default function PublicStorefront({ store, editable = false, onEdit }: Pu
             )}
             {showCover && <div className="absolute inset-0" style={company.coverUrl ? { backgroundImage: `linear-gradient(180deg, rgba(10,20,16,0.35) 0%, rgba(10,20,16,0.82) 100%)` } : { backgroundImage: `linear-gradient(155deg, ${brand} 0%, #123d2b 78%)`, minHeight: "26rem" }} />}
             <div className="relative mx-auto flex max-w-7xl flex-col items-center px-4 py-16 text-center sm:px-6 sm:py-24">
-              <EditableRegion editable={editable} onStart={startEdit} field="publicLogoUrl" label="logo" type="url" value={company.logoUrl ?? ""}>
+              <EditableRegion editable={editable} onStart={startEdit} field="publicLogoUrl">
                 {company.logoUrl ? (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img src={company.logoUrl} alt={`Logo de ${company.tradeName}`} className="h-24 w-auto max-w-60 rounded-3xl bg-white/95 object-contain p-2.5 shadow-2xl" />
@@ -171,23 +155,23 @@ export default function PublicStorefront({ store, editable = false, onEdit }: Pu
                   <span className="flex size-24 items-center justify-center rounded-[1.75rem] bg-white/95 font-[family-name:var(--font-display)] text-4xl font-black shadow-2xl" style={{ color: brand }}>{company.tradeName.charAt(0).toUpperCase()}</span>
                 )}
               </EditableRegion>
-              <EditableRegion editable={editable} onStart={startEdit} field="tradeName" label="nome da loja" type="text" value={company.tradeName}>
+              <EditableRegion editable={editable} onStart={startEdit} field="tradeName">
                 <h1 className="mt-7 max-w-3xl text-balance font-[family-name:var(--font-display)] text-5xl font-extrabold leading-[0.95] tracking-tight sm:text-6xl" style={{ color: heroTitleColor }}>{company.tradeName}</h1>
               </EditableRegion>
               {company.tagline && (
-                <EditableRegion editable={editable} onStart={startEdit} field="publicTagline" label="lema" type="text" value={company.tagline ?? ""}>
+                <EditableRegion editable={editable} onStart={startEdit} field="publicTagline">
                   <p className="mt-4 max-w-2xl text-lg font-semibold" style={{ color: showCover ? "rgba(255,255,255,0.9)" : "var(--ink)" }}>{company.tagline}</p>
                 </EditableRegion>
               )}
               {company.description && (
-                <EditableRegion editable={editable} onStart={startEdit} field="publicDescription" label="descrição" type="textarea" value={company.description ?? ""}>
+                <EditableRegion editable={editable} onStart={startEdit} field="publicDescription">
                   <p className="mt-2 max-w-2xl text-sm leading-6" style={{ color: showCover ? "rgba(255,255,255,0.75)" : "var(--muted)" }}>{company.description}</p>
                 </EditableRegion>
               )}
               <div className="mt-6 flex flex-wrap items-center justify-center gap-2 text-[11px] font-semibold" style={{ color: showCover ? "rgba(255,255,255,0.85)" : "var(--muted)" }}>
                 {cityLine && <span className="flex items-center gap-1.5"><MapPin className="size-3.5" />{cityLine}</span>}
                 {company.hours && (
-                  <EditableRegion editable={editable} onStart={startEdit} field="publicHours" label="horário" type="text" value={company.hours ?? ""}>
+                  <EditableRegion editable={editable} onStart={startEdit} field="publicHours">
                     <span className="flex items-center gap-1.5"><Clock3 className="size-3.5" />{company.hours}</span>
                   </EditableRegion>
                 )}
@@ -282,18 +266,18 @@ export default function PublicStorefront({ store, editable = false, onEdit }: Pu
         <div className="mx-auto flex max-w-7xl flex-col items-center gap-2 px-4 py-8 text-center sm:px-6">
           <p className="font-[family-name:var(--font-display)] text-sm font-black text-[var(--title)]">{company.tradeName}</p>
           {company.hours && (
-            <EditableRegion editable={editable} onStart={startEdit} field="publicHours" label="horário" type="text" value={company.hours ?? ""}>
+            <EditableRegion editable={editable} onStart={startEdit} field="publicHours">
               <p className="flex items-center gap-1.5 font-mono text-[10px] text-[var(--muted)]"><Clock3 className="size-3.5" />{company.hours}</p>
             </EditableRegion>
           )}
           {company.footerNote && (
-            <EditableRegion editable={editable} onStart={startEdit} field="publicFooterNote" label="mensagem do rodapé" type="text" value={company.footerNote ?? ""}>
+            <EditableRegion editable={editable} onStart={startEdit} field="publicFooterNote">
               <p className="text-[10px] text-[var(--muted)]">{company.footerNote}</p>
             </EditableRegion>
           )}
           <div className="mt-1 flex flex-wrap items-center justify-center gap-2">
             {whatsappUrl && <a href={whatsappUrl} target="_blank" rel="noreferrer" className="inline-flex h-10 items-center gap-2 rounded-xl px-4 text-[11px] font-bold text-white" style={{ backgroundColor: brand }}><Phone className="size-3.5" />Pedir pelo WhatsApp</a>}
-            {instagramUrl && <EditableRegion editable={editable} onStart={startEdit} field="publicInstagram" label="Instagram" type="text" value={company.instagram ?? ""}><a href={instagramUrl} target="_blank" rel="noreferrer" className="inline-flex h-10 items-center gap-2 rounded-xl border border-[var(--line)] px-4 text-[11px] font-bold text-[var(--ink)] transition hover:border-[var(--brand)]"><AtSign className="size-3.5" />@{instagramHandle}</a></EditableRegion>}
+            {instagramUrl && <EditableRegion editable={editable} onStart={startEdit} field="publicInstagram"><a href={instagramUrl} target="_blank" rel="noreferrer" className="inline-flex h-10 items-center gap-2 rounded-xl border border-[var(--line)] px-4 text-[11px] font-bold text-[var(--ink)] transition hover:border-[var(--brand)]"><AtSign className="size-3.5" />@{instagramHandle}</a></EditableRegion>}
           </div>
           <p className="mt-4 font-mono text-[9px] text-[var(--muted)]">Página criada com Mangora</p>
         </div>
@@ -307,43 +291,17 @@ export default function PublicStorefront({ store, editable = false, onEdit }: Pu
         </button>
       )}
 
-      {/* Editor inline */}
-      {editable && editing && (
-        <div className="fixed inset-x-4 bottom-4 z-[60] mx-auto max-w-md rounded-2xl border-2 border-[var(--brand)] bg-[var(--panel)] p-4 shadow-2xl" style={{ color: defaults.ink }}>
-          <div className="flex items-center justify-between gap-3">
-            <p className="text-xs font-black">Editar {editing.label}</p>
-            <button type="button" onClick={() => setEditing(null)} aria-label="Fechar editor" className="flex size-7 items-center justify-center rounded-lg text-[var(--muted)] hover:bg-[var(--line)]"><X className="size-4" /></button>
-          </div>
-          {editing.type === "color" ? (
-            <div className="mt-3 flex items-center gap-2">
-              <input type="color" value={/^#[0-9a-f]{6}$/i.test(editing.value) ? editing.value : "#ff6b1a"} onChange={(event) => setEditing({ ...editing, value: event.target.value })} className="h-11 w-16 cursor-pointer rounded-lg border border-[var(--line)] bg-white p-1" />
-              <input value={editing.value} onChange={(event) => setEditing({ ...editing, value: event.target.value })} placeholder="#RRGGBB (vazio = tema)" className="h-11 flex-1 rounded-xl border border-[var(--line)] bg-white px-3 font-mono text-xs outline-none focus:border-[var(--brand)]" />
-              {editing.value && <button type="button" onClick={() => setEditing({ ...editing, value: "" })} className="text-[10px] font-bold text-[var(--muted)] hover:text-red-500">Limpar</button>}
-            </div>
-          ) : editing.type === "select" ? (
-            <select value={editing.value} onChange={(event) => setEditing({ ...editing, value: event.target.value })} className="mt-3 h-11 w-full rounded-xl border border-[var(--line)] bg-white px-3 text-xs font-bold outline-none focus:border-[var(--brand)]">
-              {editing.options?.map((option) => <option key={option} value={option}>{option === "dark" ? "🌙 Escuro" : option === "light" ? "☀️ Claro" : (STORE_FONTS[option]?.label ?? option)}</option>)}
-            </select>
-          ) : editing.type === "textarea" ? (
-            <textarea value={editing.value} onChange={(event) => setEditing({ ...editing, value: event.target.value })} rows={4} autoFocus className="mt-3 w-full resize-none rounded-xl border border-[var(--line)] bg-white p-3 text-xs outline-none focus:border-[var(--brand)]" />
-          ) : (
-            <input value={editing.value} onChange={(event) => setEditing({ ...editing, value: event.target.value })} autoFocus type={editing.type === "url" ? "url" : "text"} placeholder={editing.type === "url" ? "https://…" : "Digite o texto"} className="mt-3 h-11 w-full rounded-xl border border-[var(--line)] bg-white px-3 text-xs outline-none focus:border-[var(--brand)]" />
-          )}
-          <div className="mt-3 flex justify-end gap-2">
-            <button type="button" onClick={() => setEditing(null)} className="h-10 rounded-xl border border-[var(--line)] px-4 text-xs font-bold text-[var(--muted)]">Cancelar</button>
-            <button type="button" onClick={() => void saveEdit()} className="h-10 rounded-xl px-5 text-xs font-black text-white" style={{ backgroundColor: brand }}>Salvar</button>
-          </div>
-        </div>
-      )}
+      {/* Drawer de edição */}
+      <EditDrawer open={editable && drawerOpen} focusField={focusField} company={company} onClose={() => setDrawerOpen(false)} onSave={saveAll} />
     </main>
   );
 }
 
 /** Região editável: ao passar o mouse mostra contorno + lápis; clicar abre o editor inline. */
-function EditableRegion({ editable, onStart, field, label, type, value, options, children }: { editable: boolean; onStart: (field: string, label: string, type: EditType, value: string, options?: string[]) => void; field: string; label: string; type: EditType; value: string; options?: string[]; children: ReactNode }) {
+function EditableRegion({ editable, onStart, field, children }: { editable: boolean; onStart: (field: string) => void; field: string; children: ReactNode }) {
   if (!editable) return <>{children}</>;
   return (
-    <div role="button" tabIndex={0} aria-label={`Editar ${label}`} onClick={() => onStart(field, label, type, value, options)} onKeyDown={(event) => { if (event.key === "Enter") onStart(field, label, type, value, options); }} className="group/ed relative cursor-pointer rounded-lg transition hover:ring-2 hover:ring-[var(--brand)]">
+    <div role="button" tabIndex={0} aria-label={`Editar ${field}`} onClick={() => onStart(field)} onKeyDown={(event) => { if (event.key === "Enter") onStart(field); }} className="group/ed relative cursor-pointer rounded-lg transition hover:ring-2 hover:ring-[var(--brand)]">
       {children}
       <span className="pointer-events-none absolute -right-2 -top-2 flex size-6 items-center justify-center rounded-full text-white opacity-0 shadow-lg transition group-hover/ed:opacity-100" style={{ backgroundColor: "var(--brand)" }}><Pencil className="size-3" /></span>
     </div>
