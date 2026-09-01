@@ -34,9 +34,9 @@ export const metadata: Metadata = {
   description:
     "Gestão completa para vendas, estoque, clientes e financeiro da sua empresa.",
   icons: {
-    icon: "/mangora-logo.png",
-    shortcut: "/mangora-logo.png",
-    apple: "/mangora-logo.png",
+    icon: "/favicon.png",
+    shortcut: "/favicon.png",
+    apple: "/favicon.png",
   },
 };
 
