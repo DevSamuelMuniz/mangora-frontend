@@ -24,6 +24,7 @@ import {
 import BrandLogo from "@/components/brand/BrandLogo";
 import MascotPose from "@/components/brand/MascotPose";
 import { marketingPlans } from "@/lib/plans";
+import { brazilDateKey } from "@/lib/timezone";
 
 const resources = [
   {
@@ -583,7 +584,7 @@ function JourneyStep({ number, title, copy }: { number: string; title: string; c
 }
 
 function Footer() {
-  const year = new Date().getFullYear();
+  const year = brazilDateKey().slice(0, 4);
   return (
     <footer className="border-t border-[#123d2b]/10 bg-[#fff8ea]">
       <div className="mx-auto grid max-w-[1380px] gap-12 px-5 py-14 sm:grid-cols-2 sm:px-8 lg:grid-cols-[1.4fr_1fr_1fr_1fr] lg:px-10">
