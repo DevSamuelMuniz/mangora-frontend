@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { useState } from "react";
 import {
   BarChart3,
+  Bot,
   Banknote,
   Boxes,
   Building2,
@@ -69,6 +70,7 @@ const navigationGroups: NavigationGroup[] = [
     { label: "Relatórios", href: "/relatorios", icon: BarChart3, roles: ["OWNER", "ADMIN", "MANAGER"] },
     { label: "Notas fiscais", href: "/notas-fiscais", icon: FileText, roles: ["OWNER", "ADMIN", "MANAGER"] },
     { label: "Avaliações", href: "/avaliacoes", icon: Star },
+    { label: "Gerente de IA", href: "/gerente-ia", icon: Bot },
   ] },
 ];
 

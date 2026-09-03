@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import {
   Bell,
+  Bot,
   CheckCheck,
   ChevronDown,
   CreditCard,
@@ -134,6 +135,7 @@ export default function DashboardHeader({ onOpenSidebar, session }: DashboardHea
         </div>
 
         <div className="flex items-center gap-2">
+          <Link href="/gerente-ia" className="hidden h-10 items-center gap-1.5 rounded-xl bg-[#123d2b] px-3 text-[11px] font-black text-white transition hover:bg-[#147a45] md:flex"><Bot className="size-4" />Gerente de IA</Link>
           <div className="relative">
             <button type="button" onClick={toggleNotifications} aria-label="Notificações" aria-expanded={notificationOpen} className="relative flex size-10 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-500 transition hover:bg-slate-50 hover:text-orange-600">
               <Bell className="size-4.5" />
