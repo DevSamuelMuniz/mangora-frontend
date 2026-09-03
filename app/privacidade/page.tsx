@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import PublicInfoPage from "@/components/public/PublicInfoPage";
 
-export const metadata: Metadata = { title: "Privacidade | Mangora" };
+export const metadata: Metadata = { title: "Política de privacidade", description: "Entenda como a Mangora coleta, utiliza e protege informações pessoais.", alternates: { canonical: "/privacidade" } };
 
 export default function PrivacyPage() {
   return (

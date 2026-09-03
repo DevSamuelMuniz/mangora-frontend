@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 import { getCurrentSession } from "@/lib/auth/server";
 import SystemAdminConsole from "@/components/system-admin/SystemAdminConsole";
 
-export const metadata: Metadata = { title: "Central do sistema | Mangora", robots: { index: false, follow: false } };
+export const metadata: Metadata = { title: "Central do sistema", robots: { index: false, follow: false } };
 
 export default async function SystemAdminPage() {
   const session = await getCurrentSession();

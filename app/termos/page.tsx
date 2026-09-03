@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import PublicInfoPage from "@/components/public/PublicInfoPage";
 
-export const metadata: Metadata = { title: "Termos de uso | Mangora" };
+export const metadata: Metadata = { title: "Termos de uso", description: "Consulte os termos e condições para utilização da plataforma Mangora.", alternates: { canonical: "/termos" } };
 
 export default function TermsPage() {
   return (

@@ -5,7 +5,7 @@ import NewEmployeeForm from "@/components/employees/NewEmployeeForm";
 import WorkspaceModal from "@/components/ui/WorkspaceModal";
 
 export const metadata: Metadata = {
-  title: "Funcionários | Mangora",
+  title: "Funcionários",
   description: "Gerencie a equipe e os papéis de acesso.",
 };
 

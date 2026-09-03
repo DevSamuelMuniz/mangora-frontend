@@ -5,7 +5,7 @@ import ProductForm from "@/components/products/ProductForm";
 import WorkspaceModal from "@/components/ui/WorkspaceModal";
 
 export const metadata: Metadata = {
-  title: "Produtos | Mangora",
+  title: "Produtos",
   description: "Gerencie o catálogo de produtos da sua empresa.",
 };
 

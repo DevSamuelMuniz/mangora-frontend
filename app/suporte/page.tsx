@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import PublicInfoPage from "@/components/public/PublicInfoPage";
-export const metadata: Metadata = { title: "Suporte | Mangora" };
+export const metadata: Metadata = { title: "Suporte", description: "Encontre ajuda para usar a Mangora e organizar a operação da sua empresa.", alternates: { canonical: "/suporte" } };
 export default function SupportPage() {
     return <PublicInfoPage
         eyebrow="Ajuda"

@@ -6,7 +6,7 @@ import WorkspaceModal from "@/components/ui/WorkspaceModal";
 import StockTransferForm from "@/components/stock/StockTransferForm";
 
 export const metadata: Metadata = {
-  title: "Estoque | Mangora",
+  title: "Estoque",
   description: "Acompanhe produtos e movimentações de estoque.",
 };
 

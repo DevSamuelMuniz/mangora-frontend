@@ -5,7 +5,7 @@ import NewOrderForm from "@/components/orders/NewOrderForm";
 import WorkspaceModal from "@/components/ui/WorkspaceModal";
 
 export const metadata: Metadata = {
-  title: "Pedidos | Mangora",
+  title: "Pedidos",
   description: "Organize e acompanhe os pedidos da sua empresa.",
 };
 

@@ -14,7 +14,16 @@ async function loadStore(slug: string) {
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params; const store = await loadStore(slug);
-  return store ? { title: `${store.company.tradeName} | Mangora`, description: store.company.description || `Catálogo e pedidos de ${store.company.tradeName}.` } : { title: "Página indisponível | Mangora", robots: { index: false, follow: false } };
+  if (!store) return { title: "Página indisponível", robots: { index: false, follow: false } };
+  const title = `${store.company.tradeName} — catálogo e pedidos online`;
+  const description = store.company.description || `Conheça os produtos, consulte preços e faça seu pedido online em ${store.company.tradeName}.`;
+  const image = store.company.coverUrl || store.company.logoUrl || "/mangora-share.png";
+  return {
+    title, description,
+    alternates: { canonical: `/loja/${encodeURIComponent(slug)}` },
+    openGraph: { type: "website", url: `/loja/${encodeURIComponent(slug)}`, title, description, images: [{ url: image, alt: store.company.tradeName }] },
+    twitter: { card: "summary_large_image", title, description, images: [image] },
+  };
 }
 
 export default async function PublicStorePage({ params }: { params: Promise<{ slug: string }> }) {

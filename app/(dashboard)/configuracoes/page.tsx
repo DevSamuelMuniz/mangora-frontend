@@ -4,7 +4,7 @@ import SettingsPanel from "@/components/settings/SettingsPanel";
 import type { SettingsTab } from "@/types/settings";
 
 export const metadata: Metadata = {
-  title: "Configurações | Mangora",
+  title: "Configurações",
   description: "Configure a empresa e as preferências da plataforma.",
 };
 

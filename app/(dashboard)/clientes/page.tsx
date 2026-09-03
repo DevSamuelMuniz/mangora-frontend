@@ -5,7 +5,7 @@ import CustomerForm from "@/components/customers/CustomerForm";
 import WorkspaceModal from "@/components/ui/WorkspaceModal";
 
 export const metadata: Metadata = {
-  title: "Clientes | Mangora",
+  title: "Clientes",
   description: "Gerencie os clientes da sua empresa.",
 };
 

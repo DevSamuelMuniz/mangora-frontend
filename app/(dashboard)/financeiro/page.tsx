@@ -5,7 +5,7 @@ import NewFinancialEntryForm from "@/components/financial/NewFinancialEntryForm"
 import WorkspaceModal from "@/components/ui/WorkspaceModal";
 
 export const metadata: Metadata = {
-  title: "Financeiro | Mangora",
+  title: "Financeiro",
   description: "Acompanhe receitas, despesas e fluxo de caixa.",
 };
 

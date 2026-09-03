@@ -44,11 +44,9 @@ export const metadata: Metadata = {
   publisher: "Mangora",
   category: "Gestão empresarial",
   robots: { index: true, follow: true, googleBot: { index: true, follow: true, "max-image-preview": "large", "max-snippet": -1, "max-video-preview": -1 } },
-  alternates: { canonical: "/" },
   openGraph: {
     type: "website",
     locale: "pt_BR",
-    url: "/",
     siteName: "Mangora",
     title: "Mangora — Gestão simples para o seu negócio",
     description: "Vendas, estoque, clientes, caixa e financeiro em um só lugar. Conheça a Mangora e teste gratuitamente por 7 dias, sem cartão.",

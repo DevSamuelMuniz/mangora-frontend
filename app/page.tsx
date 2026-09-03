@@ -1,4 +1,5 @@
 import Link from "next/link";
+import type { Metadata } from "next";
 import {
   ArrowRight,
   BarChart3,
@@ -25,6 +26,13 @@ import BrandLogo from "@/components/brand/BrandLogo";
 import MascotPose from "@/components/brand/MascotPose";
 import { marketingPlans } from "@/lib/plans";
 import { brazilDateKey } from "@/lib/timezone";
+
+export const metadata: Metadata = {
+  title: { absolute: "Mangora — Gestão simples para vender, organizar e crescer" },
+  description: "Sistema de gestão para vendas, estoque, clientes, caixa e financeiro. Teste a Mangora por 7 dias grátis, sem cartão, e continue no plano Free.",
+  alternates: { canonical: "/" },
+  openGraph: { url: "/", title: "Mangora — Gestão simples para o seu negócio", description: "Organize vendas, estoque, clientes, caixa e financeiro. Comece com 7 dias grátis, sem cartão." },
+};
 
 const resources = [
   {

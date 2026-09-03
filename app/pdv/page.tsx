@@ -4,7 +4,8 @@ import PdvScreen from "@/components/pdv/PdvScreen";
 import { getCurrentSession } from "@/lib/auth/server";
 
 export const metadata = {
-    title: "PDV | Mangora",
+    title: "PDV",
+    robots: { index: false, follow: false },
 };
 
 export default async function PdvPage() {
