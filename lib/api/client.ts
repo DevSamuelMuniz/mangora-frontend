@@ -2,6 +2,8 @@
 // them to the API and makes the HttpOnly session cookie visible to Next.js.
 const API_URL = "/api/backend";
 
+const OFFLINE_MESSAGE = "Sem conexão. Registramos a alteração e vamos sincronizá-la quando a conexão voltar.";
+
 type ApiErrorPayload = {
   message?: string | string[];
 };
@@ -17,6 +19,9 @@ export class ApiError extends Error {
 }
 
 export async function apiRequest<T>(path: string, init?: RequestInit): Promise<T> {
+  const method = (init?.method ?? "GET").toUpperCase();
+  const isRead = method === "GET" || method === "HEAD";
+
   let response: Response;
   try {
     response = await fetch(`${API_URL}${path}`, {
@@ -28,6 +33,19 @@ export async function apiRequest<T>(path: string, init?: RequestInit): Promise<T
       },
     });
   } catch {
+    // Sem conexão: leituras usam o cache offline; mutações entram na fila de sync.
+    if (typeof window === "undefined" || typeof indexedDB === "undefined") {
+      throw new ApiError("Não foi possível conectar ao servidor. Verifique sua conexão e tente novamente.", 0);
+    }
+    if (isRead) {
+      const { cacheRead } = await import("@/lib/offline/engine");
+      const cached = await cacheRead(path);
+      if (cached !== undefined) return cached as T;
+    } else {
+      const { enqueueMutation } = await import("@/lib/offline/engine");
+      await enqueueMutation(method, path, typeof init?.body === "string" ? init.body : undefined);
+      throw new ApiError(OFFLINE_MESSAGE, 0);
+    }
     throw new ApiError("Não foi possível conectar ao servidor. Verifique sua conexão e tente novamente.", 0);
   }
 
@@ -38,7 +56,12 @@ export async function apiRequest<T>(path: string, init?: RequestInit): Promise<T
   }
 
   if (response.status === 204) return undefined as T;
-  return response.json() as Promise<T>;
+  const data = (await response.json()) as T;
+  if (typeof window !== "undefined" && isRead) {
+    const { cacheWrite } = await import("@/lib/offline/engine");
+    void cacheWrite(path, data);
+  }
+  return data;
 }
 
 /** Converte status HTTP + mensagem crua em uma mensagem amigável e acionável. */
