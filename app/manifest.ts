@@ -1,17 +1,22 @@
 import type { MetadataRoute } from "next";
 
+/** Manifesto PWA — permite instalar o Mangora como aplicativo. */
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "Mangora — Gestão simples para o seu negócio",
+    name: "Mangora | Gestão inteligente",
     short_name: "Mangora",
-    description: "Vendas, estoque, clientes, caixa e financeiro em um só lugar.",
-    start_url: "/",
+    description: "Vendas, estoque, clientes e financeiro da sua empresa.",
+    id: "/dashboard",
+    start_url: "/dashboard",
+    scope: "/",
     display: "standalone",
-    background_color: "#fff8ea",
-    theme_color: "#ff6b1a",
+    orientation: "portrait",
+    background_color: "#123d2b",
+    theme_color: "#123d2b",
     icons: [
-      { src: "/favicon.png", sizes: "500x500", type: "image/png", purpose: "any" },
-      { src: "/favicon.png", sizes: "500x500", type: "image/png", purpose: "maskable" },
+      { src: "/icons/icon-192.png", sizes: "192x192", type: "image/png" },
+      { src: "/icons/icon-512.png", sizes: "512x512", type: "image/png" },
+      { src: "/icons/icon-512.png", sizes: "512x512", type: "image/png", purpose: "maskable" },
     ],
   };
 }
