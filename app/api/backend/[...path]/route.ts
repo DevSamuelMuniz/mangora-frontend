@@ -7,12 +7,15 @@ type RouteContext = { params: Promise<{ path: string[] }> };
 
 async function proxy(request: NextRequest, context: RouteContext) {
   assertApiUrlConfigured();
+  if (!["GET", "HEAD", "OPTIONS"].includes(request.method) && request.headers.get("sec-fetch-site") === "cross-site") {
+    return Response.json({ message: "Origem da requisição não autorizada." }, { status: 403 });
+  }
   const { path } = await context.params;
   const target = new URL(`${BACKEND_URL}/${path.map(encodeURIComponent).join("/")}`);
   target.search = request.nextUrl.search;
 
   const headers = new Headers();
-  for (const name of ["accept", "content-type", "cookie", "user-agent"]) {
+  for (const name of ["accept", "content-type", "cookie", "user-agent", "x-forwarded-for"]) {
     const value = request.headers.get(name);
     if (value) headers.set(name, value);
   }
