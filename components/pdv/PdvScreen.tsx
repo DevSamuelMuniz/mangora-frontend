@@ -7,6 +7,7 @@ import { useCreateSale, useSaleOptions } from "@/features/sales/hooks/useSales";
 import { useCompanySettings } from "@/features/settings/hooks/useSettings";
 import { useToast } from "@/components/ui/toast";
 import { formatCurrency, parseCurrency } from "@/lib/format";
+import { track } from "@/lib/analytics";
 import { addDaysToBrazilDateKey, brazilDateTimeToIso } from "@/lib/timezone";
 import type { PaymentMethod, Sale } from "@/types/sale";
 import type { Customer } from "@/types/customer";
@@ -210,6 +211,7 @@ export default function PdvScreen({ session }: { session: AuthSession }) {
                 items: cart.map((item) => ({ productId: item.product.id, quantity: item.quantity })),
             })
             .then((sale) => {
+                track("sale_completed", { value: sale.total, currency: "BRL", payment_method: sale.paymentMethod, items: sale.items.length, code: sale.code });
                 setSaleResult(sale);
                 setStep("done");
             })

@@ -6,6 +6,7 @@ import { STORE_FONTS, type PublicStore } from "@/types/public-store";
 import StorefrontSidebar from "./StorefrontSidebar";
 import { elementColor } from "./storeElements";
 import { apiRequest } from "@/lib/api/client";
+import { track } from "@/lib/analytics";
 import { formatCurrency, formatDate } from "@/lib/format";
 import { useCreatePublicOrder, type PublicOrderConfirmation } from "@/features/public-store/hooks/usePublicStore";
 
@@ -99,6 +100,7 @@ export default function PublicStorefront({ store, editable = false, onEdit }: Pu
     try {
       const created = await apiRequest<{ id: string; reviewerName: string; rating: number; comment: string; createdAt: string }>(`/public/stores/${company.slug}/reviews`, { method: "POST", body: JSON.stringify({ reviewerName: reviewName.trim(), rating: reviewRating, comment: reviewComment.trim() }) });
       setReviews((prev) => [created, ...prev]);
+      track("review_submitted", { rating: reviewRating });
       setReviewName(""); setReviewRating(5); setReviewComment("");
       setReviewDone(true);
       window.setTimeout(() => setReviewDone(false), 3000);
@@ -115,6 +117,7 @@ export default function PublicStorefront({ store, editable = false, onEdit }: Pu
     try {
       setError("");
       const result = await createOrder.mutateAsync({ slug: company.slug, payload: { customerName: data.get("customerName"), customerPhone: data.get("customerPhone"), fulfillment: data.get("fulfillment"), notes: data.get("notes"), items: cartItems.map((item) => ({ productId: item.product.id, quantity: item.quantity })) } });
+      track("order_submitted", { value: total, currency: "BRL", fulfillment: data.get("fulfillment") });
       setConfirmation(result); setCart({}); event.currentTarget.reset();
     } catch (cause) { setError(cause instanceof Error ? cause.message : "Não foi possível enviar o pedido."); }
   }
@@ -147,7 +150,7 @@ export default function PublicStorefront({ store, editable = false, onEdit }: Pu
             </EditableRegion>
           </button>
           <div className="flex shrink-0 items-center gap-2">
-            {whatsappUrl && <EditableRegion editable={editable} colorField="elementColor:whatsappHeader"><a href={whatsappUrl} target="_blank" rel="noreferrer" className="flex h-9 items-center gap-1.5 rounded-xl px-3 text-[10px] font-black text-white transition hover:brightness-110" style={{ backgroundColor: elementColor(company, "whatsappHeader") }}><Phone className="size-3.5" /><span className="hidden sm:inline">WhatsApp</span></a></EditableRegion>}
+            {whatsappUrl && <EditableRegion editable={editable} colorField="elementColor:whatsappHeader"><a href={whatsappUrl} target="_blank" rel="noreferrer" onClick={() => track("whatsapp_click", { location: "header" })} className="flex h-9 items-center gap-1.5 rounded-xl px-3 text-[10px] font-black text-white transition hover:brightness-110" style={{ backgroundColor: elementColor(company, "whatsappHeader") }}><Phone className="size-3.5" /><span className="hidden sm:inline">WhatsApp</span></a></EditableRegion>}
           </div>
         </div>
         </EditableRegion>
@@ -200,7 +203,7 @@ export default function PublicStorefront({ store, editable = false, onEdit }: Pu
                 <EditableRegion editable={editable} colorField="elementColor:cta">
                 <button type="button" onClick={() => (editable ? undefined : scrollToId("cardapio"))} className="inline-flex h-13 items-center gap-2 rounded-2xl px-8 font-[family-name:var(--font-display)] text-sm font-black text-white shadow-[0_6px_0_rgba(0,0,0,0.25)] transition hover:-translate-y-0.5 hover:brightness-110" style={{ backgroundColor: elementColor(company, "cta") }}><ShoppingBag className="size-4" />Ver cardápio<ChevronDown className="size-4" /></button>
                 </EditableRegion>
-                {whatsappUrl && <a href={whatsappUrl} target="_blank" rel="noreferrer" className="inline-flex h-13 items-center gap-2 rounded-2xl border-2 px-6 text-sm font-bold transition" style={{ borderColor: showCover ? "rgba(255,255,255,0.6)" : "var(--line)", color: showCover ? "#fff" : "var(--ink)" }}><Phone className="size-4" />Pedir no WhatsApp</a>}
+                {whatsappUrl && <a href={whatsappUrl} target="_blank" rel="noreferrer" onClick={() => track("whatsapp_click", { location: "hero" })} className="inline-flex h-13 items-center gap-2 rounded-2xl border-2 px-6 text-sm font-bold transition" style={{ borderColor: showCover ? "rgba(255,255,255,0.6)" : "var(--line)", color: showCover ? "#fff" : "var(--ink)" }}><Phone className="size-4" />Pedir no WhatsApp</a>}
               </div>
             </div>
           </div>
@@ -347,7 +350,7 @@ export default function PublicStorefront({ store, editable = false, onEdit }: Pu
             </EditableRegion>
           )}
           <div className="mt-1 flex flex-wrap items-center justify-center gap-2">
-            {whatsappUrl && <EditableRegion editable={editable} colorField="elementColor:footerWhatsapp"><a href={whatsappUrl} target="_blank" rel="noreferrer" className="inline-flex h-10 items-center gap-2 rounded-xl px-4 text-[11px] font-bold text-white" style={{ backgroundColor: elementColor(company, "footerWhatsapp") }}><Phone className="size-3.5" />Pedir pelo WhatsApp</a></EditableRegion>}
+            {whatsappUrl && <EditableRegion editable={editable} colorField="elementColor:footerWhatsapp"><a href={whatsappUrl} target="_blank" rel="noreferrer" onClick={() => track("whatsapp_click", { location: "footer" })} className="inline-flex h-10 items-center gap-2 rounded-xl px-4 text-[11px] font-bold text-white" style={{ backgroundColor: elementColor(company, "footerWhatsapp") }}><Phone className="size-3.5" />Pedir pelo WhatsApp</a></EditableRegion>}
             {instagramUrl && <EditableRegion editable={editable} field="publicInstagram"><a href={instagramUrl} target="_blank" rel="noreferrer" className="inline-flex h-10 items-center gap-2 rounded-xl border border-[var(--line)] px-4 text-[11px] font-bold text-[var(--ink)] transition hover:border-[var(--brand)]"><AtSign className="size-3.5" />@{instagramHandle}</a></EditableRegion>}
           </div>
           <p className="mt-4 font-mono text-[9px] text-[var(--muted)]">Página criada com Mangora</p>

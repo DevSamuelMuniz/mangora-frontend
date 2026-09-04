@@ -16,6 +16,7 @@ import {
   UserRound,
 } from "lucide-react";
 import { apiRequest } from "@/lib/api/client";
+import { setUserProperties, track } from "@/lib/analytics";
 import { roleLabels, type AuthSession } from "@/lib/auth/types";
 import { can } from "@/lib/permissions";
 import { useMarkAllNotificationsRead, useNotifications } from "@/features/notifications/hooks/useNotifications";
@@ -105,6 +106,8 @@ export default function DashboardHeader({ onOpenSidebar, session }: DashboardHea
     setLogoutLoading(true);
     try {
       await apiRequest<void>("/auth/logout", { method: "POST" });
+      track("logout");
+      setUserProperties({ logged_in: "false" });
     } catch {
       // A sessão local ainda deve ser encerrada quando a API já a invalidou.
     } finally {

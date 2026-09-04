@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { Download, X } from "lucide-react";
+import { track } from "@/lib/analytics";
 
 type BeforeInstallPromptEvent = Event & {
   prompt: () => Promise<void>;
@@ -32,6 +33,7 @@ export default function InstallPrompt() {
       setVisible(!dismissedRef.current);
     }
     function onInstalled() {
+      track("pwa_installed");
       setPromptEvent(null);
       setVisible(false);
     }

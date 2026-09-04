@@ -6,6 +6,7 @@ import { ArrowLeft, ArrowRight, Building2, CheckCircle2, Eye, EyeOff, LoaderCirc
 import AuthVisualPanel from "@/components/auth/AuthVisualPanel";
 import BrandLogo from "@/components/brand/BrandLogo";
 import { apiRequest } from "@/lib/api/client";
+import { setUserProperties, track } from "@/lib/analytics";
 
 const segments = [
   { value: "RETAIL", label: "Loja ou comércio" },
@@ -53,6 +54,8 @@ export default function CadastroPage() {
     try {
       setLoading(true);
       await apiRequest("/auth/register", { method: "POST", body: JSON.stringify(registerData) });
+      track("signup_completed");
+      setUserProperties({ logged_in: "true", signup: "completed" });
       setSuccess(true);
       await new Promise((resolve) => setTimeout(resolve, 450));
       window.location.replace("/dashboard");

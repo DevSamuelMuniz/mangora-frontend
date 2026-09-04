@@ -1,10 +1,11 @@
 "use client";
 
-import { ReactNode, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import Sidebar from "./Sidebar";
 import DashboardHeader from "./DashboardHeader";
 import type { AuthSession } from "@/lib/auth/types";
 import RouteToast from "@/components/ui/RouteToast";
+import { setUserProperties } from "@/lib/analytics";
 import OfflineBanner from "@/components/pwa/OfflineBanner";
 import TrialAccessGate from "@/components/subscription/TrialAccessGate";
 
@@ -18,6 +19,10 @@ export default function DashboardShell({
   session,
 }: DashboardShellProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  useEffect(() => {
+    setUserProperties({ logged_in: "true", role: session.membership.role, app: "mangora-web" });
+  }, [session]);
 
   return (
     <div className="mangora-app min-h-screen bg-slate-50 text-slate-950">
