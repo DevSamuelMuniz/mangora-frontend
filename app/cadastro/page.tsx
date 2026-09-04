@@ -37,7 +37,7 @@ export default function CadastroPage() {
     const passwordConfirmation = String(formData.get("passwordConfirmation") ?? "");
     const acceptedTerms = formData.get("acceptedTerms") === "on";
 
-    if (password.length < 8) return setError("A senha deve possuir pelo menos 8 caracteres.");
+    if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,128}$/.test(password)) return setError("Use de 8 a 128 caracteres, com letra maiúscula, minúscula e número.");
     if (password !== passwordConfirmation) return setError("As senhas informadas não são iguais.");
     if (!acceptedTerms) return setError("Você precisa aceitar os Termos de Uso.");
 
@@ -102,7 +102,7 @@ export default function CadastroPage() {
                   <SelectField />
                   <InputField id="phone" name="phone" label="Telefone ou WhatsApp" type="tel" placeholder="(81) 99999-9999" autoComplete="tel" icon={Phone} />
                   <div className="sm:col-span-2"><InputField id="email" name="email" label="E-mail" type="email" placeholder="voce@empresa.com" autoComplete="email" icon={Mail} /></div>
-                  <PasswordField id="password" name="password" label="Crie uma senha" placeholder="Mínimo de 8 caracteres" visible={showPassword} onToggle={() => setShowPassword((current) => !current)} />
+                  <PasswordField id="password" name="password" label="Crie uma senha" placeholder="Maiúscula, minúscula e número" visible={showPassword} onToggle={() => setShowPassword((current) => !current)} />
                   <PasswordField id="passwordConfirmation" name="passwordConfirmation" label="Confirme a senha" placeholder="Digite novamente" visible={showPasswordConfirmation} onToggle={() => setShowPasswordConfirmation((current) => !current)} />
                 </div>
 
@@ -137,7 +137,7 @@ function SelectField() {
 type PasswordFieldProps = { id: string; name: string; label: string; placeholder: string; visible: boolean; onToggle: () => void };
 
 function PasswordField({ id, name, label, placeholder, visible, onToggle }: PasswordFieldProps) {
-  return <div><FieldLabel htmlFor={id}>{label}</FieldLabel><div className="relative"><LockKeyhole className="pointer-events-none absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-[#6a7d73]" /><input id={id} name={name} type={visible ? "text" : "password"} required minLength={8} autoComplete="new-password" placeholder={placeholder} className="h-11 w-full rounded-xl border-2 border-[#123d2b]/15 bg-[#fffdf7] pl-10 pr-11 text-sm font-semibold text-[#123d2b] outline-none transition placeholder:font-medium placeholder:text-[#789083] focus:border-[#ff6b1a] focus:bg-white focus:ring-4 focus:ring-[#ffb21a]/20" /><button type="button" onClick={onToggle} aria-label={visible ? "Ocultar senha" : "Mostrar senha"} className="absolute right-2 top-1/2 flex size-8 -translate-y-1/2 items-center justify-center rounded-lg text-[#6a7d73] transition hover:bg-[#fff0dd] hover:text-[#ff6b1a]">{visible ? <EyeOff className="size-4" /> : <Eye className="size-4" />}</button></div></div>;
+  return <div><FieldLabel htmlFor={id}>{label}</FieldLabel><div className="relative"><LockKeyhole className="pointer-events-none absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-[#6a7d73]" /><input id={id} name={name} type={visible ? "text" : "password"} required minLength={8} maxLength={128} pattern="(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,128}" title="Use de 8 a 128 caracteres, com letra maiúscula, minúscula e número." autoComplete="new-password" placeholder={placeholder} className="h-11 w-full rounded-xl border-2 border-[#123d2b]/15 bg-[#fffdf7] pl-10 pr-11 text-sm font-semibold text-[#123d2b] outline-none transition placeholder:font-medium placeholder:text-[#789083] focus:border-[#ff6b1a] focus:bg-white focus:ring-4 focus:ring-[#ffb21a]/20" /><button type="button" onClick={onToggle} aria-label={visible ? "Ocultar senha" : "Mostrar senha"} className="absolute right-2 top-1/2 flex size-8 -translate-y-1/2 items-center justify-center rounded-lg text-[#6a7d73] transition hover:bg-[#fff0dd] hover:text-[#ff6b1a]">{visible ? <EyeOff className="size-4" /> : <Eye className="size-4" />}</button></div></div>;
 }
 
 function FieldLabel({ htmlFor, children }: { htmlFor: string; children: React.ReactNode }) {

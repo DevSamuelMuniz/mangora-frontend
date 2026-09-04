@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
 import {
   BarChart3,
@@ -113,6 +113,7 @@ export default function Sidebar({
   session,
 }: SidebarProps) {
   const pathname = usePathname();
+  const router = useRouter();
   const { data: group } = useUnitGroup();
   const switchCompany = useSwitchCompany();
   const [companyOpen, setCompanyOpen] = useState(false);
@@ -127,7 +128,8 @@ export default function Sidebar({
     try {
       setSwitching(membershipId);
       await switchCompany.mutateAsync({ membershipId });
-      window.location.assign("/dashboard?toast=Unidade%20alterada");
+      router.push("/dashboard?toast=Unidade%20alterada");
+      router.refresh();
     } finally {
       setSwitching("");
     }

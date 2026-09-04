@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { ArrowRightLeft, Boxes, Building2, CircleDollarSign, LoaderCircle, Plus, ReceiptText, Store, TrendingUp, X } from "lucide-react";
 
 import { formatCurrency, formatNumber } from "@/lib/format";
@@ -10,6 +11,7 @@ import { useToast } from "@/components/ui/toast";
 type Period = "7d" | "30d" | "90d";
 
 export default function UnitsOverview() {
+  const router = useRouter();
   const [period, setPeriod] = useState<Period>("30d");
   const { data: group = null, isLoading: groupLoading, error: groupError } = useUnitGroup();
   const { data: consolidated = null, isLoading: consolidatedLoading, error: consolidatedError } = useConsolidated(period);
@@ -50,7 +52,8 @@ export default function UnitsOverview() {
     setActionError("");
     try {
       await switchMutation.mutateAsync({ membershipId });
-      window.location.assign("/dashboard?toast=Unidade%20alterada");
+      router.push("/dashboard?toast=Unidade%20alterada");
+      router.refresh();
     } catch (requestError) { toast.error(requestError instanceof Error ? requestError.message : "Não foi possível trocar de loja."); }
   }
 
