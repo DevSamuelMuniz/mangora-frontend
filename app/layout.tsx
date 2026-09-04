@@ -5,6 +5,7 @@ import {
   Geist_Mono,
   Manrope,
 } from "next/font/google";
+import Script from "next/script";
 import QueryProvider from "@/components/providers/QueryProvider";
 import { ToastProvider } from "@/components/ui/toast";
 import "./globals.css";
@@ -76,6 +77,15 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} ${bricolage.variable} ${manrope.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
+        <Script strategy="afterInteractive" src="https://www.googletagmanager.com/gtag/js?id=G-D2T56HSMLK" />
+        <Script id="gtag-init" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-D2T56HSMLK');
+          `}
+        </Script>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify({
