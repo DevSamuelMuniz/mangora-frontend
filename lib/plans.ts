@@ -16,8 +16,6 @@ export const subscriptionPlans: SubscriptionPlan[] = [
         description: "O essencial para organizar seu negócio, com 7 dias de experiência Start.",
         features: [
             "Tudo do Start por 7 dias",
-            "1 dono e 1 funcionário",
-            "1 loja",
             "Clientes, produtos e serviços",
             "Vendas, pedidos e estoque básico",
             "Financeiro e relatórios essenciais",
