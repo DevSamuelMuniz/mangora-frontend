@@ -5,7 +5,7 @@ export type CompanySettings = {
   email: string | null; phone: string | null; document: string | null; postalCode: string | null;
   street: string | null; number: string | null; city: string | null; state: string | null;
   timezone: string; defaultPayment: "PIX" | "CASH" | "DEBIT_CARD" | "CREDIT_CARD" | "BOLETO";
-  maximumDiscount: number; requireCustomer: boolean; allowPendingSales: boolean;
+  maximumDiscount: number; requireCustomer: boolean; allowPendingSales: boolean; allowNegativeStock: boolean;
   lowStockNotification: boolean; overdueAccountNotification: boolean; saleNotification: boolean;
   summaryEmail: string | null; summaryFrequency: "daily" | "weekly" | "disabled";
   publicPageEnabled: boolean; publicDescription: string | null; publicWhatsapp: string | null;
