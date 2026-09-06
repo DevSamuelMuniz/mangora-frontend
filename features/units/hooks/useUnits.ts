@@ -62,3 +62,14 @@ export function useSwitchCompany() {
             apiRequest("/auth/switch-company", { method: "POST", body: JSON.stringify({ membershipId }) }),
     });
 }
+
+
+export function useRemoveUnit() {
+    const queryClient = useQueryClient();
+    return useMutation<void, Error, string>({
+        mutationFn: (id) => apiRequest(`/companies/units/${id}`, { method: "DELETE" }),
+        onSuccess: () => {
+            void queryClient.invalidateQueries({ queryKey: unitGroupQueryKey });
+        },
+    });
+}
