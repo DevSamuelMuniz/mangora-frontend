@@ -1,5 +1,5 @@
 /* Service worker do Mangora — cache de estáticos + rede para o resto. */
-const CACHE = "mangora-v3-transparent-mascots";
+const CACHE = "mangora-v4-static-only";
 const STATIC = ["/_next/static", "/icons/", "/favicon.png", "/mangora-logo.png"];
 
 self.addEventListener("install", (event) => {
@@ -22,6 +22,8 @@ self.addEventListener("fetch", (event) => {
   if (request.method !== "GET") return;
   const url = new URL(request.url);
   if (url.origin !== self.location.origin) return;
+  // Authenticated pages and API responses are never persisted by this worker.
+  if (!STATIC.some((prefix) => url.pathname.startsWith(prefix))) return;
 
   const isStatic = STATIC.some((prefix) => url.pathname.startsWith(prefix));
   if (isStatic) {

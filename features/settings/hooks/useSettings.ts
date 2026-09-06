@@ -12,6 +12,7 @@ export const companySettingsQueryKey = ["company-settings"] as const;
 export const securityQueryKey = ["security-overview"] as const;
 
 export type SecuritySession = {
+    deviceName?: string;
     id: string;
     current: boolean;
     ipAddress: string | null;

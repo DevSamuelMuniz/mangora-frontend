@@ -1,6 +1,7 @@
 // Browser requests stay on the frontend origin. The server-side proxy forwards
 // them to the API and makes the HttpOnly session cookie visible to Next.js.
 const API_URL = "/api/backend";
+import { isSensitivePath } from "@/lib/offline/security-policy";
 
 const OFFLINE_MESSAGE = "Sem conexão. Registramos a alteração e vamos sincronizá-la quando a conexão voltar.";
 
@@ -34,7 +35,7 @@ export async function apiRequest<T>(path: string, init?: RequestInit): Promise<T
     });
   } catch {
     // Sem conexão: leituras usam o cache offline; mutações entram na fila de sync.
-    if (typeof window === "undefined" || typeof indexedDB === "undefined") {
+    if (isSensitivePath(path) || typeof window === "undefined" || typeof indexedDB === "undefined") {
       throw new ApiError("Não foi possível conectar ao servidor. Verifique sua conexão e tente novamente.", 0);
     }
     if (isRead) {
@@ -57,7 +58,7 @@ export async function apiRequest<T>(path: string, init?: RequestInit): Promise<T
 
   if (response.status === 204) return undefined as T;
   const data = (await response.json()) as T;
-  if (typeof window !== "undefined" && isRead) {
+  if (typeof window !== "undefined" && isRead && !isSensitivePath(path)) {
     const { cacheWrite } = await import("@/lib/offline/engine");
     void cacheWrite(path, data);
   }

@@ -7,5 +7,6 @@ export const metadata: Metadata = { title: "Avaliações", description: "Acompan
 export default async function ReviewsPage() {
   const session = await getCurrentSession();
   if (!session) redirect("/login?retorno=/avaliacoes");
+  if (!["OWNER", "ADMIN", "MANAGER"].includes(session.membership.role)) redirect("/dashboard");
   return <ReviewsPanel />;
 }

@@ -7,5 +7,6 @@ export const metadata: Metadata = { title: "Gerente de IA | Mangora", descriptio
 export default async function AiManagerPage() {
   const session = await getCurrentSession();
   if (!session) redirect("/login?retorno=/gerente-ia");
+  if (!["OWNER", "ADMIN", "MANAGER"].includes(session.membership.role)) redirect("/dashboard");
   return <AiManager />;
 }

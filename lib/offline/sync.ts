@@ -6,6 +6,7 @@
 const API_URL = "/api/backend";
 
 import { queueList } from "./engine";
+import { isSensitivePath } from "./security-policy";
 
 export async function queuePendingCount(): Promise<number> {
   const { pendingCount } = await import("./engine");
@@ -18,6 +19,7 @@ async function flushOnce(): Promise<{ synced: number; failed: number }> {
   let synced = 0;
   let failed = 0;
   for (const item of items) {
+    if (isSensitivePath(item.url)) { await removeQueued(item.id); failed += 1; continue; }
     try {
       const response = await fetch(`${API_URL}${item.url}`, {
         method: item.method,

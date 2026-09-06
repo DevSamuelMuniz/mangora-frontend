@@ -3,6 +3,8 @@
  * Usa IndexedDB quando disponível e cai para memória quando não (SSR/tests).
  */
 
+import { isSensitivePath } from "./security-policy";
+
 export type QueuedMutation = {
   id: string;
   method: string;
@@ -12,7 +14,7 @@ export type QueuedMutation = {
 };
 
 const DB_NAME = "mangora-offline";
-const DB_VERSION = 1;
+const DB_VERSION = 2;
 const CACHE_STORE = "cache";
 const QUEUE_STORE = "queue";
 
@@ -56,6 +58,21 @@ function openDb(): Promise<IDBDatabase | null> {
         const db = request.result;
         if (!db.objectStoreNames.contains(CACHE_STORE)) db.createObjectStore(CACHE_STORE);
         if (!db.objectStoreNames.contains(QUEUE_STORE)) db.createObjectStore(QUEUE_STORE, { keyPath: "id" });
+        const transaction = request.transaction!;
+        const cacheCursor = transaction.objectStore(CACHE_STORE).openCursor();
+        cacheCursor.onsuccess = () => {
+          const cursor = cacheCursor.result;
+          if (!cursor) return;
+          if (isSensitivePath(String(cursor.key).replace(/^GET:/, ""))) cursor.delete();
+          cursor.continue();
+        };
+        const queueCursor = transaction.objectStore(QUEUE_STORE).openCursor();
+        queueCursor.onsuccess = () => {
+          const cursor = queueCursor.result;
+          if (!cursor) return;
+          if (isSensitivePath((cursor.value as QueuedMutation).url)) cursor.delete();
+          cursor.continue();
+        };
       };
       request.onsuccess = () => resolve(request.result);
       request.onerror = () => resolve(null);
@@ -120,14 +137,17 @@ export function subscribeOffline(fn: Listener): () => void {
 export const cacheKeyFor = (path: string): string => `GET:${path}`;
 
 export async function cacheRead(path: string): Promise<unknown | undefined> {
+  if (isSensitivePath(path)) return undefined;
   return storage.cacheGet(cacheKeyFor(path));
 }
 
 export async function cacheWrite(path: string, data: unknown): Promise<void> {
+  if (isSensitivePath(path)) return;
   await storage.cacheSet(cacheKeyFor(path), data);
 }
 
 export async function enqueueMutation(method: string, url: string, body?: string): Promise<void> {
+  if (isSensitivePath(url)) throw new Error("Esta operação exige conexão e não pode ser armazenada offline.");
   const item: QueuedMutation = { id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`, method, url, body, createdAt: Date.now() };
   await storage.queueAdd(item);
   notify();
