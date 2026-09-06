@@ -4,8 +4,10 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
 import {
+  ArrowRightLeft,
   BarChart3,
   Bot,
+  Database,
   Banknote,
   Boxes,
   Building2,
@@ -61,6 +63,7 @@ const navigationGroups: NavigationGroup[] = [
   ] },
   { label: "Suprimentos", icon: Boxes, items: [
     { label: "Estoque", href: "/estoque", icon: Boxes },
+    { label: "Transferências", href: "/estoque/transferencias", icon: ArrowRightLeft, roles: ["OWNER", "ADMIN", "MANAGER"] },
     { label: "Compras", href: "/compras", icon: ClipboardList, roles: ["OWNER", "ADMIN", "MANAGER"] },
     { label: "Fornecedores", href: "/fornecedores", icon: Truck, roles: ["OWNER", "ADMIN", "MANAGER"] },
   ] },
@@ -70,6 +73,7 @@ const navigationGroups: NavigationGroup[] = [
     { label: "Relatórios", href: "/relatorios", icon: BarChart3, roles: ["OWNER", "ADMIN", "MANAGER"] },
     { label: "Notas fiscais", href: "/notas-fiscais", icon: FileText, roles: ["OWNER", "ADMIN", "MANAGER"] },
     { label: "Avaliações", href: "/avaliacoes", icon: Star },
+    { label: "Dados", href: "/dados", icon: Database, roles: ["OWNER", "ADMIN", "MANAGER"] },
     { label: "Gerente de IA", href: "/gerente-ia", icon: Bot },
   ] },
 ];
