@@ -13,6 +13,7 @@ import {
   CircleDollarSign,
   Clock3,
   Eye,
+  Landmark,
   Layers3,
   LoaderCircle,
   MoreHorizontal,
@@ -154,6 +155,9 @@ export default function FinancialOverview() {
             <button type="button" onClick={() => setShowStructure(true)} className="inline-flex h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 text-sm font-bold text-slate-700 transition hover:bg-slate-50">
               <Layers3 className="size-4" />Estrutura
             </button>
+            <Link href="/financeiro/contas" className="inline-flex h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 text-sm font-bold text-slate-700 transition hover:bg-slate-50">
+              <Landmark className="size-4" />Contas &amp; Conciliação
+            </Link>
             <Link href="/financeiro?acao=novo" className="inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-orange-600 to-amber-600 px-4 text-sm font-bold text-white shadow-lg shadow-orange-200 transition hover:-translate-y-0.5 hover:shadow-xl"><Plus className="size-4" />Novo lançamento</Link>
           </div>
         </div>

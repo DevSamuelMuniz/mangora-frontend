@@ -25,6 +25,7 @@ export type FinancialEntry = {
   costCenter: string | null;
   costCenterId: string | null;
   accountCategoryId: string | null;
+  bankAccountId: string | null;
   competenceDate: string | null;
   recurrence: Recurrence;
   recurrenceDay: number | null;
