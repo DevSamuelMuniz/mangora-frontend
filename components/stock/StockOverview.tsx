@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import {
+  Truck,
   AlertTriangle,
   ArrowDownRight,
   ArrowRightLeft,
@@ -60,7 +61,7 @@ export default function StockOverview() {
 
   return (
     <section>
-      <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end"><div><p className="text-[11px] font-bold uppercase tracking-[0.14em] text-orange-600">Operação</p><h1 className="mt-1 text-2xl font-black tracking-tight text-slate-950 sm:text-3xl">Estoque</h1><p className="mt-1 text-xs text-slate-500">Controle saldos, níveis mínimos e movimentações.</p></div><div className="flex flex-col gap-2 sm:flex-row"><Link href="/estoque?acao=transferir" className="inline-flex h-11 items-center justify-center gap-2 rounded-xl border border-green-700 bg-white px-4 text-sm font-bold text-green-800 transition hover:bg-green-50"><ArrowRightLeft className="size-4" />Transferir entre lojas</Link><Link href="/estoque?acao=movimentar" className="inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-orange-600 to-amber-600 px-4 text-sm font-bold text-white shadow-lg shadow-orange-200 transition hover:-translate-y-0.5 hover:shadow-xl"><ArrowRightLeft className="size-4" />Nova movimentação</Link></div></div>
+      <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end"><div><p className="text-[11px] font-bold uppercase tracking-[0.14em] text-orange-600">Operação</p><h1 className="mt-1 text-2xl font-black tracking-tight text-slate-950 sm:text-3xl">Estoque</h1><p className="mt-1 text-xs text-slate-500">Controle saldos, níveis mínimos e movimentações.</p></div><div className="flex flex-col gap-2 sm:flex-row"><Link href="/estoque?acao=transferir" className="inline-flex h-11 items-center justify-center gap-2 rounded-xl border border-green-700 bg-white px-4 text-sm font-bold text-green-800 transition hover:bg-green-50"><ArrowRightLeft className="size-4" />Transferir entre lojas</Link><Link href="/estoque/transferencias" className="inline-flex h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 text-sm font-bold text-slate-700 transition hover:bg-slate-50"><Truck className="size-4" />Ver transferências</Link><Link href="/estoque?acao=movimentar" className="inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-orange-600 to-amber-600 px-4 text-sm font-bold text-white shadow-lg shadow-orange-200 transition hover:-translate-y-0.5 hover:shadow-xl"><ArrowRightLeft className="size-4" />Nova movimentação</Link></div></div>
 
       <div className="mt-5 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
         <SummaryCard icon={Boxes} label="Unidades em estoque" value={String(overview.summary.totalUnits)} iconClassName="bg-orange-50 text-orange-600" />

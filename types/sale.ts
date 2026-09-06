@@ -8,6 +8,7 @@ export type SaleItem = {
   productName: string;
   sku: string;
   quantity: number;
+  returnedQuantity: number;
   unitPrice: number;
   subtotal: number;
   trackStock: boolean;

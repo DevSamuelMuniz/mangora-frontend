@@ -48,3 +48,39 @@ export type StockMovementInput = {
   reason: string;
   notes?: string;
 };
+
+
+export type StockTransferStatus = "SENT" | "RECEIVED" | "CONFIRMED" | "CANCELLED";
+export type StockTransferSide = "SOURCE" | "DESTINATION";
+
+export type StockTransfer = {
+  id: string;
+  businessGroupId: string;
+  sourceCompanyId: string;
+  destinationCompanyId: string;
+  sourceProductId: string;
+  destinationProductId: string;
+  createdByName: string;
+  quantity: number;
+  status: StockTransferStatus;
+  receivedQuantity: number | null;
+  receivedByName: string | null;
+  receivedAt: string | null;
+  confirmedByName: string | null;
+  confirmedAt: string | null;
+  notes: string | null;
+  discrepancy: number | null;
+  side: StockTransferSide;
+  createdAt: string;
+  sourceCompany: { id: string; tradeName: string; unitCode: string | null };
+  destinationCompany: { id: string; tradeName: string; unitCode: string | null };
+  sourceProduct: { id: string; name: string; sku: string };
+  destinationProduct: { id: string; name: string; sku: string };
+};
+
+export const transferStatusLabels: Record<StockTransferStatus, string> = {
+  SENT: "Enviada",
+  RECEIVED: "Recebida",
+  CONFIRMED: "Confirmada",
+  CANCELLED: "Cancelada",
+};

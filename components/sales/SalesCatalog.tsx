@@ -5,6 +5,7 @@ import { useMemo, useState } from "react";
 import {
   AlertTriangle,
   Banknote,
+  CornerDownLeft,
   CheckCircle2,
   ChevronLeft,
   ChevronRight,
@@ -22,6 +23,7 @@ import {
 
 import { paymentMethodLabels, saleStatusLabels, type PaymentMethod, type Sale, type SaleStatus } from "@/types/sale";
 import { formatCurrency, formatDate, formatTime } from "@/lib/format";
+import SaleReturnForm from "@/components/sales/SaleReturnForm";
 import { brazilDateKey } from "@/lib/timezone";
 import { useCancelSale, useSales } from "@/features/sales/hooks/useSales";
 import { useToast } from "@/components/ui/toast";
@@ -43,6 +45,7 @@ export default function SalesCatalog() {
   const [page, setPage] = useState(1);
   const [selectedSale, setSelectedSale] = useState<Sale | null>(null);
   const [saleToCancel, setSaleToCancel] = useState<Sale | null>(null);
+  const [saleToReturn, setSaleToReturn] = useState<Sale | null>(null);
 
   const errorMessage = actionError || (error instanceof Error ? error.message : "");
 
@@ -165,6 +168,7 @@ export default function SalesCatalog() {
                               <summary aria-label={`Ações da venda ${sale.code}`} className="flex size-8 cursor-pointer list-none items-center justify-center rounded-lg text-slate-400 transition hover:bg-slate-100 hover:text-slate-700"><MoreHorizontal className="size-4" /></summary>
                               <div className="absolute right-0 z-20 mt-1 w-40 rounded-xl border border-slate-200 bg-white p-1.5 text-left shadow-xl">
                                 <button type="button" onClick={() => setSelectedSale(sale)} className="flex h-9 w-full items-center gap-2 rounded-lg px-2.5 text-xs font-semibold text-slate-600 hover:bg-slate-50"><Eye className="size-3.5" />Visualizar</button>
+                                {sale.status === "COMPLETED" && <button type="button" onClick={() => setSaleToReturn(sale)} className="flex h-9 w-full items-center gap-2 rounded-lg px-2.5 text-xs font-semibold text-orange-600 hover:bg-orange-50"><CornerDownLeft className="size-3.5" />Devolver itens</button>}
                                 {sale.status === "COMPLETED" && <button type="button" onClick={() => setSaleToCancel(sale)} className="flex h-9 w-full items-center gap-2 rounded-lg px-2.5 text-xs font-semibold text-red-600 hover:bg-red-50"><XCircle className="size-3.5" />Cancelar venda</button>}
                               </div>
                             </details>
@@ -197,6 +201,7 @@ export default function SalesCatalog() {
 
       {selectedSale && <SaleDetails sale={selectedSale} onClose={() => setSelectedSale(null)} />}
       {saleToCancel && <CancelSale sale={saleToCancel} loading={cancelSale.isPending} onCancel={() => setSaleToCancel(null)} onConfirm={(reason) => void confirmCancellation(reason)} />}
+      {saleToReturn && <SaleReturnForm sale={saleToReturn} onClose={() => setSaleToReturn(null)} onDone={(message) => toast.success(message)} />}
     </>
   );
 }

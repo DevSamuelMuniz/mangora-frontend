@@ -90,3 +90,20 @@ export function useCancelSale() {
         },
     });
 }
+
+
+export function useReturnSaleItems() {
+    const queryClient = useQueryClient();
+    return useMutation<unknown, Error, { id: string; reason: string; items: { saleItemId: string; quantity: number }[] }>({
+        mutationFn: ({ id, reason, items }) =>
+            apiRequest(`/sales/${id}/return-items`, { method: "POST", body: JSON.stringify({ reason, items }) }),
+        onSuccess: () => {
+            void Promise.all([
+                queryClient.invalidateQueries({ queryKey: salesQueryKey }),
+                queryClient.invalidateQueries({ queryKey: stockQueryKey }),
+                queryClient.invalidateQueries({ queryKey: financialQueryKey }),
+                queryClient.invalidateQueries({ queryKey: ["analytics"] }),
+            ]);
+        },
+    });
+}
