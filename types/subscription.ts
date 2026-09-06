@@ -39,6 +39,14 @@ export type SubscriptionOverview = {
   nextBillingAt: string | null;
   paymentMethod: string | null;
   pendingPlan: "START" | "BUSINESS" | "PREMIUM" | null;
+  billingBreakdown: null | {
+    planName: string;
+    unitPrice: number;
+    unitCount: number;
+    total: number;
+    calculationText: string;
+    hasOverride: boolean;
+  };
   provider: { name: "ASAAS"; configured: boolean; environment: "sandbox" | "production"; customerConnected: boolean; subscriptionConnected: boolean };
   usage: Array<{ key: string; label: string; current: number; limit: number | null }>;
   plans: Array<{ id: string; name: string; price: number | null; ownerLimit: number | null; employeeLimit: number | null; unitLimit: number | null }>;
