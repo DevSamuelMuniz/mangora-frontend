@@ -1,6 +1,6 @@
-# Gestão+ Frontend
+# Mangora Frontend
 
-Interface web do Gestão+, construída com Next.js App Router, React, TypeScript e Tailwind CSS.
+Interface web da Mangora, construída com Next.js App Router, React, TypeScript e Tailwind CSS.
 
 ## Configuração
 

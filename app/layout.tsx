@@ -8,6 +8,7 @@ import {
 import Script from "next/script";
 import QueryProvider from "@/components/providers/QueryProvider";
 import { ToastProvider } from "@/components/ui/toast";
+import { brand } from "@/lib/brand";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -33,7 +34,7 @@ const manrope = Manrope({
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.mangora.com.br"),
   title: {
-    default: "Mangora — Gestão simples para vender, organizar e crescer",
+    default: brand.title,
     template: "%s | Mangora",
   },
   description:
@@ -86,22 +87,6 @@ export default function RootLayout({
             gtag('config', 'G-D2T56HSMLK');
           `}
         </Script>
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "SoftwareApplication",
-            name: "Mangora",
-            alternateName: "Sistema Mangora",
-            url: "https://www.mangora.com.br",
-            image: "https://www.mangora.com.br/mangora-share.png",
-            logo: "https://www.mangora.com.br/icon.png",
-            description: "Sistema de gestão para vendas, estoque, clientes, caixa e financeiro.",
-            applicationCategory: "BusinessApplication",
-            operatingSystem: "Web",
-            offers: { "@type": "Offer", price: "0", priceCurrency: "BRL", description: "7 dias grátis e plano Free" },
-          }).replace(/</g, "\\u003c") }}
-        />
         <QueryProvider>
           <ToastProvider>{children}</ToastProvider>
         </QueryProvider>

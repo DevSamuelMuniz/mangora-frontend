@@ -1,4 +1,4 @@
-# Arquitetura do Frontend — Gestão+ (Mangora)
+# Arquitetura do Frontend — Mangora
 
 Documento de referência das relações entre módulos (Fase 7 do plano de
 refatoração). O backend (NestJS + Prisma) é a autoridade de dados e regras;

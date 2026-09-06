@@ -26,12 +26,14 @@ import BrandLogo from "@/components/brand/BrandLogo";
 import MascotPose from "@/components/brand/MascotPose";
 import { marketingPlans } from "@/lib/plans";
 import { brazilDateKey } from "@/lib/timezone";
+import { brand, brandGraph } from "@/lib/brand";
 
 export const metadata: Metadata = {
-  title: { absolute: "Mangora — Gestão simples para vender, organizar e crescer" },
-  description: "Sistema de gestão para vendas, estoque, clientes, caixa e financeiro. Teste a Mangora por 7 dias grátis, sem cartão, e continue no plano Free.",
+  title: { absolute: brand.title },
+  description: brand.description,
   alternates: { canonical: "/" },
-  openGraph: { url: "/", title: "Mangora — Gestão simples para o seu negócio", description: "Organize vendas, estoque, clientes, caixa e financeiro. Comece com 7 dias grátis, sem cartão." },
+  openGraph: { url: "/", type: "website", locale: "pt_BR", siteName: brand.name, title: brand.title, description: brand.description, images: [{ url: brand.image, width: 500, height: 500, alt: "Mangora — sistema de gestão online" }] },
+  twitter: { card: "summary_large_image", title: brand.title, description: brand.description, images: [brand.image] },
 };
 
 const resources = [
@@ -76,6 +78,7 @@ const segments = [
 export default function Home() {
   return (
     <main className="min-h-screen overflow-hidden bg-[#fff8ea] font-[family-name:var(--font-manrope)] text-[#123d2b]">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(brandGraph).replace(/</g, "\\u003c") }} />
       <Header />
 
       <section className="relative isolate pt-28 sm:pt-32 lg:pt-36">
