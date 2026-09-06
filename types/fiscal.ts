@@ -43,3 +43,14 @@ export type FiscalRejections = {
     createdAt: string;
   }>;
 };
+
+
+export type FiscalCertificate = {
+  configured: boolean;
+  label: string | null;
+  expiresAt: string | null;
+  status: "NONE" | "OK" | "SOON" | "EXPIRED";
+  daysLeft: number | null;
+  guidance: string;
+  environment: "HOMOLOGATION" | "PRODUCTION";
+};

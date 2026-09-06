@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { apiRequest } from "@/lib/api/client";
-import type { FiscalDocument, FiscalDocumentType, FiscalReadiness, FiscalSettingsResponse , FiscalRejections } from "@/types/fiscal";
+import type { FiscalCertificate, FiscalDocument, FiscalDocumentType, FiscalReadiness, FiscalRejections, FiscalSettingsResponse } from "@/types/fiscal";
 import type { Sale } from "@/types/sale";
 
 /**
@@ -102,5 +102,13 @@ export function useFiscalRejections(days = 30) {
     return useQuery<FiscalRejections, Error>({
         queryKey: ["fiscal", "rejections", days],
         queryFn: () => apiRequest<FiscalRejections>(`/fiscal/rejections?days=${days}`),
+    });
+}
+
+
+export function useFiscalCertificate() {
+    return useQuery<FiscalCertificate | null, Error>({
+        queryKey: ["fiscal", "certificate"],
+        queryFn: () => apiRequest<FiscalCertificate>("/fiscal/certificate"),
     });
 }
