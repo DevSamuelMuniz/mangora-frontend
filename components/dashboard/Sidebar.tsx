@@ -7,7 +7,9 @@ import {
   ArrowRightLeft,
   BarChart3,
   Bot,
+  ClipboardCheck,
   Database,
+  Layers3,
   Banknote,
   Boxes,
   Building2,
@@ -64,6 +66,8 @@ const navigationGroups: NavigationGroup[] = [
   { label: "Suprimentos", icon: Boxes, items: [
     { label: "Estoque", href: "/estoque", icon: Boxes },
     { label: "Transferências", href: "/estoque/transferencias", icon: ArrowRightLeft, roles: ["OWNER", "ADMIN", "MANAGER"] },
+    { label: "Inventário físico", href: "/estoque/inventario", icon: ClipboardCheck, roles: ["OWNER", "ADMIN", "MANAGER"] },
+    { label: "Lotes & custo", href: "/estoque/lotes", icon: Layers3, roles: ["OWNER", "ADMIN", "MANAGER"] },
     { label: "Compras", href: "/compras", icon: ClipboardList, roles: ["OWNER", "ADMIN", "MANAGER"] },
     { label: "Fornecedores", href: "/fornecedores", icon: Truck, roles: ["OWNER", "ADMIN", "MANAGER"] },
   ] },

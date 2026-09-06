@@ -84,3 +84,43 @@ export const transferStatusLabels: Record<StockTransferStatus, string> = {
   CONFIRMED: "Confirmada",
   CANCELLED: "Cancelada",
 };
+
+
+export type StockCountStatus = "DRAFT" | "COMPLETED" | "CANCELLED";
+
+export type StockCount = {
+  id: string;
+  companyId: string;
+  createdByName: string;
+  name: string | null;
+  status: StockCountStatus;
+  notes: string | null;
+  completedAt: string | null;
+  completedByName: string | null;
+  createdAt: string;
+  items: Array<{
+    id: string;
+    productId: string;
+    expectedStock: number;
+    countedStock: number;
+    difference: number;
+    product: { id: string; name: string; sku: string; stock: number };
+  }>;
+};
+
+export type ProductBatch = {
+  id: string;
+  code: string;
+  quantity: number;
+  unitCost: number;
+  expiresAt: string | null;
+  receivedByName: string;
+  createdAt: string;
+  product: { id: string; name: string; sku: string };
+};
+
+export const stockCountStatusLabels: Record<StockCountStatus, string> = {
+  DRAFT: "Em contagem",
+  COMPLETED: "Concluída",
+  CANCELLED: "Cancelada",
+};

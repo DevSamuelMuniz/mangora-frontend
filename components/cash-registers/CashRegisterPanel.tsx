@@ -4,7 +4,7 @@ import { FormEvent, useMemo, useState } from "react";
 import { ArrowDownToLine, ArrowUpFromLine, Banknote, CheckCircle2, LoaderCircle, LockKeyhole, PlusCircle, RefreshCw, WalletCards } from "lucide-react";
 import type { CashMovementType } from "@/types/cash-register";
 import { formatCurrency, formatDateTime } from "@/lib/format";
-import { useCashRegister, useCloseRegister, useOpenRegister, useRegisterMovement } from "@/features/cash-registers/hooks/useCashRegister";
+import { useApproveDiscrepancy, useCashRegister, useCloseRegister, useOpenRegister, useRegisterMovement } from "@/features/cash-registers/hooks/useCashRegister";
 
 const movementLabels: Record<CashMovementType, string> = { OPENING: "Abertura", SUPPLY: "Suprimento", WITHDRAWAL: "Sangria", SALE: "Venda em dinheiro", SALE_REVERSAL: "Estorno de venda" };
 
@@ -12,6 +12,7 @@ export default function CashRegisterPanel() {
   const { data, isLoading: loading, error: loadError, refetch: refresh } = useCashRegister();
   const openMutation = useOpenRegister();
   const closeMutation = useCloseRegister();
+  const approveMutation = useApproveDiscrepancy();
   const movementMutation = useRegisterMovement();
   const busy = openMutation.isPending || closeMutation.isPending || movementMutation.isPending;
   const register = data?.register ?? null;
@@ -19,6 +20,21 @@ export default function CashRegisterPanel() {
   const [actionError, setActionError] = useState("");
   const [feedback, setFeedback] = useState("");
   const [action, setAction] = useState<"SUPPLY" | "WITHDRAWAL" | "CLOSE" | null>(null);
+  const [approving, setApproving] = useState<{ id: string; tradeName: string; difference: number } | null>(null);
+  const [resolution, setResolution] = useState("");
+
+  async function confirmApproval() {
+    if (!approving) return;
+    try {
+      setActionError("");
+      await approveMutation.mutateAsync({ id: approving.id, resolution: resolution.trim() });
+      setApproving(null);
+      setResolution("");
+      setFeedback("Divergência aprovada e registrada no histórico.");
+    } catch (requestError) {
+      setActionError(requestError instanceof Error ? requestError.message : "Não foi possível aprovar a divergência.");
+    }
+  }
 
   const errorMessage = actionError || (loadError instanceof Error ? loadError.message : "");
 
@@ -62,7 +78,8 @@ export default function CashRegisterPanel() {
       <div className="mt-4 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm"><div className="flex items-center justify-between border-b border-slate-100 px-5 py-4"><div><h2 className="text-sm font-bold text-slate-950">Movimentações do turno</h2><p className="mt-0.5 text-[10px] text-slate-400">Aberto por {register.openedByName} em {formatDateTime(new Date(register.openedAt))}</p></div><RefreshCw className="size-4 text-slate-300" /></div><div className="divide-y divide-slate-100">{register.movements.map((movement) => <div key={movement.id} className="flex items-center gap-3 px-5 py-3"><span className={`flex size-8 items-center justify-center rounded-xl ${movement.amount >= 0 ? "bg-green-50 text-green-600" : "bg-red-50 text-red-600"}`}>{movement.amount >= 0 ? <ArrowDownToLine className="size-3.5" /> : <ArrowUpFromLine className="size-3.5" />}</span><div className="min-w-0 flex-1"><p className="truncate text-xs font-bold text-slate-800">{movement.description}</p><p className="mt-0.5 text-[9px] text-slate-400">{movementLabels[movement.type]} · {movement.createdByName} · {formatDateTime(new Date(movement.createdAt))}</p></div><strong className={`text-xs ${movement.amount >= 0 ? "text-green-600" : "text-red-600"}`}>{movement.amount >= 0 ? "+ " : "- "}{formatCurrency(Math.abs(movement.amount))}</strong></div>)}</div></div>
     </>}
 
-    <div className="mt-5 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm"><div className="border-b border-slate-100 px-5 py-4"><h2 className="text-sm font-bold text-slate-950">Histórico de caixas</h2><p className="mt-0.5 text-[10px] text-slate-400">Últimas aberturas e conferências da empresa.</p></div><div className="overflow-x-auto"><table className="w-full min-w-[680px] text-left"><thead className="bg-slate-50 text-[10px] uppercase tracking-wide text-slate-400"><tr><th className="px-5 py-3">Abertura</th><th className="px-4 py-3">Operador</th><th className="px-4 py-3">Esperado</th><th className="px-4 py-3">Contado</th><th className="px-5 py-3">Diferença</th></tr></thead><tbody className="divide-y divide-slate-100">{history.filter((item) => item.status === "CLOSED").map((item) => <tr key={item.id}><td className="px-5 py-3 text-xs text-slate-600">{formatDateTime(new Date(item.openedAt))}</td><td className="px-4 py-3 text-xs font-bold text-slate-700">{item.openedByName}</td><td className="px-4 py-3 text-xs">{formatCurrency(item.expectedAmount ?? 0)}</td><td className="px-4 py-3 text-xs">{formatCurrency(item.actualAmount ?? 0)}</td><td className={`px-5 py-3 text-xs font-black ${(item.difference ?? 0) === 0 ? "text-green-600" : "text-red-600"}`}>{formatCurrency(item.difference ?? 0)}</td></tr>)}{!history.some((item) => item.status === "CLOSED") && <tr><td colSpan={5} className="px-5 py-8 text-center text-xs text-slate-400">Nenhum caixa fechado ainda.</td></tr>}</tbody></table></div></div>
+    <div className="mt-5 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm"><div className="border-b border-slate-100 px-5 py-4"><h2 className="text-sm font-bold text-slate-950">Histórico de caixas</h2><p className="mt-0.5 text-[10px] text-slate-400">Últimas aberturas e conferências da empresa.</p></div><div className="overflow-x-auto"><table className="w-full min-w-[680px] text-left"><thead className="bg-slate-50 text-[10px] uppercase tracking-wide text-slate-400"><tr><th className="px-5 py-3">Abertura</th><th className="px-4 py-3">Operador</th><th className="px-4 py-3">Esperado</th><th className="px-4 py-3">Contado</th><th className="px-5 py-3">Diferença</th></tr></thead><tbody className="divide-y divide-slate-100">{history.filter((item) => item.status === "CLOSED").map((item) => <tr key={item.id}><td className="px-5 py-3 text-xs text-slate-600">{formatDateTime(new Date(item.openedAt))}</td><td className="px-4 py-3 text-xs font-bold text-slate-700">{item.openedByName}</td><td className="px-4 py-3 text-xs">{formatCurrency(item.expectedAmount ?? 0)}</td><td className="px-4 py-3 text-xs">{formatCurrency(item.actualAmount ?? 0)}</td><td className="px-5 py-3"><p className={`text-xs font-black ${(item.difference ?? 0) === 0 ? "text-green-600" : "text-red-600"}`}>{formatCurrency(item.difference ?? 0)}</p>{(item.difference ?? 0) !== 0 && !item.discrepancyApprovedAt && <button type="button" onClick={() => { setApproving({ id: item.id, tradeName: item.openedByName, difference: item.difference ?? 0 }); setResolution(""); }} className="mt-1 rounded-lg border border-amber-200 px-2 py-1 text-[9px] font-bold text-amber-700 hover:bg-amber-50">Aprovar divergência</button>}{item.discrepancyApprovedAt && <p className="mt-1 text-[9px] font-semibold text-green-700">Aprovada por {item.discrepancyApprovedByName}</p>}</td></tr>)}{!history.some((item) => item.status === "CLOSED") && <tr><td colSpan={5} className="px-5 py-8 text-center text-xs text-slate-400">Nenhum caixa fechado ainda.</td></tr>}</tbody></table></div></div>
+      {approving && <div className="fixed inset-0 z-[70] flex items-center justify-center bg-slate-950/40 p-4 backdrop-blur-sm"><div role="alertdialog" aria-modal="true" className="w-full max-w-sm rounded-2xl border border-slate-200 bg-white p-5 shadow-2xl"><div className="flex size-10 items-center justify-center rounded-xl bg-amber-50 text-amber-600"><CheckCircle2 className="size-4" /></div><h2 className="mt-4 text-base font-black text-slate-950">Aprovar divergência</h2><p className="mt-2 text-xs leading-5 text-slate-500">O fechamento de <strong className="text-slate-700">{approving.tradeName}</strong> teve diferença de <strong className={approving.difference < 0 ? "text-red-600" : "text-green-600"}>{formatCurrency(approving.difference)}</strong>. Explique o motivo para ficar registrado no histórico.</p><textarea value={resolution} onChange={(event) => setResolution(event.target.value)} maxLength={500} rows={3} placeholder="Ex.: troco preparado com antecedência..." className="mt-4 w-full resize-none rounded-xl border border-slate-200 p-3 text-xs outline-none focus:border-orange-300 focus:ring-4 focus:ring-orange-100" /><div className="mt-5 flex justify-end gap-2"><button type="button" disabled={approveMutation.isPending} onClick={() => setApproving(null)} className="h-10 rounded-xl border border-slate-200 px-4 text-xs font-bold text-slate-600 hover:bg-slate-50 disabled:opacity-50">Cancelar</button><button type="button" disabled={approveMutation.isPending || resolution.trim().length < 3} onClick={() => void confirmApproval()} className="inline-flex h-10 items-center gap-2 rounded-xl bg-amber-500 px-4 text-xs font-bold text-white hover:bg-amber-600 disabled:opacity-50">{approveMutation.isPending && <LoaderCircle className="size-3.5 animate-spin" />}Aprovar</button></div></div></div>}
   </section>;
 }
 

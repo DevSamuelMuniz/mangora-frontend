@@ -57,3 +57,9 @@ export type ProductInput = {
   fiscalUnit?: string;
   fiscalBenefitCode?: string | null;
 };
+
+export type ProductCost = {
+  costMethod?: "AVERAGE" | "FIFO";
+  unitCost?: number | null;
+  marginPercent?: number | null;
+};

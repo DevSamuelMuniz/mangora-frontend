@@ -58,3 +58,15 @@ export function useCloseRegister() {
         },
     });
 }
+
+
+export function useApproveDiscrepancy() {
+    const queryClient = useQueryClient();
+    return useMutation<unknown, Error, { id: string; resolution: string }>({
+        mutationFn: ({ id, resolution }) =>
+            apiRequest(`/cash-registers/${id}/approve-discrepancy`, { method: "POST", body: JSON.stringify({ resolution }) }),
+        onSuccess: () => {
+            void queryClient.invalidateQueries({ queryKey: cashRegisterQueryKey });
+        },
+    });
+}
