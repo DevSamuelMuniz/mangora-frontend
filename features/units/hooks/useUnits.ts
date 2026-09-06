@@ -18,10 +18,11 @@ export function useUnitGroup() {
     });
 }
 
-export function useConsolidated(period: string) {
+export function useConsolidated(period: string, unitIds: string[] = []) {
+    const filter = unitIds.length ? `&unitIds=${unitIds.join(",")}` : "";
     return useQuery<ConsolidatedOverview, Error>({
-        queryKey: consolidatedQueryKey(period),
-        queryFn: () => apiRequest<ConsolidatedOverview>(`/analytics/consolidated?period=${period}`),
+        queryKey: [...consolidatedQueryKey(period), unitIds.join(",")],
+        queryFn: () => apiRequest<ConsolidatedOverview>(`/analytics/consolidated?period=${period}${filter}`),
     });
 }
 
