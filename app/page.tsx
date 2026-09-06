@@ -27,6 +27,8 @@ import MascotPose from "@/components/brand/MascotPose";
 import { marketingPlans } from "@/lib/plans";
 import { brazilDateKey } from "@/lib/timezone";
 import { brand, brandGraph } from "@/lib/brand";
+import ConversionTracking from "@/components/marketing/ConversionTracking";
+import ProductWalkthrough from "@/components/marketing/ProductWalkthrough";
 
 export const metadata: Metadata = {
   title: { absolute: brand.title },
@@ -80,8 +82,9 @@ export default function Home() {
     <main className="min-h-screen overflow-hidden bg-[#fff8ea] font-[family-name:var(--font-manrope)] text-[#123d2b]">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(brandGraph).replace(/</g, "\\u003c") }} />
       <Header />
+      <ConversionTracking />
 
-      <section className="relative isolate pt-28 sm:pt-32 lg:pt-36">
+      <section id="inicio" className="relative isolate pt-24 sm:pt-28 lg:pt-28">
         <div className="absolute inset-x-0 top-0 -z-20 h-[780px] bg-[radial-gradient(circle_at_78%_26%,rgba(255,178,26,0.32),transparent_31%),radial-gradient(circle_at_10%_30%,rgba(255,107,26,0.13),transparent_28%)]" />
         <div className="absolute left-[7%] top-36 -z-10 size-3 rounded-full bg-[#ffb21a] sm:size-4" />
         <div className="absolute right-[8%] top-44 -z-10 size-5 rotate-12 rounded-sm bg-[#147a45]/20" />
@@ -90,13 +93,13 @@ export default function Home() {
           <div className="relative z-10 max-w-2xl">
             <p className="inline-flex -rotate-1 items-center gap-2 rounded-full border-2 border-[#123d2b]/10 bg-white px-4 py-2 text-xs font-extrabold uppercase tracking-[0.16em] text-[#147a45] shadow-[3px_3px_0_#ffb21a] sm:text-sm">
               <span className="size-2 rounded-full bg-[#ff6b1a]" />
-              7 dias grátis para colocar a casa em ordem
+              Gestão online para pequenos negócios
             </p>
 
-            <h1 className="mt-8 max-w-[760px] text-balance font-[family-name:var(--font-bricolage)] text-[clamp(3.25rem,7vw,6.8rem)] font-extrabold leading-[0.88] tracking-[-0.065em] text-[#123d2b]">
-              Seu negócio flui.
+            <h1 className="mt-6 max-w-[760px] text-balance font-[family-name:var(--font-bricolage)] text-[clamp(2.5rem,4.8vw,4.5rem)] font-extrabold leading-[1.04] tracking-[-0.045em] text-[#123d2b]">
+              Vendas, estoque e financeiro.
               <span className="relative mt-2 block w-fit text-[#ff6b1a]">
-                Você respira.
+                Tudo sob controle.
                 <svg
                   aria-hidden="true"
                   viewBox="0 0 460 22"
@@ -113,9 +116,9 @@ export default function Home() {
               </span>
             </h1>
 
-            <p className="mt-10 max-w-xl text-lg font-medium leading-8 text-[#315847] sm:text-xl">
-              Teste vendas, estoque, clientes e financeiro trabalhando juntos
-              por 7 dias. Sem cartão e sem compromisso para começar.
+            <p className="mt-8 max-w-xl text-lg font-medium leading-8 text-[#315847] sm:text-xl">
+              Saiba quanto vendeu, o que tem para receber e quais produtos estão
+              acabando. Organize a rotina do seu negócio com a Mangora.
             </p>
 
             <div className="mt-9 flex flex-col gap-3 sm:flex-row sm:items-center">
@@ -123,23 +126,23 @@ export default function Home() {
                 href="/cadastro"
                 className="group inline-flex min-h-14 items-center justify-center gap-3 rounded-2xl bg-[#ff6b1a] px-7 font-extrabold text-white shadow-[0_8px_0_#c9460b] transition hover:-translate-y-1 hover:shadow-[0_12px_0_#c9460b] focus-visible:outline-4 focus-visible:outline-offset-4 focus-visible:outline-[#ffb21a]"
               >
-                Começar meus 7 dias grátis
+                Testar grátis por 7 dias
                 <ArrowRight className="size-5 transition group-hover:translate-x-1" />
               </Link>
               <Link
-                href="#como-funciona"
+                href="#por-dentro"
                 className="inline-flex min-h-14 items-center justify-center gap-2 rounded-2xl px-6 font-extrabold text-[#123d2b] transition hover:bg-white"
               >
-                Ver como funciona
+                Explorar demonstração
                 <ChevronRight className="size-5" />
               </Link>
             </div>
 
             <div className="mt-8 flex flex-wrap gap-x-6 gap-y-3 text-sm font-semibold text-[#4a695c]">
-              <Benefit>7 dias com acesso completo</Benefit>
-              <Benefit>Sem cartão para começar</Benefit>
-              <Benefit>Depois, continue no Free</Benefit>
+              <Benefit>Sem cartão de crédito</Benefit>
+              <Benefit>Sem cobrança automática</Benefit>
             </div>
+            <p className="mt-4 max-w-lg text-sm leading-6 text-[#4a695c]">Experimente por 7 dias. Depois, sua conta continua no Free; assine um plano se precisar de mais recursos.</p>
           </div>
 
           <HeroCounter />
@@ -166,7 +169,9 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="recursos" className="bg-white py-24 sm:py-32">
+      <ProductWalkthrough />
+
+      <section id="recursos" className="bg-white py-16 sm:py-24">
         <div className="mx-auto max-w-[1380px] px-5 sm:px-8 lg:px-10">
           <SectionHeading
             tag="Uma operação conectada"
@@ -293,7 +298,7 @@ export default function Home() {
             <SectionHeading
               tag="Planos sem labirinto"
               title="Comece do tamanho certo."
-              copy="Use tudo por 7 dias grátis. Depois, continue no Free sem prazo ou escolha um plano para crescer."
+              copy="Experimente os recursos do Start por 7 dias grátis. Depois, continue no Free ou escolha o plano que atende sua operação."
               align="left"
             />
             <div className="relative hidden w-44 lg:block">
@@ -316,7 +321,7 @@ export default function Home() {
               >
                 {plan.featured && (
                   <span className="absolute -top-4 right-6 rotate-2 rounded-full bg-[#ff6b1a] px-4 py-2 text-xs font-black uppercase tracking-wider text-white">
-                    Mais escolhido
+                    Para crescer
                   </span>
                 )}
                 <h3 className="font-[family-name:var(--font-bricolage)] text-3xl font-extrabold text-[#123d2b]">
@@ -364,7 +369,22 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="contato" className="bg-white px-5 pb-20 sm:px-8 lg:px-10 lg:pb-28">
+      <section id="duvidas" className="bg-[#fff8ea] px-5 py-16 sm:px-8 sm:py-24">
+        <div className="mx-auto max-w-3xl">
+          <h2 className="font-[family-name:var(--font-bricolage)] text-4xl font-extrabold tracking-tight text-[#123d2b]">Antes de começar</h2>
+          <div className="mt-8 divide-y divide-[#123d2b]/15">
+            {[
+              ["Preciso informar meu cartão?", "Não. Você cria sua conta e começa os 7 dias de experiência Start sem informar cartão de crédito."],
+              ["O que acontece depois dos 7 dias?", "Sua conta continua no plano Free, com os recursos e limites desse plano. Para continuar usando recursos pagos, escolha uma assinatura. O teste não gera cobrança automática."],
+              ["Preciso instalar algum programa?", "A Mangora funciona pelo navegador, com acesso à internet. Você pode acessar pelo computador ou celular."],
+              ["Por onde começo depois do cadastro?", "Cadastre sua empresa e os produtos ou serviços que vende. Depois, registre uma venda e acompanhe os dados no sistema."],
+              ["Posso tirar uma dúvida antes de me cadastrar?", "Sim. Use o botão Falar com a Mangora abaixo para entrar em contato pelo WhatsApp."],
+            ].map(([question, answer]) => <details key={question} className="group py-5"><summary className="cursor-pointer rounded-lg text-lg font-bold text-[#123d2b] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#147a45]">{question}</summary><p className="mt-4 max-w-2xl leading-7 text-[#315847]">{answer}</p></details>)}
+          </div>
+        </div>
+      </section>
+
+      <section id="contato" className="bg-white px-5 py-16 sm:px-8 lg:px-10 lg:pb-28">
         <div className="relative mx-auto max-w-[1380px] overflow-hidden rounded-[2.75rem] bg-[#147a45] px-6 py-14 text-white sm:px-12 lg:min-h-[450px] lg:px-16 lg:py-20">
           <div className="absolute -left-20 -top-24 size-72 rounded-full border-[42px] border-white/5" />
           <div className="absolute bottom-0 right-0 h-1/2 w-full bg-[linear-gradient(8deg,rgba(18,61,43,0.38)_0_48%,transparent_49%)]" />
@@ -374,7 +394,7 @@ export default function Home() {
               A próxima venda pode ser mais simples
             </p>
             <h2 className="mt-5 text-balance font-[family-name:var(--font-bricolage)] text-5xl font-extrabold leading-[0.95] tracking-[-0.05em] sm:text-7xl">
-              Coloque a casa em ordem. Depois, faça barulho.
+              Comece pela próxima venda.
             </h2>
             <p className="mt-6 max-w-xl text-lg leading-8 text-white/75">
               São 7 dias para vender, organizar e sentir a diferença na rotina.
@@ -452,8 +472,8 @@ function Header() {
 
 function HeroCounter() {
   return (
-    <div className="relative mx-auto w-full max-w-[720px] lg:ml-auto">
-      <div className="absolute -right-2 -top-8 z-20 w-[34%] min-w-40 sm:-right-6 sm:-top-16 sm:w-[36%]">
+    <div id="demonstracao" className="relative mx-auto w-full max-w-[720px] scroll-mt-28 lg:ml-auto">
+      <div className="absolute -right-2 -top-16 z-20 w-24 sm:-right-4 sm:-top-20 sm:w-28 pointer-events-none">
         <MascotPose
           pose="wave"
           label="Mascote Mangora dando boas-vindas"
@@ -465,10 +485,10 @@ function HeroCounter() {
         <div className="flex items-center justify-between border-b-2 border-[#123d2b] bg-[#fff8ea] px-5 py-4 sm:px-7">
           <div>
             <p className="font-[family-name:var(--font-bricolage)] text-lg font-extrabold">Movimento de hoje</p>
-            <p className="text-xs font-semibold text-[#6a7d73]">Tudo atualizado em tempo real</p>
+            <p className="text-xs font-semibold text-[#6a7d73]">Prévia ilustrativa · dados de exemplo</p>
           </div>
           <span className="flex items-center gap-2 rounded-full bg-[#dff4e7] px-3 py-2 text-[10px] font-black uppercase tracking-wider text-[#147a45]">
-            <span className="size-2 rounded-full bg-[#147a45]" /> Ao vivo
+            Demonstração
           </span>
         </div>
 

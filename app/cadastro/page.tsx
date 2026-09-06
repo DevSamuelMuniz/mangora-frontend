@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { FormEvent, useState } from "react";
+import { FormEvent, useRef, useState } from "react";
 import { ArrowLeft, ArrowRight, Building2, CheckCircle2, Eye, EyeOff, LoaderCircle, LockKeyhole, Mail, Phone, ShieldCheck, Store, User, type LucideIcon } from "lucide-react";
 import AuthVisualPanel from "@/components/auth/AuthVisualPanel";
 import BrandLogo from "@/components/brand/BrandLogo";
@@ -22,6 +22,7 @@ const segments = [
 ];
 
 export default function CadastroPage() {
+  const started = useRef(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showPasswordConfirmation, setShowPasswordConfirmation] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -67,7 +68,7 @@ export default function CadastroPage() {
   }
 
   return (
-    <main className="min-h-screen bg-[#fff8ea] font-[family-name:var(--font-manrope)] text-[#123d2b]">
+    <main onChange={() => { if (!started.current) { started.current = true; track("signup_started"); } }} className="min-h-screen bg-[#fff8ea] font-[family-name:var(--font-manrope)] text-[#123d2b]">
       <div className="grid min-h-screen lg:grid-cols-[0.78fr_1.22fr] xl:grid-cols-[0.92fr_1.08fr]">
         <AuthVisualPanel variant="register" />
 
