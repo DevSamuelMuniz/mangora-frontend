@@ -1,6 +1,7 @@
 export type FinancialEntryType = "INCOME" | "EXPENSE";
 export type FinancialEntryStatus = "PENDING" | "PARTIALLY_PAID" | "PAID" | "OVERDUE" | "CANCELLED";
 export type StoredFinancialEntryStatus = Exclude<FinancialEntryStatus, "OVERDUE">;
+export type Recurrence = "NONE" | "DAILY" | "WEEKLY" | "MONTHLY" | "YEARLY";
 
 export type FinancialEntry = {
   id: string;
@@ -22,6 +23,15 @@ export type FinancialEntry = {
   contact: string | null;
   document: string | null;
   costCenter: string | null;
+  costCenterId: string | null;
+  accountCategoryId: string | null;
+  competenceDate: string | null;
+  recurrence: Recurrence;
+  recurrenceDay: number | null;
+  recurrenceEndDate: string | null;
+  reversed: boolean;
+  reversalOfId: string | null;
+  reversedAt: string | null;
   paymentMethod: string | null;
   notes: string | null;
   cancelledAt: string | null;
@@ -36,9 +46,28 @@ export type FinancialPayment = {
   financialEntryId: string;
   receivedByName: string;
   amount: number;
+  interest: number;
+  discount: number;
+  remainingAfter: number | null;
   paymentMethod: "PIX" | "CREDIT_CARD" | "DEBIT_CARD" | "CASH" | "BOLETO" | "CHECK" | "STORE_CREDIT";
   paidAt: string;
   notes: string | null;
+};
+
+export type CostCenter = {
+  id: string;
+  companyId: string;
+  name: string;
+  active: boolean;
+};
+
+export type AccountCategory = {
+  id: string;
+  companyId: string;
+  code: string;
+  name: string;
+  type: FinancialEntryType;
+  active: boolean;
 };
 
 export type FinancialOverview = {
@@ -49,3 +78,4 @@ export type FinancialOverview = {
 
 export const financialTypeLabels: Record<FinancialEntryType, string> = { INCOME: "Receita", EXPENSE: "Despesa" };
 export const financialStatusLabels: Record<FinancialEntryStatus, string> = { PENDING: "Pendente", PARTIALLY_PAID: "Pago parcialmente", PAID: "Pago", OVERDUE: "Vencido", CANCELLED: "Cancelado" };
+export const recurrenceLabels: Record<Recurrence, string> = { NONE: "Sem recorrência", DAILY: "Diária", WEEKLY: "Semanal", MONTHLY: "Mensal", YEARLY: "Anual" };

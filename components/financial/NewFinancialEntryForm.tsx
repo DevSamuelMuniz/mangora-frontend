@@ -15,13 +15,15 @@ import {
 } from "lucide-react";
 
 import { expenseCategories, incomeCategories } from "./financial-data";
-import { financialTypeLabels, type FinancialEntryType, type StoredFinancialEntryStatus } from "@/types/financial";
-import { useCreateFinancialEntry } from "@/features/financial/hooks/useFinancialEntries";
+import { financialTypeLabels, recurrenceLabels, type FinancialEntryType, type Recurrence, type StoredFinancialEntryStatus } from "@/types/financial";
+import { useAccountCategories, useCostCenters, useCreateFinancialEntry } from "@/features/financial/hooks/useFinancialEntries";
 import { brazilDateTimeToIso } from "@/lib/timezone";
 
 export default function NewFinancialEntryForm() {
   const router = useRouter();
   const createEntry = useCreateFinancialEntry();
+  const { data: costCenters } = useCostCenters();
+  const { data: accountCategories } = useAccountCategories();
   const loading = createEntry.isPending;
   const [entryType, setEntryType] = useState<FinancialEntryType>("INCOME");
   const [entryStatus, setEntryStatus] = useState<StoredFinancialEntryStatus>("PENDING");
@@ -36,6 +38,10 @@ export default function NewFinancialEntryForm() {
     const category = String(formData.get("category") ?? "");
     const amount = Number(formData.get("amount"));
     const dueDate = String(formData.get("dueDate") ?? "");
+    const recurrence = String(formData.get("recurrence") ?? "NONE") as Recurrence;
+    const recurrenceDay = formData.get("recurrenceDay") ? Number(formData.get("recurrenceDay")) : undefined;
+    const competenceDate = String(formData.get("competenceDate") ?? "");
+    const recurrenceEndDate = String(formData.get("recurrenceEndDate") ?? "");
 
     setError("");
 
@@ -69,6 +75,12 @@ export default function NewFinancialEntryForm() {
         contact: String(formData.get("contact") ?? "") || undefined,
         document: String(formData.get("document") ?? "") || undefined,
         costCenter: String(formData.get("costCenter") ?? "") || undefined,
+        costCenterId: String(formData.get("costCenterId") ?? "") || undefined,
+        accountCategoryId: String(formData.get("accountCategoryId") ?? "") || undefined,
+        competenceDate: competenceDate ? brazilDateTimeToIso(competenceDate) : undefined,
+        recurrence,
+        recurrenceDay,
+        recurrenceEndDate: recurrenceEndDate ? brazilDateTimeToIso(recurrenceEndDate) : undefined,
         paymentMethod: String(formData.get("paymentMethod") ?? "") || undefined,
         notes: String(formData.get("notes") ?? "") || undefined,
       });
@@ -108,6 +120,8 @@ export default function NewFinancialEntryForm() {
               <Field label="Contato (opcional)" id="contact" className="sm:col-span-2"><input id="contact" name="contact" type="text" placeholder={entryType === "INCOME" ? "Cliente ou pagador" : "Fornecedor ou favorecido"} className={inputClassName} /></Field>
               <Field label="Documento (opcional)" id="document"><input id="document" name="document" type="text" placeholder="Nota, pedido ou referência" className={inputClassName} /></Field>
               <Field label="Centro de custo (opcional)" id="costCenter"><select id="costCenter" name="costCenter" defaultValue="" className={inputClassName}><option value="">Não informado</option><option value="Operação">Operação</option><option value="Comercial">Comercial</option><option value="Administrativo">Administrativo</option><option value="Marketing">Marketing</option></select></Field>
+              <Field label="Centro de custo (estrutura)" id="costCenterId"><select id="costCenterId" name="costCenterId" defaultValue="" className={inputClassName}><option value="">Não informado</option>{(costCenters ?? []).filter((item) => item.active).map((item) => <option key={item.id} value={item.id}>{item.name}</option>)}</select></Field>
+              <Field label="Categoria contábil (plano de contas)" id="accountCategoryId"><select id="accountCategoryId" name="accountCategoryId" defaultValue="" className={inputClassName}><option value="">Não informada</option>{(accountCategories ?? []).filter((item) => item.active).map((item) => <option key={item.id} value={item.id}>{item.code} — {item.name}</option>)}</select></Field>
             </div>
           </div>
 
@@ -117,6 +131,10 @@ export default function NewFinancialEntryForm() {
               <Field label="Vencimento" id="dueDate"><input id="dueDate" name="dueDate" type="date" required className={inputClassName} /></Field>
               <Field label="Status" id="status"><select id="status" name="status" value={entryStatus} onChange={(event) => setEntryStatus(event.target.value as StoredFinancialEntryStatus)} className={inputClassName}><option value="PENDING">Pendente</option><option value="PAID">Pago</option></select></Field>
               {entryStatus === "PAID" && <Field label="Data do pagamento" id="paymentDate"><input id="paymentDate" name="paymentDate" type="date" required className={inputClassName} /></Field>}
+              <Field label="Competência (opcional)" id="competenceDate"><input id="competenceDate" name="competenceDate" type="date" className={inputClassName} /></Field>
+              <Field label="Recorrência" id="recurrence"><select id="recurrence" name="recurrence" defaultValue="NONE" className={inputClassName}>{(Object.keys(recurrenceLabels) as Recurrence[]).map((rule) => <option key={rule} value={rule}>{recurrenceLabels[rule]}</option>)}</select></Field>
+              <Field label="Dia de vencimento (1-31)" id="recurrenceDay"><input id="recurrenceDay" name="recurrenceDay" type="number" min={1} max={31} placeholder="Ex.: 10" className={inputClassName} /></Field>
+              <Field label="Término da recorrência (opcional)" id="recurrenceEndDate"><input id="recurrenceEndDate" name="recurrenceEndDate" type="date" className={inputClassName} /></Field>
               <Field label="Conta" id="account"><select id="account" name="account" required defaultValue="Conta principal" className={inputClassName}><option value="Conta principal">Conta principal</option><option value="Caixa">Caixa</option><option value="Conta secundária">Conta secundária</option></select></Field>
               <Field label="Forma de pagamento" id="paymentMethod"><select id="paymentMethod" name="paymentMethod" defaultValue="" className={inputClassName}><option value="">Não informada</option><option value="PIX">PIX</option><option value="Boleto">Boleto</option><option value="Cartão">Cartão</option><option value="Transferência">Transferência</option><option value="Dinheiro">Dinheiro</option></select></Field>
             </div>
