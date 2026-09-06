@@ -28,3 +28,18 @@ export type FiscalDocument = {
   items: Array<{ id: string; sequence: number; name: string; sku: string; quantity: number; unitPrice: number; total: number; ncm: string; cfop: string }>;
   events: Array<{ id: string; type: string; description: string; createdAt: string }>;
 };
+
+export type FiscalRejections = {
+  periodDays: number;
+  total: number;
+  reasons: Array<{ code: string; count: number; lastAt: string; message: string }>;
+  products: Array<{ sku: string; count: number; quantity: number }>;
+  recent: Array<{
+    id: string;
+    code: string;
+    sale: { id: string; code: string; customerName: string } | null;
+    rejectionCode: string | null;
+    rejectionMessage: string | null;
+    createdAt: string;
+  }>;
+};

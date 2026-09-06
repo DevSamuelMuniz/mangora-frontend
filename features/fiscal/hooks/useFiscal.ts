@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { apiRequest } from "@/lib/api/client";
-import type { FiscalDocument, FiscalDocumentType, FiscalReadiness, FiscalSettingsResponse } from "@/types/fiscal";
+import type { FiscalDocument, FiscalDocumentType, FiscalReadiness, FiscalSettingsResponse , FiscalRejections } from "@/types/fiscal";
 import type { Sale } from "@/types/sale";
 
 /**
@@ -94,5 +94,13 @@ export function useConnectFiscalProvider() {
         onSuccess: () => {
             void queryClient.invalidateQueries({ queryKey: fiscalSettingsQueryKey });
         },
+    });
+}
+
+
+export function useFiscalRejections(days = 30) {
+    return useQuery<FiscalRejections, Error>({
+        queryKey: ["fiscal", "rejections", days],
+        queryFn: () => apiRequest<FiscalRejections>(`/fiscal/rejections?days=${days}`),
     });
 }
