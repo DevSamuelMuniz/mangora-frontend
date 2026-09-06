@@ -398,8 +398,8 @@ export default function Home() {
 
           <div className="absolute -bottom-20 -right-4 hidden w-[34%] min-w-80 lg:block">
             <MascotPose
-              pose="celebrate"
-              label="Mascote Mangora comemorando"
+              pose="wave"
+              label="Mascote Mangora convidando você para começar"
               className="drop-shadow-[0_30px_25px_rgba(0,0,0,0.22)]"
             />
           </div>

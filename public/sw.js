@@ -1,5 +1,5 @@
 /* Service worker do Mangora — cache de estáticos + rede para o resto. */
-const CACHE = "mangora-v1";
+const CACHE = "mangora-v2-mascots";
 const STATIC = ["/_next/static", "/icons/", "/favicon.png", "/mangora-logo.png"];
 
 self.addEventListener("install", (event) => {
