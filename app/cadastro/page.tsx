@@ -68,7 +68,7 @@ export default function CadastroPage() {
   }
 
   return (
-    <main onChange={() => { if (!started.current) { started.current = true; track("signup_started"); } }} className="min-h-screen bg-[#fff8ea] font-[family-name:var(--font-manrope)] text-[#123d2b]">
+    <main onChange={() => { if (!started.current) { started.current = true; track("signup_started"); } }} className="mangora-signup min-h-screen bg-[#fff8ea] font-[family-name:var(--font-manrope)] text-[#123d2b]">
       <div className="grid min-h-screen lg:grid-cols-[0.78fr_1.22fr] xl:grid-cols-[0.92fr_1.08fr]">
         <AuthVisualPanel variant="register" />
 

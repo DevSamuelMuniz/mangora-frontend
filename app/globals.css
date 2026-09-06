@@ -503,3 +503,33 @@ body {
 }
 .store-icons-square svg { stroke-linecap: square; stroke-linejoin: miter; }
 .store-icons-outline svg { stroke-width: 1.35; }
+
+/* Mobile acquisition pages: comfortable touch targets and compact reading. */
+.mangora-landing section[id] { scroll-margin-top: 6rem; }
+.mangora-landing a:focus-visible,
+.mangora-landing button:focus-visible { outline: 3px solid #147a45; outline-offset: 4px; }
+@media (max-width: 639px) {
+  .mangora-landing h2 { font-size: clamp(1.875rem, 8vw, 2.5rem); line-height: 1.12; }
+  .mangora-landing #inicio h1 { font-size: clamp(2.125rem, 9vw, 3rem); line-height: 1.08; }
+  .mangora-landing #inicio > div > div > p { font-size: 1rem; line-height: 1.65; }
+  .mangora-landing #inicio > div > div > p:first-child { font-size: .625rem; letter-spacing: .08em; }
+  .mangora-landing #inicio .hero-layout { gap: 3.5rem; padding-bottom: 3rem; }
+  .mangora-landing #demonstracao .hero-metrics { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .375rem; }
+  .mangora-landing #demonstracao .hero-metrics > div { padding: .5rem; }
+  .mangora-landing #demonstracao .hero-metrics > div > div { flex-wrap: wrap; gap: .25rem; }
+  .mangora-landing #demonstracao .hero-metrics p:last-child { font-size: .875rem; }
+  .mangora-landing #planos article { padding: 1.5rem; }
+  .mangora-landing #planos article > p { min-height: 0; }
+  .mangora-landing #duvidas summary { min-height: 44px; line-height: 1.5; }
+  .mangora-landing footer a { display: inline-flex; align-items: center; min-height: 44px; }
+  .mangora-signup input:not([type="checkbox"]),
+  .mangora-signup select { font-size: 16px; min-height: 48px; }
+  .mangora-signup button { min-height: 44px; }
+  .mangora-signup input[type="checkbox"] { min-width: 20px; min-height: 20px; }
+  .mangora-signup section { padding: 1rem; align-items: flex-start; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .mangora-landing *, .mangora-landing *::before, .mangora-landing *::after {
+    animation: none !important; transition: none !important; scroll-behavior: auto !important;
+  }
+}

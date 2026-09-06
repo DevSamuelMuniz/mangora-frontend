@@ -79,7 +79,7 @@ const segments = [
 
 export default function Home() {
   return (
-    <main className="min-h-screen overflow-hidden bg-[#fff8ea] font-[family-name:var(--font-manrope)] text-[#123d2b]">
+    <main className="mangora-landing min-h-screen overflow-hidden bg-[#fff8ea] font-[family-name:var(--font-manrope)] text-[#123d2b]">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(brandGraph).replace(/</g, "\\u003c") }} />
       <Header />
       <ConversionTracking />
@@ -89,7 +89,7 @@ export default function Home() {
         <div className="absolute left-[7%] top-36 -z-10 size-3 rounded-full bg-[#ffb21a] sm:size-4" />
         <div className="absolute right-[8%] top-44 -z-10 size-5 rotate-12 rounded-sm bg-[#147a45]/20" />
 
-        <div className="mx-auto grid max-w-[1380px] items-center gap-12 px-5 pb-20 sm:px-8 lg:grid-cols-[0.88fr_1.12fr] lg:gap-8 lg:px-10 lg:pb-28">
+        <div className="hero-layout mx-auto grid max-w-[1380px] items-center gap-12 px-5 pb-20 sm:px-8 lg:grid-cols-[0.88fr_1.12fr] lg:gap-8 lg:px-10 lg:pb-28">
           <div className="relative z-10 max-w-2xl">
             <p className="inline-flex -rotate-1 items-center gap-2 rounded-full border-2 border-[#123d2b]/10 bg-white px-4 py-2 text-xs font-extrabold uppercase tracking-[0.16em] text-[#147a45] shadow-[3px_3px_0_#ffb21a] sm:text-sm">
               <span className="size-2 rounded-full bg-[#ff6b1a]" />
@@ -437,9 +437,9 @@ export default function Home() {
 function Header() {
   return (
     <header className="fixed inset-x-0 top-0 z-50 border-b border-[#123d2b]/10 bg-[#fff8ea]/90 backdrop-blur-xl">
-      <div className="mx-auto flex h-20 max-w-[1380px] items-center justify-between px-5 sm:px-8 lg:px-10">
+      <div className="mx-auto flex h-16 max-w-[1380px] items-center justify-between gap-2 px-4 sm:h-20 sm:px-8 lg:px-10">
         <Link href="/" aria-label="Página inicial da Mangora">
-          <BrandLogo className="h-10 sm:h-11" priority />
+          <BrandLogo className="h-8 sm:h-11" priority />
         </Link>
 
         <nav aria-label="Navegação principal" className="hidden items-center gap-7 text-sm font-bold text-[#315847] lg:flex">
@@ -452,7 +452,7 @@ function Header() {
         <div className="flex items-center gap-2 sm:gap-3">
           <Link
             href="/login"
-            className="rounded-xl px-3 py-2 text-sm font-extrabold text-[#315847] transition hover:bg-white sm:px-5 sm:py-3"
+            className="inline-flex min-h-11 items-center rounded-xl px-3 py-2 text-sm font-extrabold text-[#315847] transition hover:bg-white sm:px-5 sm:py-3"
           >
             Entrar
           </Link>
@@ -481,8 +481,8 @@ function HeroCounter() {
         />
       </div>
 
-      <div className="relative rotate-1 overflow-hidden rounded-[2rem] border-2 border-[#123d2b] bg-white shadow-[10px_12px_0_#123d2b] sm:rounded-[2.5rem]">
-        <div className="flex items-center justify-between border-b-2 border-[#123d2b] bg-[#fff8ea] px-5 py-4 sm:px-7">
+      <div className="relative overflow-hidden rounded-[1.5rem] border-2 border-[#123d2b] bg-white shadow-[4px_6px_0_#123d2b] sm:rotate-1 sm:rounded-[2.5rem] sm:shadow-[10px_12px_0_#123d2b]">
+        <div className="flex flex-wrap items-center justify-between gap-2 border-b-2 border-[#123d2b] bg-[#fff8ea] px-4 py-4 sm:px-7">
           <div>
             <p className="font-[family-name:var(--font-bricolage)] text-lg font-extrabold">Movimento de hoje</p>
             <p className="text-xs font-semibold text-[#6a7d73]">Prévia ilustrativa · dados de exemplo</p>
@@ -493,7 +493,7 @@ function HeroCounter() {
         </div>
 
         <div className="p-5 sm:p-7">
-          <div className="grid gap-3 sm:grid-cols-3">
+          <div className="hero-metrics grid gap-3 sm:grid-cols-3">
             <CounterMetric icon={CircleDollarSign} label="Faturamento" value="R$ 18.450" detail="+12,5%" />
             <CounterMetric icon={ShoppingBag} label="Vendas" value="284" detail="+8,2%" />
             <CounterMetric icon={Users} label="Clientes" value="1.248" detail="+18" />
