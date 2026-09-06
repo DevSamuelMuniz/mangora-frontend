@@ -2,6 +2,12 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   poweredByHeader: false,
+  images: {
+    localPatterns: [
+      { pathname: "/**", search: "" },
+      { pathname: "/mascots/**", search: "?v=transparent-20260906" },
+    ],
+  },
   async headers() {
     const isDevelopment = process.env.NODE_ENV !== "production";
     const contentSecurityPolicy = [

@@ -17,7 +17,7 @@ export default function MascotPose({ pose, className = "", label = "Mascote Mang
   return (
     <span className={`relative block aspect-[482/543] ${className}`}>
       <Image
-        src={`/mascots/${images[pose]}.png`}
+        src={`/mascots/${images[pose]}.png?v=transparent-20260906`}
         alt={label}
         fill
         sizes="(max-width: 640px) 72vw, (max-width: 1024px) 384px, 480px"
