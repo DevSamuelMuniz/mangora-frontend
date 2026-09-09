@@ -7,6 +7,7 @@ import AuthVisualPanel from "@/components/auth/AuthVisualPanel";
 import BrandLogo from "@/components/brand/BrandLogo";
 import { apiRequest } from "@/lib/api/client";
 import { setUserProperties, track } from "@/lib/analytics";
+import type { AuthSession } from "@/lib/auth/types";
 
 const segments = [
   { value: "RETAIL", label: "Loja ou comércio" },
@@ -54,12 +55,12 @@ export default function CadastroPage() {
 
     try {
       setLoading(true);
-      await apiRequest("/auth/register", { method: "POST", body: JSON.stringify(registerData) });
+      const session = await apiRequest<AuthSession>("/auth/register", { method: "POST", body: JSON.stringify(registerData) });
       track("signup_completed");
       setUserProperties({ logged_in: "true", signup: "completed" });
       setSuccess(true);
       await new Promise((resolve) => setTimeout(resolve, 450));
-      window.location.replace("/dashboard");
+      window.location.replace(session.security.nextStep ? "/seguranca-da-conta" : "/dashboard");
     } catch (registrationError) {
       setError(registrationError instanceof Error ? registrationError.message : "Não foi possível criar sua conta.");
     } finally {

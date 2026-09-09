@@ -15,6 +15,7 @@ export default async function DashboardLayout({
 }>) {
   const session = await getCurrentSession();
   if (!session) redirect("/login");
+  if (session.security.nextStep) redirect("/seguranca-da-conta");
 
   return <DashboardShell session={session}>{children}<InstallPrompt /></DashboardShell>;
 }

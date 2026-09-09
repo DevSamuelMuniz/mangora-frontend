@@ -32,6 +32,13 @@ export type AuthSession = {
     trialExpired: boolean;
     accessBlocked: boolean;
   };
+  security: {
+    emailVerified: boolean;
+    mfaEnabled: boolean;
+    mfaVerified: boolean;
+    mfaRequired: boolean;
+    nextStep: "email" | "enroll" | "mfa" | null;
+  };
 };
 
 export const roleLabels: Record<MembershipRole, string> = {

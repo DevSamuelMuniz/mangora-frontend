@@ -125,6 +125,23 @@ body {
   }
 }
 
+.button {
+  width: 100%; min-height: 3rem; border-radius: .75rem; background: #ff6b1a;
+  padding: .75rem 1rem; font-size: .875rem; font-weight: 800; color: white;
+  box-shadow: 0 4px 0 #c9460b; transition: transform .15s ease;
+}
+.button:hover { transform: translateY(-2px); }
+.button:disabled { cursor: not-allowed; opacity: .55; transform: none; }
+.button-secondary {
+  min-height: 3rem; border: 2px solid #123d2b; border-radius: .75rem;
+  padding: .65rem 1rem; font-size: .75rem; font-weight: 800; color: #123d2b;
+}
+.input {
+  width: 100%; min-height: 3rem; border: 2px solid rgb(18 61 43 / 15%); border-radius: .75rem;
+  background: white; padding: .7rem 1rem; font-size: 1rem; font-weight: 600; color: #123d2b; outline: none;
+}
+.input:focus { border-color: #ff6b1a; box-shadow: 0 0 0 4px rgb(255 178 26 / 20%); }
+
 /* Mangora application system ------------------------------------------------ */
 .mangora-app {
   --app-ink: #123d2b;

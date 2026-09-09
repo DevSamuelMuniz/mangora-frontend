@@ -7,6 +7,7 @@ import AuthVisualPanel from "@/components/auth/AuthVisualPanel";
 import BrandLogo from "@/components/brand/BrandLogo";
 import { apiRequest } from "@/lib/api/client";
 import { setUserProperties, track } from "@/lib/analytics";
+import type { AuthSession } from "@/lib/auth/types";
 
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
@@ -25,10 +26,10 @@ export default function LoginPage() {
     };
 
     try {
-      await apiRequest("/auth/login", { method: "POST", body: JSON.stringify(loginData) });
+      const session = await apiRequest<AuthSession>("/auth/login", { method: "POST", body: JSON.stringify(loginData) });
       track("login");
       setUserProperties({ logged_in: "true" });
-      window.location.replace("/dashboard");
+      window.location.replace(session.security.nextStep ? "/seguranca-da-conta" : "/dashboard");
     } catch (loginError) {
       setError(loginError instanceof Error ? loginError.message : "Não foi possível realizar o login.");
     } finally {
