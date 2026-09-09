@@ -2,23 +2,25 @@
 
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
-import { Activity, ArrowLeft, Building2, CheckCircle2, CreditCard, KeyRound, LayoutDashboard, LifeBuoy, LoaderCircle, LockKeyhole, LogOut, Pencil, RefreshCw, Search, ShieldCheck, Unlock, Users, X } from "lucide-react";
+import { Activity, ArrowLeft, Building2, CheckCircle2, CreditCard, KeyRound, LayoutDashboard, LifeBuoy, LoaderCircle, LockKeyhole, LogOut, Pencil, RefreshCw, Search, ShieldCheck, Tags, Unlock, Users, X } from "lucide-react";
 import BrandLogo from "@/components/brand/BrandLogo";
 import { ApiError, apiRequest } from "@/lib/api/client";
 import { formatCurrency, formatDate, formatNumber } from "@/lib/format";
 
-type Tab = "overview" | "companies" | "users" | "plans";
+type Tab = "overview" | "companies" | "users" | "plans" | "coupons";
 type Overview = { metrics: { users: number; activeUsers: number; companies: number; activeCompanies: number; newCompanies: number; monthlyRecurringRevenue: number }; plans: Plan[]; recentCompanies: Company[] };
 type Plan = { id: string; name: string; price: number | null; ownerLimit: number | null; employeeLimit: number | null; unitLimit: number | null; companies: number };
 type User = { id: string; name: string; email: string; phone: string | null; status: string; isSystemAdmin: boolean; failedLoginAttempts: number; lockedUntil: string | null; createdAt: string; _count: { memberships: number; sessions: number } };
 type UserDetail = { id: string; name: string; email: string; phone: string | null; status: string; isSystemAdmin: boolean; failedLoginAttempts: number; lockedUntil: string | null; passwordChangedAt: string | null; createdAt: string; updatedAt: string; memberships: Array<{ id: string; role: string; active: boolean; createdAt: string; company: { id: string; tradeName: string; slug: string; status: string; subscriptionPlan: string; subscriptionStatus: string } }>; sessions: Array<{ id: string; ipAddress: string | null; createdAt: string }> };
 type Company = { id: string; tradeName: string; slug: string; email?: string | null; document?: string | null; status: string; subscriptionPlan: string; subscriptionStatus: string; subscriptionPrice?: number | string; subscriptionUnitPriceOverride?: number | string | null; subscriptionOwnerLimitOverride?: number | null; subscriptionEmployeeLimitOverride?: number | null; subscriptionUnitLimitOverride?: number | null; trialEndsAt?: string | null; nextBillingAt?: string | null; createdAt: string; _count: { memberships: number; sales?: number } };
+type Coupon = { id: string; code: string; type: "PERCENT" | "FIXED"; value: number; planScope: string | null; maxUses: number; usedCount: number; status: string };
 
 const nav = [
   { id: "overview" as const, label: "Visão geral", icon: LayoutDashboard },
   { id: "companies" as const, label: "Empresas", icon: Building2 },
   { id: "users" as const, label: "Usuários", icon: Users },
   { id: "plans" as const, label: "Planos", icon: CreditCard },
+  { id: "coupons" as const, label: "Cupons", icon: Tags },
 ];
 
 export default function SystemAdminConsole({ operatorName }: { operatorName: string }) {
@@ -26,6 +28,7 @@ export default function SystemAdminConsole({ operatorName }: { operatorName: str
   const [overview, setOverview] = useState<Overview | null>(null);
   const [users, setUsers] = useState<User[]>([]);
   const [companies, setCompanies] = useState<Company[]>([]);
+  const [coupons, setCoupons] = useState<Coupon[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [accessDenied, setAccessDenied] = useState(false);
@@ -38,12 +41,13 @@ export default function SystemAdminConsole({ operatorName }: { operatorName: str
   async function load() {
     setLoading(true); setError(""); setAccessDenied(false);
     try {
-      const [summary, userList, companyList] = await Promise.all([
+      const [summary, userList, companyList, couponList] = await Promise.all([
         apiRequest<Overview>("/system-admin/overview"),
         apiRequest<User[]>("/system-admin/users"),
         apiRequest<Company[]>("/system-admin/companies"),
+        apiRequest<Coupon[]>("/system-admin/coupons"),
       ]);
-      setOverview(summary); setUsers(userList); setCompanies(companyList);
+      setOverview(summary); setUsers(userList); setCompanies(companyList); setCoupons(couponList);
     } catch (cause) {
       const denied = cause instanceof ApiError && cause.status === 403;
       setAccessDenied(denied);
@@ -56,9 +60,10 @@ export default function SystemAdminConsole({ operatorName }: { operatorName: str
       apiRequest<Overview>("/system-admin/overview"),
       apiRequest<User[]>("/system-admin/users"),
       apiRequest<Company[]>("/system-admin/companies"),
-    ]).then(([summary, userList, companyList]) => {
+      apiRequest<Coupon[]>("/system-admin/coupons"),
+    ]).then(([summary, userList, companyList, couponList]) => {
       if (!active) return;
-      setOverview(summary); setUsers(userList); setCompanies(companyList); setLoading(false);
+      setOverview(summary); setUsers(userList); setCompanies(companyList); setCoupons(couponList); setLoading(false);
     }).catch((cause: unknown) => {
       if (!active) return;
       const denied = cause instanceof ApiError && cause.status === 403;
@@ -95,6 +100,7 @@ export default function SystemAdminConsole({ operatorName }: { operatorName: str
             {tab === "companies" && <CompaniesPanel items={visibleCompanies} onEdit={setEditingCompany} />}
             {tab === "users" && <UsersPanel items={visibleUsers} onEdit={setEditingUser} onSupport={setSupportingUser} />}
             {tab === "plans" && <PlansPanel plans={overview.plans} />}
+            {tab === "coupons" && <CouponsPanel items={coupons} onCreated={(coupon) => { setCoupons((current) => [coupon, ...current]); notify("Cupom criado."); }} />}
           </>}
         </div>
       </section>
@@ -227,5 +233,11 @@ function SupportEditor({ user, onClose, onChanged, notify }: { user: User; onClo
     </div>
   );
 }
+function CouponsPanel({ items, onCreated }: { items: Coupon[]; onCreated: (coupon: Coupon) => void }) {
+  const [form, setForm] = useState({ code: "", type: "PERCENT", value: "", planScope: "", maxUses: "1", validUntil: "" }); const [saving, setSaving] = useState(false); const [error, setError] = useState("");
+  async function create(event: React.FormEvent) { event.preventDefault(); setSaving(true); setError(""); try { const coupon = await apiRequest<Coupon>("/system-admin/coupons", { method: "POST", body: JSON.stringify({ code: form.code, type: form.type, value: Number(form.value), planScope: form.planScope || undefined, maxUses: Number(form.maxUses), validUntil: form.validUntil ? `${form.validUntil}T23:59:59-03:00` : undefined }) }); onCreated(coupon); setForm({ code: "", type: "PERCENT", value: "", planScope: "", maxUses: "1", validUntil: "" }); } catch (cause) { setError(cause instanceof Error ? cause.message : "Não foi possível criar o cupom."); } finally { setSaving(false); } }
+  return <div className="space-y-5"><form onSubmit={create} className="rounded-2xl border-2 border-[#123d2b] bg-[#fffdf8] p-5 shadow-[5px_5px_0_#ffb21a]"><h2 className="text-xl font-black">Cupom para a primeira mensalidade</h2><div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-3"><Field label="Código"><input required pattern="[A-Za-z0-9_-]{3,32}" value={form.code} onChange={(e) => setForm({ ...form, code: e.target.value.toUpperCase() })} placeholder="BEMVINDO20" /></Field><Field label="Tipo"><select value={form.type} onChange={(e) => setForm({ ...form, type: e.target.value })}><option value="PERCENT">Percentual (%)</option><option value="FIXED">Valor fixo (R$)</option></select></Field><Field label="Desconto"><input required type="number" min="0.01" max={form.type === "PERCENT" ? 100 : undefined} step="0.01" value={form.value} onChange={(e) => setForm({ ...form, value: e.target.value })} /></Field><Field label="Plano"><select value={form.planScope} onChange={(e) => setForm({ ...form, planScope: e.target.value })}><option value="">Todos</option>{["START", "BUSINESS", "PREMIUM"].map((plan) => <option key={plan}>{plan}</option>)}</select></Field><Field label="Limite de usos"><input required type="number" min="1" value={form.maxUses} onChange={(e) => setForm({ ...form, maxUses: e.target.value })} /></Field><Field label="Validade"><input type="date" value={form.validUntil} onChange={(e) => setForm({ ...form, validUntil: e.target.value })} /></Field></div>{error && <p className="mt-3 text-xs font-bold text-red-600">{error}</p>}<button disabled={saving} className="mt-4 h-10 rounded-xl bg-[#ce4a0a] px-5 text-xs font-black text-white">{saving ? "Criando..." : "Criar cupom"}</button></form><section className="overflow-hidden rounded-2xl border border-[#123d2b]/15 bg-[#fffdf8]"><PanelTitle title="Cupons cadastrados" description="Desconto aplicado somente na primeira mensalidade." /><div className="divide-y divide-[#123d2b]/10">{items.map((coupon) => <div key={coupon.id} className="grid gap-2 px-5 py-4 sm:grid-cols-4"><strong className="text-xs">{coupon.code}</strong><span className="text-xs">{coupon.type === "PERCENT" ? `${coupon.value}%` : formatCurrency(coupon.value)}</span><span className="text-[10px]">{coupon.usedCount}/{coupon.maxUses} usos</span><Badge value={coupon.status} /></div>)}{!items.length && <Empty text="Nenhum cupom cadastrado." />}</div></section></div>;
+}
+
 function InfoCard({ label, children }: { label: string; children: React.ReactNode }) { return <div className="rounded-xl border border-[#123d2b]/10 bg-white p-3"><p className="text-[9px] text-[#597064]">{label}</p><div className="mt-1.5">{children}</div></div>; }
 function ActionButton({ children, disabled, onClick, tone }: { children: React.ReactNode; disabled?: boolean; onClick: () => void; tone: string }) { return <button type="button" disabled={disabled} onClick={onClick} className={`flex h-11 items-center justify-center gap-2 rounded-xl px-3 text-[10px] font-black text-white transition disabled:cursor-not-allowed disabled:opacity-40 ${tone}`}>{children}</button>; }

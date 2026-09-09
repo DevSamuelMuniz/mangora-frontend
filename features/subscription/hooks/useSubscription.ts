@@ -30,7 +30,7 @@ export function useSubscriptionRequest() {
 
 export function useSubscriptionCheckout() {
     const queryClient = useQueryClient();
-    return useMutation<void, Error, { targetPlan: string; billingType: "PIX" | "BOLETO"; nextDueDate: string }>({
+    return useMutation<{ originalPrice: number; discount: number; firstCharge: number; recurringPrice: number }, Error, { targetPlan: string; billingType: "PIX" | "BOLETO"; nextDueDate: string; couponCode?: string }>({
         mutationFn: (input) => apiRequest("/subscription/checkout", { method: "POST", body: JSON.stringify(input) }),
         onSuccess: () => {
             void queryClient.invalidateQueries({ queryKey: subscriptionQueryKey });
