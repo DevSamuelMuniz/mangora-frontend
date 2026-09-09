@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { FormEvent, useRef, useState } from "react";
-import { ArrowLeft, ArrowRight, Building2, CheckCircle2, Eye, EyeOff, LoaderCircle, LockKeyhole, Mail, Phone, ShieldCheck, Store, User, type LucideIcon } from "lucide-react";
+import { ArrowLeft, ArrowRight, Building2, CheckCircle2, Eye, EyeOff, LoaderCircle, LockKeyhole, Mail, Phone, ShieldCheck, Store, TicketPercent, User, type LucideIcon } from "lucide-react";
 import AuthVisualPanel from "@/components/auth/AuthVisualPanel";
 import BrandLogo from "@/components/brand/BrandLogo";
 import { apiRequest } from "@/lib/api/client";
@@ -50,6 +50,7 @@ export default function CadastroPage() {
       phone: String(formData.get("phone") ?? "").trim(),
       email: String(formData.get("email") ?? "").trim().toLowerCase(),
       password,
+      couponCode: String(formData.get("couponCode") ?? "").trim().toUpperCase() || undefined,
       acceptedTerms,
     };
 
@@ -104,6 +105,7 @@ export default function CadastroPage() {
                   <SelectField />
                   <InputField id="phone" name="phone" label="Telefone ou WhatsApp" type="tel" placeholder="(81) 99999-9999" autoComplete="tel" icon={Phone} />
                   <div className="sm:col-span-2"><InputField id="email" name="email" label="E-mail" type="email" placeholder="voce@empresa.com" autoComplete="email" icon={Mail} /></div>
+                  <div className="sm:col-span-2"><FieldLabel htmlFor="couponCode">Cupom de desconto (opcional)</FieldLabel><div className="relative"><TicketPercent className="pointer-events-none absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-[#6a7d73]" /><input id="couponCode" name="couponCode" maxLength={32} pattern="[A-Za-z0-9_-]{3,32}" placeholder="Ex.: BEMVINDO20" autoComplete="off" className="h-11 w-full rounded-xl border-2 border-[#123d2b]/15 bg-[#fffdf7] pl-10 pr-3 text-sm font-semibold uppercase text-[#123d2b] outline-none transition placeholder:normal-case placeholder:text-[#789083] focus:border-[#ff6b1a] focus:bg-white focus:ring-4 focus:ring-[#ffb21a]/20" /></div><p className="mt-1 text-[10px] font-medium text-[#6a7d73]">O benefício será aplicado à primeira mensalidade quando você contratar um plano.</p></div>
                   <PasswordField id="password" name="password" label="Crie uma senha" placeholder="Maiúscula, minúscula e número" visible={showPassword} onToggle={() => setShowPassword((current) => !current)} />
                   <PasswordField id="passwordConfirmation" name="passwordConfirmation" label="Confirme a senha" placeholder="Digite novamente" visible={showPasswordConfirmation} onToggle={() => setShowPasswordConfirmation((current) => !current)} />
                 </div>
