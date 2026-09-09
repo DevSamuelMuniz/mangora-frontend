@@ -135,6 +135,7 @@ function OnlineStoreForm({ company }: { company: CompanySettings }) {
     }
   }
   return <div className="space-y-5">
+    <section className="rounded-xl border-2 border-green-200 bg-green-50 p-4"><div className="flex flex-wrap items-center justify-between gap-3"><div className="flex items-center gap-3"><span className="grid size-9 place-items-center rounded-xl bg-white text-green-700"><ShieldCheck className="size-4" /></span><div><h3 className="text-xs font-black text-green-900">Autenticação em duas etapas</h3><p className="mt-0.5 text-[10px] text-green-800">Opcional e recomendada para aumentar a proteção da sua conta.</p></div></div><Link href="/seguranca-da-conta" className="flex h-10 items-center rounded-xl bg-green-700 px-4 text-xs font-bold text-white">Configurar A2F</Link></div></section>
     <div className="overflow-hidden rounded-2xl border-2 border-[#123d2b] bg-[#fff8ea] shadow-[6px_7px_0_#ffb21a]">
       <div className="flex flex-wrap items-center justify-between gap-3 border-b-2 border-dashed border-[#123d2b]/15 px-5 py-4">
         <div><p className="text-[10px] font-black uppercase tracking-[0.16em] text-[#ff6b1a]">Sua página online</p><p className="mt-1 text-sm font-black text-[#123d2b]">Compartilhe este link com seus clientes</p></div>
