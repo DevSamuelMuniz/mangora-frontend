@@ -35,9 +35,15 @@ export default function AuthVisualPanel({ variant }: AuthVisualPanelProps) {
       <div className="absolute -right-20 -top-20 size-64 rounded-full bg-[#ffb21a]/10 blur-3xl" />
       <div className="absolute inset-x-0 bottom-0 h-[38%] bg-[linear-gradient(8deg,rgba(20,122,69,0.55)_0_48%,transparent_49%)]" />
 
-      <Link href="/" aria-label="Ir para a página inicial" className="relative z-10 w-fit rounded-xl bg-[#fff8ea] px-4 py-2.5 shadow-[4px_4px_0_#ffb21a]">
-        <BrandLogo className="h-8 xl:h-9" surface="light" priority />
-      </Link>
+      {variant === "login" ? (
+        <Link href="/" aria-label="Ir para a página inicial" className="relative z-10 w-fit">
+          <BrandLogo className="h-12 xl:h-14" priority />
+        </Link>
+      ) : (
+        <Link href="/" aria-label="Ir para a página inicial" className="relative z-10 w-fit rounded-xl bg-[#fff8ea] px-4 py-2.5 shadow-[4px_4px_0_#ffb21a]">
+          <BrandLogo className="h-8 xl:h-9" surface="light" priority />
+        </Link>
+      )}
 
       <div className="relative z-10 mt-auto max-w-[32rem] pb-[min(35vh,17rem)] xl:pb-[min(37vh,19rem)]">
         <p className="inline-flex items-center gap-2 text-xs font-black uppercase tracking-[0.18em] text-[#ffd56a]"><Sparkles className="size-4" />{panel.eyebrow}</p>
