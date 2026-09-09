@@ -4,7 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { FormEvent, useEffect, useState } from "react";
 import QRCode from "qrcode";
-import { CheckCircle2, Copy, KeyRound, LoaderCircle, MailCheck, ShieldCheck } from "lucide-react";
+import { CheckCircle2, Copy, Download, KeyRound, LoaderCircle, MailCheck, ShieldCheck } from "lucide-react";
 import BrandLogo from "@/components/brand/BrandLogo";
 import { apiRequest } from "@/lib/api/client";
 
@@ -40,6 +40,15 @@ export default function AccountSecurityPage() {
   async function verify(event: FormEvent<HTMLFormElement>) { event.preventDefault(); const code = String(new FormData(event.currentTarget).get("code") ?? ""); if (await action("/auth/security/email/verify", { code })) setMessage("E-mail confirmado."); }
   async function begin(event: FormEvent<HTMLFormElement>) { event.preventDefault(); const password = String(new FormData(event.currentTarget).get("password") ?? ""); const result = await action("/auth/security/mfa/setup", { password }); if (result) setSetup(result as Setup); }
   async function confirm(event: FormEvent<HTMLFormElement>) { event.preventDefault(); const code = String(new FormData(event.currentTarget).get("code") ?? ""); const result = await action(setup ? "/auth/security/mfa/enable" : "/auth/security/mfa/challenge", { code }); if (result?.recoveryCodes) setRecovery(result.recoveryCodes as string[]); else if (result) window.location.replace("/dashboard"); }
+  function downloadRecoveryCodes() {
+    const content = ["Códigos de recuperação — Mangora", "", "Cada código funciona uma única vez. Guarde este arquivo em um local seguro.", "", ...recovery, "", `Gerado em ${new Date().toLocaleString("pt-BR")}`].join("\r\n");
+    const url = URL.createObjectURL(new Blob([content], { type: "text/plain;charset=utf-8" }));
+    const anchor = document.createElement("a");
+    anchor.href = url;
+    anchor.download = "mangora-codigos-de-recuperacao.txt";
+    anchor.click();
+    URL.revokeObjectURL(url);
+  }
 
   if (!status) return <main className="grid min-h-screen place-items-center bg-[#fff8ea]"><LoaderCircle className="size-8 animate-spin text-[#ff6b1a]" /></main>;
   return <main className="min-h-screen bg-[#fff8ea] px-4 py-8 text-[#123d2b] sm:py-14"><div className="mx-auto max-w-xl"><Link href="/"><BrandLogo className="mx-auto h-10" /></Link><section className="mt-8 rounded-[2rem] border-2 border-[#123d2b] bg-white p-6 shadow-[7px_8px_0_#ffb21a] sm:p-9"><div className="flex gap-4"><span className="grid size-12 shrink-0 place-items-center rounded-2xl bg-[#dff4e7] text-[#147a45]"><ShieldCheck /></span><div><p className="text-xs font-black uppercase tracking-[.16em] text-[#ff6b1a]">Proteção da conta</p><h1 className="mt-1 text-3xl font-black">Confirme que é você</h1><p className="mt-2 text-sm text-[#597064]">Proteja seus dados e as operações da sua empresa.</p></div></div>
@@ -48,7 +57,7 @@ export default function AccountSecurityPage() {
   {status.nextStep === "enroll" && !setup && <form onSubmit={begin} className="mt-7"><Step icon={KeyRound} title="Ative o autenticador" text="Confirme sua senha para gerar uma chave no Google Authenticator, Microsoft Authenticator ou aplicativo compatível." /><input name="password" type="password" required autoComplete="current-password" placeholder="Sua senha atual" className="input mt-5" /><button disabled={busy || !status.configured} className="button mt-3">Gerar chave do autenticador</button></form>}
   {setup && !recovery.length && <form onSubmit={confirm} className="mt-7"><Step icon={KeyRound} title="Cadastre a chave" text="Escaneie o QR Code com o Google Authenticator, Microsoft Authenticator ou aplicativo compatível. Se preferir, insira a chave manualmente." /><MfaQrCode uri={setup.uri} /><p className="mt-4 text-[11px] font-black uppercase tracking-[.12em] text-[#597064]">Chave para entrada manual</p><div className="mt-2 flex items-center gap-2 rounded-xl bg-[#fff8ea] p-3"><code className="min-w-0 flex-1 break-all text-xs font-bold">{setup.secret}</code><button type="button" aria-label="Copiar chave" onClick={() => void navigator.clipboard.writeText(setup.secret)}><Copy className="size-4" /></button></div><CodeInput length={6} /><button disabled={busy} className="button mt-3">Ativar autenticação em duas etapas</button></form>}
   {status.nextStep === "mfa" && <form onSubmit={confirm} className="mt-7"><Step icon={KeyRound} title="Código de segurança" text="Digite o código atual do autenticador ou um código de recuperação." /><CodeInput /><button disabled={busy} className="button mt-3">Verificar e continuar</button></form>}
-  {recovery.length > 0 && <div className="mt-7"><Step icon={CheckCircle2} title="MFA ativado" text="Guarde estes códigos em local seguro. Cada código funciona uma única vez e não será exibido novamente." /><pre className="mt-4 grid grid-cols-1 gap-2 rounded-xl bg-[#123d2b] p-4 text-center text-xs text-white sm:grid-cols-2">{recovery.join("\n")}</pre><button onClick={() => window.location.replace("/dashboard")} className="button mt-4">Já guardei os códigos</button></div>}
+  {recovery.length > 0 && <div className="mt-7"><Step icon={CheckCircle2} title="MFA ativado" text="Guarde estes códigos em local seguro. Cada código funciona uma única vez e não será exibido novamente." /><pre className="mt-4 grid grid-cols-1 gap-2 rounded-xl bg-[#123d2b] p-4 text-center text-xs text-white sm:grid-cols-2">{recovery.join("\n")}</pre><button type="button" onClick={downloadRecoveryCodes} className="button-secondary mt-4 flex w-full items-center justify-center gap-2"><Download className="size-4" />Baixar códigos em TXT</button><button onClick={() => window.location.replace("/dashboard")} className="button mt-4">Já guardei os códigos</button></div>}
   {status.nextStep === null && !recovery.length && <div className="mt-7 text-center"><CheckCircle2 className="mx-auto size-10 text-[#147a45]" /><p className="mt-3 font-black">Conta protegida e liberada.</p><Link href="/dashboard" className="button mt-5 inline-flex items-center justify-center">Ir ao painel</Link></div>}
   </section></div></main>;
 }
