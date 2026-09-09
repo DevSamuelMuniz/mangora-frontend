@@ -39,6 +39,24 @@ export type SubscriptionOverview = {
   nextBillingAt: string | null;
   paymentMethod: string | null;
   pendingPlan: "START" | "BUSINESS" | "PREMIUM" | null;
+  contract: {
+    planCatalogVersion: number;
+    planSnapshot: unknown | null;
+    notes: string;
+  };
+  history: Array<{
+    id: string;
+    type: "CREATED" | "PLAN_CHANGE_REQUESTED" | "PLAN_CHANGED" | "PRICE_CHANGED" | "DISCOUNT_UPDATED" | "CANCELLATION_REQUESTED" | "CANCELLED" | "REACTIVATED";
+    userName: string;
+    fromPlan: string | null;
+    toPlan: string | null;
+    fromPrice: number | null;
+    toPrice: number | null;
+    discount: number | null;
+    coupon: string | null;
+    notes: string | null;
+    createdAt: string;
+  }>;
   billingBreakdown: null | {
     planName: string;
     unitPrice: number;
