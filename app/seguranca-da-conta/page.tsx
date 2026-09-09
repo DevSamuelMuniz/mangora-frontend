@@ -1,7 +1,9 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { FormEvent, useEffect, useState } from "react";
+import QRCode from "qrcode";
 import { CheckCircle2, Copy, KeyRound, LoaderCircle, MailCheck, ShieldCheck } from "lucide-react";
 import BrandLogo from "@/components/brand/BrandLogo";
 import { apiRequest } from "@/lib/api/client";
@@ -44,7 +46,7 @@ export default function AccountSecurityPage() {
   {!status.configured && <Alert error>O servidor ainda não recebeu a chave de criptografia da segurança. Contate o suporte.</Alert>}{error && <Alert error>{error}</Alert>}{message && <Alert>{message}</Alert>}
   {status.nextStep === "email" && <div className="mt-7"><Step icon={MailCheck} title="Confirme seu e-mail" text={`Enviaremos um código de 8 dígitos para ${status.email}.`} /><button disabled={busy} onClick={() => void sendEmail()} className="button mt-5">Enviar código</button><form onSubmit={verify} className="mt-4 flex gap-2"><CodeInput length={8} /><button disabled={busy} className="button-secondary">Confirmar</button></form></div>}
   {status.nextStep === "enroll" && !setup && <form onSubmit={begin} className="mt-7"><Step icon={KeyRound} title="Ative o autenticador" text="Confirme sua senha para gerar uma chave no Google Authenticator, Microsoft Authenticator ou aplicativo compatível." /><input name="password" type="password" required autoComplete="current-password" placeholder="Sua senha atual" className="input mt-5" /><button disabled={busy || !status.configured} className="button mt-3">Gerar chave do autenticador</button></form>}
-  {setup && !recovery.length && <form onSubmit={confirm} className="mt-7"><Step icon={KeyRound} title="Cadastre a chave" text="No autenticador, escolha inserir chave manualmente. Depois informe o código de 6 dígitos." /><div className="mt-4 flex items-center gap-2 rounded-xl bg-[#fff8ea] p-3"><code className="min-w-0 flex-1 break-all text-xs font-bold">{setup.secret}</code><button type="button" aria-label="Copiar chave" onClick={() => void navigator.clipboard.writeText(setup.secret)}><Copy className="size-4" /></button></div><CodeInput length={6} /><button disabled={busy} className="button mt-3">Ativar autenticação em duas etapas</button></form>}
+  {setup && !recovery.length && <form onSubmit={confirm} className="mt-7"><Step icon={KeyRound} title="Cadastre a chave" text="Escaneie o QR Code com o Google Authenticator, Microsoft Authenticator ou aplicativo compatível. Se preferir, insira a chave manualmente." /><MfaQrCode uri={setup.uri} /><p className="mt-4 text-[11px] font-black uppercase tracking-[.12em] text-[#597064]">Chave para entrada manual</p><div className="mt-2 flex items-center gap-2 rounded-xl bg-[#fff8ea] p-3"><code className="min-w-0 flex-1 break-all text-xs font-bold">{setup.secret}</code><button type="button" aria-label="Copiar chave" onClick={() => void navigator.clipboard.writeText(setup.secret)}><Copy className="size-4" /></button></div><CodeInput length={6} /><button disabled={busy} className="button mt-3">Ativar autenticação em duas etapas</button></form>}
   {status.nextStep === "mfa" && <form onSubmit={confirm} className="mt-7"><Step icon={KeyRound} title="Código de segurança" text="Digite o código atual do autenticador ou um código de recuperação." /><CodeInput /><button disabled={busy} className="button mt-3">Verificar e continuar</button></form>}
   {recovery.length > 0 && <div className="mt-7"><Step icon={CheckCircle2} title="MFA ativado" text="Guarde estes códigos em local seguro. Cada código funciona uma única vez e não será exibido novamente." /><pre className="mt-4 grid grid-cols-1 gap-2 rounded-xl bg-[#123d2b] p-4 text-center text-xs text-white sm:grid-cols-2">{recovery.join("\n")}</pre><button onClick={() => window.location.replace("/dashboard")} className="button mt-4">Já guardei os códigos</button></div>}
   {status.nextStep === null && !recovery.length && <div className="mt-7 text-center"><CheckCircle2 className="mx-auto size-10 text-[#147a45]" /><p className="mt-3 font-black">Conta protegida e liberada.</p><Link href="/dashboard" className="button mt-5 inline-flex items-center justify-center">Ir ao painel</Link></div>}
@@ -54,3 +56,13 @@ export default function AccountSecurityPage() {
 function Step({ icon: Icon, title, text }: { icon: typeof KeyRound; title: string; text: string }) { return <div><div className="flex items-center gap-2 font-black"><Icon className="size-5 text-[#ff6b1a]" />{title}</div><p className="mt-2 text-sm leading-6 text-[#597064]">{text}</p></div>; }
 function CodeInput({ length }: { length?: number }) { return <input name="code" required minLength={length ?? 6} maxLength={32} autoComplete="one-time-code" inputMode={length ? "numeric" : "text"} placeholder="Código de segurança" className="input mt-3" />; }
 function Alert({ children, error = false }: { children: React.ReactNode; error?: boolean }) { return <div className={`mt-5 rounded-xl border-2 px-4 py-3 text-xs font-bold ${error ? "border-red-200 bg-red-50 text-red-700" : "border-green-200 bg-green-50 text-green-700"}`}>{children}</div>; }
+
+function MfaQrCode({ uri }: { uri: string }) {
+  const [source, setSource] = useState("");
+  useEffect(() => {
+    let active = true;
+    QRCode.toDataURL(uri, { width: 240, margin: 2, errorCorrectionLevel: "M", color: { dark: "#123d2b", light: "#ffffff" } }).then((value) => { if (active) setSource(value); });
+    return () => { active = false; };
+  }, [uri]);
+  return <div className="mt-5 grid min-h-64 place-items-center rounded-2xl border-2 border-[#123d2b]/10 bg-white p-3">{source ? <Image src={source} width={240} height={240} unoptimized alt="QR Code para cadastrar a Mangora no aplicativo autenticador" className="size-60 max-w-full" /> : <LoaderCircle className="size-7 animate-spin text-[#ff6b1a]" />}</div>;
+}
