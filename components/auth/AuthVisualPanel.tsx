@@ -16,7 +16,7 @@ const content = {
     items: ["Dados protegidos", "Rotina sincronizada", "Acesso pelo celular"],
   },
   register: {
-    eyebrow: "7 dias grátis · sem cartão",
+    eyebrow: "Start por 7 dias · sem cartão",
     title: "Sete dias para mudar sua rotina.",
     copy: "Use vendas, estoque, clientes e financeiro por 7 dias. Depois, continue no Free ou escolha o plano que fizer sentido.",
     pose: "wave" as const,

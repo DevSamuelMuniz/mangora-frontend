@@ -90,7 +90,7 @@ export default function CadastroPage() {
             <div className="rounded-[2rem] border-2 border-[#123d2b] bg-white p-5 shadow-[7px_8px_0_#ffb21a] sm:p-7 xl:p-8">
               <div className="flex items-start justify-between gap-5">
                 <div>
-                  <p className="text-xs font-black uppercase tracking-[0.18em] text-[#ff6b1a]">7 dias grátis · sem cartão</p>
+                  <p className="text-xs font-black uppercase tracking-[0.18em] text-[#ff6b1a]">Start por 7 dias · sem cartão</p>
                   <h1 className="mt-2 font-[family-name:var(--font-bricolage)] text-3xl font-extrabold leading-none tracking-[-0.045em] text-[#123d2b] sm:text-4xl xl:text-[2.75rem]">Vamos preparar sua Mangora.</h1>
                   <p className="mt-2 text-sm font-medium leading-6 text-[#597064]">Preencha os dados essenciais e use a experiência completa por 7 dias. No 8º dia, continue no Free ou escolha um plano pago.</p>
                 </div>
@@ -113,7 +113,7 @@ export default function CadastroPage() {
 
                 <label className="mt-4 flex cursor-pointer items-start gap-2.5 text-xs font-semibold leading-5 text-[#597064]"><input type="checkbox" name="acceptedTerms" required className="mt-0.5 size-4 shrink-0 rounded border-[#123d2b]/30 accent-[#147a45]" /><span>Li e concordo com os <Link href="/termos" className="font-extrabold text-[#147a45] hover:text-[#ff6b1a]">Termos de Uso</Link> e com a <Link href="/privacidade" className="font-extrabold text-[#147a45] hover:text-[#ff6b1a]">Política de Privacidade</Link>.</span></label>
 
-                <button type="submit" disabled={loading} className="group mt-4 flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-[#ff6b1a] px-5 text-sm font-extrabold text-white shadow-[0_5px_0_#c9460b] transition hover:-translate-y-0.5 hover:shadow-[0_7px_0_#c9460b] focus-visible:outline-4 focus-visible:outline-offset-4 focus-visible:outline-[#ffb21a] disabled:cursor-not-allowed disabled:opacity-65 disabled:hover:translate-y-0">{loading ? <><LoaderCircle className="size-4 animate-spin" />Preparando sua conta...</> : <>Começar meus 7 dias grátis<ArrowRight className="size-4 transition group-hover:translate-x-1" /></>}</button>
+                <button type="submit" disabled={loading} className="group mt-4 flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-[#ff6b1a] px-5 text-sm font-extrabold text-white shadow-[0_5px_0_#c9460b] transition hover:-translate-y-0.5 hover:shadow-[0_7px_0_#c9460b] focus-visible:outline-4 focus-visible:outline-offset-4 focus-visible:outline-[#ffb21a] disabled:cursor-not-allowed disabled:opacity-65 disabled:hover:translate-y-0">{loading ? <><LoaderCircle className="size-4 animate-spin" />Preparando sua conta...</> : <>Testar o Start por 7 dias<ArrowRight className="size-4 transition group-hover:translate-x-1" /></>}</button>
                 <p className="mt-3 text-center text-[11px] font-semibold leading-5 text-[#6a7d73]">Você não informa cartão agora. Após o período completo, sua conta continua ativa no plano Free, sem cobrança.</p>
               </form>
 
