@@ -39,6 +39,13 @@ export type SubscriptionOverview = {
   nextBillingAt: string | null;
   paymentMethod: string | null;
   pendingPlan: "START" | "BUSINESS" | "PREMIUM" | null;
+  cancellation: {
+    requested: boolean;
+    cancelled: boolean;
+    active: boolean;
+    effectiveAt: string | null;
+    daysLeft: number | null;
+  };
   contract: {
     planCatalogVersion: number;
     planSnapshot: unknown | null;
