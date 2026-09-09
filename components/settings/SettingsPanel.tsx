@@ -109,6 +109,21 @@ function SalesForm({ company }: { company: CompanySettings }) { return <div clas
 function NotificationsForm({ company }: { company: CompanySettings }) { return <div className="space-y-5"><SettingsGroup title="Alertas no sistema"><Toggle name="lowStockNotification" title="Estoque baixo" description="Avisa gestores quando produtos atingem o estoque mínimo." defaultChecked={company.lowStockNotification} /><Toggle name="overdueAccountNotification" title="Contas vencidas" description="Avisa gestores sobre compromissos financeiros atrasados." defaultChecked={company.overdueAccountNotification} /><Toggle name="saleNotification" title="Novas vendas" description="Registra a preferência para alertas comerciais." defaultChecked={company.saleNotification} /></SettingsGroup><div className="grid gap-4 sm:grid-cols-2"><Field label="E-mail para resumos" id="summaryEmail"><input id="summaryEmail" name="summaryEmail" type="email" defaultValue={company.summaryEmail ?? ""} className={inputClass} /></Field><Field label="Frequência" id="summaryFrequency"><select id="summaryFrequency" name="summaryFrequency" defaultValue={company.summaryFrequency} className={inputClass}><option value="daily">Diariamente</option><option value="weekly">Semanalmente</option><option value="disabled">Desativado</option></select></Field></div><p className="text-[10px] text-slate-400">Os resumos são processados automaticamente, sem duplicação, e os e-mails com falha entram em reenvio gradual.</p></div>; }
 function OnlineStoreForm({ company }: { company: CompanySettings }) {
   const [copied, setCopied] = useState(false);
+  const [enabled, setEnabled] = useState(company.publicPageEnabled);
+  const [savingToggle, setSavingToggle] = useState(false);
+  const saveSettings = useSaveCompanySettings();
+  async function toggleEnabled() {
+    if (savingToggle) return;
+    setSavingToggle(true);
+    try {
+      const updated = await saveSettings.mutateAsync({ publicPageEnabled: !enabled });
+      setEnabled(updated.publicPageEnabled);
+    } catch {
+      // mantém o estado atual quando a atualização falhar
+    } finally {
+      setSavingToggle(false);
+    }
+  }
   const pageUrl = `${typeof window !== "undefined" ? window.location.origin : "https://mangora.com.br"}/loja/${company.slug}`;
   async function copyLink() {
     try {
@@ -123,7 +138,10 @@ function OnlineStoreForm({ company }: { company: CompanySettings }) {
     <div className="overflow-hidden rounded-2xl border-2 border-[#123d2b] bg-[#fff8ea] shadow-[6px_7px_0_#ffb21a]">
       <div className="flex flex-wrap items-center justify-between gap-3 border-b-2 border-dashed border-[#123d2b]/15 px-5 py-4">
         <div><p className="text-[10px] font-black uppercase tracking-[0.16em] text-[#ff6b1a]">Sua página online</p><p className="mt-1 text-sm font-black text-[#123d2b]">Compartilhe este link com seus clientes</p></div>
-        <span className={`rounded-full px-3 py-1 text-[10px] font-black ${company.publicPageEnabled ? "bg-green-100 text-green-700" : "bg-slate-200 text-slate-500"}`}>{company.publicPageEnabled ? "● Publicada" : "○ Desativada"}</span>
+        <span className="flex items-center gap-2">
+          <span className={`rounded-full px-3 py-1 text-[10px] font-black ${enabled ? "bg-green-100 text-green-700" : "bg-slate-200 text-slate-500"}`}>{enabled ? "● Publicada" : "○ Desativada"}</span>
+          <button type="button" role="switch" aria-checked={enabled} aria-label={enabled ? "Desativar a página online" : "Ativar a página online"} disabled={savingToggle} onClick={() => void toggleEnabled()} className={`relative h-6 w-11 shrink-0 rounded-full transition-colors disabled:opacity-50 ${enabled ? "bg-[#147a45]" : "bg-slate-300"}`}><span className={`absolute left-1 top-1 size-4 rounded-full bg-white shadow-sm transition-transform ${enabled ? "translate-x-5" : ""}`} /></button>
+        </span>
       </div>
       <div className="px-5 py-4">
         <p className="font-mono text-[9px] font-bold uppercase tracking-[0.14em] text-[#597064]">Link da página</p>
