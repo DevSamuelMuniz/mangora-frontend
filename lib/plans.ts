@@ -28,7 +28,6 @@ export const subscriptionPlans: SubscriptionPlan[] = [
         description: "O essencial para organizar seu pequeno negócio.",
         features: [
             "Tudo do plano Free",
-            "Página online",
             "1 dono e 2 funcionários",
             "1 loja",
             "Suporte padrão",

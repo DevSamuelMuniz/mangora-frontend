@@ -1,4 +1,4 @@
-export type SettingsTab = "company" | "preferences" | "sales" | "notifications" | "online" | "security";
+export type SettingsTab = "company" | "preferences" | "sales" | "notifications" | "security";
 
 export type CompanySettings = {
   id: string; tradeName: string; legalName: string | null; slug: string; segment: string;
@@ -8,18 +8,5 @@ export type CompanySettings = {
   maximumDiscount: number; requireCustomer: boolean; allowPendingSales: boolean; allowNegativeStock: boolean;
   lowStockNotification: boolean; overdueAccountNotification: boolean; saleNotification: boolean;
   summaryEmail: string | null; summaryFrequency: "daily" | "weekly" | "disabled";
-  publicPageEnabled: boolean; publicDescription: string | null; publicWhatsapp: string | null;
-  publicPickupEnabled: boolean; publicDeliveryEnabled: boolean;
-  publicBrandColor: string; publicLogoUrl: string | null; publicCoverUrl: string | null;
-  publicAnnouncement: string | null; publicHours: string | null; publicFooterNote: string | null;
-  publicTagline: string | null; publicInstagram: string | null;
-  publicTheme: "light" | "dark"; publicOrderNote: string | null;
-  publicTitleColor: string | null; publicTextColor: string | null;
-  publicBackgroundColor: string | null; publicPanelColor: string | null;
-  publicFont: "moderno" | "classico" | "mono"; publicCoverEnabled: boolean;
-  publicIconStyle: "rounded" | "square" | "outline"; publicBackgroundPattern: "none" | "dots" | "grid" | "waves";
-  publicHeaderColor: string | null; publicAnnouncementColor: string | null;
-  publicButtonColor: string | null; publicPriceColor: string | null; publicCardColor: string | null;
-  publicElementColors: Record<string, string>;
   sessionTimeout: number; loginAttempts: number; status: "ACTIVE" | "SUSPENDED";
 };

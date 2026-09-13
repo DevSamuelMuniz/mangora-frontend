@@ -73,7 +73,6 @@ export default function ProductForm({ productId }: { productId?: string }) {
       barcode: optional("barcode"),
       description: optional("description"),
       imageUrl: optional("imageUrl"),
-      publicVisible: formData.get("publicVisible") === "on",
       fiscalNcm: optional("fiscalNcm"), fiscalCest: optional("fiscalCest"),
       fiscalCfop: optional("fiscalCfop"), fiscalOrigin: optional("fiscalOrigin"),
       fiscalCsosn: optional("fiscalCsosn"), fiscalCstIcms: optional("fiscalCstIcms"),
@@ -199,7 +198,6 @@ export default function ProductForm({ productId }: { productId?: string }) {
             <Field label="URL da imagem (opcional)" id="imageUrl" className="mt-4">
               <input id="imageUrl" name="imageUrl" type="url" defaultValue={product?.imageUrl ?? ""} placeholder="https://..." className={inputClassName} />
             </Field>
-            <label className="mt-4 flex cursor-pointer items-center justify-between gap-3 rounded-xl border border-slate-200 p-3"><span><span className="block text-xs font-bold text-slate-700">Exibir na página online</span><span className="text-[9px] text-slate-400">Permite que clientes vejam e peçam este item.</span></span><input type="checkbox" name="publicVisible" defaultChecked={product?.publicVisible ?? true} className="size-4 accent-orange-600" /></label>
           </div>
         </div>
 

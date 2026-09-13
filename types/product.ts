@@ -17,7 +17,6 @@ export type Product = {
   trackStock: boolean;
   active: boolean;
   imageUrl: string | null;
-  publicVisible: boolean;
   fiscalNcm: string | null;
   fiscalCest: string | null;
   fiscalCfop: string | null;
@@ -45,7 +44,6 @@ export type ProductInput = {
   trackStock: boolean;
   active: boolean;
   imageUrl: string | null;
-  publicVisible: boolean;
   fiscalNcm?: string | null;
   fiscalCest?: string | null;
   fiscalCfop?: string | null;

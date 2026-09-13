@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 
 export default async function SettingsPage({ searchParams }: { searchParams: Promise<{ secao?: string }> }) {
   const { secao } = await searchParams;
-  const tabs: SettingsTab[] = ["company", "preferences", "sales", "notifications", "online", "security"];
+  const tabs: SettingsTab[] = ["company", "preferences", "sales", "notifications", "security"];
   const initialTab = tabs.includes(secao as SettingsTab) ? secao as SettingsTab : "company";
   return <SettingsPanel key={initialTab} initialTab={initialTab} />;
 }

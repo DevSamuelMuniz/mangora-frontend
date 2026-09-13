@@ -95,7 +95,6 @@ Reports         → relatórios (por período), dashboard
 Notifications   → header (sino), jobs (resumos/alertas)
 Settings        → configurações (empresa/segurança), permissões (can)
 Subscription    → assinatura (planos + Asaas), landing page (lib/plans)
-Public Store    → loja pública (catálogo + pedido)
 ```
 
 ## Permissões (UX)

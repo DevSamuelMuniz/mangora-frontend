@@ -17,12 +17,8 @@ describe("subscriptionPlans (catálogo canônico)", () => {
         expect(subscriptionPlans.filter((plan) => plan.highlighted).map((plan) => plan.id)).toEqual(["business"]);
     });
 
-    it("mantém página online a partir do Start e os novos limites comerciais", () => {
-        const free = subscriptionPlans.find((plan) => plan.id === "free");
-        const start = subscriptionPlans.find((plan) => plan.id === "start");
+    it("mantém os limites comerciais dos planos", () => {
         const business = subscriptionPlans.find((plan) => plan.id === "business");
-        expect(free?.features).not.toContain("Página online");
-        expect(start?.features).toContain("Página online");
         expect(business?.features).toContain("Até 3 lojas");
     });
 });

@@ -1,8 +1,7 @@
 "use client";
 
-import Link from "next/link";
 import { FormEvent, useState, type ReactNode } from "react";
-import { Activity, Bell, Building2, CheckCircle2, Copy, Globe2, KeyRound, LoaderCircle, Monitor, Pencil, RefreshCw, Save, ShieldCheck, ShoppingCart, SlidersHorizontal, type LucideIcon } from "lucide-react";
+import { Activity, Bell, Building2, CheckCircle2, KeyRound, LoaderCircle, Monitor, RefreshCw, Save, ShieldCheck, ShoppingCart, SlidersHorizontal, type LucideIcon } from "lucide-react";
 import type { CompanySettings, SettingsTab } from "@/types/settings";
 import { formatDateTime } from "@/lib/format";
 import {
@@ -21,7 +20,6 @@ const tabs: { id: SettingsTab; label: string; description: string; icon: LucideI
   { id: "preferences", label: "Preferências", description: "Idioma e operação", icon: SlidersHorizontal },
   { id: "sales", label: "Vendas", description: "Regras comerciais", icon: ShoppingCart },
   { id: "notifications", label: "Notificações", description: "Alertas e resumos", icon: Bell },
-  { id: "online", label: "Página online", description: "Catálogo público", icon: Globe2 },
   { id: "security", label: "Segurança", description: "Sessão e acesso", icon: ShieldCheck },
 ];
 const segments = [
@@ -62,24 +60,6 @@ export default function SettingsPanel({ initialTab = "company" }: { initialTab?:
       saleNotification: data.get("saleNotification") === "on",
       summaryEmail: data.get("summaryEmail"), summaryFrequency: data.get("summaryFrequency"),
     };
-    else if (activeTab === "online") payload = {
-      publicPageEnabled: data.get("publicPageEnabled") === "on",
-      publicDescription: data.get("publicDescription"), publicWhatsapp: data.get("publicWhatsapp"),
-      publicPickupEnabled: data.get("publicPickupEnabled") === "on",
-      publicDeliveryEnabled: data.get("publicDeliveryEnabled") === "on",
-      publicBrandColor: data.get("publicBrandColor"), publicLogoUrl: data.get("publicLogoUrl"),
-      publicCoverUrl: data.get("publicCoverUrl"), publicAnnouncement: data.get("publicAnnouncement"),
-      publicHours: data.get("publicHours"), publicFooterNote: data.get("publicFooterNote"),
-      publicTagline: data.get("publicTagline"), publicInstagram: data.get("publicInstagram"),
-      publicTheme: data.get("publicTheme"), publicOrderNote: data.get("publicOrderNote"),
-      publicTitleColor: data.get("publicTitleColor"), publicTextColor: data.get("publicTextColor"),
-      publicBackgroundColor: data.get("publicBackgroundColor"), publicPanelColor: data.get("publicPanelColor"),
-      publicFont: data.get("publicFont"), publicCoverEnabled: data.get("publicCoverEnabled") === "on",
-      publicIconStyle: data.get("publicIconStyle"), publicBackgroundPattern: data.get("publicBackgroundPattern"),
-      publicHeaderColor: data.get("publicHeaderColor"), publicAnnouncementColor: data.get("publicAnnouncementColor"),
-      publicButtonColor: data.get("publicButtonColor"), publicPriceColor: data.get("publicPriceColor"),
-      publicCardColor: data.get("publicCardColor"),
-    };
     else payload = { sessionTimeout: Number(data.get("sessionTimeout")), loginAttempts: Number(data.get("loginAttempts")) };
 
     try {
@@ -97,8 +77,8 @@ export default function SettingsPanel({ initialTab = "company" }: { initialTab?:
     <div><p className="text-[11px] font-bold uppercase tracking-[0.14em] text-orange-600">Administração</p><h1 className="mt-1 text-2xl font-black text-slate-950 sm:text-3xl">Configurações</h1><p className="mt-1 text-xs text-slate-500">Personalize os dados e as regras reais da empresa.</p></div>
     {errorMessage && !company ? <div role="alert" className="mt-5 rounded-xl border border-red-200 bg-red-50 p-4 text-xs font-semibold text-red-700">{errorMessage}</div> : company && <div className="mt-5 grid items-start gap-4 lg:grid-cols-[240px_1fr]">
       <nav aria-label="Seções de configurações" className="overflow-x-auto rounded-2xl border border-slate-200 bg-white p-2 shadow-sm lg:sticky lg:top-20"><div className="flex min-w-max gap-1 lg:min-w-0 lg:flex-col">{tabs.map((item) => { const Icon = item.icon; const active = activeTab === item.id; return <button key={item.id} type="button" onClick={() => { setActiveTab(item.id); setActionError(""); setSuccess(""); }} className={`flex min-w-44 items-center gap-3 rounded-xl px-3 py-2.5 text-left lg:min-w-0 ${active ? "bg-orange-50 text-orange-700" : "text-slate-600 hover:bg-slate-50"}`}><div className={`flex size-8 items-center justify-center rounded-lg ${active ? "bg-orange-100" : "bg-slate-100 text-slate-400"}`}><Icon className="size-4" /></div><div><p className="text-xs font-bold">{item.label}</p><p className="text-[9px] text-slate-400">{item.description}</p></div></button>; })}</div></nav>
-      <form key={activeTab} onSubmit={handleSubmit} className="space-y-4"><div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm"><div className="flex items-center gap-3 border-b border-slate-100 pb-4"><div className="flex size-9 items-center justify-center rounded-xl bg-orange-50 text-orange-600"><ActiveIcon className="size-4" /></div><div><h2 className="text-sm font-bold text-slate-950">{tab.label}</h2><p className="text-[10px] text-slate-400">{tab.description}</p></div></div><div className="mt-4">{activeTab === "company" && <CompanyForm company={company} />}{activeTab === "preferences" && <PreferencesForm company={company} />}{activeTab === "sales" && <SalesForm company={company} />}{activeTab === "notifications" && <NotificationsForm company={company} />}{activeTab === "online" && <OnlineStoreForm company={company} />}{activeTab === "security" && <SecurityForm company={company} />}</div></div>
-      {errorMessage && <Alert tone="error">{errorMessage}</Alert>}{success && <Alert tone="success"><CheckCircle2 className="size-4 shrink-0" />{success}</Alert>}{activeTab !== "online" && <div className="flex justify-end"><button disabled={saving} className="flex h-11 items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-orange-600 to-amber-600 px-5 text-sm font-bold text-white disabled:opacity-70">{saving ? <><LoaderCircle className="size-4 animate-spin" />Salvando...</> : <><Save className="size-4" />Salvar alterações</>}</button></div>}</form>
+      <form key={activeTab} onSubmit={handleSubmit} className="space-y-4"><div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm"><div className="flex items-center gap-3 border-b border-slate-100 pb-4"><div className="flex size-9 items-center justify-center rounded-xl bg-orange-50 text-orange-600"><ActiveIcon className="size-4" /></div><div><h2 className="text-sm font-bold text-slate-950">{tab.label}</h2><p className="text-[10px] text-slate-400">{tab.description}</p></div></div><div className="mt-4">{activeTab === "company" && <CompanyForm company={company} />}{activeTab === "preferences" && <PreferencesForm company={company} />}{activeTab === "sales" && <SalesForm company={company} />}{activeTab === "notifications" && <NotificationsForm company={company} />}{activeTab === "security" && <SecurityForm company={company} />}</div></div>
+      {errorMessage && <Alert tone="error">{errorMessage}</Alert>}{success && <Alert tone="success"><CheckCircle2 className="size-4 shrink-0" />{success}</Alert>}<div className="flex justify-end"><button disabled={saving} className="flex h-11 items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-orange-600 to-amber-600 px-5 text-sm font-bold text-white disabled:opacity-70">{saving ? <><LoaderCircle className="size-4 animate-spin" />Salvando...</> : <><Save className="size-4" />Salvar alterações</>}</button></div></form>
     </div>}
   </section>;
 }
@@ -107,64 +87,6 @@ function CompanyForm({ company }: { company: CompanySettings }) { return <div cl
 function PreferencesForm({ company }: { company: CompanySettings }) { return <div className="grid gap-4 sm:grid-cols-2"><Field label="Idioma" id="language"><input id="language" value="Português (Brasil)" disabled className={inputClass} /></Field><Field label="Fuso horário" id="timezone"><select id="timezone" name="timezone" defaultValue={company.timezone === "America/Sao_Paulo" ? company.timezone : "America/Sao_Paulo"} className={inputClass}><option value="America/Sao_Paulo">Horário de Brasília — UTC−3</option></select></Field><Field label="Moeda" id="currency"><input id="currency" value="Real brasileiro (R$)" disabled className={inputClass} /></Field><div className="rounded-xl border border-orange-100 bg-orange-50 p-3 text-[10px] leading-4 text-orange-700">Datas e horários usam America/Sao_Paulo. O banco preserva os instantes em UTC.</div></div>; }
 function SalesForm({ company }: { company: CompanySettings }) { return <div className="space-y-5"><div className="grid gap-4 sm:grid-cols-2"><Field label="Pagamento padrão" id="defaultPayment"><select id="defaultPayment" name="defaultPayment" defaultValue={company.defaultPayment} className={inputClass}><option value="PIX">PIX</option><option value="CASH">Dinheiro</option><option value="DEBIT_CARD">Cartão de débito</option><option value="CREDIT_CARD">Cartão de crédito</option><option value="BOLETO">Boleto</option></select></Field><Field label="Desconto máximo (%)" id="maximumDiscount"><input id="maximumDiscount" name="maximumDiscount" type="number" min={0} max={100} step="0.5" defaultValue={company.maximumDiscount} className={inputClass} /></Field></div><SettingsGroup title="Regras aplicadas"><Toggle name="requireCustomer" title="Exigir cliente identificado" description="Bloqueia venda e pedido sem cliente cadastrado." defaultChecked={company.requireCustomer} /><Toggle name="allowPendingSales" title="Permitir vendas pendentes" description="Preferência preparada para o fluxo de recebimentos." defaultChecked={company.allowPendingSales} /><Toggle name="allowNegativeStock" title="Permitir estoque negativo" description="Permite vender/pedir mais do que o disponível (desligado: bloqueia a operação)." defaultChecked={company.allowNegativeStock} /></SettingsGroup></div>; }
 function NotificationsForm({ company }: { company: CompanySettings }) { return <div className="space-y-5"><SettingsGroup title="Alertas no sistema"><Toggle name="lowStockNotification" title="Estoque baixo" description="Avisa gestores quando produtos atingem o estoque mínimo." defaultChecked={company.lowStockNotification} /><Toggle name="overdueAccountNotification" title="Contas vencidas" description="Avisa gestores sobre compromissos financeiros atrasados." defaultChecked={company.overdueAccountNotification} /><Toggle name="saleNotification" title="Novas vendas" description="Registra a preferência para alertas comerciais." defaultChecked={company.saleNotification} /></SettingsGroup><div className="grid gap-4 sm:grid-cols-2"><Field label="E-mail para resumos" id="summaryEmail"><input id="summaryEmail" name="summaryEmail" type="email" defaultValue={company.summaryEmail ?? ""} className={inputClass} /></Field><Field label="Frequência" id="summaryFrequency"><select id="summaryFrequency" name="summaryFrequency" defaultValue={company.summaryFrequency} className={inputClass}><option value="daily">Diariamente</option><option value="weekly">Semanalmente</option><option value="disabled">Desativado</option></select></Field></div><p className="text-[10px] text-slate-400">Os resumos são processados automaticamente, sem duplicação, e os e-mails com falha entram em reenvio gradual.</p></div>; }
-function OnlineStoreForm({ company }: { company: CompanySettings }) {
-  const [copied, setCopied] = useState(false);
-  const [enabled, setEnabled] = useState(company.publicPageEnabled);
-  const [savingToggle, setSavingToggle] = useState(false);
-  const saveSettings = useSaveCompanySettings();
-  async function toggleEnabled() {
-    if (savingToggle) return;
-    setSavingToggle(true);
-    try {
-      const updated = await saveSettings.mutateAsync({ publicPageEnabled: !enabled });
-      setEnabled(updated.publicPageEnabled);
-    } catch {
-      // mantém o estado atual quando a atualização falhar
-    } finally {
-      setSavingToggle(false);
-    }
-  }
-  const pageUrl = `${typeof window !== "undefined" ? window.location.origin : "https://mangora.com.br"}/loja/${company.slug}`;
-  async function copyLink() {
-    try {
-      await navigator.clipboard.writeText(pageUrl);
-      setCopied(true);
-      window.setTimeout(() => setCopied(false), 2500);
-    } catch {
-      // clipboard indisponível — o link continua visível para copiar manualmente
-    }
-  }
-  return <div className="space-y-5">
-    <section className="rounded-xl border-2 border-green-200 bg-green-50 p-4"><div className="flex flex-wrap items-center justify-between gap-3"><div className="flex items-center gap-3"><span className="grid size-9 place-items-center rounded-xl bg-white text-green-700"><ShieldCheck className="size-4" /></span><div><h3 className="text-xs font-black text-green-900">Autenticação em duas etapas</h3><p className="mt-0.5 text-[10px] text-green-800">Opcional e recomendada para aumentar a proteção da sua conta.</p></div></div><Link href="/seguranca-da-conta" className="flex h-10 items-center rounded-xl bg-green-700 px-4 text-xs font-bold text-white">Configurar A2F</Link></div></section>
-    <div className="overflow-hidden rounded-2xl border-2 border-[#123d2b] bg-[#fff8ea] shadow-[6px_7px_0_#ffb21a]">
-      <div className="flex flex-wrap items-center justify-between gap-3 border-b-2 border-dashed border-[#123d2b]/15 px-5 py-4">
-        <div><p className="text-[10px] font-black uppercase tracking-[0.16em] text-[#ff6b1a]">Sua página online</p><p className="mt-1 text-sm font-black text-[#123d2b]">Compartilhe este link com seus clientes</p></div>
-        <span className="flex items-center gap-2">
-          <span className={`rounded-full px-3 py-1 text-[10px] font-black ${enabled ? "bg-green-100 text-green-700" : "bg-slate-200 text-slate-500"}`}>{enabled ? "● Publicada" : "○ Desativada"}</span>
-          <button type="button" role="switch" aria-checked={enabled} aria-label={enabled ? "Desativar a página online" : "Ativar a página online"} disabled={savingToggle} onClick={() => void toggleEnabled()} className={`relative h-6 w-11 shrink-0 rounded-full transition-colors disabled:opacity-50 ${enabled ? "bg-[#147a45]" : "bg-slate-300"}`}><span className={`absolute left-1 top-1 size-4 rounded-full bg-white shadow-sm transition-transform ${enabled ? "translate-x-5" : ""}`} /></button>
-        </span>
-      </div>
-      <div className="px-5 py-4">
-        <p className="font-mono text-[9px] font-bold uppercase tracking-[0.14em] text-[#597064]">Link da página</p>
-        <div className="mt-1.5 flex items-center gap-2">
-          <code className="min-w-0 flex-1 truncate rounded-xl bg-[#123d2b] px-3.5 py-3 font-mono text-sm font-bold text-[#ffd56a]">{pageUrl}</code>
-          <button type="button" onClick={() => void copyLink()} className={`flex h-11 shrink-0 items-center gap-1.5 rounded-xl px-4 text-xs font-black text-white transition ${copied ? "bg-green-600" : "bg-[#ff6b1a] hover:brightness-110"}`}>{copied ? <CheckCircle2 className="size-4" /> : <Copy className="size-4" />}{copied ? "Copiado!" : "Copiar link"}</button>
-        </div>
-        <div className="mt-3 flex flex-wrap gap-2">
-          <Link href={`/loja/${company.slug}`} target="_blank" className="flex h-10 items-center gap-2 rounded-xl border-2 border-[#123d2b] bg-white px-4 text-xs font-black text-[#123d2b] transition hover:border-[#ff6b1a] hover:text-[#a93a05]">Abrir página</Link>
-          <Link href="/loja/editar" className="flex h-10 items-center gap-2 rounded-xl bg-[#123d2b] px-4 text-xs font-black text-white shadow-sm transition hover:bg-[#147a45]"><Pencil className="size-3.5" />Editar página</Link>
-        </div>
-      </div>
-    </div>
-    <div className="grid gap-3 sm:grid-cols-3">
-      <div className="rounded-xl border border-slate-200 bg-white p-4"><p className="text-[10px] font-bold text-slate-500">Identidade</p><p className="mt-1 text-xs font-black text-slate-800">{company.tradeName}</p></div>
-      <div className="rounded-xl border border-slate-200 bg-white p-4"><p className="text-[10px] font-bold text-slate-500">Tema</p><p className="mt-1 text-xs font-black text-slate-800">{company.publicTheme === "dark" ? "Escuro" : "Claro"} · {company.publicFont}</p></div>
-      <div className="rounded-xl border border-slate-200 bg-white p-4"><p className="text-[10px] font-bold text-slate-500">Edição</p><p className="mt-1 text-xs font-black text-slate-800">No editor visual da página</p></div>
-    </div>
-    <p className="text-[10px] leading-4 text-slate-400">Textos, cores, imagens, tema e fonte são editados direto na página, no painel fixo à direita. A visibilidade dos produtos continua no cadastro de cada item.</p>
-  </div>;
-}
-
 const emptyJobs: JobStatusData = { emails: { queued: 0, sent: 0, failed: 0 }, recentRuns: [] };
 
 function SecurityForm({ company }: { company: CompanySettings }) {
