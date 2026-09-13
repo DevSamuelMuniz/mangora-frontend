@@ -8,5 +8,6 @@ export type CompanySettings = {
   maximumDiscount: number; requireCustomer: boolean; allowPendingSales: boolean; allowNegativeStock: boolean;
   lowStockNotification: boolean; overdueAccountNotification: boolean; saleNotification: boolean;
   summaryEmail: string | null; summaryFrequency: "daily" | "weekly" | "disabled";
+  requirePasswordForRecords: boolean; requirePasswordForStock: boolean; requirePasswordForSaleReturns: boolean;
   sessionTimeout: number; loginAttempts: number; status: "ACTIVE" | "SUSPENDED";
 };

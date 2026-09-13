@@ -7,6 +7,7 @@ const OFFLINE_MESSAGE = "Sem conexão. Registramos a alteração e vamos sincron
 
 type ApiErrorPayload = {
   message?: string | string[];
+  code?: string;
 };
 
 export class ApiError extends Error {
@@ -51,7 +52,25 @@ export async function apiRequest<T>(path: string, init?: RequestInit): Promise<T
   }
 
   if (!response.ok) {
-    const payload = (await response.json().catch(() => ({}))) as ApiErrorPayload;
+    let payload = (await response.json().catch(() => ({}))) as ApiErrorPayload;
+    if (response.status === 428 && payload.code === "OPERATION_PASSWORD_REQUIRED" && typeof window !== "undefined") {
+      const password = window.prompt(payload.message || "Confirme sua senha para continuar:");
+      if (password === null) throw new ApiError("Operação cancelada: a senha não foi informada.", 428);
+      response = await fetch(`${API_URL}${path}`, {
+        ...init,
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+          ...init?.headers,
+          "x-operation-password": password,
+        },
+      });
+      if (response.ok) {
+        if (response.status === 204) return undefined as T;
+        return await response.json() as T;
+      }
+      payload = (await response.json().catch(() => ({}))) as ApiErrorPayload;
+    }
     const raw = Array.isArray(payload.message) ? payload.message.join(" ") : payload.message;
     throw new ApiError(describeError(response.status, raw), response.status);
   }
