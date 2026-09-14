@@ -266,7 +266,14 @@ export default function Sidebar({
             <Link href="/dashboard" onClick={onClose} className={`flex h-10 items-center gap-3 rounded-xl px-3 text-sm font-semibold transition ${pathname === "/dashboard" ? "bg-orange-50 text-orange-700" : "text-slate-600 hover:bg-slate-100 hover:text-slate-950"}`}>
               <LayoutDashboard className={`size-4.5 ${pathname === "/dashboard" ? "text-orange-600" : "text-slate-400"}`} />Dashboard
             </Link>
-            {visibleNavigationGroups.map((group) => {
+            {simpleMode ? visibleNavigationGroups.flatMap((group) => group.items).map((item) => {
+              const ItemIcon = item.icon;
+              const active = isActive(item.href);
+              return <Link key={item.href} href={item.href} onClick={onClose} className={`flex h-10 items-center gap-3 rounded-xl px-3 text-sm font-semibold transition ${active ? "bg-orange-50 text-orange-700" : "text-slate-600 hover:bg-slate-100 hover:text-slate-950"}`}>
+                <ItemIcon className={`size-4.5 ${active ? "text-orange-600" : "text-slate-400"}`} />
+                {item.label}
+              </Link>;
+            }) : visibleNavigationGroups.map((group) => {
               const GroupIcon = group.icon;
               const active = group.items.some((item) => isActive(item.href));
               const expanded = Boolean(openGroups[group.label]);
