@@ -11,6 +11,9 @@ export type Employee = {
   jobTitle: string | null;
   employeeCode: string | null;
   startDate: string;
+  birthDate: string | null;
+  birthdayEmailEnabled: boolean;
+  workAnniversaryEmailEnabled: boolean;
   notes: string | null;
   lastAccessAt: string | null;
   createdAt: string;

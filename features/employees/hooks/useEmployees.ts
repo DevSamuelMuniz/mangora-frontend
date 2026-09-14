@@ -48,3 +48,11 @@ export function useCreateEmployee() {
         },
     });
 }
+
+export function useUpdateEmployeeProfile() {
+    const queryClient = useQueryClient();
+    return useMutation<Employee, Error, { id: string; payload: Record<string, unknown> }>({
+        mutationFn: ({ id, payload }) => apiRequest<Employee>(`/employees/${id}/profile`, { method: "PATCH", body: JSON.stringify(payload) }),
+        onSuccess: () => { void queryClient.invalidateQueries({ queryKey: employeesQueryKey }); },
+    });
+}
