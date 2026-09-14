@@ -21,6 +21,7 @@ import {
   ClipboardList,
   LayoutDashboard,
   Package,
+  ScrollText,
   Settings,
   ShoppingBag,
   Store,
@@ -77,6 +78,7 @@ const navigationGroups: NavigationGroup[] = [
     { label: "Notas fiscais", href: "/notas-fiscais", icon: FileText, roles: ["OWNER", "ADMIN", "MANAGER"] },
     { label: "Dados", href: "/dados", icon: Database, roles: ["OWNER", "ADMIN", "MANAGER"] },
     { label: "Gerente de IA", href: "/gerente-ia", icon: Bot, roles: ["OWNER", "ADMIN", "MANAGER"] },
+    { label: "LOG", href: "/logs", icon: ScrollText, roles: ["OWNER"] },
   ] },
 ];
 

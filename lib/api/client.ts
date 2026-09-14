@@ -54,7 +54,8 @@ export async function apiRequest<T>(path: string, init?: RequestInit): Promise<T
   if (!response.ok) {
     let payload = (await response.json().catch(() => ({}))) as ApiErrorPayload;
     if (response.status === 428 && payload.code === "OPERATION_PASSWORD_REQUIRED" && typeof window !== "undefined") {
-      const password = window.prompt(payload.message || "Confirme sua senha para continuar:");
+      const passwordPrompt = Array.isArray(payload.message) ? payload.message.join(" ") : payload.message;
+      const password = window.prompt(passwordPrompt || "Confirme sua senha para continuar:");
       if (password === null) throw new ApiError("Operação cancelada: a senha não foi informada.", 428);
       response = await fetch(`${API_URL}${path}`, {
         ...init,
