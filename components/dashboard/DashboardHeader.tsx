@@ -4,9 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import {
-  Bell,
   Bot,
-  CheckCheck,
   ChevronDown,
   CreditCard,
   LogOut,
@@ -20,7 +18,7 @@ import { apiRequest } from "@/lib/api/client";
 import { setUserProperties, track } from "@/lib/analytics";
 import { roleLabels, type AuthSession } from "@/lib/auth/types";
 import { can } from "@/lib/permissions";
-import { useMarkAllNotificationsRead, useNotifications } from "@/features/notifications/hooks/useNotifications";
+import NotificationCenter from "./NotificationCenter";
 
 type DashboardHeaderProps = {
   onOpenSidebar: () => void;
@@ -31,15 +29,9 @@ type DashboardHeaderProps = {
 
 export default function DashboardHeader({ onOpenSidebar, session, simpleMode, onSimpleModeChange }: DashboardHeaderProps) {
   const router = useRouter();
-  const { data: notificationsData } = useNotifications();
-  const markAllReadMutation = useMarkAllNotificationsRead();
-  const notifications = notificationsData?.items ?? [];
-  const [notificationOpen, setNotificationOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
   const [logoutLoading, setLogoutLoading] = useState(false);
-  const notificationMenuRef = useRef<HTMLDivElement>(null);
   const profileMenuRef = useRef<HTMLDivElement>(null);
-  const unread = notifications.filter((notification) => !notification.readAt).length;
   const roleLabel = roleLabels[session.membership.role];
   const initials = session.user.name
     .split(" ")
@@ -75,34 +67,9 @@ export default function DashboardHeader({ onOpenSidebar, session, simpleMode, on
     };
   }, [profileOpen]);
 
-  useEffect(() => {
-    if (!notificationOpen) return;
-    function closeNotifications(event: PointerEvent) {
-      if (notificationMenuRef.current && !notificationMenuRef.current.contains(event.target as Node)) setNotificationOpen(false);
-    }
-    function closeNotificationsWithKeyboard(event: KeyboardEvent) {
-      if (event.key === "Escape") setNotificationOpen(false);
-    }
-    document.addEventListener("pointerdown", closeNotifications);
-    document.addEventListener("keydown", closeNotificationsWithKeyboard);
-    return () => {
-      document.removeEventListener("pointerdown", closeNotifications);
-      document.removeEventListener("keydown", closeNotificationsWithKeyboard);
-    };
-  }, [notificationOpen]);
-
-  function toggleNotifications() {
-    setProfileOpen(false);
-    setNotificationOpen((current) => !current);
-  }
-
   function toggleProfile() {
-    setNotificationOpen(false);
+    window.dispatchEvent(new Event("mangora-close-notifications"));
     setProfileOpen((current) => !current);
-  }
-
-  async function markAllRead() {
-    await markAllReadMutation.mutateAsync();
   }
 
   async function handleLogout() {
@@ -134,7 +101,7 @@ export default function DashboardHeader({ onOpenSidebar, session, simpleMode, on
         </div>
 
         <div className="hidden max-w-sm flex-1 md:block">
-          <div ref={notificationMenuRef} className="relative">
+          <div className="relative">
             <Search className="pointer-events-none absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-slate-400" />
             <input type="search" placeholder="Buscar no sistema..." className="h-10 w-full rounded-xl border border-slate-200 bg-slate-50 pl-10 pr-4 text-xs text-slate-800 outline-none transition placeholder:text-slate-400 focus:border-orange-300 focus:bg-white focus:ring-4 focus:ring-orange-100" />
           </div>
@@ -148,30 +115,7 @@ export default function DashboardHeader({ onOpenSidebar, session, simpleMode, on
             <span aria-hidden="true" className="relative h-5 w-9 rounded-full bg-slate-200 transition peer-checked:bg-orange-500 after:absolute after:left-0.5 after:top-0.5 after:size-4 after:rounded-full after:bg-white after:shadow-sm after:transition-transform peer-checked:after:translate-x-4" />
           </label>
           <Link href="/gerente-ia" className="hidden h-10 items-center gap-1.5 rounded-xl bg-[#123d2b] px-3 text-[11px] font-black text-white transition hover:bg-[#147a45] md:flex"><Bot className="size-4" />Gerente de IA</Link>
-          <div className="relative">
-            <button type="button" onClick={toggleNotifications} aria-label="Notificações" aria-expanded={notificationOpen} className="relative flex size-10 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-500 transition hover:bg-slate-50 hover:text-orange-600">
-              <Bell className="size-4.5" />
-              {unread > 0 && <span className="absolute right-2.5 top-2.5 size-2 rounded-full border-2 border-white bg-red-500" />}
-            </button>
-
-            {notificationOpen && (
-              <div role="dialog" aria-label="Central de notificações" className="absolute right-0 mt-2 w-[min(22rem,calc(100vw-2rem))] overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl shadow-slate-300/50">
-                <div className="flex items-center justify-between border-b border-slate-100 px-4 py-3">
-                  <div><p className="text-sm font-black text-slate-900">Notificações</p><p className="text-[10px] text-slate-400">{unread} não lidas</p></div>
-                  <button type="button" disabled={!unread} onClick={() => void markAllRead()} className="flex items-center gap-1.5 text-[10px] font-bold text-orange-600 hover:text-orange-800 disabled:text-slate-300"><CheckCheck className="size-3.5" /> Marcar como lidas</button>
-                </div>
-                <div className="divide-y divide-slate-100">
-                  {notifications.map((notification) => (
-                    <div key={notification.id} className="flex gap-3 px-4 py-3">
-                      <span className={`mt-1 size-2 shrink-0 rounded-full ${notification.readAt ? "bg-slate-200" : "bg-orange-500"}`} />
-                      <div><p className="text-xs font-bold text-slate-800">{notification.title}</p><p className="mt-1 text-[11px] leading-4 text-slate-500">{notification.description}</p></div>
-                    </div>
-                  ))}
-                  {!notifications.length && <p className="px-4 py-6 text-center text-[11px] text-slate-400">Nenhuma notificação por enquanto.</p>}
-                </div>
-              </div>
-            )}
-          </div>
+          <NotificationCenter onOpen={() => setProfileOpen(false)} />
 
           <div ref={profileMenuRef} className="relative">
             <button type="button" onClick={toggleProfile} aria-label={`${session.user.name} ${roleLabel}`} aria-expanded={profileOpen} className="flex h-10 items-center gap-2 rounded-xl border border-slate-200 bg-white px-2 transition hover:bg-slate-50 sm:pr-3">

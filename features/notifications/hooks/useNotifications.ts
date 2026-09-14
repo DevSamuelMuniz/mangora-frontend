@@ -23,6 +23,7 @@ export function useNotifications() {
     return useQuery<{ items: NotificationItem[] }, Error>({
         queryKey: notificationsQueryKey,
         queryFn: () => apiRequest<{ items: NotificationItem[] }>("/notifications"),
+        refetchInterval: 30_000,
     });
 }
 
@@ -38,6 +39,20 @@ export function useMarkAllNotificationsRead() {
                 return { items: current.items.map((notification) => ({ ...notification, readAt: notification.readAt ?? readAt })) };
             });
             void queryClient.invalidateQueries({ queryKey: notificationsQueryKey });
+        },
+    });
+}
+
+export function useMarkNotificationRead() {
+    const queryClient = useQueryClient();
+    return useMutation<{ updated: number }, Error, string>({
+        mutationFn: (id) => apiRequest<{ updated: number }>(`/notifications/${id}/read`, { method: "PATCH" }),
+        onSuccess: (_result, id) => {
+            queryClient.setQueryData<{ items: NotificationItem[] }>(notificationsQueryKey, (current) => {
+                if (!current) return current;
+                const readAt = new Date().toISOString();
+                return { items: current.items.map((item) => item.id === id ? { ...item, readAt: item.readAt ?? readAt } : item) };
+            });
         },
     });
 }
