@@ -31,6 +31,8 @@ const manrope = Manrope({
   subsets: ["latin"],
 });
 
+const GA_ID = process.env.NEXT_PUBLIC_GA_ID;
+
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.mangora.com.br"),
   title: {
@@ -40,24 +42,50 @@ export const metadata: Metadata = {
   description:
     "Conheça a Mangora: um sistema simples para cuidar de vendas, estoque, clientes, caixa e financeiro. Comece com 7 dias grátis, sem cartão.",
   applicationName: "Mangora",
-  keywords: ["gestão empresarial", "sistema de vendas", "controle de estoque", "PDV", "financeiro", "Mangora"],
+  keywords: [
+    "gestão empresarial",
+    "sistema de vendas",
+    "controle de estoque",
+    "PDV",
+    "financeiro",
+    "Mangora",
+  ],
   authors: [{ name: "Mangora", url: "https://www.mangora.com.br" }],
   creator: "Mangora",
   publisher: "Mangora",
   category: "Gestão empresarial",
-  robots: { index: true, follow: true, googleBot: { index: true, follow: true, "max-image-preview": "large", "max-snippet": -1, "max-video-preview": -1 } },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+      "max-video-preview": -1,
+    },
+  },
   openGraph: {
     type: "website",
     locale: "pt_BR",
     siteName: "Mangora",
     title: "Mangora — Gestão simples para o seu negócio",
-    description: "Vendas, estoque, clientes, caixa e financeiro em um só lugar. Conheça a Mangora e teste gratuitamente por 7 dias, sem cartão.",
-    images: [{ url: "/mangora-share.png", width: 500, height: 500, alt: "Mascote da Mangora trabalhando no computador" }],
+    description:
+      "Vendas, estoque, clientes, caixa e financeiro em um só lugar. Conheça a Mangora e teste gratuitamente por 7 dias, sem cartão.",
+    images: [
+      {
+        url: "/mangora-share.png",
+        width: 500,
+        height: 500,
+        alt: "Mascote da Mangora trabalhando no computador",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "Mangora — Gestão simples para o seu negócio",
-    description: "Organize vendas, estoque, clientes, caixa e financeiro. Teste a Mangora gratuitamente por 7 dias.",
+    description:
+      "Organize vendas, estoque, clientes, caixa e financeiro. Teste a Mangora gratuitamente por 7 dias.",
     images: ["/mangora-share.png"],
   },
   icons: {
@@ -78,15 +106,28 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} ${bricolage.variable} ${manrope.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
-        <Script strategy="afterInteractive" src="https://www.googletagmanager.com/gtag/js?id=G-D2T56HSMLK" />
-        <Script id="gtag-init" strategy="afterInteractive">
-          {`
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', 'G-D2T56HSMLK');
-          `}
-        </Script>
+        {GA_ID && (
+          <>
+            <Script
+              src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
+              strategy="afterInteractive"
+            />
+
+            <Script id="gtag-init" strategy="afterInteractive">
+              {`
+                window.dataLayer = window.dataLayer || [];
+
+                function gtag(){
+                  dataLayer.push(arguments);
+                }
+
+                gtag('js', new Date());
+                gtag('config', '${GA_ID}');
+              `}
+            </Script>
+          </>
+        )}
+
         <QueryProvider>
           <ToastProvider>{children}</ToastProvider>
         </QueryProvider>
