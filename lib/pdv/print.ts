@@ -8,15 +8,19 @@ type ReceiptCompany = Pick<
 >;
 
 /** Imprime o cupom da venda (80mm) em uma janela dedicada. */
-export function printReceipt(sale: Sale, company: ReceiptCompany | null, changeInfo?: { received: number; change: number }, mode: "standard" | "bold" = "standard") {
+export function printReceipt(sale: Sale, company: ReceiptCompany | null, changeInfo?: { received: number; change: number }, mode: "standard" | "bold" | "extra-bold" = "standard") {
     const isCashChange = sale.paymentMethod === "CASH" && changeInfo !== undefined;
-    const reinforced = mode === "bold";
+    const style = mode === "extra-bold"
+        ? { font: "16px", weight: 900, item: "16px", muted: "13px", brand: "20px", line: "3px", totalBorder: "4px", total: "30px", footer: "13px", family: "Arial, sans-serif" }
+        : mode === "bold"
+            ? { font: "14px", weight: 700, item: "14px", muted: "12px", brand: "18px", line: "2px", totalBorder: "3px", total: "26px", footer: "12px", family: "'Courier New', monospace" }
+            : { font: "12px", weight: 400, item: "12px", muted: "11px", brand: "15px", line: "1px", totalBorder: "2px", total: "22px", footer: "11px", family: "'Courier New', monospace" };
     const items = sale.items
         .map((item) => {
             const name = wrapText(escapeHtml(item.productName), 30);
             return `<tr>
-                <td colspan="2" style="padding:3px 0 0;font-size:${reinforced ? "14px" : "12px"}">${name}<br><span style="color:${reinforced ? "#000" : "#444"}">${item.quantity} x ${formatMoney(item.unitPrice)}</span></td>
-                <td style="text-align:right;font-size:${reinforced ? "14px" : "12px"};font-weight:900;vertical-align:bottom">${formatMoney(item.subtotal)}</td>
+                <td colspan="2" style="padding:3px 0 0;font-size:${style.item}">${name}<br><span style="color:${mode === "standard" ? "#444" : "#000"}">${item.quantity} x ${formatMoney(item.unitPrice)}</span></td>
+                <td style="text-align:right;font-size:${style.item};font-weight:900;vertical-align:bottom">${formatMoney(item.subtotal)}</td>
             </tr>`;
         })
         .join("");
@@ -28,22 +32,22 @@ export function printReceipt(sale: Sale, company: ReceiptCompany | null, changeI
     const html = `<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><title>Cupom ${sale.code}</title>
 <style>
   * { box-sizing: border-box; margin: 0; }
-  body { font-family: 'Courier New', monospace; color: #000; width: 80mm; margin: 0 auto; padding: 10px 4px; font-size: ${reinforced ? "14px" : "12px"}; font-weight: ${reinforced ? "700" : "400"}; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  body { font-family: ${style.family}; color: #000; width: 80mm; margin: 0 auto; padding: 10px 4px; font-size: ${style.font}; font-weight: ${style.weight}; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
   .center { text-align: center; }
-  .brand { font-weight: 900; font-size: ${reinforced ? "18px" : "15px"}; letter-spacing: 1px; }
-  .muted { color: ${reinforced ? "#000" : "#444"}; font-size: ${reinforced ? "12px" : "11px"}; }
-  .divider { border-top: ${reinforced ? "2px" : "1px"} dashed #000; margin: 7px 0; }
-  .divider-solid { border-top: ${reinforced ? "2px" : "1px"} solid #000; margin: 7px 0; }
+  .brand { font-weight: 900; font-size: ${style.brand}; letter-spacing: 1px; }
+  .muted { color: ${mode === "standard" ? "#444" : "#000"}; font-size: ${style.muted}; }
+  .divider { border-top: ${style.line} dashed #000; margin: 7px 0; }
+  .divider-solid { border-top: ${style.line} solid #000; margin: 7px 0; }
   table { width: 100%; border-collapse: collapse; }
   .meta { width: 100%; }
   .meta td { padding: 1px 0; vertical-align: top; }
   .meta td:last-child { text-align: right; white-space: nowrap; }
   .total-row td { font-size: 15px; font-weight: bold; padding-top: 4px; }
-  .total-box { border: ${reinforced ? "3px" : "2px"} solid #000; margin: 8px 0; padding: 6px 8px; text-align: center; }
+  .total-box { border: ${style.totalBorder} solid #000; margin: 8px 0; padding: 6px 8px; text-align: center; }
   .total-box .label { font-size: 10px; text-transform: uppercase; letter-spacing: 2px; }
-  .total-box .value { font-size: ${reinforced ? "26px" : "22px"}; font-weight: 900; }
-  .footer { text-align: center; font-size: ${reinforced ? "12px" : "11px"}; margin-top: 8px; }
-  .notes { margin-top: 6px; font-size: ${reinforced ? "12px" : "11px"}; color: #000; }
+  .total-box .value { font-size: ${style.total}; font-weight: 900; }
+  .footer { text-align: center; font-size: ${style.footer}; margin-top: 8px; }
+  .notes { margin-top: 6px; font-size: ${style.footer}; color: #000; }
 </style></head><body>
   <p class="center brand">${escapeHtml(company?.tradeName ?? "Mangora")}</p>
   ${company?.document ? `<p class="center muted">CNPJ/CPF ${escapeHtml(company.document)}</p>` : ""}
