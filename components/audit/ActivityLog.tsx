@@ -16,8 +16,6 @@ const labels: Record<string, string> = {
   PURCHASE_RECEIVED: "Compra recebida", PURCHASE_CANCELLED: "Compra cancelada", CATEGORY_CREATED: "Categoria cadastrada",
   CATEGORY_UPDATED: "Categoria atualizada", SERVICE_CREATED: "Serviço cadastrado", SERVICE_UPDATED: "Serviço atualizado",
   FINANCIAL_PAYMENT_RECORDED: "Pagamento registrado", STOCK_TRANSFERRED: "Estoque transferido",
-  FISCAL_SETTINGS_UPDATED: "Configuração fiscal alterada", FISCAL_DOCUMENT_PREPARED: "Nota fiscal preparada",
-  FISCAL_DOCUMENT_SUBMITTED: "Nota fiscal enviada", FISCAL_DOCUMENT_CANCELLED: "Nota fiscal cancelada",
 };
 
 export default function ActivityLog() {

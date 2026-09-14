@@ -15,7 +15,7 @@ type DoneStepProps = {
     onFinish: () => void;
 };
 
-/** Etapa final — venda registrada: imprimir a nota fiscal ou concluir. */
+/** Etapa final — venda registrada: imprimir o cupom de compra ou concluir. */
 export default function DoneStep({ sale, company, received, change, onFinish }: DoneStepProps) {
     return (
         <div className="mx-auto flex w-full max-w-md flex-col items-center rounded-2xl border-2 border-pdv-line bg-pdv-panel p-8 text-center">
@@ -43,13 +43,13 @@ export default function DoneStep({ sale, company, received, change, onFinish }: 
 
             <div className="mt-6 grid w-full grid-cols-2 gap-2">
                 <button type="button" onClick={() => printReceipt(sale, company, received !== undefined && change !== undefined ? { received, change } : undefined)} className="flex h-14 items-center justify-center gap-2 rounded-xl border border-pdv-line text-sm font-bold text-pdv-fg/80 transition hover:bg-pdv-line">
-                    <Printer className="size-4" /> Imprimir nota
+                    <Printer className="size-4" /> Imprimir cupom
                 </button>
                 <button type="button" onClick={onFinish} className="flex h-14 items-center justify-center gap-2 rounded-xl bg-orange font-[family-name:var(--font-bricolage)] text-sm font-black text-white transition hover:brightness-110">
                     <RotateCcw className="size-4" /> Concluir venda
                 </button>
             </div>
-            <p className="mt-4 font-mono text-[10px] text-pdv-fg/40">A nota abre em uma janela para impressão.</p>
+            <p className="mt-4 font-mono text-[10px] text-pdv-fg/40">O cupom abre em uma janela para impressão.</p>
         </div>
     );
 }

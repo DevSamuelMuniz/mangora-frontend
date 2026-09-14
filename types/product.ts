@@ -17,16 +17,6 @@ export type Product = {
   trackStock: boolean;
   active: boolean;
   imageUrl: string | null;
-  fiscalNcm: string | null;
-  fiscalCest: string | null;
-  fiscalCfop: string | null;
-  fiscalOrigin: string | null;
-  fiscalCsosn: string | null;
-  fiscalCstIcms: string | null;
-  fiscalCstPis: string | null;
-  fiscalCstCofins: string | null;
-  fiscalUnit: string;
-  fiscalBenefitCode: string | null;
   createdAt: string;
   updatedAt: string;
 };
@@ -44,16 +34,6 @@ export type ProductInput = {
   trackStock: boolean;
   active: boolean;
   imageUrl: string | null;
-  fiscalNcm?: string | null;
-  fiscalCest?: string | null;
-  fiscalCfop?: string | null;
-  fiscalOrigin?: string | null;
-  fiscalCsosn?: string | null;
-  fiscalCstIcms?: string | null;
-  fiscalCstPis?: string | null;
-  fiscalCstCofins?: string | null;
-  fiscalUnit?: string;
-  fiscalBenefitCode?: string | null;
 };
 
 export type ProductCost = {

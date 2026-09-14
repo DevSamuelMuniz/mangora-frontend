@@ -24,7 +24,7 @@ export function printReceipt(sale: Sale, company: ReceiptCompany | null, changeI
     const cityLine = [company?.city, company?.state].filter(Boolean).join(" - ");
     const contact = [company?.phone, company?.email].filter(Boolean).join(" · ");
 
-    const html = `<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><title>Nota ${sale.code}</title>
+    const html = `<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><title>Cupom ${sale.code}</title>
 <style>
   * { box-sizing: border-box; margin: 0; }
   body { font-family: 'Courier New', monospace; color: #111; width: 80mm; margin: 0 auto; padding: 10px 4px; font-size: 12px; }

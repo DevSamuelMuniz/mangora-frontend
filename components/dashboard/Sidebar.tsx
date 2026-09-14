@@ -77,7 +77,6 @@ const navigationGroups: NavigationGroup[] = [
     { label: "Clientes", href: "/clientes", icon: Users, simple: true },
     { label: "Financeiro", href: "/financeiro", icon: CircleDollarSign, roles: ["OWNER", "ADMIN", "MANAGER"], simple: true },
     { label: "Relatórios", href: "/relatorios", icon: BarChart3, roles: ["OWNER", "ADMIN", "MANAGER"] },
-    { label: "Notas fiscais", href: "/notas-fiscais", icon: FileText, roles: ["OWNER", "ADMIN", "MANAGER"] },
     { label: "Dados", href: "/dados", icon: Database, roles: ["OWNER", "ADMIN", "MANAGER"] },
     { label: "Gerente de IA", href: "/gerente-ia", icon: Bot, roles: ["OWNER", "ADMIN", "MANAGER"] },
     { label: "LOG", href: "/logs", icon: ScrollText, roles: ["OWNER"] },
@@ -109,12 +108,6 @@ const secondaryNavigation: NavigationItem[] = [
     icon: Settings,
     roles: ["OWNER", "ADMIN"],
     simple: true,
-  },
-  {
-    label: "Configuração fiscal",
-    href: "/configuracoes-fiscais",
-    icon: FileText,
-    roles: ["OWNER", "ADMIN"],
   },
 ];
 

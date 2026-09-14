@@ -3,7 +3,7 @@ import { isSensitivePath } from "./security-policy";
 import { enqueueMutation, cacheWrite, cacheRead } from "./engine";
 
 describe("offline security", () => {
-  it.each(["/auth/login", "/auth/register", "/auth/change-password", "/fiscal/provider", "/employees", "/system-admin/users", "/companies/current"])("never queues secrets for %s", async path => {
+  it.each(["/auth/login", "/auth/register", "/auth/change-password", "/employees", "/system-admin/users", "/companies/current"])("never queues secrets for %s", async path => {
     expect(isSensitivePath(path)).toBe(true);
     await expect(enqueueMutation("POST", path, "secret")).rejects.toThrow();
     await cacheWrite(path, { password: "secret" });
