@@ -41,6 +41,7 @@ type SidebarProps = {
   open: boolean;
   onClose: () => void;
   session: AuthSession;
+  simpleMode: boolean;
 };
 
 type NavigationItem = {
@@ -48,23 +49,24 @@ type NavigationItem = {
   href: string;
   icon: LucideIcon;
   roles?: MembershipRole[];
+  simple?: boolean;
 };
 
 type NavigationGroup = { label: string; icon: LucideIcon; items: NavigationItem[] };
 
 const navigationGroups: NavigationGroup[] = [
   { label: "Operação", icon: ShoppingBag, items: [
-    { label: "Vendas", href: "/vendas", icon: ShoppingBag },
-    { label: "Caixa", href: "/caixa", icon: Banknote, roles: ["OWNER", "ADMIN", "MANAGER", "CASHIER"] },
+    { label: "Vendas", href: "/vendas", icon: ShoppingBag, simple: true },
+    { label: "Caixa", href: "/caixa", icon: Banknote, roles: ["OWNER", "ADMIN", "MANAGER", "CASHIER"], simple: true },
     { label: "Pedidos", href: "/pedidos", icon: FileText },
   ] },
   { label: "Catálogo", icon: Package, items: [
-    { label: "Produtos", href: "/produtos", icon: Package },
+    { label: "Produtos", href: "/produtos", icon: Package, simple: true },
     { label: "Serviços", href: "/servicos", icon: Wrench, roles: ["OWNER", "ADMIN", "MANAGER"] },
     { label: "Categorias", href: "/categorias", icon: FolderTree, roles: ["OWNER", "ADMIN", "MANAGER"] },
   ] },
   { label: "Suprimentos", icon: Boxes, items: [
-    { label: "Estoque", href: "/estoque", icon: Boxes },
+    { label: "Estoque", href: "/estoque", icon: Boxes, simple: true },
     { label: "Transferências", href: "/estoque/transferencias", icon: ArrowRightLeft, roles: ["OWNER", "ADMIN", "MANAGER"] },
     { label: "Inventário físico", href: "/estoque/inventario", icon: ClipboardCheck, roles: ["OWNER", "ADMIN", "MANAGER"] },
     { label: "Lotes & custo", href: "/estoque/lotes", icon: Layers3, roles: ["OWNER", "ADMIN", "MANAGER"] },
@@ -72,8 +74,8 @@ const navigationGroups: NavigationGroup[] = [
     { label: "Fornecedores", href: "/fornecedores", icon: Truck, roles: ["OWNER", "ADMIN", "MANAGER"] },
   ] },
   { label: "Gestão", icon: CircleDollarSign, items: [
-    { label: "Clientes", href: "/clientes", icon: Users },
-    { label: "Financeiro", href: "/financeiro", icon: CircleDollarSign, roles: ["OWNER", "ADMIN", "MANAGER"] },
+    { label: "Clientes", href: "/clientes", icon: Users, simple: true },
+    { label: "Financeiro", href: "/financeiro", icon: CircleDollarSign, roles: ["OWNER", "ADMIN", "MANAGER"], simple: true },
     { label: "Relatórios", href: "/relatorios", icon: BarChart3, roles: ["OWNER", "ADMIN", "MANAGER"] },
     { label: "Notas fiscais", href: "/notas-fiscais", icon: FileText, roles: ["OWNER", "ADMIN", "MANAGER"] },
     { label: "Dados", href: "/dados", icon: Database, roles: ["OWNER", "ADMIN", "MANAGER"] },
@@ -106,6 +108,7 @@ const secondaryNavigation: NavigationItem[] = [
     href: "/configuracoes",
     icon: Settings,
     roles: ["OWNER", "ADMIN"],
+    simple: true,
   },
   {
     label: "Configuração fiscal",
@@ -119,6 +122,7 @@ export default function Sidebar({
   open,
   onClose,
   session,
+  simpleMode,
 }: SidebarProps) {
   const pathname = usePathname();
   const router = useRouter();
@@ -128,8 +132,8 @@ export default function Sidebar({
   const units = group?.units ?? [];
   const [switching, setSwitching] = useState("");
   const [openGroups, setOpenGroups] = useState<Record<string, boolean>>(() => Object.fromEntries(navigationGroups.map((group) => [group.label, group.items.some((item) => pathname === item.href || pathname.startsWith(item.href + "/"))])));
-  const visibleNavigationGroups = navigationGroups.map((group) => ({ ...group, items: group.items.filter((item) => !item.roles || item.roles.includes(session.membership.role)) })).filter((group) => group.items.length > 0);
-  const visibleSecondaryNavigation = secondaryNavigation.filter((item) => !item.roles || item.roles.includes(session.membership.role));
+  const visibleNavigationGroups = navigationGroups.map((group) => ({ ...group, items: group.items.filter((item) => (!item.roles || item.roles.includes(session.membership.role)) && (!simpleMode || item.simple)) })).filter((group) => group.items.length > 0);
+  const visibleSecondaryNavigation = secondaryNavigation.filter((item) => (!item.roles || item.roles.includes(session.membership.role)) && (!simpleMode || item.simple));
 
   async function switchUnit(membershipId: string) {
     if (membershipId === session.membership.id) return setCompanyOpen(false);
@@ -255,7 +259,7 @@ export default function Sidebar({
 
         <nav className="flex-1 overflow-y-auto px-3 pb-4">
           <p className="mb-2 px-3 text-[10px] font-bold uppercase tracking-[0.14em] text-slate-400">
-            Principal
+            {simpleMode ? "Essenciais" : "Principal"}
           </p>
 
           <div className="space-y-1">

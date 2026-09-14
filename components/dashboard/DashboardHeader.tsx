@@ -14,6 +14,7 @@ import {
   Search,
   Settings,
   UserRound,
+  WandSparkles,
 } from "lucide-react";
 import { apiRequest } from "@/lib/api/client";
 import { setUserProperties, track } from "@/lib/analytics";
@@ -24,9 +25,11 @@ import { useMarkAllNotificationsRead, useNotifications } from "@/features/notifi
 type DashboardHeaderProps = {
   onOpenSidebar: () => void;
   session: AuthSession;
+  simpleMode: boolean;
+  onSimpleModeChange: (enabled: boolean) => void;
 };
 
-export default function DashboardHeader({ onOpenSidebar, session }: DashboardHeaderProps) {
+export default function DashboardHeader({ onOpenSidebar, session, simpleMode, onSimpleModeChange }: DashboardHeaderProps) {
   const router = useRouter();
   const { data: notificationsData } = useNotifications();
   const markAllReadMutation = useMarkAllNotificationsRead();
@@ -138,6 +141,12 @@ export default function DashboardHeader({ onOpenSidebar, session }: DashboardHea
         </div>
 
         <div className="flex items-center gap-2">
+          <label className="flex h-10 cursor-pointer items-center gap-2 rounded-xl border border-slate-200 bg-white px-2.5 transition hover:border-orange-200 hover:bg-orange-50" title="Exibir somente as funções essenciais">
+            <WandSparkles className={`size-4 ${simpleMode ? "text-orange-600" : "text-slate-400"}`} />
+            <span className="hidden text-[10px] font-black text-slate-700 xl:inline">Modo simples</span>
+            <input type="checkbox" aria-label="Ativar modo simples" checked={simpleMode} onChange={(event) => onSimpleModeChange(event.target.checked)} className="peer sr-only" />
+            <span aria-hidden="true" className="relative h-5 w-9 rounded-full bg-slate-200 transition peer-checked:bg-orange-500 after:absolute after:left-0.5 after:top-0.5 after:size-4 after:rounded-full after:bg-white after:shadow-sm after:transition-transform peer-checked:after:translate-x-4" />
+          </label>
           <Link href="/gerente-ia" className="hidden h-10 items-center gap-1.5 rounded-xl bg-[#123d2b] px-3 text-[11px] font-black text-white transition hover:bg-[#147a45] md:flex"><Bot className="size-4" />Gerente de IA</Link>
           <div className="relative">
             <button type="button" onClick={toggleNotifications} aria-label="Notificações" aria-expanded={notificationOpen} className="relative flex size-10 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-500 transition hover:bg-slate-50 hover:text-orange-600">
