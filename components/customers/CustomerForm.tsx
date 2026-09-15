@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useT } from "@/i18n/provider";
 import { useRouter } from "next/navigation";
 import { FormEvent, type ReactNode, useState } from "react";
 import {
@@ -19,6 +20,7 @@ import { useCustomerForm, useSaveCustomer } from "@/features/customers/hooks/use
 const states = ["AC", "AL", "AP", "AM", "BA", "CE", "DF", "ES", "GO", "MA", "MT", "MS", "MG", "PA", "PB", "PR", "PE", "PI", "RJ", "RN", "RS", "RO", "RR", "SC", "SP", "SE", "TO"];
 
 export default function CustomerForm({ customerId }: { customerId?: string }) {
+  const t = useT();
   const router = useRouter();
   const editing = Boolean(customerId);
   const { data: customer = null, isLoading: loadingCustomer, error: loadError } = useCustomerForm(customerId ?? null);
@@ -48,19 +50,19 @@ export default function CustomerForm({ customerId }: { customerId?: string }) {
     const expectedDocumentLength = customerType === "INDIVIDUAL" ? 11 : 14;
 
     if (name.length < 3) {
-      setError("Informe um nome ou razão social válido.");
+      setError(t("customers.form.errors.name"));
       return;
     }
     if (document.length !== expectedDocumentLength) {
-      setError(customerType === "INDIVIDUAL" ? "Informe um CPF com 11 dígitos." : "Informe um CNPJ com 14 dígitos.");
+      setError(customerType === "INDIVIDUAL" ? t("customers.form.errors.cpf") : t("customers.form.errors.cnpj"));
       return;
     }
     if (!email.includes("@")) {
-      setError("Informe um e-mail válido.");
+      setError(t("customers.form.errors.email"));
       return;
     }
     if (phone.length < 10 || phone.length > 15) {
-      setError("Informe um telefone válido com DDD.");
+      setError(t("customers.form.errors.phone"));
       return;
     }
 
@@ -84,31 +86,31 @@ export default function CustomerForm({ customerId }: { customerId?: string }) {
 
     try {
       await saveCustomer.mutateAsync({ id: customerId ?? null, payload });
-      router.push(`/clientes?toast=${encodeURIComponent(editing ? "Cliente atualizado" : "Cliente cadastrado")}`);
+      router.push(`/clientes?toast=${encodeURIComponent(editing ? t("customers.form.toasts.updated") : t("customers.form.toasts.created"))}`);
       router.refresh();
     } catch (requestError) {
-      setError(requestError instanceof Error ? requestError.message : "Não foi possível salvar o cliente.");
+      setError(requestError instanceof Error ? requestError.message : t("customers.form.errors.saveFailed"));
     }
   }
 
   if (loadingCustomer) {
-    return <div className="flex min-h-72 items-center justify-center rounded-2xl border border-slate-200 bg-white"><LoaderCircle className="size-6 animate-spin text-orange-600" /><span className="ml-2 text-sm font-semibold text-slate-500">Carregando cliente...</span></div>;
+    return <div className="flex min-h-72 items-center justify-center rounded-2xl border border-slate-200 bg-white"><LoaderCircle className="size-6 animate-spin text-orange-600" /><span className="ml-2 text-sm font-semibold text-slate-500">{t("customers.form.loading")}</span></div>;
   }
 
   if (editing && !customer) {
-    return <div className="rounded-2xl border border-red-200 bg-red-50 p-6 text-center"><p className="text-sm font-bold text-red-700">{error || "Cliente não encontrado."}</p><Link href="/clientes" className="mt-4 inline-flex h-10 items-center rounded-xl bg-white px-4 text-xs font-bold text-orange-600 shadow-sm">Voltar para clientes</Link></div>;
+    return <div className="rounded-2xl border border-red-200 bg-red-50 p-6 text-center"><p className="text-sm font-bold text-red-700">{error || "Cliente não encontrado."}</p><Link href="/clientes" className="mt-4 inline-flex h-10 items-center rounded-xl bg-white px-4 text-xs font-bold text-orange-600 shadow-sm">{t("customers.form.back")}</Link></div>;
   }
 
   return (
     <section className="mx-auto max-w-5xl">
       <div className="flex items-start gap-3">
         <Link href="/clientes" aria-label="Voltar para clientes" className="flex size-10 shrink-0 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-500 shadow-sm transition hover:bg-slate-50 hover:text-orange-600"><ArrowLeft className="size-4" /></Link>
-        <div><p className="text-[11px] font-bold uppercase tracking-[0.14em] text-orange-600">Relacionamento</p><h1 className="mt-1 text-2xl font-black tracking-tight text-slate-950 sm:text-3xl">{editing ? "Editar cliente" : "Novo cliente"}</h1><p className="mt-1 text-xs text-slate-500">{editing ? "Atualize os dados do cliente selecionado." : "Preencha os dados para cadastrar o cliente."}</p></div>
+        <div><p className="text-[11px] font-bold uppercase tracking-[0.14em] text-orange-600">Relacionamento</p><h1 className="mt-1 text-2xl font-black tracking-tight text-slate-950 sm:text-3xl">{editing ? t("customers.form.titleEdit") : t("customers.form.titleNew")}</h1><p className="mt-1 text-xs text-slate-500">{editing ? t("customers.form.subtitleEdit") : t("customers.form.subtitleNew")}</p></div>
       </div>
 
       <form key={customer?.id ?? "new"} onSubmit={handleSubmit} className="mt-5 space-y-4">
         <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:p-5">
-          <SectionTitle icon={UserPlus} title="Dados principais" description="Identificação e informações de contato do cliente." />
+          <SectionTitle icon={UserPlus} title="Dados principais" description={t("customers.form.sections.mainHint")} />
           <fieldset className="mt-4">
             <legend className="mb-1.5 text-xs font-bold text-slate-700">Tipo de cliente</legend>
             <div className="grid gap-2 sm:max-w-md sm:grid-cols-2">
@@ -132,7 +134,7 @@ export default function CustomerForm({ customerId }: { customerId?: string }) {
         </div>
 
         <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:p-5">
-          <SectionTitle icon={MapPin} title="Endereço" description="Informações opcionais para localização e atendimento." />
+          <SectionTitle icon={MapPin} title="Endereço" description={t("customers.form.sections.addressHint")} />
           <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             <Field label="CEP" id="postalCode"><input id="postalCode" name="postalCode" type="text" inputMode="numeric" defaultValue={customer?.postalCode ?? ""} placeholder="00000-000" autoComplete="postal-code" className={inputClassName} /></Field>
             <Field label="Endereço" id="street" className="lg:col-span-2"><input id="street" name="street" type="text" maxLength={200} defaultValue={customer?.street ?? ""} placeholder="Rua ou avenida" autoComplete="street-address" className={inputClassName} /></Field>
@@ -149,7 +151,7 @@ export default function CustomerForm({ customerId }: { customerId?: string }) {
         </div>
 
         {errorMessage && <div role="alert" className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-xs font-semibold text-red-700">{errorMessage}</div>}
-        <div className="flex flex-col-reverse gap-3 sm:flex-row sm:justify-end"><Link href="/clientes" className="flex h-11 items-center justify-center rounded-xl border border-slate-200 bg-white px-5 text-sm font-bold text-slate-600 transition hover:bg-slate-50">Cancelar</Link><button type="submit" disabled={loading} className="flex h-11 items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-orange-600 to-amber-600 px-5 text-sm font-bold text-white shadow-lg shadow-orange-200 transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-70 disabled:hover:translate-y-0">{loading ? <><LoaderCircle className="size-4 animate-spin" />Salvando...</> : <><Save className="size-4" />{editing ? "Salvar alterações" : "Salvar cliente"}</>}</button></div>
+        <div className="flex flex-col-reverse gap-3 sm:flex-row sm:justify-end"><Link href="/clientes" className="flex h-11 items-center justify-center rounded-xl border border-slate-200 bg-white px-5 text-sm font-bold text-slate-600 transition hover:bg-slate-50">{t("customers.form.actions.cancel")}</Link><button type="submit" disabled={loading} className="flex h-11 items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-orange-600 to-amber-600 px-5 text-sm font-bold text-white shadow-lg shadow-orange-200 transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-70 disabled:hover:translate-y-0">{loading ? <><LoaderCircle className="size-4 animate-spin" />{t("customers.form.actions.saving")}</> : <><Save className="size-4" />{editing ? t("customers.form.actions.saveChanges") : t("customers.form.actions.save")}</>}</button></div>
       </form>
     </section>
   );

@@ -1,0 +1,123 @@
+{
+  "title": "Customers",
+  "subtitle": "Check contacts and follow your customer base history.",
+  "actions": {
+    "create": "Add customer",
+    "view": "Edit",
+    "edit": "Edit customer",
+    "delete": "Delete",
+    "cancel": "Cancel",
+    "retry": "Try again",
+    "clearFilters": "Clear filters",
+    "back": "Back to customers"
+  },
+  "search": {
+    "label": "Search customers",
+    "placeholder": "Search by name, phone or ID..."
+  },
+  "filters": {
+    "type": "Customer type",
+    "status": "Status",
+    "active": "Active",
+    "inactive": "Inactive",
+    "all": "All"
+  },
+  "metrics": {
+    "total": "Total customers",
+    "active": "Active customers"
+  },
+  "table": {
+    "customer": "Customer",
+    "contact": "Contact",
+    "type": "Type",
+    "lastPurchase": "Last purchase",
+    "totalSpent": "Total spent",
+    "status": "Status",
+    "actions": "Actions"
+  },
+  "types": {
+    "INDIVIDUAL": "Individual",
+    "COMPANY": "Company",
+    "COMPANY_PLURAL": "Companies"
+  },
+  "status": {
+    "active": "Active",
+    "inactive": "Inactive"
+  },
+  "empty": {
+    "title": "No customers found",
+    "hint": "Adjust the filters to browse your base.",
+    "hintFirst": "Add your first customer to start your base."
+  },
+  "loading": "Loading customers...",
+  "loadFailed": "Could not load customers",
+  "details": {
+    "title": "Customer details",
+    "notFound": "Customer not found.",
+    "notInformed": "Not provided",
+    "never": "Never",
+    "relationship": "Relationship",
+    "notes": "Notes",
+    "totalSpent": "Total spent"
+  },
+  "deleteDialog": {
+    "title": "Delete customer?",
+    "warning": "Customer {name} and the relationship history will be removed.",
+    "confirm": "Delete",
+    "deleting": "Deleting..."
+  },
+  "deleteFailed": "Could not delete the customer.",
+  "form": {
+    "titleNew": "New customer",
+    "titleEdit": "Edit customer",
+    "subtitleNew": "Fill in the details to register the customer.",
+    "subtitleEdit": "Update the selected customer's information.",
+    "back": "Back to customers",
+    "sections": {
+      "main": "Main information",
+      "mainHint": "Customer identification and contact details.",
+      "address": "Address",
+      "addressHint": "Optional information for location and service."
+    },
+    "fields": {
+      "type": "Type",
+      "name": "Full name",
+      "namePlaceholder": "e.g. Mary Smith",
+      "legalName": "Legal name",
+      "legalNamePlaceholder": "e.g. Example Company Ltd.",
+      "tradeName": "Trade name (optional)",
+      "document": "Tax ID",
+      "email": "Email",
+      "phone": "Phone or WhatsApp",
+      "status": "Status",
+      "select": "Select",
+      "zip": "ZIP/Postal code",
+      "street": "Street",
+      "number": "Number",
+      "district": "District",
+      "city": "City",
+      "state": "State",
+      "notes": "Notes (optional)",
+      "notesPlaceholder": "Internal notes about preferences or service."
+    },
+    "actions": {
+      "save": "Save customer",
+      "saveChanges": "Save changes",
+      "saving": "Saving...",
+      "cancel": "Cancel"
+    },
+    "toasts": {
+      "created": "Customer created",
+      "updated": "Customer updated"
+    },
+    "errors": {
+      "name": "Enter a valid name or legal name.",
+      "email": "Enter a valid email.",
+      "cpf": "Enter an 11-digit tax ID.",
+      "cnpj": "Enter a 14-digit company tax ID.",
+      "phone": "Enter a valid phone number with area code.",
+      "saveFailed": "Could not save the customer."
+    },
+    "loading": "Loading customer..."
+  }
+}

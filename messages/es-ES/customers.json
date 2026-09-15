@@ -1,0 +1,123 @@
+{
+  "title": "Clientes",
+  "subtitle": "Consulta contactos y sigue el historial de tu base.",
+  "actions": {
+    "create": "Agregar cliente",
+    "view": "Editar",
+    "edit": "Editar cliente",
+    "delete": "Eliminar",
+    "cancel": "Cancelar",
+    "retry": "Intentar de nuevo",
+    "clearFilters": "Limpiar filtros",
+    "back": "Volver a clientes"
+  },
+  "search": {
+    "label": "Buscar clientes",
+    "placeholder": "Buscar por nombre, teléfono o documento..."
+  },
+  "filters": {
+    "type": "Tipo de cliente",
+    "status": "Estado",
+    "active": "Activos",
+    "inactive": "Inactivos",
+    "all": "Todos"
+  },
+  "metrics": {
+    "total": "Total de clientes",
+    "active": "Clientes activos"
+  },
+  "table": {
+    "customer": "Cliente",
+    "contact": "Contacto",
+    "type": "Tipo",
+    "lastPurchase": "Última compra",
+    "totalSpent": "Total comprado",
+    "status": "Estado",
+    "actions": "Acciones"
+  },
+  "types": {
+    "INDIVIDUAL": "Persona física",
+    "COMPANY": "Persona jurídica",
+    "COMPANY_PLURAL": "Personas jurídicas"
+  },
+  "status": {
+    "active": "Activo",
+    "inactive": "Inactivo"
+  },
+  "empty": {
+    "title": "No se encontraron clientes",
+    "hint": "Ajusta los filtros para ver tu base.",
+    "hintFirst": "Registra el primer cliente para empezar tu base."
+  },
+  "loading": "Cargando clientes...",
+  "loadFailed": "No se pudieron cargar los clientes",
+  "details": {
+    "title": "Detalles del cliente",
+    "notFound": "Cliente no encontrado.",
+    "notInformed": "No informado",
+    "never": "Nunca",
+    "relationship": "Relación",
+    "notes": "Observaciones",
+    "totalSpent": "Total comprado"
+  },
+  "deleteDialog": {
+    "title": "¿Eliminar cliente?",
+    "warning": "Se eliminarán el cliente {name} y su historial de relación.",
+    "confirm": "Eliminar",
+    "deleting": "Eliminando..."
+  },
+  "deleteFailed": "No se pudo eliminar el cliente.",
+  "form": {
+    "titleNew": "Nuevo cliente",
+    "titleEdit": "Editar cliente",
+    "subtitleNew": "Completa los datos para registrar el cliente.",
+    "subtitleEdit": "Actualiza los datos del cliente seleccionado.",
+    "back": "Volver a clientes",
+    "sections": {
+      "main": "Datos principales",
+      "mainHint": "Identificación y contacto del cliente.",
+      "address": "Dirección",
+      "addressHint": "Información opcional para ubicación y atención."
+    },
+    "fields": {
+      "type": "Tipo",
+      "name": "Nombre completo",
+      "namePlaceholder": "Ej.: María Santos",
+      "legalName": "Razón social",
+      "legalNamePlaceholder": "Ej.: Empresa Ejemplo S.L.",
+      "tradeName": "Nombre comercial (opcional)",
+      "document": "Documento",
+      "email": "Correo",
+      "phone": "Teléfono o WhatsApp",
+      "status": "Estado",
+      "select": "Selecciona",
+      "zip": "Código postal",
+      "street": "Calle",
+      "number": "Número",
+      "district": "Barrio",
+      "city": "Ciudad",
+      "state": "Provincia",
+      "notes": "Observaciones (opcional)",
+      "notesPlaceholder": "Notas internas sobre preferencias o atención."
+    },
+    "actions": {
+      "save": "Guardar cliente",
+      "saveChanges": "Guardar cambios",
+      "saving": "Guardando...",
+      "cancel": "Cancelar"
+    },
+    "toasts": {
+      "created": "Cliente registrado",
+      "updated": "Cliente actualizado"
+    },
+    "errors": {
+      "name": "Introduce un nombre o razón social válido.",
+      "email": "Introduce un correo válido.",
+      "cpf": "Introduce un documento de 11 dígitos.",
+      "cnpj": "Introduce un documento de 14 dígitos.",
+      "phone": "Introduce un teléfono válido con prefijo.",
+      "saveFailed": "No se pudo guardar el cliente."
+    },
+    "loading": "Cargando cliente..."
+  }
+}
