@@ -68,5 +68,64 @@
     "next": "Next page",
     "page": "Page {page} of {total}",
     "showing": "Showing {shown} of {total} product(s)"
+  },
+  "form": {
+    "titleNew": "New product",
+    "titleEdit": "Edit product",
+    "subtitleNew": "Fill in the details to register the product.",
+    "subtitleEdit": "Update the selected product's information.",
+    "back": "Back to products",
+    "sections": {
+      "main": "Main information",
+      "mainHint": "Data used to identify and sell the product.",
+      "stock": "Stock",
+      "stockHint": "Set the current quantity and restock alert.",
+      "image": "Image"
+    },
+    "fields": {
+      "name": "Product name",
+      "namePlaceholder": "e.g. Basic black t-shirt",
+      "sku": "SKU",
+      "skuPlaceholder": "e.g. TSH-001",
+      "category": "Category",
+      "categoryPlaceholder": "Select a category",
+      "status": "Status",
+      "active": "Active",
+      "inactive": "Inactive",
+      "price": "Sale price",
+      "pricePlaceholder": "0.00",
+      "barcode": "Barcode (optional)",
+      "barcodePlaceholder": "7890000000000",
+      "stockInitial": "Initial stock",
+      "stockCurrent": "Current stock",
+      "minimumStock": "Minimum stock",
+      "description": "Description (optional)",
+      "descriptionPlaceholder": "Additional information about the product...",
+      "imageUrl": "Image",
+      "imagePlaceholder": "https://..."
+    },
+    "actions": {
+      "save": "Save product",
+      "saveChanges": "Save changes",
+      "saving": "Saving...",
+      "cancel": "Cancel",
+      "manageCategories": "Manage categories",
+      "moveStock": "Move stock"
+    },
+    "categoryRequired": "Create a product category before continuing.",
+    "errors": {
+      "name": "Enter a valid product name.",
+      "sku": "Enter a valid SKU.",
+      "category": "Select a category.",
+      "price": "Enter a price greater than zero.",
+      "stock": "Stock values must be whole numbers greater than or equal to zero.",
+      "imageUrl": "Enter a public HTTP or HTTPS image.",
+      "saveFailed": "Could not save the product."
+    },
+    "toasts": {
+      "created": "Product created",
+      "updated": "Product updated"
+    },
+    "loading": "Loading product..."
   }
 }

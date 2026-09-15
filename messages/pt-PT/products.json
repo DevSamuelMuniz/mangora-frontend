@@ -68,5 +68,64 @@
     "next": "Página seguinte",
     "page": "Página {page} de {total}",
     "showing": "A mostrar {shown} de {total} produto(s)"
+  },
+  "form": {
+    "titleNew": "Novo produto",
+    "titleEdit": "Editar produto",
+    "subtitleNew": "Preencha os dados para registar o produto.",
+    "subtitleEdit": "Atualize as informações do produto selecionado.",
+    "back": "Voltar aos produtos",
+    "sections": {
+      "main": "Informações principais",
+      "mainHint": "Dados usados para identificar e vender o produto.",
+      "stock": "Estoque",
+      "stockHint": "Defina a quantidade atual e o alerta de reposição.",
+      "image": "Imagem"
+    },
+    "fields": {
+      "name": "Nome do produto",
+      "namePlaceholder": "Ex.: T-shirt preta básica",
+      "sku": "SKU",
+      "skuPlaceholder": "Ex.: CAM-001",
+      "category": "Categoria",
+      "categoryPlaceholder": "Selecione uma categoria",
+      "status": "Status",
+      "active": "Ativo",
+      "inactive": "Inativo",
+      "price": "Preço de venda",
+      "pricePlaceholder": "0,00",
+      "barcode": "Código de barras (opcional)",
+      "barcodePlaceholder": "7890000000000",
+      "stockInitial": "Inventário inicial",
+      "stockCurrent": "Inventário atual",
+      "minimumStock": "Inventário mínimo",
+      "description": "Descrição (opcional)",
+      "descriptionPlaceholder": "Informações adicionais sobre o produto...",
+      "imageUrl": "Imagem",
+      "imagePlaceholder": "https://..."
+    },
+    "actions": {
+      "save": "Guardar produto",
+      "saveChanges": "Guardar alterações",
+      "saving": "A guardar...",
+      "cancel": "Cancelar",
+      "manageCategories": "Gerir categorias",
+      "moveStock": "Movimentar inventário"
+    },
+    "categoryRequired": "Crie uma categoria de produto antes de continuar.",
+    "errors": {
+      "name": "Informe um nome de produto válido.",
+      "sku": "Informe um SKU válido.",
+      "category": "Selecione uma categoria.",
+      "price": "Informe um preço maior que zero.",
+      "stock": "Os valores de estoque devem ser números inteiros iguais ou maiores que zero.",
+      "imageUrl": "Informe uma imagem pública em HTTP ou HTTPS.",
+      "saveFailed": "Não foi possível salvar o produto."
+    },
+    "toasts": {
+      "created": "Produto registado",
+      "updated": "Produto atualizado"
+    },
+    "loading": "A carregar produto..."
   }
 }

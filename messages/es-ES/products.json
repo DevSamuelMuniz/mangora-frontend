@@ -68,5 +68,64 @@
     "next": "Página siguiente",
     "page": "Página {page} de {total}",
     "showing": "Mostrando {shown} de {total} producto(s)"
+  },
+  "form": {
+    "titleNew": "Nuevo producto",
+    "titleEdit": "Editar producto",
+    "subtitleNew": "Completa los datos para registrar el producto.",
+    "subtitleEdit": "Actualiza la información del producto seleccionado.",
+    "back": "Volver a productos",
+    "sections": {
+      "main": "Información principal",
+      "mainHint": "Datos para identificar y vender el producto.",
+      "stock": "Inventario",
+      "stockHint": "Define la cantidad actual y la alerta de reposición.",
+      "image": "Imagen"
+    },
+    "fields": {
+      "name": "Nombre del producto",
+      "namePlaceholder": "Ej.: Camiseta básica negra",
+      "sku": "SKU",
+      "skuPlaceholder": "Ej.: CAM-001",
+      "category": "Categoría",
+      "categoryPlaceholder": "Selecciona una categoría",
+      "status": "Estado",
+      "active": "Activo",
+      "inactive": "Inactivo",
+      "price": "Precio de venta",
+      "pricePlaceholder": "0,00",
+      "barcode": "Código de barras (opcional)",
+      "barcodePlaceholder": "7890000000000",
+      "stockInitial": "Inventario inicial",
+      "stockCurrent": "Inventario actual",
+      "minimumStock": "Inventario mínimo",
+      "description": "Descripción (opcional)",
+      "descriptionPlaceholder": "Información adicional del producto...",
+      "imageUrl": "Imagen",
+      "imagePlaceholder": "https://..."
+    },
+    "actions": {
+      "save": "Guardar producto",
+      "saveChanges": "Guardar cambios",
+      "saving": "Guardando...",
+      "cancel": "Cancelar",
+      "manageCategories": "Gestionar categorías",
+      "moveStock": "Mover inventario"
+    },
+    "categoryRequired": "Crea una categoría de producto antes de continuar.",
+    "errors": {
+      "name": "Introduce un nombre de producto válido.",
+      "sku": "Introduce un SKU válido.",
+      "category": "Selecciona una categoría.",
+      "price": "Introduce un precio mayor que cero.",
+      "stock": "Los valores de inventario deben ser enteros mayores o iguales que cero.",
+      "imageUrl": "Introduce una imagen pública HTTP o HTTPS.",
+      "saveFailed": "No se pudo guardar el producto."
+    },
+    "toasts": {
+      "created": "Producto registrado",
+      "updated": "Producto actualizado"
+    },
+    "loading": "Cargando producto..."
   }
 }
