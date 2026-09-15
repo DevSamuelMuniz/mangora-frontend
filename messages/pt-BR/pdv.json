@@ -15,14 +15,16 @@
     "review": "Revisão",
     "payment": "Pagamento",
     "done": "Finalizada",
-    "reviewOf": "Etapa 2 de 4"
+    "reviewOf": "Etapa 2 de 4",
+    "processing": "Confirmação"
   },
   "scan": {
     "placeholder": "Leia o código de barras — o produto é adicionado automaticamente",
     "clear": "Limpar busca",
     "enter": "Enter",
     "quantity": "quantidade",
-    "readKey": "confirmar leitura"
+    "readKey": "confirmar leitura",
+    "resultsFor": "Resultados para \"{term}\""
   },
   "grid": {
     "empty": "Nenhum produto encontrado",
@@ -64,7 +66,10 @@
     "searchCustomerPlaceholder": "Buscar cliente por nome ou CPF/CNPJ…",
     "documentOnInvoice": "CPF / CNPJ na nota",
     "cashIn": "Em dinheiro: ",
-    "cash": "dinheiro"
+    "cash": "dinheiro",
+    "split": "Dividido em 2: {parts}",
+    "nextHint": "Pague e confirme na próxima etapa.",
+    "optionalPlaceholder": "Opcional"
   },
   "newCustomer": {
     "title": "Novo cliente",
@@ -90,7 +95,13 @@
     "printHint": "O cupom abre em uma janela para impressão.",
     "standard": "Mantém o tamanho e a espessura originais do cupom.",
     "bold": "Fonte maior, preto intenso e traços mais grossos para melhor leitura.",
-    "extraBold": "Máxima espessura e contraste para impressões muito claras."
+    "extraBold": "Máxima espessura e contraste para impressões muito claras.",
+    "askTitle": "Como deseja imprimir?",
+    "askSubtitle": "Escolha a intensidade mais legível para sua impressora.",
+    "standardLabel": "Impressão padrão",
+    "boldLabel": "Impressão reforçada",
+    "recommended": "Recomendado",
+    "closePrint": "Fechar opções de impressão"
   },
   "errors": {
     "emptyCart": "Adicione pelo menos um item ao carrinho.",
@@ -101,10 +112,12 @@
     "saleFailed": "Não foi possível concluir a venda.",
     "customerFailed": "Não foi possível cadastrar o cliente.",
     "documentInvalid": "CPF/CNPJ deve ter 11 ou 14 dígitos.",
-    "nameTooShort": "Informe um nome com ao menos 3 letras."
+    "nameTooShort": "Informe um nome com ao menos 3 letras.",
+    "phoneInvalid": "Informe um telefone válido com DDD."
   },
   "loading": {
     "finishing": "Finalizando venda...",
     "finishingShort": "Finalizando..."
-  }
+  },
+  "keysHint": "focar busca · confirmar leitura · confirmar itens · quantidade · tela cheia"
 }

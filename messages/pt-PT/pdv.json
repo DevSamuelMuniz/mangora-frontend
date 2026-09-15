@@ -15,14 +15,16 @@
     "review": "Revisão",
     "payment": "Pagamento",
     "done": "Concluída",
-    "reviewOf": "Etapa 2 de 4"
+    "reviewOf": "Etapa 2 de 4",
+    "processing": "Confirmação"
   },
   "scan": {
     "placeholder": "Leia o código de barras — o produto é adicionado automaticamente",
     "clear": "Limpar pesquisa",
     "enter": "Enter",
     "quantity": "quantidade",
-    "readKey": "confirmar leitura"
+    "readKey": "confirmar leitura",
+    "resultsFor": "Resultados para \"{term}\""
   },
   "grid": {
     "empty": "Nenhum produto encontrado",
@@ -64,7 +66,10 @@
     "searchCustomerPlaceholder": "Pesquisar cliente por nome ou NIF…",
     "documentOnInvoice": "NIF na fatura",
     "cashIn": "Em numerário: ",
-    "cash": "numerário"
+    "cash": "numerário",
+    "split": "Dividido em 2: {parts}",
+    "nextHint": "Pague e confirme na etapa seguinte.",
+    "optionalPlaceholder": "Opcional"
   },
   "newCustomer": {
     "title": "Novo cliente",
@@ -90,7 +95,13 @@
     "printHint": "O recibo abre numa janela para impressão.",
     "standard": "Mantém o tamanho e a espessura originais do recibo.",
     "bold": "Fonte maior, preto intenso e traços mais grossos para melhor leitura.",
-    "extraBold": "Máxima espessura e contraste para impressões muito claras."
+    "extraBold": "Máxima espessura e contraste para impressões muito claras.",
+    "askTitle": "Como deseja imprimir?",
+    "askSubtitle": "Escolha a intensidade mais legível para a sua impressora.",
+    "standardLabel": "Impressão padrão",
+    "boldLabel": "Impressão reforçada",
+    "recommended": "Recomendado",
+    "closePrint": "Fechar opções de impressão"
   },
   "errors": {
     "emptyCart": "Adicione pelo menos um artigo ao carrinho.",
@@ -101,10 +112,12 @@
     "saleFailed": "Não foi possível concluir a venda.",
     "customerFailed": "Não foi possível registar o cliente.",
     "documentInvalid": "O NIF deve ter 11 ou 14 dígitos.",
-    "nameTooShort": "Indique um nome com pelo menos 3 letras."
+    "nameTooShort": "Indique um nome com pelo menos 3 letras.",
+    "phoneInvalid": "Indique um telefone válido com indicativo."
   },
   "loading": {
     "finishing": "A finalizar venda...",
     "finishingShort": "A finalizar..."
-  }
+  },
+  "keysHint": "focar pesquisa · confirmar leitura · confirmar artigos · quantidade · ecrã inteiro"
 }

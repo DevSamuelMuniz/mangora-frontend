@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useT } from "@/i18n/provider";
 import { ArrowLeft, LoaderCircle, ShieldCheck } from "lucide-react";
 
 import { useCreateSale, useSaleOptions } from "@/features/sales/hooks/useSales";
@@ -28,6 +29,8 @@ type PaymentPart = { method: PaymentMethod; amount: string };
 const DEFERRED: PaymentMethod[] = ["CHECK", "STORE_CREDIT"];
 
 export default function PdvScreen({ session }: { session: AuthSession }) {
+  const t = useT();
+  const allLabel = t("pdv.review.all");
     const { data: options, isLoading: loadingOptions } = useSaleOptions();
     const createSale = useCreateSale();
     const toast = useToast();
@@ -56,7 +59,7 @@ export default function PdvScreen({ session }: { session: AuthSession }) {
     const [cart, setCart] = useState<CartItem[]>([]);
     const [scanInput, setScanInput] = useState("");
     const [searchTerm, setSearchTerm] = useState("");
-    const [category, setCategory] = useState("Todos");
+    const [category, setCategory] = useState<string>(t("pdv.review.all"));
     const [customerId, setCustomerId] = useState("");
     const [parts, setParts] = useState<PaymentPart[]>([{ method: company?.defaultPayment ?? "PIX", amount: "" }]);
     const [dueDate, setDueDate] = useState(() => addDaysToBrazilDateKey(1));
@@ -100,16 +103,16 @@ export default function PdvScreen({ session }: { session: AuthSession }) {
         const query = searchTerm.trim().toLocaleLowerCase("pt-BR");
         return products
             .filter((product) => product.active && (!product.trackStock || product.stock - product.reservedStock > 0))
-            .filter((product) => category === "Todos" || product.category === category)
+            .filter((product) => category === allLabel || product.category === category)
             .filter(
                 (product) =>
                     !query ||
                     `${product.name} ${product.sku ?? ""} ${product.barcode ?? ""}`.toLocaleLowerCase("pt-BR").includes(query),
             )
             .slice(0, 40);
-    }, [products, searchTerm, category]);
+    }, [products, searchTerm, category, allLabel]);
 
-    const categories = useMemo(() => ["Todos", ...new Set(products.map((product) => product.category))], [products]);
+    const categories = useMemo(() => [allLabel, ...new Set(products.map((product) => product.category))], [products, allLabel]);
 
     const cartCounts = useMemo(
         () => Object.fromEntries(cart.map((item) => [item.product.id, item.quantity])) as Record<string, number>,
@@ -132,7 +135,7 @@ export default function PdvScreen({ session }: { session: AuthSession }) {
         parts.length === 1 || (parsedParts.every((part) => part.amount > 0) && Math.abs(parsedParts.reduce((sum, part) => sum + part.amount, 0) - total) < 0.01);
     const cashChange = isCash ? { received: receivedValue, change: Math.max(0, receivedValue - cashPartAmount) } : undefined;
     const selectedCustomer = customers.find((customer) => customer.id === customerId);
-    const selectedCustomerName = selectedCustomer ? selectedCustomer.tradeName || selectedCustomer.name : "Consumidor final";
+    const selectedCustomerName = selectedCustomer ? selectedCustomer.tradeName || selectedCustomer.name : t("pdv.payment.consumer");
     // Clientes cadastrados no terminal aparecem no dropdown imediatamente
     // (antes mesmo do refetch da query ["sale-options"]).
     const dropdownCustomers = useMemo(() => {
@@ -177,7 +180,7 @@ export default function PdvScreen({ session }: { session: AuthSession }) {
 
     /** Etapa 1 → 2: validar o carrinho e ir para a revisão dos itens. */
     function goToReview() {
-        if (!cart.length) return toast.error("Adicione pelo menos um item ao carrinho.");
+        if (!cart.length) return toast.error(t("pdv.errors.emptyCart"));
         setStep("review");
     }
 
@@ -188,10 +191,10 @@ export default function PdvScreen({ session }: { session: AuthSession }) {
 
     /** Etapa 3 → 4: pagamento efetuado — aguardando confirmação final. */
     function pay() {
-        if (company?.requireCustomer && !customerId) return toast.error("Esta empresa exige cliente identificado.");
-        if (deferred && !customerId) return toast.error("Cheque ou fiado exige cliente.");
+        if (company?.requireCustomer && !customerId) return toast.error(t("pdv.errors.requiresCustomer"));
+        if (deferred && !customerId) return toast.error(t("pdv.errors.checkOrCredit"));
         if (deferred && !dueDate) return toast.error("Informe o vencimento do pagamento.");
-        if (!splitValid) return toast.error("Os valores dos pagamentos não somam o total da venda.");
+        if (!splitValid) return toast.error(t("pdv.errors.mismatch"));
         setStep("processing");
     }
 
@@ -253,7 +256,7 @@ export default function PdvScreen({ session }: { session: AuthSession }) {
                             <ScanBar value={scanInput} onChange={handleScanInput} onEnter={handleScan} onClear={() => { setScanInput(""); setSearchTerm(""); keepScanFocus(); }} onBlurRefocus={keepScanFocus} ref={scanRef} />
                             <div className="flex items-center justify-between">
                                 <p className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-pdv-fg/60">
-                                    {searchTerm ? `Resultados para "${searchTerm}"` : "Catálogo disponível"}
+                                    {searchTerm ? t("pdv.scan.resultsFor", { term: searchTerm }) : t("pdv.steps.catalog")}
                                 </p>
                                 <span className="rounded-full bg-pdv-line px-2.5 py-1 font-mono text-[10px] font-bold text-pdv-fg/60">{availableProducts.length} produto(s)</span>
                             </div>
@@ -369,7 +372,7 @@ export default function PdvScreen({ session }: { session: AuthSession }) {
                 {step === "items" ? (
                     <><Kbd>F2</Kbd> ou <Kbd>/</Kbd> focar busca · <Kbd>Enter</Kbd> confirmar leitura · <Kbd>F4</Kbd> confirmar itens · <Kbd>+</Kbd>/<Kbd>−</Kbd> quantidade · <Kbd>⛶</Kbd> tela cheia</>
                 ) : (
-                    <><Kbd>Etapa {stepIndex(step)} de 4</Kbd> · {stepLabel(step)}</>
+                    <><Kbd>Etapa {stepIndex(step)} de 4</Kbd> · {stepLabel(step, t)}</>
                 )}
             </footer>
 
@@ -392,6 +395,6 @@ function stepIndex(step: Step): number {
     return ({ items: 1, review: 2, payment: 3, processing: 4, done: 5 })[step] ?? 1;
 }
 
-function stepLabel(step: Step): string {
-    return ({ items: "Itens", review: "Revisão", payment: "Pagamento", processing: "Confirmação", done: "Finalizada" })[step] ?? step;
+function stepLabel(step: Step, t: (key: string) => string): string {
+    return ({ items: t("pdv.cart.title"), review: t("pdv.steps.review"), payment: t("pdv.steps.payment"), processing: t("pdv.steps.processing"), done: t("pdv.steps.done") })[step] ?? step;
 }

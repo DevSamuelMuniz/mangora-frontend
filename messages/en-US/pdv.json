@@ -15,14 +15,16 @@
     "review": "Review",
     "payment": "Payment",
     "done": "Completed",
-    "reviewOf": "Step 2 of 4"
+    "reviewOf": "Step 2 of 4",
+    "processing": "Confirmation"
   },
   "scan": {
     "placeholder": "Scan the barcode — the product is added automatically",
     "clear": "Clear search",
     "enter": "Enter",
     "quantity": "quantity",
-    "readKey": "confirm scan"
+    "readKey": "confirm scan",
+    "resultsFor": "Results for \"{term}\""
   },
   "grid": {
     "empty": "No products found",
@@ -64,7 +66,10 @@
     "searchCustomerPlaceholder": "Search customer by name or tax ID…",
     "documentOnInvoice": "Tax ID on the receipt",
     "cashIn": "Cash: ",
-    "cash": "cash"
+    "cash": "cash",
+    "split": "Split in 2: {parts}",
+    "nextHint": "Pay and confirm in the next step.",
+    "optionalPlaceholder": "Optional"
   },
   "newCustomer": {
     "title": "New customer",
@@ -90,7 +95,13 @@
     "printHint": "The receipt opens in a window for printing.",
     "standard": "Keeps the receipt's original size and line weight.",
     "bold": "Larger font, deep black and thicker lines for easier reading.",
-    "extraBold": "Maximum line weight and contrast for very light prints."
+    "extraBold": "Maximum line weight and contrast for very light prints.",
+    "askTitle": "How do you want to print?",
+    "askSubtitle": "Pick the most legible intensity for your printer.",
+    "standardLabel": "Standard print",
+    "boldLabel": "Bold print",
+    "recommended": "Recommended",
+    "closePrint": "Close print options"
   },
   "errors": {
     "emptyCart": "Add at least one item to the cart.",
@@ -101,10 +112,12 @@
     "saleFailed": "Could not complete the sale.",
     "customerFailed": "Could not register the customer.",
     "documentInvalid": "Tax ID must have 11 or 14 digits.",
-    "nameTooShort": "Enter a name with at least 3 letters."
+    "nameTooShort": "Enter a name with at least 3 letters.",
+    "phoneInvalid": "Enter a valid phone number with area code."
   },
   "loading": {
     "finishing": "Finishing sale...",
     "finishingShort": "Finishing..."
-  }
+  },
+  "keysHint": "focus search · confirm scan · confirm items · quantity · fullscreen"
 }

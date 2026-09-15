@@ -15,14 +15,16 @@
     "review": "Revisión",
     "payment": "Pago",
     "done": "Finalizada",
-    "reviewOf": "Paso 2 de 4"
+    "reviewOf": "Paso 2 de 4",
+    "processing": "Confirmación"
   },
   "scan": {
     "placeholder": "Escanea el código de barras — el producto se agrega automáticamente",
     "clear": "Limpiar búsqueda",
     "enter": "Enter",
     "quantity": "cantidad",
-    "readKey": "confirmar lectura"
+    "readKey": "confirmar lectura",
+    "resultsFor": "Resultados para \"{term}\""
   },
   "grid": {
     "empty": "No se encontraron productos",
@@ -64,7 +66,10 @@
     "searchCustomerPlaceholder": "Buscar cliente por nombre o documento…",
     "documentOnInvoice": "Documento en la factura",
     "cashIn": "En efectivo: ",
-    "cash": "efectivo"
+    "cash": "efectivo",
+    "split": "Dividido en 2: {parts}",
+    "nextHint": "Paga y confirma en el siguiente paso.",
+    "optionalPlaceholder": "Opcional"
   },
   "newCustomer": {
     "title": "Nuevo cliente",
@@ -90,7 +95,13 @@
     "printHint": "El recibo se abre en una ventana para imprimir.",
     "standard": "Mantiene el tamaño y grosor originales del recibo.",
     "bold": "Fuente más grande, negro intenso y trazos más gruesos para mejor lectura.",
-    "extraBold": "Máximo grosor y contraste para impresiones muy claras."
+    "extraBold": "Máximo grosor y contraste para impresiones muy claras.",
+    "askTitle": "¿Cómo quieres imprimir?",
+    "askSubtitle": "Elige la intensidad más legible para tu impresora.",
+    "standardLabel": "Impresión estándar",
+    "boldLabel": "Impresión reforzada",
+    "recommended": "Recomendado",
+    "closePrint": "Cerrar opciones de impresión"
   },
   "errors": {
     "emptyCart": "Agrega al menos un artículo al carrito.",
@@ -101,10 +112,12 @@
     "saleFailed": "No se pudo completar la venta.",
     "customerFailed": "No se pudo registrar el cliente.",
     "documentInvalid": "El documento debe tener 11 o 14 dígitos.",
-    "nameTooShort": "Introduce un nombre con al menos 3 letras."
+    "nameTooShort": "Introduce un nombre con al menos 3 letras.",
+    "phoneInvalid": "Introduce un teléfono válido con prefijo."
   },
   "loading": {
     "finishing": "Finalizando venta...",
     "finishingShort": "Finalizando..."
-  }
+  },
+  "keysHint": "enfocar búsqueda · confirmar lectura · confirmar artículos · cantidad · pantalla completa"
 }

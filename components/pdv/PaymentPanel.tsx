@@ -1,6 +1,7 @@
 "use client";
 
 import { Banknote, CheckCircle2, ChevronRight, Plus, Search, Trash2, UserPlus, WalletCards, X } from "lucide-react";
+import { useI18n, useT } from "@/i18n/provider";
 import { useState } from "react";
 
 import { formatCurrency, formatDocument, formatPhone, parseCurrency } from "@/lib/format";
@@ -49,6 +50,8 @@ export default function PaymentStep({
     receivedAmount,
     onReceivedAmount,
 }: PaymentStepProps) {
+  const t = useT();
+  const { locale } = useI18n();
     const isSingle = parts.length === 1;
     const [customerSearch, setCustomerSearch] = useState("");
     const activeCustomers = customers.filter((customer) => customer.active);
@@ -140,8 +143,8 @@ export default function PaymentStep({
                             type="text"
                             value={customerSearch}
                             onChange={(event) => handleCustomerSearch(event.target.value)}
-                            placeholder="Buscar cliente por nome ou CPF/CNPJ…"
-                            aria-label="Buscar cliente"
+                            placeholder={t("pdv.payment.searchCustomerPlaceholder")}
+                            aria-label={t("pdv.payment.searchCustomer")}
                             className="h-11 w-full rounded-xl border border-pdv-line bg-pdv-input pl-9 pr-9 text-sm font-semibold text-pdv-input-fg outline-none placeholder:font-normal placeholder:text-pdv-input-fg/40 focus:border-pdv-gold"
                         />
                         {customerSearch && (
@@ -180,7 +183,7 @@ export default function PaymentStep({
                         )
                     ) : (
                         <select value={customerId} onChange={(event) => onCustomer(event.target.value)} className="mt-2 h-12 w-full rounded-xl border border-pdv-line bg-pdv-input px-3 text-sm font-semibold text-pdv-input-fg outline-none focus:border-pdv-gold">
-                            <option value="">Consumidor final</option>
+                            <option value="">{t("pdv.payment.consumer")}</option>
                             {filteredCustomers.map((customer) => (
                                 <option key={customer.id} value={customer.id}>{customer.tradeName || customer.name}</option>
                             ))}
@@ -194,7 +197,7 @@ export default function PaymentStep({
                             inputMode="numeric"
                             value={customerDocument}
                             onChange={(event) => onCustomerDocument(event.target.value.replace(/\D/g, "").slice(0, 14))}
-                            placeholder="Opcional"
+                            placeholder={t("pdv.payment.optionalPlaceholder")}
                             className="mt-2 h-12 w-full rounded-xl border border-pdv-line bg-pdv-input px-3 font-mono text-base font-bold tracking-widest text-pdv-input-fg outline-none placeholder:font-sans placeholder:text-sm placeholder:font-normal placeholder:tracking-normal placeholder:text-pdv-input-fg/40 focus:border-pdv-gold"
                         />
                         {customerDocument && <p className="mt-1 font-mono text-[10px] text-pdv-fg/50">CPF: {formatDocument(customerDocument, "INDIVIDUAL")}</p>}
@@ -272,7 +275,7 @@ export default function PaymentStep({
                                 onChange={(event) => onReceivedAmount(event.target.value.replace(/[^\d,.]/g, "").slice(0, 10))}
                                 onFocus={(event) => event.target.select()}
                                 placeholder="0,00"
-                                aria-label="Valor recebido em dinheiro"
+                                aria-label={t("pdv.payment.cashReceived")}
                                 className={`mt-2 h-14 w-full rounded-xl border bg-pdv-input px-3 text-right font-mono text-2xl font-black tracking-wide outline-none placeholder:text-pdv-input-fg/30 ${insufficient ? "border-red-400/60 text-red-400" : "border-pdv-line text-pdv-input-fg focus:border-pdv-gold"}`}
                             />
                             <div className="mt-2 flex flex-wrap gap-1.5">
@@ -308,7 +311,7 @@ export default function PaymentStep({
 
             <p className="text-center font-mono text-[10px] text-pdv-fg/40">
                 <WalletCards className="mr-1 inline size-3" />
-                {parts.length === 2 ? `Dividido em 2: ${parsedParts.map((part) => `${paymentMethodLabels[part.method]} ${part.amount ? formatCurrency(part.amount) : ""}`).join(" + ")}` : "Pague e confirme na próxima etapa."}
+                {parts.length === 2 ? t("pdv.payment.split", { parts: parsedParts.map((part) => `${t(`paymentMethods.${part.method}`)} ${part.amount ? formatCurrency(part.amount, locale) : ""}`).join(" + ") }) : t("pdv.payment.nextHint")}
             </p>
             {parts.length === 2 && !splitValid && (
                 <p className="text-center font-mono text-[10px] text-red-400">

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
+import { useT } from "@/i18n/provider";
 import { LoaderCircle, UserPlus, X } from "lucide-react";
 
 import { useSaveCustomer } from "@/features/customers/hooks/useCustomers";
@@ -14,6 +15,7 @@ type NewCustomerModalProps = {
 
 /** Cadastro rápido de cliente direto do terminal. */
 export default function NewCustomerModal({ onCreated, onClose }: NewCustomerModalProps) {
+  const t = useT();
     const saveCustomer = useSaveCustomer();
     const toast = useToast();
     const [name, setName] = useState("");
@@ -25,10 +27,10 @@ export default function NewCustomerModal({ onCreated, onClose }: NewCustomerModa
     async function submit(event: FormEvent<HTMLFormElement>) {
         event.preventDefault();
         const digits = document.replace(/\D/g, "");
-        if (name.trim().length < 3) return setError("Informe um nome com ao menos 3 letras.");
-        if (!/^\d{11}$|^\d{14}$/.test(digits)) return setError("CPF/CNPJ deve ter 11 ou 14 dígitos.");
+        if (name.trim().length < 3) return setError(t("pdv.errors.nameTooShort"));
+        if (!/^\d{11}$|^\d{14}$/.test(digits)) return setError(t("pdv.errors.documentInvalid"));
         if (!email.includes("@")) return setError("Informe um e-mail válido.");
-        if (!/^\d{10,15}$/.test(phone.replace(/\D/g, ""))) return setError("Informe um telefone válido com DDD.");
+        if (!/^\d{10,15}$/.test(phone.replace(/\D/g, ""))) return setError(t("pdv.errors.phoneInvalid"));
         setError("");
 
         try {
@@ -44,10 +46,10 @@ export default function NewCustomerModal({ onCreated, onClose }: NewCustomerModa
                     active: true,
                 },
             });
-            toast.success("Cliente cadastrado e selecionado na venda.");
+            toast.success(t("pdv.newCustomer.success"));
             onCreated(customer);
         } catch (cause) {
-            toast.error(cause instanceof Error ? cause.message : "Não foi possível cadastrar o cliente.");
+            toast.error(cause instanceof Error ? cause.message : t("pdv.errors.customerFailed"));
         }
     }
 
