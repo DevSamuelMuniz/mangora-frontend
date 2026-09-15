@@ -1,0 +1,64 @@
+{
+  "title": "Vendas",
+  "subtitle": "Acompanhe movimentações, pagamentos e resultados.",
+  "actions": {
+    "newSale": "Nova venda",
+    "openPdv": "Abrir PDV",
+    "view": "Visualizar",
+    "return": "Devolver itens",
+    "cancel": "Cancelar venda",
+    "register": "Registrar venda",
+    "clearFilters": "Limpar filtros",
+    "retry": "Tentar novamente"
+  },
+  "summary": {
+    "revenueToday": "Faturamento hoje",
+    "salesToday": "Vendas hoje",
+    "averageTicket": "Ticket médio",
+    "cancelled": "Vendas canceladas"
+  },
+  "filters": {
+    "searchLabel": "Buscar vendas",
+    "searchPlaceholder": "Buscar por código ou cliente...",
+    "status": "Status",
+    "payment": "Pagamento"
+  },
+  "table": {
+    "sale": "Venda",
+    "customer": "Cliente",
+    "date": "Data",
+    "payment": "Pagamento",
+    "value": "Valor",
+    "status": "Status",
+    "actions": "Ações",
+    "items": "{count} item(ns)",
+    "showing": "Mostrando {shown} de {total} venda(s)"
+  },
+  "status": {
+    "COMPLETED": "Concluída",
+    "CANCELLED": "Cancelada"
+  },
+  "empty": {
+    "title": "Nenhuma venda encontrada",
+    "hintFilter": "Ajuste os filtros para consultar outras movimentações.",
+    "hintFirst": "Registre a primeira venda da empresa."
+  },
+  "loading": "Carregando vendas...",
+  "loadFailed": "Não foi possível carregar as vendas",
+  "details": {
+    "title": "Detalhes da venda",
+    "close": "Fechar detalhes",
+    "payment": "Pagamento",
+    "total": "Total"
+  },
+  "cancelDialog": {
+    "title": "Cancelar venda {code}?",
+    "warning": "Os itens controlados voltarão ao estoque e o total do cliente será estornado.",
+    "reasonLabel": "Motivo",
+    "reasonPlaceholder": "Informe o motivo do cancelamento",
+    "back": "Voltar",
+    "confirm": "Cancelar venda"
+  },
+  "cancelFailed": "Não foi possível cancelar a venda.",
+  "cancelSuccess": "Venda {code} cancelada — estoque e financeiro estornados."
+}

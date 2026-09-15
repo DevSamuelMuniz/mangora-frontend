@@ -1,0 +1,64 @@
+{
+  "title": "Sales",
+  "subtitle": "Track transactions, payments and results.",
+  "actions": {
+    "newSale": "New sale",
+    "openPdv": "Open POS",
+    "view": "View",
+    "return": "Return items",
+    "cancel": "Cancel sale",
+    "register": "Record sale",
+    "clearFilters": "Clear filters",
+    "retry": "Try again"
+  },
+  "summary": {
+    "revenueToday": "Revenue today",
+    "salesToday": "Sales today",
+    "averageTicket": "Average ticket",
+    "cancelled": "Cancelled sales"
+  },
+  "filters": {
+    "searchLabel": "Search sales",
+    "searchPlaceholder": "Search by code or customer...",
+    "status": "Status",
+    "payment": "Payment"
+  },
+  "table": {
+    "sale": "Sale",
+    "customer": "Customer",
+    "date": "Date",
+    "payment": "Payment",
+    "value": "Amount",
+    "status": "Status",
+    "actions": "Actions",
+    "items": "{count} item(s)",
+    "showing": "Showing {shown} of {total} sale(s)"
+  },
+  "status": {
+    "COMPLETED": "Completed",
+    "CANCELLED": "Cancelled"
+  },
+  "empty": {
+    "title": "No sales found",
+    "hintFilter": "Adjust the filters to browse other transactions.",
+    "hintFirst": "Record your business's first sale."
+  },
+  "loading": "Loading sales...",
+  "loadFailed": "Could not load sales",
+  "details": {
+    "title": "Sale details",
+    "close": "Close details",
+    "payment": "Payment",
+    "total": "Total"
+  },
+  "cancelDialog": {
+    "title": "Cancel sale {code}?",
+    "warning": "Tracked items will return to inventory and the customer total will be reversed.",
+    "reasonLabel": "Reason",
+    "reasonPlaceholder": "Enter the cancellation reason",
+    "back": "Back",
+    "confirm": "Cancel sale"
+  },
+  "cancelFailed": "Could not cancel the sale.",
+  "cancelSuccess": "Sale {code} cancelled — inventory and finance reversed."
+}
