@@ -1,0 +1,174 @@
+{
+  "title": "Finanzas",
+  "subtitle": "Sigue ingresos, gastos y compromisos.",
+  "eyebrow": "Gestión financiera",
+  "tabs": {
+    "flow": "Flujo de caja",
+    "structure": "Estructura financiera",
+    "accounts": "Centros de coste y plan contable",
+    "chart": "Ingresos y gastos de los últimos 6 meses",
+    "reconciliation": "Cuentas y conciliación"
+  },
+  "actions": {
+    "add": "Añadir",
+    "create": "Nuevo asiento",
+    "save": "Guardar asiento",
+    "saving": "Guardando...",
+    "cancel": "Cancelar",
+    "retry": "Intentar de nuevo",
+    "clearFilters": "Limpiar filtros",
+    "close": "Cerrar",
+    "closeDetails": "Cerrar detalles",
+    "view": "Ver",
+    "back": "Volver a finanzas",
+    "registerPayment": "Registrar pago",
+    "activate": "Activar",
+    "deactivate": "Desactivar",
+    "reverse": "Revertir asiento",
+    "reverseShort": "Revertir (crea reversión)"
+  },
+  "search": {
+    "label": "Buscar asientos",
+    "placeholder": "Buscar descripción, contacto o categoría..."
+  },
+  "metrics": {
+    "revenue": "Ingresos realizados",
+    "revenueShort": "Ingresos",
+    "expenses": "Gastos",
+    "expenseShort": "Gasto",
+    "balance": "Saldo realizado",
+    "balanceHint": "Ingresos menos gastos pagados",
+    "receivable": "Cuentas a cobrar",
+    "receivableHint": "Ingresos pendientes",
+    "payable": "Cuentas a pagar",
+    "payableHint": "Gastos pendientes o vencidos"
+  },
+  "filters": {
+    "type": "Tipo de asiento",
+    "status": "Estado",
+    "category": "Categoría",
+    "all": "Todos"
+  },
+  "entryTypes": {
+    "INCOME": "Ingreso",
+    "EXPENSE": "Gasto",
+    "TRANSFER": "Transferencia"
+  },
+  "entryHints": {
+    "INCOME": "Venta, servicio u otro cobro",
+    "EXPENSE": "Factura, compra u otro pago"
+  },
+  "chart": {
+    "title": "Ingresos y gastos de los últimos 6 meses",
+    "period": "Período"
+  },
+  "table": {
+    "entry": "Asiento",
+    "date": "Fecha",
+    "operation": "Operación",
+    "category": "Categoría",
+    "account": "Cuenta",
+    "due": "Vencimiento",
+    "amount": "Importe",
+    "status": "Estado",
+    "actions": "Acciones"
+  },
+  "empty": {
+    "entries": "No se encontraron asientos",
+    "upcoming": "Sin compromisos pendientes.",
+    "costCenters": "Sin centros de coste registrados.",
+    "chartAccounts": "Sin categorías contables registradas."
+  },
+  "loading": "Cargando asientos...",
+  "loadFailed": "No se pudieron cargar los asientos",
+  "notInformed": "No informado",
+  "notInformedF": "No informada",
+  "noContact": "Sin contacto",
+  "noneGenerated": "Ninguna ocurrencia nueva que generar.",
+  "details": {
+    "title": "Detalles del asiento",
+    "main": "Datos principales",
+    "mainHint": "Identificación, categoría e importe del asiento.",
+    "datesHint": "Fechas, estado y cuenta utilizada.",
+    "history": "Historial de pagos",
+    "reversed": "Revertido: {reason}",
+    "cancelled": "Cancelación: {reason}",
+    "openBalance": "Saldo pendiente de {value}",
+    "effective": "Importe efectivo: {value}",
+    "reversalCreated": "Se creará un {type} de reversión.",
+    "reverseReason": "Motivo de la reversión",
+    "reverseReasonPlaceholder": "Ej.: cargo duplicado, importe incorrecto...",
+    "discount": "Descuento (opcional)",
+    "interest": "Intereses (opcional)",
+    "note": "Observación (opcional)",
+    "paymentDate": "Fecha del pago",
+    "paymentMethod": "Forma de pago",
+    "reference": "Documento (opcional)",
+    "referencePlaceholder": "Factura, pedido o referencia"
+  },
+  "form": {
+    "title": "Nuevo asiento",
+    "subtitle": "Registra un ingreso o gasto para control interno.",
+    "typeHint": "Elige si el importe entra o sale de caja.",
+    "fields": {
+      "description": "Descripción",
+      "descriptionIncomePlaceholder": "Ej.: Venta de productos",
+      "descriptionExpensePlaceholder": "Ej.: Pago a proveedor",
+      "amount": "Importe",
+      "amountPlaceholder": "0,00",
+      "dueDate": "Vencimiento",
+      "category": "Categoría",
+      "contact": "Contacto (opcional)",
+      "contactIncome": "Cliente o pagador",
+      "contactExpense": "Proveedor o beneficiario",
+      "costCenter": "Centro de coste (estructura)",
+      "costCenterOptional": "Centro de coste (opcional)",
+      "accounting": "Cuenta contable",
+      "accountingPlan": "Plan contable",
+      "account": "Cuenta",
+      "accountMain": "Cuenta principal",
+      "accountSecondary": "Cuenta secundaria",
+      "notes": "Observaciones (opcional)",
+      "notesPlaceholder": "Información adicional sobre el asiento...",
+      "recurrence": "Recurrencia",
+      "recurrenceEnd": "Fin de la recurrencia (opcional)",
+      "dueDay": "Día de vencimiento (1-31)",
+      "dueDayPlaceholder": "Ej.: 10",
+      "competence": "Competencia (opcional)",
+      "select": "Selecciona",
+      "paymentMethod": "Forma de pago"
+    },
+    "errors": {
+      "description": "Introduce una descripción válida.",
+      "amount": "Introduce un importe mayor que cero.",
+      "dueDate": "Introduce la fecha de vencimiento.",
+      "category": "Selecciona una categoría."
+    }
+  },
+  "structure": {
+    "costCenterNamePlaceholder": "Nombre (ej.: Impuestos)",
+    "costCenterCodePlaceholder": "Código (ej.: 1.1)",
+    "costCenterHintPlaceholder": "Ej.: Tienda física, Cocina, Delivery...",
+    "costCenters": "Centros de coste",
+    "chartAccounts": "Plan contable",
+    "newCostCenter": "Nuevo centro de coste",
+    "newChartAccount": "Nueva cuenta contable"
+  },
+  "toasts": {
+    "created": "Asiento registrado",
+    "paid": "Pago registrado.",
+    "generated": "Ocurrencias recurrentes generadas.",
+    "reversed": "Reversión creada. El asiento original se marcó como revertido."
+  },
+  "errors": {
+    "loadFailed": "No se pudieron cargar los asientos",
+    "save": "No se pudo guardar el asiento.",
+    "confirmPayment": "No se pudo confirmar el pago.",
+    "reverse": "No se pudo revertir el asiento.",
+    "generate": "No se pudieron generar las ocurrencias.",
+    "costCenter": "No se pudo actualizar el centro de coste.",
+    "accounting": "No se pudo actualizar la cuenta contable.",
+    "createCostCenter": "No se pudo crear el centro de coste.",
+    "createAccounting": "No se pudo crear la cuenta contable."
+  }
+}

@@ -1,0 +1,174 @@
+{
+  "title": "Finanças",
+  "subtitle": "Acompanhe receitas, despesas e compromissos.",
+  "eyebrow": "Gestão financeira",
+  "tabs": {
+    "flow": "Fluxo de caixa",
+    "structure": "Estrutura financeira",
+    "accounts": "Centros de custo e plano de contas",
+    "chart": "Receitas e despesas dos últimos 6 meses",
+    "reconciliation": "Contas e conciliação"
+  },
+  "actions": {
+    "add": "Adicionar",
+    "create": "Novo lançamento",
+    "save": "Guardar lançamento",
+    "saving": "A guardar...",
+    "cancel": "Cancelar",
+    "retry": "Tentar novamente",
+    "clearFilters": "Limpar filtros",
+    "close": "Fechar",
+    "closeDetails": "Fechar detalhes",
+    "view": "Visualizar",
+    "back": "Voltar às finanças",
+    "registerPayment": "Registar pagamento",
+    "activate": "Ativar",
+    "deactivate": "Desativar",
+    "reverse": "Estornar lançamento",
+    "reverseShort": "Estornar (cria reversão)"
+  },
+  "search": {
+    "label": "Pesquisar lançamentos",
+    "placeholder": "Pesquisar descrição, contacto ou categoria..."
+  },
+  "metrics": {
+    "revenue": "Receitas realizadas",
+    "revenueShort": "Receitas",
+    "expenses": "Despesas",
+    "expenseShort": "Despesa",
+    "balance": "Saldo realizado",
+    "balanceHint": "Receitas menos despesas pagas",
+    "receivable": "Contas a receber",
+    "receivableHint": "Receitas pendentes",
+    "payable": "Contas a pagar",
+    "payableHint": "Despesas pendentes ou vencidas"
+  },
+  "filters": {
+    "type": "Tipo de lançamento",
+    "status": "Estado",
+    "category": "Categoria",
+    "all": "Todos"
+  },
+  "entryTypes": {
+    "INCOME": "Receita",
+    "EXPENSE": "Despesa",
+    "TRANSFER": "Transferência"
+  },
+  "entryHints": {
+    "INCOME": "Venda, serviço ou outro recebimento",
+    "EXPENSE": "Conta, compra ou outro pagamento"
+  },
+  "chart": {
+    "title": "Receitas e despesas dos últimos 6 meses",
+    "period": "Período"
+  },
+  "table": {
+    "entry": "Lançamento",
+    "date": "Data",
+    "operation": "Operação",
+    "category": "Categoria",
+    "account": "Conta",
+    "due": "Vencimento",
+    "amount": "Valor",
+    "status": "Estado",
+    "actions": "Ações"
+  },
+  "empty": {
+    "entries": "Nenhum lançamento encontrado",
+    "upcoming": "Nenhum compromisso pendente.",
+    "costCenters": "Nenhum centro de custo registado.",
+    "chartAccounts": "Nenhuma categoria contabilística registada."
+  },
+  "loading": "A carregar lançamentos...",
+  "loadFailed": "Não foi possível carregar os lançamentos",
+  "notInformed": "Não indicado",
+  "notInformedF": "Não indicada",
+  "noContact": "Sem contacto",
+  "noneGenerated": "Nenhuma ocorrência nova para gerar.",
+  "details": {
+    "title": "Detalhes do lançamento",
+    "main": "Dados principais",
+    "mainHint": "Identificação, categoria e valor do lançamento.",
+    "datesHint": "Datas, situação e conta utilizada.",
+    "history": "Histórico de pagamentos",
+    "reversed": "Revertido: {reason}",
+    "cancelled": "Cancelamento: {reason}",
+    "openBalance": "Saldo em aberto de {value}",
+    "effective": "Valor efetivo: {value}",
+    "reversalCreated": "Será criada uma {type} de estorno.",
+    "reverseReason": "Motivo do estorno",
+    "reverseReasonPlaceholder": "Ex.: cobrança duplicada, valor incorreto...",
+    "discount": "Desconto (opcional)",
+    "interest": "Juros (opcional)",
+    "note": "Observação (opcional)",
+    "paymentDate": "Data do pagamento",
+    "paymentMethod": "Forma de pagamento",
+    "reference": "Documento (opcional)",
+    "referencePlaceholder": "Nota, pedido ou referência"
+  },
+  "form": {
+    "title": "Novo lançamento",
+    "subtitle": "Registe uma receita ou despesa para controlo interno.",
+    "typeHint": "Escolha se o valor entra ou sai da caixa.",
+    "fields": {
+      "description": "Descrição",
+      "descriptionIncomePlaceholder": "Ex.: Venda de produtos",
+      "descriptionExpensePlaceholder": "Ex.: Pagamento a fornecedor",
+      "amount": "Valor",
+      "amountPlaceholder": "0,00",
+      "dueDate": "Vencimento",
+      "category": "Categoria",
+      "contact": "Contacto (opcional)",
+      "contactIncome": "Cliente ou pagador",
+      "contactExpense": "Fornecedor ou beneficiário",
+      "costCenter": "Centro de custo (estrutura)",
+      "costCenterOptional": "Centro de custo (opcional)",
+      "accounting": "Conta contabilística",
+      "accountingPlan": "Plano de contas",
+      "account": "Conta",
+      "accountMain": "Conta principal",
+      "accountSecondary": "Conta secundária",
+      "notes": "Observações (opcional)",
+      "notesPlaceholder": "Informações adicionais sobre o lançamento...",
+      "recurrence": "Recorrência",
+      "recurrenceEnd": "Fim da recorrência (opcional)",
+      "dueDay": "Dia de vencimento (1-31)",
+      "dueDayPlaceholder": "Ex.: 10",
+      "competence": "Competência (opcional)",
+      "select": "Selecione",
+      "paymentMethod": "Forma de pagamento"
+    },
+    "errors": {
+      "description": "Indique uma descrição válida.",
+      "amount": "Indique um valor superior a zero.",
+      "dueDate": "Indique a data de vencimento.",
+      "category": "Selecione uma categoria."
+    }
+  },
+  "structure": {
+    "costCenterNamePlaceholder": "Nome (ex.: Impostos)",
+    "costCenterCodePlaceholder": "Código (ex.: 1.1)",
+    "costCenterHintPlaceholder": "Ex.: Loja física, Cozinha, Delivery...",
+    "costCenters": "Centros de custo",
+    "chartAccounts": "Plano de contas",
+    "newCostCenter": "Novo centro de custo",
+    "newChartAccount": "Nova conta contabilística"
+  },
+  "toasts": {
+    "created": "Lançamento registado",
+    "paid": "Pagamento registado.",
+    "generated": "Ocorrências recorrentes geradas.",
+    "reversed": "Estorno criado. O lançamento original foi marcado como revertido."
+  },
+  "errors": {
+    "loadFailed": "Não foi possível carregar os lançamentos",
+    "save": "Não foi possível guardar o lançamento.",
+    "confirmPayment": "Não foi possível confirmar o pagamento.",
+    "reverse": "Não foi possível estornar o lançamento.",
+    "generate": "Não foi possível gerar as ocorrências.",
+    "costCenter": "Não foi possível atualizar o centro de custo.",
+    "accounting": "Não foi possível atualizar a conta contabilística.",
+    "createCostCenter": "Não foi possível criar o centro de custo.",
+    "createAccounting": "Não foi possível criar a conta contabilística."
+  }
+}

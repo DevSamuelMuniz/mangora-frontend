@@ -1,0 +1,174 @@
+{
+  "title": "Finance",
+  "subtitle": "Track revenue, expenses and commitments.",
+  "eyebrow": "Financial management",
+  "tabs": {
+    "flow": "Cash flow",
+    "structure": "Financial structure",
+    "accounts": "Cost centers and chart of accounts",
+    "chart": "Revenue and expenses of the last 6 months",
+    "reconciliation": "Accounts and reconciliation"
+  },
+  "actions": {
+    "add": "Add",
+    "create": "New entry",
+    "save": "Save entry",
+    "saving": "Saving...",
+    "cancel": "Cancel",
+    "retry": "Try again",
+    "clearFilters": "Clear filters",
+    "close": "Close",
+    "closeDetails": "Close details",
+    "view": "View",
+    "back": "Back to finance",
+    "registerPayment": "Record payment",
+    "activate": "Activate",
+    "deactivate": "Deactivate",
+    "reverse": "Reverse entry",
+    "reverseShort": "Reverse (creates a reversal)"
+  },
+  "search": {
+    "label": "Search entries",
+    "placeholder": "Search description, contact or category..."
+  },
+  "metrics": {
+    "revenue": "Revenue received",
+    "revenueShort": "Revenue",
+    "expenses": "Expenses",
+    "expenseShort": "Expense",
+    "balance": "Net balance",
+    "balanceHint": "Revenue minus paid expenses",
+    "receivable": "Accounts receivable",
+    "receivableHint": "Pending revenue",
+    "payable": "Accounts payable",
+    "payableHint": "Pending or overdue expenses"
+  },
+  "filters": {
+    "type": "Entry type",
+    "status": "Status",
+    "category": "Category",
+    "all": "All"
+  },
+  "entryTypes": {
+    "INCOME": "Revenue",
+    "EXPENSE": "Expense",
+    "TRANSFER": "Transfer"
+  },
+  "entryHints": {
+    "INCOME": "Sale, service or another receipt",
+    "EXPENSE": "Bill, purchase or another payment"
+  },
+  "chart": {
+    "title": "Revenue and expenses of the last 6 months",
+    "period": "Period"
+  },
+  "table": {
+    "entry": "Entry",
+    "date": "Date",
+    "operation": "Operation",
+    "category": "Category",
+    "account": "Account",
+    "due": "Due date",
+    "amount": "Amount",
+    "status": "Status",
+    "actions": "Actions"
+  },
+  "empty": {
+    "entries": "No entries found",
+    "upcoming": "No pending commitments.",
+    "costCenters": "No cost centers yet.",
+    "chartAccounts": "No chart accounts yet."
+  },
+  "loading": "Loading entries...",
+  "loadFailed": "Could not load entries",
+  "notInformed": "Not provided",
+  "notInformedF": "Not provided",
+  "noContact": "No contact",
+  "noneGenerated": "No new occurrences to generate.",
+  "details": {
+    "title": "Entry details",
+    "main": "Main information",
+    "mainHint": "Entry identification, category and amount.",
+    "datesHint": "Dates, status and the account used.",
+    "history": "Payment history",
+    "reversed": "Reversed: {reason}",
+    "cancelled": "Cancellation: {reason}",
+    "openBalance": "Open balance of {value}",
+    "effective": "Effective amount: {value}",
+    "reversalCreated": "A reversal {type} will be created.",
+    "reverseReason": "Reversal reason",
+    "reverseReasonPlaceholder": "e.g. duplicate charge, wrong amount...",
+    "discount": "Discount (optional)",
+    "interest": "Interest (optional)",
+    "note": "Note (optional)",
+    "paymentDate": "Payment date",
+    "paymentMethod": "Payment method",
+    "reference": "Document (optional)",
+    "referencePlaceholder": "Invoice, order or reference"
+  },
+  "form": {
+    "title": "New entry",
+    "subtitle": "Record revenue or an expense for internal control.",
+    "typeHint": "Choose whether the amount enters or leaves the cash.",
+    "fields": {
+      "description": "Description",
+      "descriptionIncomePlaceholder": "e.g. Product sale",
+      "descriptionExpensePlaceholder": "e.g. Supplier payment",
+      "amount": "Amount",
+      "amountPlaceholder": "0.00",
+      "dueDate": "Due date",
+      "category": "Category",
+      "contact": "Contact (optional)",
+      "contactIncome": "Customer or payer",
+      "contactExpense": "Supplier or payee",
+      "costCenter": "Cost center (structure)",
+      "costCenterOptional": "Cost center (optional)",
+      "accounting": "Chart account",
+      "accountingPlan": "Chart of accounts",
+      "account": "Account",
+      "accountMain": "Main account",
+      "accountSecondary": "Secondary account",
+      "notes": "Notes (optional)",
+      "notesPlaceholder": "Additional information about the entry...",
+      "recurrence": "Recurrence",
+      "recurrenceEnd": "Recurrence end (optional)",
+      "dueDay": "Due day (1-31)",
+      "dueDayPlaceholder": "e.g. 10",
+      "competence": "Accrual period (optional)",
+      "select": "Select",
+      "paymentMethod": "Payment method"
+    },
+    "errors": {
+      "description": "Enter a valid description.",
+      "amount": "Enter an amount greater than zero.",
+      "dueDate": "Enter the due date.",
+      "category": "Select a category."
+    }
+  },
+  "structure": {
+    "costCenterNamePlaceholder": "Name (e.g. Taxes)",
+    "costCenterCodePlaceholder": "Code (e.g. 1.1)",
+    "costCenterHintPlaceholder": "e.g. Physical store, Kitchen, Delivery...",
+    "costCenters": "Cost centers",
+    "chartAccounts": "Chart of accounts",
+    "newCostCenter": "New cost center",
+    "newChartAccount": "New chart account"
+  },
+  "toasts": {
+    "created": "Entry recorded",
+    "paid": "Payment recorded.",
+    "generated": "Recurring occurrences generated.",
+    "reversed": "Reversal created. The original entry was marked as reversed."
+  },
+  "errors": {
+    "loadFailed": "Could not load entries",
+    "save": "Could not save the entry.",
+    "confirmPayment": "Could not confirm the payment.",
+    "reverse": "Could not reverse the entry.",
+    "generate": "Could not generate the occurrences.",
+    "costCenter": "Could not update the cost center.",
+    "accounting": "Could not update the chart account.",
+    "createCostCenter": "Could not create the cost center.",
+    "createAccounting": "Could not create the chart account."
+  }
+}
