@@ -50,9 +50,9 @@ export function formatPercentage(ratio: number, locale: FormatLocale = DEFAULT_L
 }
 
 /** Data longa com capitalização inicial: "sexta-feira, 30 de agosto". */
-export function formatDateLong(date: Date | string): string {
+export function formatDateLong(date: Date | string, locale: FormatLocale = DEFAULT_LOCALE): string {
     const value = typeof date === "string" ? new Date(date) : date;
-    const formatted = bundle().dateLong.format(value);
+    const formatted = bundle(locale).dateLong.format(value);
     return formatted.charAt(0).toUpperCase() + formatted.slice(1);
 }
 

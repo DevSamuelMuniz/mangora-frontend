@@ -1,0 +1,57 @@
+{
+  "intro": {
+    "eyebrow": "Overview",
+    "greeting": "Hi, {name} 👋",
+    "subtitle": "See how your business is performing today."
+  },
+  "metrics": {
+    "revenue": "Revenue today",
+    "revenueHint": "Compared to yesterday",
+    "sales": "Completed sales",
+    "salesHint": "Compared to yesterday",
+    "ticket": "Average ticket",
+    "ticketHint": "Average value per sale",
+    "receivable": "Accounts receivable",
+    "receivableHint": "{count} pending payment(s)",
+    "receivableVariation": "{count} invoice(s)",
+    "customers": "Active customers",
+    "customersHint": "{count} new customer(s) this month",
+    "customersVariation": "{count} new"
+  },
+  "quickActions": {
+    "title": "Quick actions",
+    "subtitle": "Access the main features",
+    "newSale": "Record a sale",
+    "newSaleHint": "Open the POS",
+    "movement": "Record stock movement",
+    "movementHint": "In, out or adjustment",
+    "newProduct": "New product",
+    "newProductHint": "Add to the catalog",
+    "newCustomer": "New customer",
+    "newCustomerHint": "Register a customer",
+    "entry": "Financial entry",
+    "entryHint": "Income or expense"
+  },
+  "recentSales": {
+    "title": "Recent sales",
+    "subtitle": "Latest recorded activity",
+    "empty": "No sales recorded.",
+    "newSale": "New sale",
+    "viewAll": "View all",
+    "viewDetails": "View details"
+  },
+  "lowStock": {
+    "title": "Low stock",
+    "subtitle": "Products at or below minimum",
+    "empty": "No products with low stock.",
+    "remaining": "{count} left"
+  },
+  "chart": {
+    "title": "Sales performance",
+    "subtitle": "Daily revenue",
+    "period": "Chart period",
+    "days7": "Last 7 days",
+    "days30": "Last 30 days",
+    "days90": "Last 90 days"
+  }
+}

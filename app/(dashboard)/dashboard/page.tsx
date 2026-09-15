@@ -13,6 +13,7 @@ import RecentSales from "@/components/dashboard/RecentSales";
 import LowStock from "@/components/dashboard/LowStock";
 import QuickActions from "@/components/dashboard/QuickActions";
 import { getCurrentSession } from "@/lib/auth/server";
+import { getTranslator } from "@/i18n/server";
 import { serverApiRequest } from "@/lib/api/server-client";
 import { formatCurrency, formatDateLong, formatNumber } from "@/lib/format";
 import type { DashboardData } from "@/types/analytics";
@@ -21,23 +22,24 @@ export default async function DashboardPage() {
     const session = await getCurrentSession();
     if (!session) redirect("/login");
     const dashboard = await serverApiRequest<DashboardData>("/analytics/dashboard");
+    const { locale, t } = await getTranslator();
     const firstName = session.user.name.split(" ")[0] || session.user.name;
-    const currentDate = formatDateLong(new Date());
+    const currentDate = formatDateLong(new Date(), locale);
 
     return (
             <section className="mangora-dashboard">
                 <div className="mangora-dashboard-intro flex flex-col justify-between gap-3 sm:flex-row sm:items-end">
                     <div>
                         <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-orange-600">
-                            Visão geral
+                            {t("dashboard.intro.eyebrow")}
                         </p>
 
                         <h1 className="mt-1 text-3xl font-black tracking-tight text-slate-950 sm:text-4xl">
-                            Olá, {firstName} 👋
+                            {t("dashboard.intro.greeting", { name: firstName })}
                         </h1>
 
                         <p className="mt-1 text-xs text-slate-500">
-                            Veja como está o desempenho da sua empresa hoje.
+                            {t("dashboard.intro.subtitle")}
                         </p>
                     </div>
 
@@ -48,40 +50,40 @@ export default async function DashboardPage() {
 
                 <div className="mt-5 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
                     <MetricCard
-                        title="Faturamento hoje"
-                        value={formatCurrency(dashboard.metrics.revenue)}
-                        description="Comparado com ontem"
-                        variation={`${Math.abs(dashboard.metrics.revenueVariation).toLocaleString("pt-BR")}%`}
+                        title={t("dashboard.metrics.revenue")}
+                        value={formatCurrency(dashboard.metrics.revenue, locale)}
+                        description={t("dashboard.metrics.revenueHint")}
+                        variation={`${formatNumber(Math.abs(dashboard.metrics.revenueVariation), locale)}%`}
                         trend={getTrend(dashboard.metrics.revenueVariation)}
                         icon={CircleDollarSign}
                         iconClassName="bg-green-50 text-green-600"
                     />
 
                     <MetricCard
-                        title="Vendas realizadas"
-                        value={formatNumber(dashboard.metrics.sales)}
+                        title={t("dashboard.metrics.sales")}
+                        value={formatNumber(dashboard.metrics.sales, locale)}
                         description="Comparado com ontem"
-                        variation={`${Math.abs(dashboard.metrics.salesVariation).toLocaleString("pt-BR")}%`}
+                        variation={`${formatNumber(Math.abs(dashboard.metrics.salesVariation), locale)}%`}
                         trend={getTrend(dashboard.metrics.salesVariation)}
                         icon={ShoppingBag}
                         iconClassName="bg-orange-50 text-orange-600"
                     />
 
                     <MetricCard
-                        title="Ticket médio"
-                        value={formatCurrency(dashboard.metrics.averageTicket)}
-                        description="Média por venda realizada"
-                        variation={`${Math.abs(dashboard.metrics.ticketVariation).toLocaleString("pt-BR")}%`}
+                        title={t("dashboard.metrics.ticket")}
+                        value={formatCurrency(dashboard.metrics.averageTicket, locale)}
+                        description={t("dashboard.metrics.ticketHint")}
+                        variation={`${formatNumber(Math.abs(dashboard.metrics.ticketVariation), locale)}%`}
                         trend={getTrend(dashboard.metrics.ticketVariation)}
                         icon={TrendingUp}
                         iconClassName="bg-yellow-50 text-yellow-600"
                     />
 
                     <MetricCard
-                        title="Contas a receber"
-                        value={formatCurrency(dashboard.metrics.receivable)}
-                        description={`${dashboard.metrics.receivableCount} recebimento(s) pendente(s)`}
-                        variation={`${dashboard.metrics.receivableCount} conta(s)`}
+                        title={t("dashboard.metrics.receivable")}
+                        value={formatCurrency(dashboard.metrics.receivable, locale)}
+                        description={t("dashboard.metrics.receivableHint", { count: dashboard.metrics.receivableCount })}
+                        variation={t("dashboard.metrics.receivableVariation", { count: dashboard.metrics.receivableCount })}
                         trend="neutral"
                         icon={CreditCard}
                         iconClassName="bg-amber-50 text-amber-600"
@@ -95,10 +97,10 @@ export default async function DashboardPage() {
                         <QuickActions />
 
                         <MetricCard
-                            title="Clientes ativos"
-                            value={formatNumber(dashboard.metrics.activeCustomers)}
-                            description={`${dashboard.metrics.newCustomersThisMonth} novo(s) cliente(s) neste mês`}
-                            variation={`${dashboard.metrics.newCustomersThisMonth} novo(s)`}
+                            title={t("dashboard.metrics.customers")}
+                            value={formatNumber(dashboard.metrics.activeCustomers, locale)}
+                            description={t("dashboard.metrics.customersHint", { count: dashboard.metrics.newCustomersThisMonth })}
+                            variation={t("dashboard.metrics.customersVariation", { count: dashboard.metrics.newCustomersThisMonth })}
                             trend={dashboard.metrics.newCustomersThisMonth > 0 ? "up" : "neutral"}
                             icon={Users}
                             iconClassName="bg-amber-50 text-amber-600"

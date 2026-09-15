@@ -1,4 +1,7 @@
+"use client";
+
 import Link from "next/link";
+import { useT } from "@/i18n/provider";
 import {
   ArrowUpRight,
   CircleDollarSign,
@@ -9,8 +12,8 @@ import {
 } from "lucide-react";
 
 type QuickAction = {
-  title: string;
-  description: string;
+  titleKey: string;
+  descriptionKey: string;
   href: string;
   icon: LucideIcon;
   className: string;
@@ -18,29 +21,29 @@ type QuickAction = {
 
 const actions: QuickAction[] = [
   {
-    title: "Nova venda",
-    description: "Registrar uma venda",
+    titleKey: "newSale",
+    descriptionKey: "newSaleHint",
     href: "/vendas?acao=novo",
     icon: ShoppingCart,
     className: "bg-orange-50 text-orange-600",
   },
   {
-    title: "Novo produto",
-    description: "Adicionar ao catálogo",
+    titleKey: "newProduct",
+    descriptionKey: "newProductHint",
     href: "/produtos?acao=novo",
     icon: PackagePlus,
     className: "bg-yellow-50 text-yellow-600",
   },
   {
-    title: "Novo cliente",
-    description: "Cadastrar cliente",
+    titleKey: "newCustomer",
+    descriptionKey: "newCustomerHint",
     href: "/clientes?acao=novo",
     icon: UserPlus,
     className: "bg-green-50 text-green-600",
   },
   {
-    title: "Lançamento",
-    description: "Registrar movimentação",
+    titleKey: "entry",
+    descriptionKey: "movementHint",
     href: "/financeiro?acao=novo",
     icon: CircleDollarSign,
     className: "bg-amber-50 text-amber-600",
@@ -48,15 +51,16 @@ const actions: QuickAction[] = [
 ];
 
 export default function QuickActions() {
+  const t = useT();
   return (
     <article className="mangora-quick-actions rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:p-5">
       <div>
         <h2 className="text-sm font-bold text-slate-950">
-          Ações rápidas
+          {t("dashboard.quickActions.title")}
         </h2>
 
         <p className="mt-0.5 text-[10px] text-slate-400">
-          Acesse as principais funções
+          {t("dashboard.quickActions.subtitle")}
         </p>
       </div>
 
@@ -66,7 +70,7 @@ export default function QuickActions() {
 
           return (
             <Link
-              key={action.title}
+              key={t(`dashboard.quickActions.${action.titleKey}`)}
               href={action.href}
               className="group flex items-center gap-3 rounded-xl border border-slate-200 p-3 transition hover:-translate-y-0.5 hover:border-orange-200 hover:bg-orange-50/40 hover:shadow-sm"
             >
@@ -78,11 +82,11 @@ export default function QuickActions() {
 
               <div className="min-w-0 flex-1">
                 <p className="truncate text-xs font-bold text-slate-800">
-                  {action.title}
+                  {t(`dashboard.quickActions.${action.titleKey}`)}
                 </p>
 
                 <p className="mt-0.5 truncate text-[9px] text-slate-400">
-                  {action.description}
+                  {t(`dashboard.quickActions.${action.descriptionKey}`)}
                 </p>
               </div>
 

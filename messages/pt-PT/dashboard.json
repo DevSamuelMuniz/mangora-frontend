@@ -1,0 +1,57 @@
+{
+  "intro": {
+    "eyebrow": "Visão geral",
+    "greeting": "Olá, {name} 👋",
+    "subtitle": "Veja como está o desempenho da sua empresa hoje."
+  },
+  "metrics": {
+    "revenue": "Faturação de hoje",
+    "revenueHint": "Comparado com ontem",
+    "sales": "Vendas realizadas",
+    "salesHint": "Comparado com ontem",
+    "ticket": "Ticket médio",
+    "ticketHint": "Média por venda realizada",
+    "receivable": "Contas a receber",
+    "receivableHint": "{count} recebimento(s) pendente(s)",
+    "receivableVariation": "{count} conta(s)",
+    "customers": "Clientes ativos",
+    "customersHint": "{count} novo(s) cliente(s) este mês",
+    "customersVariation": "{count} novo(s)"
+  },
+  "quickActions": {
+    "title": "Ações rápidas",
+    "subtitle": "Aceda às principais funções",
+    "newSale": "Registar uma venda",
+    "newSaleHint": "Abrir o POS",
+    "movement": "Registar movimento",
+    "movementHint": "Entrada, saída ou ajuste",
+    "newProduct": "Novo produto",
+    "newProductHint": "Adicionar ao catálogo",
+    "newCustomer": "Novo cliente",
+    "newCustomerHint": "Registar cliente",
+    "entry": "Lançamento",
+    "entryHint": "Receita ou despesa"
+  },
+  "recentSales": {
+    "title": "Vendas recentes",
+    "subtitle": "Últimos movimentos registados",
+    "empty": "Nenhuma venda registada.",
+    "newSale": "Nova venda",
+    "viewAll": "Ver todas",
+    "viewDetails": "Ver detalhes"
+  },
+  "lowStock": {
+    "title": "Inventário baixo",
+    "subtitle": "Produtos no mínimo ou abaixo",
+    "empty": "Nenhum produto com inventário baixo.",
+    "remaining": "restam {count}"
+  },
+  "chart": {
+    "title": "Desempenho de vendas",
+    "subtitle": "Receita por dia",
+    "period": "Período do gráfico",
+    "days7": "Últimos 7 dias",
+    "days30": "Últimos 30 dias",
+    "days90": "Últimos 90 dias"
+  }
+}

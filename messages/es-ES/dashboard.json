@@ -1,0 +1,57 @@
+{
+  "intro": {
+    "eyebrow": "Resumen",
+    "greeting": "Hola, {name} 👋",
+    "subtitle": "Mira cómo va el rendimiento de tu empresa hoy."
+  },
+  "metrics": {
+    "revenue": "Facturación de hoy",
+    "revenueHint": "Comparado con ayer",
+    "sales": "Ventas realizadas",
+    "salesHint": "Comparado con ayer",
+    "ticket": "Ticket medio",
+    "ticketHint": "Media por venta realizada",
+    "receivable": "Cuentas por cobrar",
+    "receivableHint": "{count} cobro(s) pendiente(s)",
+    "receivableVariation": "{count} cuenta(s)",
+    "customers": "Clientes activos",
+    "customersHint": "{count} cliente(s) nuevo(s) este mes",
+    "customersVariation": "{count} nuevo(s)"
+  },
+  "quickActions": {
+    "title": "Acciones rápidas",
+    "subtitle": "Accede a las funciones principales",
+    "newSale": "Registrar una venta",
+    "newSaleHint": "Abrir el TPV",
+    "movement": "Registrar movimiento",
+    "movementHint": "Entrada, salida o ajuste",
+    "newProduct": "Nuevo producto",
+    "newProductHint": "Agregar al catálogo",
+    "newCustomer": "Nuevo cliente",
+    "newCustomerHint": "Registrar cliente",
+    "entry": "Movimiento financiero",
+    "entryHint": "Ingreso o gasto"
+  },
+  "recentSales": {
+    "title": "Ventas recientes",
+    "subtitle": "Últimos movimientos registrados",
+    "empty": "No hay ventas registradas.",
+    "newSale": "Nueva venta",
+    "viewAll": "Ver todas",
+    "viewDetails": "Ver detalles"
+  },
+  "lowStock": {
+    "title": "Inventario bajo",
+    "subtitle": "Productos en el mínimo o por debajo",
+    "empty": "Ningún producto con inventario bajo.",
+    "remaining": "quedan {count}"
+  },
+  "chart": {
+    "title": "Rendimiento de ventas",
+    "subtitle": "Ingresos por día",
+    "period": "Período del gráfico",
+    "days7": "Últimos 7 días",
+    "days30": "Últimos 30 días",
+    "days90": "Últimos 90 días"
+  }
+}

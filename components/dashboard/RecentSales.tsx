@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useT } from "@/i18n/provider";
 import { useState } from "react";
 import { ArrowRight, CheckCircle2, ExternalLink, MoreHorizontal, ReceiptText, XCircle } from "lucide-react";
 
@@ -18,11 +19,12 @@ function getStatusStyle(status: SaleStatus) {
 export default function RecentSales({ sales }: { sales: DashboardData["recentSales"] }) {
   const [openSale, setOpenSale] = useState<string | null>(null);
 
+  const t = useT();
   return (
     <article className="rounded-2xl border border-slate-200 bg-white shadow-sm">
       <div className="flex items-center justify-between border-b border-slate-200 px-4 py-4 sm:px-5">
-        <div><h2 className="text-sm font-bold text-slate-950">Vendas recentes</h2><p className="mt-0.5 text-[10px] text-slate-400">Últimas movimentações registradas</p></div>
-        <Link href="/vendas" className="flex items-center gap-1 text-[11px] font-bold text-orange-600 hover:text-orange-800">Ver todas<ArrowRight className="size-3.5" /></Link>
+        <div><h2 className="text-sm font-bold text-slate-950">{t("dashboard.recentSales.title")}</h2><p className="mt-0.5 text-[10px] text-slate-400">{t("dashboard.recentSales.subtitle")}</p></div>
+        <Link href="/vendas" className="flex items-center gap-1 text-[11px] font-bold text-orange-600 hover:text-orange-800">{t("dashboard.recentSales.viewAll")}<ArrowRight className="size-3.5" /></Link>
       </div>
 
       <div className="divide-y divide-slate-100">
@@ -36,11 +38,11 @@ export default function RecentSales({ sales }: { sales: DashboardData["recentSal
               <div className="min-w-0 flex-1"><div className="flex items-center gap-2"><p className="truncate text-xs font-bold text-slate-800">{sale.customerName}</p><span className="text-[9px] text-slate-400">{sale.code}</span></div><p className="mt-1 text-[10px] text-slate-400">{formatDateTime(new Date(sale.createdAt))}</p></div>
               <div className="hidden text-right sm:block"><p className="text-xs font-bold text-slate-800">{formatCurrency(sale.total)}</p><span className={`mt-1 inline-flex items-center gap-1 rounded-full px-2 py-1 text-[9px] font-bold ${status.className}`}><StatusIcon className="size-3" />{saleStatusLabels[sale.status]}</span></div>
               <button type="button" onClick={() => setOpenSale((current) => current === sale.id ? null : sale.id)} aria-label={`Opções da venda ${sale.code}`} aria-expanded={selected} className="flex size-8 shrink-0 items-center justify-center rounded-lg text-slate-400 transition hover:bg-slate-100 hover:text-slate-700"><MoreHorizontal className="size-4" /></button>
-              {selected && <div role="menu" aria-label={`Menu da venda ${sale.code}`} className="absolute right-4 top-12 z-20 w-44 rounded-xl border border-slate-200 bg-white p-1.5 shadow-xl"><Link href={`/vendas?selecionada=${sale.id}`} role="menuitem" className="flex items-center gap-2 rounded-lg px-3 py-2 text-[11px] font-semibold text-slate-600 hover:bg-orange-50 hover:text-orange-700"><ExternalLink className="size-3.5" />Ver detalhes</Link><Link href="/vendas?acao=novo" role="menuitem" className="flex items-center gap-2 rounded-lg px-3 py-2 text-[11px] font-semibold text-slate-600 hover:bg-orange-50 hover:text-orange-700"><ReceiptText className="size-3.5" />Nova venda</Link></div>}
+              {selected && <div role="menu" aria-label={`Menu da venda ${sale.code}`} className="absolute right-4 top-12 z-20 w-44 rounded-xl border border-slate-200 bg-white p-1.5 shadow-xl"><Link href={`/vendas?selecionada=${sale.id}`} role="menuitem" className="flex items-center gap-2 rounded-lg px-3 py-2 text-[11px] font-semibold text-slate-600 hover:bg-orange-50 hover:text-orange-700"><ExternalLink className="size-3.5" />{t("dashboard.recentSales.viewDetails")}</Link><Link href="/vendas?acao=novo" role="menuitem" className="flex items-center gap-2 rounded-lg px-3 py-2 text-[11px] font-semibold text-slate-600 hover:bg-orange-50 hover:text-orange-700"><ReceiptText className="size-3.5" />{t("dashboard.recentSales.newSale")}</Link></div>}
             </div>
           );
         })}
-        {sales.length === 0 && <p className="px-5 py-10 text-center text-xs text-slate-400">Nenhuma venda registrada.</p>}
+        {sales.length === 0 && <p className="px-5 py-10 text-center text-xs text-slate-400">{t("dashboard.recentSales.empty")}</p>}
       </div>
     </article>
   );

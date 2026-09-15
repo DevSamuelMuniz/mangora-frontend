@@ -1,4 +1,7 @@
+"use client";
+
 import Link from "next/link";
+import { useT } from "@/i18n/provider";
 import {
   AlertTriangle,
   ArrowRight,
@@ -7,6 +10,7 @@ import {
 import type { DashboardData } from "@/types/analytics";
 
 export default function LowStock({ products }: { products: DashboardData["lowStock"] }) {
+  const t = useT();
   return (
     <article className="rounded-2xl border border-slate-200 bg-white shadow-sm">
       <div className="flex items-center justify-between border-b border-slate-200 px-4 py-4 sm:px-5">
@@ -86,7 +90,7 @@ export default function LowStock({ products }: { products: DashboardData["lowSto
             </div>
           );
         })}
-        {products.length === 0 && <p className="px-5 py-10 text-center text-xs text-slate-400">Nenhum produto com estoque baixo.</p>}
+        {products.length === 0 && <p className="px-5 py-10 text-center text-xs text-slate-400">{t("dashboard.lowStock.empty")}</p>}
       </div>
     </article>
   );
