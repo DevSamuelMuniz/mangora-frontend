@@ -178,5 +178,90 @@
       "confirmedWith": "Closed by {name}.",
       "confirmed": "Closed."
     }
+  },
+  "inventory": {
+    "eyebrow": "Inventory · Accuracy",
+    "title": "Physical count",
+    "subtitle": "Count what is on the shelf and adjust the system with a justification.",
+    "new": "New count",
+    "loading": "Loading counts...",
+    "loadFailed": "Could not load.",
+    "retry": "Try again",
+    "close": "Close",
+    "started": "Draft count created (INV-{code}). Open it to count the products.",
+    "completed": "Count completed — discrepancies adjusted stock with a justified movement.",
+    "cancelled": "Count cancelled.",
+    "editorHint": "Count each product and record the found value. The difference becomes a stock adjustment with a justification.",
+    "searchPlaceholder": "Search product to count...",
+    "searchLabel": "Search product",
+    "counted": "Counted",
+    "system": "system",
+    "countedDiff": "counted",
+    "complete": "Complete count ({count})",
+    "cancelCount": "Cancel count",
+    "errors": {
+      "empty": "Enter the count for at least one product.",
+      "create": "Could not create the count.",
+      "complete": "Could not complete the count.",
+      "generic": "Error"
+    },
+    "emptyState": {
+      "title": "No counts yet",
+      "hint": "Create a count to check physical stock and adjust differences with a justification."
+    },
+    "summary": {
+      "completedBy": "Completed by {name}",
+      "completed": "Completed",
+      "on": "on",
+      "differences": "{count} item(s) with differences — adjusted with a justified movement in stock history.",
+      "ok": "OK"
+    },
+    "newDialog": {
+      "title": "New count",
+      "name": "Name (optional)",
+      "namePlaceholder": "e.g. September monthly count",
+      "notes": "Notes (optional)",
+      "notesPlaceholder": "e.g. includes internal storage",
+      "cancel": "Cancel",
+      "create": "Create count"
+    },
+    "countFallback": "Count INV-{code}"
+  },
+  "batches": {
+    "eyebrow": "Inventory · Cost & expiry",
+    "title": "Batches and FIFO cost",
+    "subtitle": "Register batches with cost and expiry; FIFO products consume batches on sale.",
+    "product": "Product with stock control",
+    "selectProduct": "Select a product...",
+    "fifoActive": "FIFO cost active",
+    "averageActive": "Using average cost",
+    "fifoHint": "Sales consume batches by expiry and cost is recorded per batch.",
+    "averageHint": "Enable FIFO to track expiry and cost per batch on sales.",
+    "activateFifo": "Enable FIFO cost",
+    "batchesOf": "Batches of {name}",
+    "receive": "Receive batch",
+    "nearExpiry": "Expiring soon:",
+    "loading": "Loading batches...",
+    "empty": "No batches yet — receive the first batch above.",
+    "emptyAverage": "Enable FIFO cost to receive batches.",
+    "fields": {
+      "code": "Batch code",
+      "codePlaceholder": "e.g. B2509-01",
+      "quantity": "Qty.",
+      "cost": "Unit cost",
+      "costShort": "Unit cost",
+      "expires": "Expiry (optional)",
+      "batch": "Batch",
+      "validity": "Expiry",
+      "receivedBy": "Received by",
+      "noExpiry": "No expiry",
+      "submit": "Receive"
+    },
+    "errors": {
+      "invalid": "Enter a quantity greater than zero and a valid unit cost.",
+      "receiveFailed": "Could not receive the batch.",
+      "loadFailed": "Could not load."
+    },
+    "toast": "Batch received — stock updated with a justified entry."
   }
 }

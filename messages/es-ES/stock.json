@@ -178,5 +178,90 @@
       "confirmedWith": "Cerrada por {name}.",
       "confirmed": "Cerrada."
     }
+  },
+  "inventory": {
+    "eyebrow": "Inventario · Precisión",
+    "title": "Conteo físico",
+    "subtitle": "Cuenta lo que hay en la estantería y ajusta el sistema con justificación.",
+    "new": "Nuevo conteo",
+    "loading": "Cargando conteos...",
+    "loadFailed": "No se pudo cargar.",
+    "retry": "Intentar de nuevo",
+    "close": "Cerrar",
+    "started": "Conteo creado en borrador (INV-{code}). Ábrelo para contar los productos.",
+    "completed": "Conteo completado — las diferencias ajustaron el inventario con movimiento justificado.",
+    "cancelled": "Conteo cancelado.",
+    "editorHint": "Cuenta cada producto y registra el valor encontrado. La diferencia se convierte en un ajuste con justificación.",
+    "searchPlaceholder": "Buscar producto para contar...",
+    "searchLabel": "Buscar producto",
+    "counted": "Contado",
+    "system": "sistema",
+    "countedDiff": "contado",
+    "complete": "Completar conteo ({count})",
+    "cancelCount": "Cancelar conteo",
+    "errors": {
+      "empty": "Indica el conteo de al menos un producto.",
+      "create": "No se pudo crear el conteo.",
+      "complete": "No se pudo completar el conteo.",
+      "generic": "Error"
+    },
+    "emptyState": {
+      "title": "Aún no hay conteos",
+      "hint": "Crea un conteo para revisar el inventario físico y ajustar diferencias con justificación."
+    },
+    "summary": {
+      "completedBy": "Completado por {name}",
+      "completed": "Completado",
+      "on": "el",
+      "differences": "{count} artículo(s) con diferencias — ajustados con movimiento justificado en el historial.",
+      "ok": "OK"
+    },
+    "newDialog": {
+      "title": "Nuevo conteo",
+      "name": "Nombre (opcional)",
+      "namePlaceholder": "Ej.: Conteo mensual de septiembre",
+      "notes": "Observaciones (opcional)",
+      "notesPlaceholder": "Ej.: incluye depósito interno",
+      "cancel": "Cancelar",
+      "create": "Crear conteo"
+    },
+    "countFallback": "Conteo INV-{code}"
+  },
+  "batches": {
+    "eyebrow": "Inventario · Coste y caducidad",
+    "title": "Lotes y coste FIFO",
+    "subtitle": "Registra lotes con coste y caducidad; los productos FIFO consumen lotes en la venta.",
+    "product": "Producto con control de inventario",
+    "selectProduct": "Selecciona un producto...",
+    "fifoActive": "Coste FIFO activo",
+    "averageActive": "Usando coste medio",
+    "fifoHint": "Las ventas consumen los lotes por caducidad y el coste se registra por lote.",
+    "averageHint": "Activa FIFO para controlar caducidad y coste por lote en las ventas.",
+    "activateFifo": "Activar coste FIFO",
+    "batchesOf": "Lotes de {name}",
+    "receive": "Recibir lote",
+    "nearExpiry": "Caducidad próxima:",
+    "loading": "Cargando lotes...",
+    "empty": "No hay lotes — recibe el primero arriba.",
+    "emptyAverage": "Activa el coste FIFO para recibir lotes.",
+    "fields": {
+      "code": "Código del lote",
+      "codePlaceholder": "Ej.: L2509-01",
+      "quantity": "Cant.",
+      "cost": "Coste unitario",
+      "costShort": "Coste unitario",
+      "expires": "Caducidad (opcional)",
+      "batch": "Lote",
+      "validity": "Caducidad",
+      "receivedBy": "Recibido por",
+      "noExpiry": "Sin caducidad",
+      "submit": "Recibir"
+    },
+    "errors": {
+      "invalid": "Indica una cantidad mayor que cero y un coste unitario válido.",
+      "receiveFailed": "No se pudo recibir el lote.",
+      "loadFailed": "No se pudo cargar."
+    },
+    "toast": "Lote recibido — inventario actualizado con entrada justificada."
   }
 }

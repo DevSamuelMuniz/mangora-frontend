@@ -178,5 +178,90 @@
       "confirmedWith": "Fechada por {name}.",
       "confirmed": "Fechada."
     }
+  },
+  "inventory": {
+    "eyebrow": "Estoque · Precisão",
+    "title": "Inventário físico",
+    "subtitle": "Conte o que existe na prateleira e ajuste o sistema com justificativa.",
+    "new": "Nova contagem",
+    "loading": "Carregando contagens...",
+    "loadFailed": "Não foi possível carregar.",
+    "retry": "Tentar novamente",
+    "close": "Fechar",
+    "started": "Contagem criada em rascunho (INV-{code}). Abra-a para contar os produtos.",
+    "completed": "Contagem concluída — divergências ajustaram o estoque com movimento justificado.",
+    "cancelled": "Contagem cancelada.",
+    "editorHint": "Conte cada produto e registre o valor encontrado. A diferença vira um ajuste de estoque com justificativa.",
+    "searchPlaceholder": "Buscar produto para contar...",
+    "searchLabel": "Buscar produto",
+    "counted": "Contado",
+    "system": "sistema",
+    "countedDiff": "contado",
+    "complete": "Concluir contagem ({count})",
+    "cancelCount": "Cancelar contagem",
+    "errors": {
+      "empty": "Informe a contagem de pelo menos um produto.",
+      "create": "Não foi possível criar a contagem.",
+      "complete": "Não foi possível concluir a contagem.",
+      "generic": "Erro"
+    },
+    "emptyState": {
+      "title": "Nenhuma contagem ainda",
+      "hint": "Crie uma contagem para conferir o estoque físico e ajustar diferenças com justificativa."
+    },
+    "summary": {
+      "completedBy": "Concluída por {name}",
+      "completed": "Concluída",
+      "on": "em",
+      "differences": "{count} item(ns) com diferença — ajustados com movimento justificado no histórico de estoque.",
+      "ok": "OK"
+    },
+    "newDialog": {
+      "title": "Nova contagem",
+      "name": "Nome (opcional)",
+      "namePlaceholder": "Ex.: Contagem mensal de setembro",
+      "notes": "Observações (opcional)",
+      "notesPlaceholder": "Ex.: inclui depósito interno",
+      "cancel": "Cancelar",
+      "create": "Criar contagem"
+    },
+    "countFallback": "Contagem INV-{code}"
+  },
+  "batches": {
+    "eyebrow": "Estoque · Custo & validade",
+    "title": "Lotes e custo FIFO",
+    "subtitle": "Cadastre lotes com custo e validade; produtos FIFO baixam por lote na venda.",
+    "product": "Produto com controle de estoque",
+    "selectProduct": "Selecione um produto...",
+    "fifoActive": "Custo FIFO ativo",
+    "averageActive": "Usando custo médio",
+    "fifoHint": "As vendas baixam dos lotes por validade e o custo é registrado por lote.",
+    "averageHint": "Ative o FIFO para controlar validade e custo por lote nas vendas.",
+    "activateFifo": "Ativar custo FIFO",
+    "batchesOf": "Lotes de {name}",
+    "receive": "Receber lote",
+    "nearExpiry": "Validade próxima:",
+    "loading": "Carregando lotes...",
+    "empty": "Nenhum lote cadastrado — receba o primeiro lote acima.",
+    "emptyAverage": "Ative o custo FIFO para receber lotes.",
+    "fields": {
+      "code": "Código do lote",
+      "codePlaceholder": "Ex.: L2509-01",
+      "quantity": "Qtd.",
+      "cost": "Custo un. (R$)",
+      "costShort": "Custo un.",
+      "expires": "Validade (opcional)",
+      "batch": "Lote",
+      "validity": "Validade",
+      "receivedBy": "Recebido por",
+      "noExpiry": "Sem validade",
+      "submit": "Receber"
+    },
+    "errors": {
+      "invalid": "Informe quantidade maior que zero e um custo unitário válido.",
+      "receiveFailed": "Não foi possível receber o lote.",
+      "loadFailed": "Não foi possível carregar."
+    },
+    "toast": "Lote recebido — estoque atualizado com entrada justificada."
   }
 }
