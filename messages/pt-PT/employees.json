@@ -1,0 +1,128 @@
+{
+  "title": "Funcionários",
+  "subtitle": "Acessos, vínculos e datas importantes reunidos num só lugar.",
+  "eyebrow": "Administração",
+  "actions": {
+    "create": "Novo funcionário",
+    "createAccess": "Criar acesso",
+    "manage": "Gerir",
+    "close": "Fechar",
+    "back": "Voltar",
+    "cancel": "Cancelar",
+    "confirm": "Confirmar",
+    "saving": "A registar...",
+    "retry": "Tentar novamente"
+  },
+  "search": {
+    "label": "Pesquisar funcionários"
+  },
+  "filters": {
+    "status": "Estado",
+    "role": "Função",
+    "allRoles": "Todas as funções",
+    "allAccess": "Todos os acessos",
+    "active": "Ativos",
+    "inactive": "Inativos"
+  },
+  "metrics": {
+    "activeAccess": "Acessos ativos",
+    "inactiveAccess": "Acessos inativos",
+    "birthdays": "Aniversários em 30 dias"
+  },
+  "table": {
+    "employee": "Funcionário",
+    "contact": "Contacto",
+    "role": "Função",
+    "status": "Estado",
+    "actions": "Ação"
+  },
+  "status": {
+    "active": "Ativo",
+    "inactive": "Inativo"
+  },
+  "empty": {
+    "filtered": "Nenhum funcionário corresponde aos filtros.",
+    "first": "Registe o primeiro funcionário para organizar equipa e acessos."
+  },
+  "loading": "A carregar equipa...",
+  "loadFailed": "Não foi possível carregar a equipa",
+  "notInformed": "Cargo não indicado",
+  "noPhone": "Sem telefone",
+  "celebrations": {
+    "title": "Próximas celebrações",
+    "dates": "Datas",
+    "datesHint": "Datas usadas para recordar momentos importantes da equipa.",
+    "birthdayEmail": "E-mail de aniversário",
+    "birthdayEmailHint": "Envia um e-mail personalizado na data de nascimento.",
+    "companyAnniversary": "Aniversário na empresa",
+    "companyAnniversaryHint": "Celebra cada ano desde a data de admissão.",
+    "companyEmail": "E-mail do aniversário na empresa",
+    "today": "Hoje 🎉",
+    "congrats": "Parabéns de aniversário"
+  },
+  "drawer": {
+    "title": "Ficha do funcionário",
+    "main": "Dados do funcionário",
+    "mainHint": "Identificação, contacto e credencial inicial.",
+    "roleTitle": "Papel e permissões",
+    "roleHint": "A API aplicará estes limites em cada operação.",
+    "permissions": "Permissões",
+    "link": "Vínculo e celebrações"
+  },
+  "access": {
+    "activate": "Ativar acesso",
+    "deactivate": "Inativar acesso",
+    "activated": "Acesso ativado.",
+    "deactivated": "Acesso inativado e sessões encerradas.",
+    "reactivateHint": "O funcionário poderá entrar novamente na plataforma.",
+    "deactivateHint": "As sessões abertas serão encerradas de imediato."
+  },
+  "form": {
+    "title": "Novo funcionário",
+    "subtitle": "Crie o acesso e defina as permissões do colaborador.",
+    "fields": {
+      "name": "Nome",
+      "email": "E-mail",
+      "phone": "Telefone",
+      "role": "Função",
+      "status": "Estado",
+      "password": "Palavra-passe inicial",
+      "internalCode": "Código interno (opcional)",
+      "internalCodeShort": "Código interno",
+      "jobTitle": "Cargo interno (opcional)",
+      "jobTitleShort": "Cargo interno",
+      "hiredAt": "Data de admissão",
+      "startedAt": "Data de início",
+      "birthDate": "Data de nascimento (opcional)",
+      "birthDateShort": "Data de nascimento",
+      "notes": "Observações internas",
+      "notesPlaceholder": "Preferências, restrições e combinados do colaborador."
+    },
+    "errors": {
+      "name": "Indique um nome válido.",
+      "email": "Indique um e-mail válido.",
+      "password": "A palavra-passe deve ter pelo menos 8 caracteres.",
+      "createFailed": "Não foi possível registar o funcionário."
+    }
+  },
+  "roles": {
+    "OWNER": "Proprietário",
+    "ADMIN": "Administrador",
+    "MANAGER": "Gerente",
+    "SELLER": "Vendedor",
+    "CASHIER": "Operador de caixa",
+    "EMPLOYEE": "Funcionário",
+    "VIEWER": "Consulta"
+  },
+  "toasts": {
+    "created": "Funcionário adicionado",
+    "updated": "Dados do funcionário guardados.",
+    "roleUpdated": "Função e permissões atualizadas."
+  },
+  "errors": {
+    "roleUpdate": "Não foi possível alterar a função.",
+    "accessUpdate": "Não foi possível alterar o acesso.",
+    "save": "Não foi possível guardar os dados.",
+    "load": "Não foi possível carregar a equipa"
+  }
+}

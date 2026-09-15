@@ -1,0 +1,128 @@
+{
+  "title": "Empleados",
+  "subtitle": "Accesos, vínculos y fechas importantes en un solo lugar.",
+  "eyebrow": "Administración",
+  "actions": {
+    "create": "Nuevo empleado",
+    "createAccess": "Crear acceso",
+    "manage": "Gestionar",
+    "close": "Cerrar",
+    "back": "Volver",
+    "cancel": "Cancelar",
+    "confirm": "Confirmar",
+    "saving": "Registrando...",
+    "retry": "Intentar de nuevo"
+  },
+  "search": {
+    "label": "Buscar empleados"
+  },
+  "filters": {
+    "status": "Estado",
+    "role": "Rol",
+    "allRoles": "Todos los roles",
+    "allAccess": "Todos los accesos",
+    "active": "Activos",
+    "inactive": "Inactivos"
+  },
+  "metrics": {
+    "activeAccess": "Accesos activos",
+    "inactiveAccess": "Accesos inactivos",
+    "birthdays": "Cumpleaños en 30 días"
+  },
+  "table": {
+    "employee": "Empleado",
+    "contact": "Contacto",
+    "role": "Rol",
+    "status": "Estado",
+    "actions": "Acción"
+  },
+  "status": {
+    "active": "Activo",
+    "inactive": "Inactivo"
+  },
+  "empty": {
+    "filtered": "Ningún empleado coincide con los filtros.",
+    "first": "Registra el primer empleado para organizar equipo y accesos."
+  },
+  "loading": "Cargando equipo...",
+  "loadFailed": "No se pudo cargar el equipo",
+  "notInformed": "Puesto no informado",
+  "noPhone": "Sin teléfono",
+  "celebrations": {
+    "title": "Próximas celebraciones",
+    "dates": "Fechas",
+    "datesHint": "Fechas usadas para recordar momentos importantes del equipo.",
+    "birthdayEmail": "Correo de cumpleaños",
+    "birthdayEmailHint": "Envía un correo personalizado en la fecha de nacimiento.",
+    "companyAnniversary": "Aniversario en la empresa",
+    "companyAnniversaryHint": "Celebra cada año desde la fecha de alta.",
+    "companyEmail": "Correo del aniversario en la empresa",
+    "today": "Hoy 🎉",
+    "congrats": "Felicitación de cumpleaños"
+  },
+  "drawer": {
+    "title": "Ficha del empleado",
+    "main": "Datos del empleado",
+    "mainHint": "Identificación, contacto y credencial inicial.",
+    "roleTitle": "Rol y permisos",
+    "roleHint": "La API aplicará estos límites en cada operación.",
+    "permissions": "Permisos",
+    "link": "Vínculo y celebraciones"
+  },
+  "access": {
+    "activate": "Activar acceso",
+    "deactivate": "Desactivar acceso",
+    "activated": "Acceso activado.",
+    "deactivated": "Acceso desactivado y sesiones cerradas.",
+    "reactivateHint": "El empleado podrá entrar de nuevo en la plataforma.",
+    "deactivateHint": "Las sesiones abiertas se cerrarán de inmediato."
+  },
+  "form": {
+    "title": "Nuevo empleado",
+    "subtitle": "Crea el acceso y define los permisos del colaborador.",
+    "fields": {
+      "name": "Nombre",
+      "email": "Correo",
+      "phone": "Teléfono",
+      "role": "Rol",
+      "status": "Estado",
+      "password": "Contraseña inicial",
+      "internalCode": "Código interno (opcional)",
+      "internalCodeShort": "Código interno",
+      "jobTitle": "Puesto interno (opcional)",
+      "jobTitleShort": "Puesto interno",
+      "hiredAt": "Fecha de alta",
+      "startedAt": "Fecha de inicio",
+      "birthDate": "Fecha de nacimiento (opcional)",
+      "birthDateShort": "Fecha de nacimiento",
+      "notes": "Observaciones internas",
+      "notesPlaceholder": "Preferencias, restricciones y acuerdos del colaborador."
+    },
+    "errors": {
+      "name": "Introduce un nombre válido.",
+      "email": "Introduce un correo válido.",
+      "password": "La contraseña debe tener al menos 8 caracteres.",
+      "createFailed": "No se pudo registrar el empleado."
+    }
+  },
+  "roles": {
+    "OWNER": "Propietario",
+    "ADMIN": "Administrador",
+    "MANAGER": "Gerente",
+    "SELLER": "Vendedor",
+    "CASHIER": "Cajero",
+    "EMPLOYEE": "Empleado",
+    "VIEWER": "Consulta"
+  },
+  "toasts": {
+    "created": "Empleado añadido",
+    "updated": "Datos del empleado guardados.",
+    "roleUpdated": "Rol y permisos actualizados."
+  },
+  "errors": {
+    "roleUpdate": "No se pudo cambiar el rol.",
+    "accessUpdate": "No se pudo cambiar el acceso.",
+    "save": "No se pudieron guardar los datos.",
+    "load": "No se pudo cargar el equipo"
+  }
+}

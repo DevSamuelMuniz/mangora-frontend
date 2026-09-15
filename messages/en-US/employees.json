@@ -1,0 +1,128 @@
+{
+  "title": "Employees",
+  "subtitle": "Access, roles and important dates in one place.",
+  "eyebrow": "Administration",
+  "actions": {
+    "create": "New employee",
+    "createAccess": "Create access",
+    "manage": "Manage",
+    "close": "Close",
+    "back": "Back",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "saving": "Creating...",
+    "retry": "Try again"
+  },
+  "search": {
+    "label": "Search employees"
+  },
+  "filters": {
+    "status": "Status",
+    "role": "Role",
+    "allRoles": "All roles",
+    "allAccess": "All access levels",
+    "active": "Active",
+    "inactive": "Inactive"
+  },
+  "metrics": {
+    "activeAccess": "Active access",
+    "inactiveAccess": "Inactive access",
+    "birthdays": "Birthdays in 30 days"
+  },
+  "table": {
+    "employee": "Employee",
+    "contact": "Contact",
+    "role": "Role",
+    "status": "Status",
+    "actions": "Action"
+  },
+  "status": {
+    "active": "Active",
+    "inactive": "Inactive"
+  },
+  "empty": {
+    "filtered": "No employee matches the filters.",
+    "first": "Add the first employee to organise team and access."
+  },
+  "loading": "Loading team...",
+  "loadFailed": "Could not load the team",
+  "notInformed": "Position not provided",
+  "noPhone": "No phone",
+  "celebrations": {
+    "title": "Upcoming celebrations",
+    "dates": "Dates",
+    "datesHint": "Dates used to remember important moments for the team.",
+    "birthdayEmail": "Birthday email",
+    "birthdayEmailHint": "Sends a personalised email on the birthday.",
+    "companyAnniversary": "Company anniversary",
+    "companyAnniversaryHint": "Celebrates each year since the hire date.",
+    "companyEmail": "Company anniversary email",
+    "today": "Today 🎉",
+    "congrats": "Birthday wishes"
+  },
+  "drawer": {
+    "title": "Employee record",
+    "main": "Employee details",
+    "mainHint": "Identification, contact and initial credentials.",
+    "roleTitle": "Role and permissions",
+    "roleHint": "The API will enforce these limits on every operation.",
+    "permissions": "Permissions",
+    "link": "Employment and celebrations"
+  },
+  "access": {
+    "activate": "Activate access",
+    "deactivate": "Deactivate access",
+    "activated": "Access activated.",
+    "deactivated": "Access deactivated and sessions ended.",
+    "reactivateHint": "The employee will be able to sign in again.",
+    "deactivateHint": "Open sessions will be ended immediately."
+  },
+  "form": {
+    "title": "New employee",
+    "subtitle": "Create the access and set the collaborator's permissions.",
+    "fields": {
+      "name": "Name",
+      "email": "Email",
+      "phone": "Phone",
+      "role": "Role",
+      "status": "Status",
+      "password": "Initial password",
+      "internalCode": "Internal code (optional)",
+      "internalCodeShort": "Internal code",
+      "jobTitle": "Internal position (optional)",
+      "jobTitleShort": "Internal position",
+      "hiredAt": "Hire date",
+      "startedAt": "Start date",
+      "birthDate": "Birth date (optional)",
+      "birthDateShort": "Birth date",
+      "notes": "Internal notes",
+      "notesPlaceholder": "Collaborator preferences, restrictions and agreements."
+    },
+    "errors": {
+      "name": "Enter a valid name.",
+      "email": "Enter a valid email.",
+      "password": "The password must have at least 8 characters.",
+      "createFailed": "Could not create the employee."
+    }
+  },
+  "roles": {
+    "OWNER": "Owner",
+    "ADMIN": "Administrator",
+    "MANAGER": "Manager",
+    "SELLER": "Salesperson",
+    "CASHIER": "Cashier",
+    "EMPLOYEE": "Employee",
+    "VIEWER": "Viewer"
+  },
+  "toasts": {
+    "created": "Employee added",
+    "updated": "Employee details saved.",
+    "roleUpdated": "Role and permissions updated."
+  },
+  "errors": {
+    "roleUpdate": "Could not change the role.",
+    "accessUpdate": "Could not change the access.",
+    "save": "Could not save the details.",
+    "load": "Could not load the team"
+  }
+}
