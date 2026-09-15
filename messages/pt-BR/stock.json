@@ -128,5 +128,55 @@
     "saving": "Registrando...",
     "cancel": "Cancelar",
     "toast": "Movimentação registrada"
+  },
+  "transfers": {
+    "eyebrow": "Estoque · Entre lojas",
+    "title": "Transferências",
+    "subtitle": "Envie, receba e confirme remessas entre unidades do grupo.",
+    "loading": "Carregando transferências...",
+    "loadFailed": "Não foi possível carregar.",
+    "retry": "Tentar novamente",
+    "close": "Fechar",
+    "unitShort": "un.",
+    "empty": {
+      "title": "Nenhuma transferência",
+      "hint": "Envie produtos para outra unidade do grupo em Estoque → Transferir entre lojas."
+    },
+    "fields": {
+      "origin": "Origem",
+      "destination": "Destino",
+      "receivedQuantity": "Quantidade recebida"
+    },
+    "stamps": {
+      "SENT": "ENVIADA",
+      "RECEIVED": "RECEBIDA",
+      "CONFIRMED": "CONFIRMADA",
+      "CANCELLED": "CANCELADA"
+    },
+    "receive": {
+      "action": "Receber",
+      "success": "Transferência recebida. Confirme quando a conferência terminar.",
+      "failed": "Não foi possível receber a transferência.",
+      "invalid": "A quantidade recebida deve ficar entre 0 e {max}."
+    },
+    "confirm": {
+      "action": "Confirmar recebimento",
+      "success": "Transferência confirmada.",
+      "failed": "Não foi possível confirmar a transferência."
+    },
+    "cancel": {
+      "action": "Cancelar envio",
+      "success": "Transferência cancelada e estoque da origem estornado.",
+      "failed": "Não foi possível cancelar a transferência."
+    },
+    "receivedLine": "Recebido {received} de {sent}",
+    "noDivergence": "· sem divergência",
+    "divergence": "· divergência de {count} un.",
+    "hints": {
+      "sent": "Aguardando a unidade de destino receber.",
+      "received": "Recebida — confirme para fechar a remessa.",
+      "confirmedWith": "Fechada por {name}.",
+      "confirmed": "Fechada."
+    }
   }
 }

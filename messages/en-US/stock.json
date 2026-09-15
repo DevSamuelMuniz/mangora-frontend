@@ -128,5 +128,55 @@
     "saving": "Recording...",
     "cancel": "Cancel",
     "toast": "Movement recorded"
+  },
+  "transfers": {
+    "eyebrow": "Inventory · Between stores",
+    "title": "Transfers",
+    "subtitle": "Send, receive and confirm shipments between group units.",
+    "loading": "Loading transfers...",
+    "loadFailed": "Could not load.",
+    "retry": "Try again",
+    "close": "Close",
+    "unitShort": "u.",
+    "empty": {
+      "title": "No transfers",
+      "hint": "Send products to another group unit in Inventory → Transfer between stores."
+    },
+    "fields": {
+      "origin": "Origin",
+      "destination": "Destination",
+      "receivedQuantity": "Received quantity"
+    },
+    "stamps": {
+      "SENT": "SENT",
+      "RECEIVED": "RECEIVED",
+      "CONFIRMED": "CONFIRMED",
+      "CANCELLED": "CANCELLED"
+    },
+    "receive": {
+      "action": "Receive",
+      "success": "Transfer received. Confirm when the check is done.",
+      "failed": "Could not receive the transfer.",
+      "invalid": "The received quantity must be between 0 and {max}."
+    },
+    "confirm": {
+      "action": "Confirm receipt",
+      "success": "Transfer confirmed.",
+      "failed": "Could not confirm the transfer."
+    },
+    "cancel": {
+      "action": "Cancel shipment",
+      "success": "Transfer cancelled and origin stock restored.",
+      "failed": "Could not cancel the transfer."
+    },
+    "receivedLine": "Received {received} of {sent}",
+    "noDivergence": "· no discrepancy",
+    "divergence": "· {count} u. discrepancy",
+    "hints": {
+      "sent": "Waiting for the destination unit to receive.",
+      "received": "Received — confirm to close the shipment.",
+      "confirmedWith": "Closed by {name}.",
+      "confirmed": "Closed."
+    }
   }
 }

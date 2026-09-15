@@ -128,5 +128,55 @@
     "saving": "Registrando...",
     "cancel": "Cancelar",
     "toast": "Movimiento registrado"
+  },
+  "transfers": {
+    "eyebrow": "Inventario · Entre tiendas",
+    "title": "Transferencias",
+    "subtitle": "Envía, recibe y confirma envíos entre unidades del grupo.",
+    "loading": "Cargando transferencias...",
+    "loadFailed": "No se pudo cargar.",
+    "retry": "Intentar de nuevo",
+    "close": "Cerrar",
+    "unitShort": "un.",
+    "empty": {
+      "title": "Sin transferencias",
+      "hint": "Envía productos a otra tienda del grupo en Inventario → Transferir entre tiendas."
+    },
+    "fields": {
+      "origin": "Origen",
+      "destination": "Destino",
+      "receivedQuantity": "Cantidad recibida"
+    },
+    "stamps": {
+      "SENT": "ENVIADA",
+      "RECEIVED": "RECIBIDA",
+      "CONFIRMED": "CONFIRMADA",
+      "CANCELLED": "CANCELADA"
+    },
+    "receive": {
+      "action": "Recibir",
+      "success": "Transferencia recibida. Confirma cuando termine la revisión.",
+      "failed": "No se pudo recibir la transferencia.",
+      "invalid": "La cantidad recibida debe estar entre 0 y {max}."
+    },
+    "confirm": {
+      "action": "Confirmar recepción",
+      "success": "Transferencia confirmada.",
+      "failed": "No se pudo confirmar la transferencia."
+    },
+    "cancel": {
+      "action": "Cancelar envío",
+      "success": "Transferencia cancelada y stock de origen devuelto.",
+      "failed": "No se pudo cancelar la transferencia."
+    },
+    "receivedLine": "Recibido {received} de {sent}",
+    "noDivergence": "· sin diferencias",
+    "divergence": "· diferencia de {count} un.",
+    "hints": {
+      "sent": "Esperando que la tienda de destino reciba.",
+      "received": "Recibida — confirma para cerrar el envío.",
+      "confirmedWith": "Cerrada por {name}.",
+      "confirmed": "Cerrada."
+    }
   }
 }
