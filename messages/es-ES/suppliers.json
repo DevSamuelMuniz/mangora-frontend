@@ -1,0 +1,98 @@
+{
+  "title": "Proveedores",
+  "subtitle": "Contactos y empresas que abastecen tu inventario.",
+  "eyebrow": "Compras",
+  "actions": {
+    "create": "Nuevo proveedor",
+    "edit": "Editar proveedor",
+    "delete": "Eliminar",
+    "cancel": "Cancelar",
+    "retry": "Intentar de nuevo",
+    "clearFilters": "Limpiar filtros",
+    "back": "Volver a proveedores",
+    "saving": "Guardando...",
+    "save": "Guardar proveedor",
+    "saveChanges": "Guardar cambios"
+  },
+  "search": {
+    "label": "Buscar proveedores",
+    "placeholder": "Buscar por nombre, documento o contacto..."
+  },
+  "filters": {
+    "status": "Estado",
+    "active": "Activos",
+    "inactive": "Inactivos",
+    "all": "Todos los estados"
+  },
+  "table": {
+    "supplier": "Proveedor",
+    "contact": "Contacto",
+    "document": "Documento",
+    "status": "Estado",
+    "actions": "Acciones"
+  },
+  "status": {
+    "active": "Activo",
+    "inactive": "Inactivo"
+  },
+  "empty": {
+    "title": "No se encontraron proveedores",
+    "hint": "Ajusta los filtros o registra el primer proveedor.",
+    "hintFirst": "Registra el primer proveedor para organizar tus compras."
+  },
+  "loading": "Cargando...",
+  "loadFailed": "No se pudieron cargar los proveedores",
+  "details": {
+    "notFound": "Proveedor no encontrado.",
+    "notInformed": "No informado",
+    "notInformedF": "No informada",
+    "contact": "Persona de contacto",
+    "notes": "Observaciones",
+    "active": "Proveedor activo"
+  },
+  "deleteDialog": {
+    "title": "¿Eliminar este proveedor?",
+    "warning": "El proveedor {name} se eliminará de tu lista.",
+    "confirm": "Eliminar",
+    "deleting": "Eliminando..."
+  },
+  "deleteFailed": "No se pudo eliminar el proveedor.",
+  "form": {
+    "titleNew": "Nuevo proveedor",
+    "titleEdit": "Editar proveedor",
+    "subtitleNew": "Datos comerciales, contacto y dirección.",
+    "subtitleEdit": "Actualiza los datos del proveedor seleccionado.",
+    "sections": {
+      "identification": "Identificación",
+      "contact": "Contacto",
+      "address": "Dirección",
+      "location": "Ubicación"
+    },
+    "fields": {
+      "legalName": "Razón social",
+      "tradeName": "Nombre comercial",
+      "document": "Documento fiscal",
+      "contactName": "Persona de contacto",
+      "email": "Correo",
+      "phone": "Teléfono",
+      "zip": "Código postal",
+      "street": "Calle",
+      "number": "Número",
+      "district": "Barrio",
+      "city": "Ciudad",
+      "state": "Provincia",
+      "notes": "Observaciones"
+    },
+    "errors": {
+      "name": "Introduce una razón social válida.",
+      "email": "Introduce un correo válido.",
+      "phone": "Introduce un teléfono válido con prefijo.",
+      "document": "Introduce un documento fiscal válido.",
+      "saveFailed": "No se pudo guardar el proveedor."
+    },
+    "toasts": {
+      "created": "Proveedor registrado",
+      "updated": "Proveedor actualizado"
+    }
+  }
+}

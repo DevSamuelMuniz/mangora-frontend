@@ -1,0 +1,98 @@
+{
+  "title": "Fornecedores",
+  "subtitle": "Contatos e empresas que abastecem seu estoque.",
+  "eyebrow": "Suprimentos",
+  "actions": {
+    "create": "Novo fornecedor",
+    "edit": "Editar fornecedor",
+    "delete": "Excluir",
+    "cancel": "Cancelar",
+    "retry": "Tentar novamente",
+    "clearFilters": "Limpar filtros",
+    "back": "Voltar para fornecedores",
+    "saving": "Salvando...",
+    "save": "Salvar fornecedor",
+    "saveChanges": "Salvar alterações"
+  },
+  "search": {
+    "label": "Buscar fornecedores",
+    "placeholder": "Buscar por nome, documento ou contato..."
+  },
+  "filters": {
+    "status": "Status",
+    "active": "Ativos",
+    "inactive": "Inativos",
+    "all": "Todos os status"
+  },
+  "table": {
+    "supplier": "Fornecedor",
+    "contact": "Contato",
+    "document": "Documento",
+    "status": "Status",
+    "actions": "Ações"
+  },
+  "status": {
+    "active": "Ativo",
+    "inactive": "Inativo"
+  },
+  "empty": {
+    "title": "Nenhum fornecedor encontrado",
+    "hint": "Ajuste os filtros ou cadastre o primeiro fornecedor.",
+    "hintFirst": "Cadastre o primeiro fornecedor para organizar suas compras."
+  },
+  "loading": "Carregando...",
+  "loadFailed": "Não foi possível carregar os fornecedores",
+  "details": {
+    "notFound": "Fornecedor não encontrado.",
+    "notInformed": "Não informado",
+    "notInformedF": "Não informada",
+    "contact": "Pessoa de contato",
+    "notes": "Observações",
+    "active": "Fornecedor ativo"
+  },
+  "deleteDialog": {
+    "title": "Excluir este fornecedor?",
+    "warning": "O fornecedor {name} será removido da sua lista.",
+    "confirm": "Excluir",
+    "deleting": "Excluindo..."
+  },
+  "deleteFailed": "Não foi possível excluir o fornecedor.",
+  "form": {
+    "titleNew": "Novo fornecedor",
+    "titleEdit": "Editar fornecedor",
+    "subtitleNew": "Dados comerciais, contato e endereço.",
+    "subtitleEdit": "Atualize os dados do fornecedor selecionado.",
+    "sections": {
+      "identification": "Identificação",
+      "contact": "Contato",
+      "address": "Endereço",
+      "location": "Localização"
+    },
+    "fields": {
+      "legalName": "Razão social",
+      "tradeName": "Nome fantasia",
+      "document": "CPF ou CNPJ",
+      "contactName": "Pessoa de contato",
+      "email": "E-mail",
+      "phone": "Telefone",
+      "zip": "CEP",
+      "street": "Endereço",
+      "number": "Número",
+      "district": "Bairro",
+      "city": "Cidade",
+      "state": "Estado",
+      "notes": "Observações"
+    },
+    "errors": {
+      "name": "Informe uma razão social válida.",
+      "email": "Informe um e-mail válido.",
+      "phone": "Informe um telefone válido com DDD.",
+      "document": "Informe um CPF ou CNPJ válido.",
+      "saveFailed": "Não foi possível salvar o fornecedor."
+    },
+    "toasts": {
+      "created": "Fornecedor cadastrado",
+      "updated": "Fornecedor atualizado"
+    }
+  }
+}

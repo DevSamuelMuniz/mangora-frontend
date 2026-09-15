@@ -1,0 +1,98 @@
+{
+  "title": "Suppliers",
+  "subtitle": "Contacts and companies that supply your inventory.",
+  "eyebrow": "Supplies",
+  "actions": {
+    "create": "New supplier",
+    "edit": "Edit supplier",
+    "delete": "Delete",
+    "cancel": "Cancel",
+    "retry": "Try again",
+    "clearFilters": "Clear filters",
+    "back": "Back to suppliers",
+    "saving": "Saving...",
+    "save": "Save supplier",
+    "saveChanges": "Save changes"
+  },
+  "search": {
+    "label": "Search suppliers",
+    "placeholder": "Search by name, ID or contact..."
+  },
+  "filters": {
+    "status": "Status",
+    "active": "Active",
+    "inactive": "Inactive",
+    "all": "All statuses"
+  },
+  "table": {
+    "supplier": "Supplier",
+    "contact": "Contact",
+    "document": "Tax ID",
+    "status": "Status",
+    "actions": "Actions"
+  },
+  "status": {
+    "active": "Active",
+    "inactive": "Inactive"
+  },
+  "empty": {
+    "title": "No suppliers found",
+    "hint": "Adjust the filters or add your first supplier.",
+    "hintFirst": "Add your first supplier to organise your purchases."
+  },
+  "loading": "Loading...",
+  "loadFailed": "Could not load suppliers",
+  "details": {
+    "notFound": "Supplier not found.",
+    "notInformed": "Not provided",
+    "notInformedF": "Not provided",
+    "contact": "Contact person",
+    "notes": "Notes",
+    "active": "Active supplier"
+  },
+  "deleteDialog": {
+    "title": "Delete this supplier?",
+    "warning": "Supplier {name} will be removed from your list.",
+    "confirm": "Delete",
+    "deleting": "Deleting..."
+  },
+  "deleteFailed": "Could not delete the supplier.",
+  "form": {
+    "titleNew": "New supplier",
+    "titleEdit": "Edit supplier",
+    "subtitleNew": "Business details, contact and address.",
+    "subtitleEdit": "Update the selected supplier's information.",
+    "sections": {
+      "identification": "Identification",
+      "contact": "Contact",
+      "address": "Address",
+      "location": "Location"
+    },
+    "fields": {
+      "legalName": "Legal name",
+      "tradeName": "Trade name",
+      "document": "Tax ID",
+      "contactName": "Contact person",
+      "email": "Email",
+      "phone": "Phone",
+      "zip": "ZIP/Postal code",
+      "street": "Street",
+      "number": "Number",
+      "district": "District",
+      "city": "City",
+      "state": "State",
+      "notes": "Notes"
+    },
+    "errors": {
+      "name": "Enter a valid legal name.",
+      "email": "Enter a valid email.",
+      "phone": "Enter a valid phone number with area code.",
+      "document": "Enter a valid tax ID.",
+      "saveFailed": "Could not save the supplier."
+    },
+    "toasts": {
+      "created": "Supplier created",
+      "updated": "Supplier updated"
+    }
+  }
+}
