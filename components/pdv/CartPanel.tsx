@@ -1,6 +1,7 @@
 "use client";
 
 import { Minus, Plus, ShoppingCart, Trash2 } from "lucide-react";
+import { useT } from "@/i18n/provider";
 
 import { formatCurrency } from "@/lib/format";
 import type { Product } from "@/types/product";
@@ -21,6 +22,7 @@ type CartPanelProps = {
 export default function CartPanel({ cart, subtotal, discountValue, maxDiscount, total, onQuantity, onDiscount }: CartPanelProps) {
     const itemCount = cart.reduce((sum, item) => sum + item.quantity, 0);
 
+    const t = useT();
     return (
         <div className="flex flex-col overflow-hidden rounded-2xl bg-cream text-ink shadow-2xl shadow-black/30">
             <div className="flex items-center justify-between border-b-2 border-dashed border-ink/15 px-4 py-3">
@@ -53,14 +55,14 @@ export default function CartPanel({ cart, subtotal, discountValue, maxDiscount, 
                         </div>
                     ))
                 ) : (
-                    <p className="py-6 text-center font-mono text-xs text-ink/50">Leia um produto para começar.</p>
+                    <p className="py-6 text-center font-mono text-xs text-ink/50">{t("pdv.cart.empty")}</p>
                 )}
             </div>
 
             {/* Total em destaque — a assinatura do terminal */}
             <div className="border-t-2 border-dashed border-ink/15 bg-white/60 px-4 py-3">
                 <div className="flex justify-between font-mono text-xs text-ink/70">
-                    <span>Subtotal</span><span>{formatCurrency(subtotal)}</span>
+                    <span>{t("pdv.cart.subtotal")}</span><span>{formatCurrency(subtotal)}</span>
                 </div>
                 <div className="mt-1 flex items-center justify-between gap-3 font-mono text-xs text-ink/70">
                     <span>Desconto (máx. {maxDiscount}%)</span>
@@ -76,7 +78,7 @@ export default function CartPanel({ cart, subtotal, discountValue, maxDiscount, 
                     />
                 </div>
                 <div className="mt-2 flex items-end justify-between gap-2 border-t-2 border-ink/15 pt-2">
-                    <span className="font-[family-name:var(--font-bricolage)] text-sm font-black uppercase tracking-wide text-ink/80">Total</span>
+                    <span className="font-[family-name:var(--font-bricolage)] text-sm font-black uppercase tracking-wide text-ink/80">{t("pdv.cart.total")}</span>
                     <strong className="font-[family-name:var(--font-bricolage)] text-5xl font-black leading-none tracking-tight text-orange">
                         {formatCurrency(total)}
                     </strong>

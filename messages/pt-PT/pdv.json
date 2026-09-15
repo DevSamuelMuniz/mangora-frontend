@@ -1,0 +1,110 @@
+{
+  "backToDashboard": "Voltar ao painel",
+  "cashRegister": "Caixa",
+  "cashClosed": "Fechado",
+  "theme": "Tema do terminal",
+  "themeLight": "Claro",
+  "themeDark": "Escuro",
+  "themeGreen": "Verde",
+  "changeTheme": "Alterar tema",
+  "enterFullscreen": "Entrar em ecrã inteiro",
+  "exitFullscreen": "Sair do ecrã inteiro",
+  "fullscreen": "ecrã inteiro",
+  "steps": {
+    "catalog": "Catálogo disponível",
+    "review": "Revisão",
+    "payment": "Pagamento",
+    "done": "Concluída",
+    "reviewOf": "Etapa 2 de 4"
+  },
+  "scan": {
+    "placeholder": "Leia o código de barras — o produto é adicionado automaticamente",
+    "clear": "Limpar pesquisa",
+    "enter": "Enter",
+    "quantity": "quantidade",
+    "readKey": "confirmar leitura"
+  },
+  "grid": {
+    "empty": "Nenhum produto encontrado",
+    "hint": "Aponte o leitor ou escreva o código de barras.",
+    "service": "Serviço"
+  },
+  "cart": {
+    "title": "Artigos",
+    "empty": "Leia um produto para começar.",
+    "emptyShort": "Carrinho vazio.",
+    "subtotal": "Subtotal",
+    "discount": "Desconto",
+    "total": "Total",
+    "change": "Troco",
+    "received": "Valor recebido",
+    "receipt": "recibo",
+    "items": "{count} artigo(s)"
+  },
+  "review": {
+    "title": "Confirme os artigos",
+    "all": "Todos",
+    "hint": "Após confirmar, escolhe o pagamento e finaliza.",
+    "confirmItems": "confirmar artigos"
+  },
+  "payment": {
+    "title": "Confirmar pagamento",
+    "confirmed": "Pagamento efetuado?",
+    "first": "1.º método",
+    "second": "2.º método",
+    "twoMethods": "(2 métodos)",
+    "required": "(obrigatório)",
+    "optional": "(opcional)",
+    "removeSecond": "Remover 2.º método",
+    "cashReceived": "Valor recebido em numerário",
+    "changeToReturn": "Troco a devolver",
+    "dueDate": "Vencimento (cheque / fiado)",
+    "consumer": "Consumidor final",
+    "searchCustomer": "Pesquisar cliente",
+    "searchCustomerPlaceholder": "Pesquisar cliente por nome ou NIF…",
+    "documentOnInvoice": "NIF na fatura",
+    "cashIn": "Em numerário: ",
+    "cash": "numerário"
+  },
+  "newCustomer": {
+    "title": "Novo cliente",
+    "subtitle": "Registo rápido",
+    "name": "Nome / razão social *",
+    "namePlaceholder": "Ex.: Maria Silva",
+    "document": "NIF *",
+    "email": "E-mail *",
+    "emailPlaceholder": "cliente@email.com",
+    "phone": "Telefone *",
+    "save": "Registar",
+    "saving": "A guardar...",
+    "cancel": "Cancelar",
+    "close": "Fechar",
+    "success": "Cliente registado e selecionado na venda."
+  },
+  "done": {
+    "success": "Registada com sucesso",
+    "saleTotal": "Total da venda",
+    "customer": "Cliente",
+    "payment": "Pagamento",
+    "printOptions": "Impressão térmica",
+    "printHint": "O recibo abre numa janela para impressão.",
+    "standard": "Mantém o tamanho e a espessura originais do recibo.",
+    "bold": "Fonte maior, preto intenso e traços mais grossos para melhor leitura.",
+    "extraBold": "Máxima espessura e contraste para impressões muito claras."
+  },
+  "errors": {
+    "emptyCart": "Adicione pelo menos um artigo ao carrinho.",
+    "requiresCustomer": "Esta empresa exige um cliente identificado.",
+    "checkOrCredit": "Cheque ou fiado exige cliente.",
+    "dueDateRequired": "Indique o vencimento do pagamento.",
+    "mismatch": "Os valores dos pagamentos não somam o total da venda.",
+    "saleFailed": "Não foi possível concluir a venda.",
+    "customerFailed": "Não foi possível registar o cliente.",
+    "documentInvalid": "O NIF deve ter 11 ou 14 dígitos.",
+    "nameTooShort": "Indique um nome com pelo menos 3 letras."
+  },
+  "loading": {
+    "finishing": "A finalizar venda...",
+    "finishingShort": "A finalizar..."
+  }
+}

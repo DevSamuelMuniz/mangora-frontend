@@ -1,0 +1,110 @@
+{
+  "backToDashboard": "Volver al panel",
+  "cashRegister": "Caja",
+  "cashClosed": "Cerrado",
+  "theme": "Tema del terminal",
+  "themeLight": "Claro",
+  "themeDark": "Oscuro",
+  "themeGreen": "Verde",
+  "changeTheme": "Cambiar tema",
+  "enterFullscreen": "Entrar en pantalla completa",
+  "exitFullscreen": "Salir de pantalla completa",
+  "fullscreen": "pantalla completa",
+  "steps": {
+    "catalog": "Catálogo disponible",
+    "review": "Revisión",
+    "payment": "Pago",
+    "done": "Finalizada",
+    "reviewOf": "Paso 2 de 4"
+  },
+  "scan": {
+    "placeholder": "Escanea el código de barras — el producto se agrega automáticamente",
+    "clear": "Limpiar búsqueda",
+    "enter": "Enter",
+    "quantity": "cantidad",
+    "readKey": "confirmar lectura"
+  },
+  "grid": {
+    "empty": "No se encontraron productos",
+    "hint": "Apunta el lector o escribe el código de barras.",
+    "service": "Servicio"
+  },
+  "cart": {
+    "title": "Artículos",
+    "empty": "Escanea un producto para empezar.",
+    "emptyShort": "Carrito vacío.",
+    "subtotal": "Subtotal",
+    "discount": "Descuento",
+    "total": "Total",
+    "change": "Cambio",
+    "received": "Importe recibido",
+    "receipt": "recibo",
+    "items": "{count} artículo(s)"
+  },
+  "review": {
+    "title": "Confirma los artículos",
+    "all": "Todos",
+    "hint": "Después de confirmar, eliges el pago y finalizas.",
+    "confirmItems": "confirmar artículos"
+  },
+  "payment": {
+    "title": "Confirmar pago",
+    "confirmed": "Pago realizado?",
+    "first": "1er método",
+    "second": "2do método",
+    "twoMethods": "(2 métodos)",
+    "required": "(obligatorio)",
+    "optional": "(opcional)",
+    "removeSecond": "Quitar 2do método",
+    "cashReceived": "Importe recibido en efectivo",
+    "changeToReturn": "Cambio a devolver",
+    "dueDate": "Vencimiento (cheque / fiado)",
+    "consumer": "Consumidor final",
+    "searchCustomer": "Buscar cliente",
+    "searchCustomerPlaceholder": "Buscar cliente por nombre o documento…",
+    "documentOnInvoice": "Documento en la factura",
+    "cashIn": "En efectivo: ",
+    "cash": "efectivo"
+  },
+  "newCustomer": {
+    "title": "Nuevo cliente",
+    "subtitle": "Registro rápido",
+    "name": "Nombre / razón social *",
+    "namePlaceholder": "Ej.: María Silva",
+    "document": "Documento *",
+    "email": "Correo *",
+    "emailPlaceholder": "cliente@email.com",
+    "phone": "Teléfono *",
+    "save": "Registrar",
+    "saving": "Guardando...",
+    "cancel": "Cancelar",
+    "close": "Cerrar",
+    "success": "Cliente registrado y seleccionado en la venta."
+  },
+  "done": {
+    "success": "Registrada correctamente",
+    "saleTotal": "Total de la venta",
+    "customer": "Cliente",
+    "payment": "Pago",
+    "printOptions": "Impresión térmica",
+    "printHint": "El recibo se abre en una ventana para imprimir.",
+    "standard": "Mantiene el tamaño y grosor originales del recibo.",
+    "bold": "Fuente más grande, negro intenso y trazos más gruesos para mejor lectura.",
+    "extraBold": "Máximo grosor y contraste para impresiones muy claras."
+  },
+  "errors": {
+    "emptyCart": "Agrega al menos un artículo al carrito.",
+    "requiresCustomer": "Esta empresa exige un cliente identificado.",
+    "checkOrCredit": "Cheque o fiado exige cliente.",
+    "dueDateRequired": "Indica el vencimiento del pago.",
+    "mismatch": "Los importes no suman el total de la venta.",
+    "saleFailed": "No se pudo completar la venta.",
+    "customerFailed": "No se pudo registrar el cliente.",
+    "documentInvalid": "El documento debe tener 11 o 14 dígitos.",
+    "nameTooShort": "Introduce un nombre con al menos 3 letras."
+  },
+  "loading": {
+    "finishing": "Finalizando venta...",
+    "finishingShort": "Finalizando..."
+  }
+}

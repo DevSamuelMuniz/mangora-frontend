@@ -1,0 +1,110 @@
+{
+  "backToDashboard": "Voltar ao painel",
+  "cashRegister": "Caixa",
+  "cashClosed": "Fechado",
+  "theme": "Tema do terminal",
+  "themeLight": "Claro",
+  "themeDark": "Escuro",
+  "themeGreen": "Verde",
+  "changeTheme": "Mudar tema",
+  "enterFullscreen": "Entrar em tela cheia",
+  "exitFullscreen": "Sair da tela cheia",
+  "fullscreen": "tela cheia",
+  "steps": {
+    "catalog": "Catálogo disponível",
+    "review": "Revisão",
+    "payment": "Pagamento",
+    "done": "Finalizada",
+    "reviewOf": "Etapa 2 de 4"
+  },
+  "scan": {
+    "placeholder": "Leia o código de barras — o produto é adicionado automaticamente",
+    "clear": "Limpar busca",
+    "enter": "Enter",
+    "quantity": "quantidade",
+    "readKey": "confirmar leitura"
+  },
+  "grid": {
+    "empty": "Nenhum produto encontrado",
+    "hint": "Aponte o leitor ou digite o código de barras.",
+    "service": "Serviço"
+  },
+  "cart": {
+    "title": "Itens",
+    "empty": "Leia um produto para começar.",
+    "emptyShort": "Carrinho vazio.",
+    "subtotal": "Subtotal",
+    "discount": "Desconto",
+    "total": "Total",
+    "change": "Troco",
+    "received": "Valor recebido",
+    "receipt": "recibo",
+    "items": "{count} item(ns)"
+  },
+  "review": {
+    "title": "Confirme os itens",
+    "all": "Todos",
+    "hint": "Após confirmar, você escolhe o pagamento e finaliza.",
+    "confirmItems": "confirmar itens"
+  },
+  "payment": {
+    "title": "Confirmar pagamento",
+    "confirmed": "Pagamento efetuado?",
+    "first": "1º método",
+    "second": "2º método",
+    "twoMethods": "(2 métodos)",
+    "required": "(obrigatório)",
+    "optional": "(opcional)",
+    "removeSecond": "Remover 2º método",
+    "cashReceived": "Valor recebido em dinheiro",
+    "changeToReturn": "Troco a devolver",
+    "dueDate": "Vencimento (cheque / fiado)",
+    "consumer": "Consumidor final",
+    "searchCustomer": "Buscar cliente",
+    "searchCustomerPlaceholder": "Buscar cliente por nome ou CPF/CNPJ…",
+    "documentOnInvoice": "CPF / CNPJ na nota",
+    "cashIn": "Em dinheiro: ",
+    "cash": "dinheiro"
+  },
+  "newCustomer": {
+    "title": "Novo cliente",
+    "subtitle": "Cadastro rápido",
+    "name": "Nome / razão social *",
+    "namePlaceholder": "Ex.: Maria Silva",
+    "document": "CPF / CNPJ *",
+    "email": "E-mail *",
+    "emailPlaceholder": "cliente@email.com",
+    "phone": "Telefone *",
+    "save": "Cadastrar",
+    "saving": "Salvando...",
+    "cancel": "Cancelar",
+    "close": "Fechar",
+    "success": "Cliente cadastrado e selecionado na venda."
+  },
+  "done": {
+    "success": "Registrada com sucesso",
+    "saleTotal": "Total da venda",
+    "customer": "Cliente",
+    "payment": "Pagamento",
+    "printOptions": "Impressão térmica",
+    "printHint": "O cupom abre em uma janela para impressão.",
+    "standard": "Mantém o tamanho e a espessura originais do cupom.",
+    "bold": "Fonte maior, preto intenso e traços mais grossos para melhor leitura.",
+    "extraBold": "Máxima espessura e contraste para impressões muito claras."
+  },
+  "errors": {
+    "emptyCart": "Adicione pelo menos um item ao carrinho.",
+    "requiresCustomer": "Esta empresa exige cliente identificado.",
+    "checkOrCredit": "Cheque ou fiado exige cliente.",
+    "dueDateRequired": "Informe o vencimento do pagamento.",
+    "mismatch": "Os valores dos pagamentos não somam o total da venda.",
+    "saleFailed": "Não foi possível concluir a venda.",
+    "customerFailed": "Não foi possível cadastrar o cliente.",
+    "documentInvalid": "CPF/CNPJ deve ter 11 ou 14 dígitos.",
+    "nameTooShort": "Informe um nome com ao menos 3 letras."
+  },
+  "loading": {
+    "finishing": "Finalizando venda...",
+    "finishingShort": "Finalizando..."
+  }
+}

@@ -1,0 +1,110 @@
+{
+  "backToDashboard": "Back to dashboard",
+  "cashRegister": "Cash register",
+  "cashClosed": "Closed",
+  "theme": "Terminal theme",
+  "themeLight": "Light",
+  "themeDark": "Dark",
+  "themeGreen": "Green",
+  "changeTheme": "Change theme",
+  "enterFullscreen": "Enter fullscreen",
+  "exitFullscreen": "Exit fullscreen",
+  "fullscreen": "fullscreen",
+  "steps": {
+    "catalog": "Available catalog",
+    "review": "Review",
+    "payment": "Payment",
+    "done": "Completed",
+    "reviewOf": "Step 2 of 4"
+  },
+  "scan": {
+    "placeholder": "Scan the barcode — the product is added automatically",
+    "clear": "Clear search",
+    "enter": "Enter",
+    "quantity": "quantity",
+    "readKey": "confirm scan"
+  },
+  "grid": {
+    "empty": "No products found",
+    "hint": "Point the scanner or type the barcode.",
+    "service": "Service"
+  },
+  "cart": {
+    "title": "Items",
+    "empty": "Scan a product to start.",
+    "emptyShort": "Cart is empty.",
+    "subtotal": "Subtotal",
+    "discount": "Discount",
+    "total": "Total",
+    "change": "Change",
+    "received": "Amount received",
+    "receipt": "receipt",
+    "items": "{count} item(s)"
+  },
+  "review": {
+    "title": "Confirm the items",
+    "all": "All",
+    "hint": "After confirming, you choose the payment and finish.",
+    "confirmItems": "confirm items"
+  },
+  "payment": {
+    "title": "Confirm payment",
+    "confirmed": "Payment completed?",
+    "first": "1st method",
+    "second": "2nd method",
+    "twoMethods": "(2 methods)",
+    "required": "(required)",
+    "optional": "(optional)",
+    "removeSecond": "Remove 2nd method",
+    "cashReceived": "Cash received",
+    "changeToReturn": "Change to give",
+    "dueDate": "Due date (check / store credit)",
+    "consumer": "Walk-in customer",
+    "searchCustomer": "Search customer",
+    "searchCustomerPlaceholder": "Search customer by name or tax ID…",
+    "documentOnInvoice": "Tax ID on the receipt",
+    "cashIn": "Cash: ",
+    "cash": "cash"
+  },
+  "newCustomer": {
+    "title": "New customer",
+    "subtitle": "Quick registration",
+    "name": "Name / legal name *",
+    "namePlaceholder": "e.g. Mary Smith",
+    "document": "Tax ID *",
+    "email": "Email *",
+    "emailPlaceholder": "customer@email.com",
+    "phone": "Phone *",
+    "save": "Register",
+    "saving": "Saving...",
+    "cancel": "Cancel",
+    "close": "Close",
+    "success": "Customer registered and selected for this sale."
+  },
+  "done": {
+    "success": "Successfully recorded",
+    "saleTotal": "Sale total",
+    "customer": "Customer",
+    "payment": "Payment",
+    "printOptions": "Thermal printing",
+    "printHint": "The receipt opens in a window for printing.",
+    "standard": "Keeps the receipt's original size and line weight.",
+    "bold": "Larger font, deep black and thicker lines for easier reading.",
+    "extraBold": "Maximum line weight and contrast for very light prints."
+  },
+  "errors": {
+    "emptyCart": "Add at least one item to the cart.",
+    "requiresCustomer": "This business requires an identified customer.",
+    "checkOrCredit": "Check or store credit requires a customer.",
+    "dueDateRequired": "Enter the payment due date.",
+    "mismatch": "Payment amounts do not add up to the sale total.",
+    "saleFailed": "Could not complete the sale.",
+    "customerFailed": "Could not register the customer.",
+    "documentInvalid": "Tax ID must have 11 or 14 digits.",
+    "nameTooShort": "Enter a name with at least 3 letters."
+  },
+  "loading": {
+    "finishing": "Finishing sale...",
+    "finishingShort": "Finishing..."
+  }
+}

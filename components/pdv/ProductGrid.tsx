@@ -1,6 +1,7 @@
 "use client";
 
 import { Barcode, LoaderCircle, Minus, Plus } from "lucide-react";
+import { useT } from "@/i18n/provider";
 
 import { formatCurrency } from "@/lib/format";
 import type { Product } from "@/types/product";
@@ -15,6 +16,7 @@ type ProductGridProps = {
 
 /** Lista de produtos do terminal: imagem à esquerda, infos à direita em coluna. */
 export default function ProductGrid({ products, loading, cartCounts, onAdd, onChangeQuantity }: ProductGridProps) {
+    const t = useT();
     if (loading) {
         return (
             <div className="flex min-h-64 items-center justify-center text-pdv-fg/60">
@@ -27,8 +29,8 @@ export default function ProductGrid({ products, loading, cartCounts, onAdd, onCh
         return (
             <div className="flex min-h-64 flex-col items-center justify-center text-pdv-fg/50">
                 <Barcode className="mb-3 size-9 text-pdv-fg/30" />
-                <p className="font-[family-name:var(--font-bricolage)] text-base font-black text-pdv-fg/80">Nenhum produto encontrado</p>
-                <p className="mt-1 text-xs">Aponte o leitor ou digite o código de barras.</p>
+                <p className="font-[family-name:var(--font-bricolage)] text-base font-black text-pdv-fg/80">{t("pdv.grid.empty")}</p>
+                <p className="mt-1 text-xs">{t("pdv.grid.hint")}</p>
             </div>
         );
     }

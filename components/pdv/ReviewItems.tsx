@@ -1,6 +1,7 @@
 "use client";
 
 import { ArrowLeft, CheckCheck, ReceiptText } from "lucide-react";
+import { useT } from "@/i18n/provider";
 
 import { formatCurrency } from "@/lib/format";
 import type { CartItem } from "./CartPanel";
@@ -16,12 +17,13 @@ type ReviewItemsProps = {
 
 /** Etapa 2 — revisar os itens antes de seguir para o pagamento. */
 export default function ReviewItems({ cart, subtotal, discount, total, onBack, onNext }: ReviewItemsProps) {
+    const t = useT();
     return (
         <div className="mx-auto flex w-full max-w-2xl flex-col rounded-2xl border-2 border-pdv-line bg-pdv-panel p-6">
             <div className="flex items-center justify-between gap-3">
                 <div>
-                    <p className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-orange-400">Etapa 2 de 4</p>
-                    <h2 className="font-[family-name:var(--font-bricolage)] text-2xl font-black text-pdv-fg">Confirme os itens</h2>
+                    <p className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-orange-400">{t("pdv.steps.reviewOf")}</p>
+                    <h2 className="font-[family-name:var(--font-bricolage)] text-2xl font-black text-pdv-fg">{t("pdv.review.title")}</h2>
                 </div>
                 <span className="flex size-11 items-center justify-center rounded-xl bg-orange-500/15 text-orange-400"><ReceiptText className="size-5" /></span>
             </div>
@@ -42,10 +44,10 @@ export default function ReviewItems({ cart, subtotal, discount, total, onBack, o
             </div>
 
             <div className="mt-5 space-y-1.5 rounded-xl bg-cream p-4 font-mono text-xs text-ink">
-                <div className="flex justify-between"><span>Subtotal</span><span>{formatCurrency(subtotal)}</span></div>
-                {discount > 0 && <div className="flex justify-between text-red-600"><span>Desconto</span><span>- {formatCurrency(discount)}</span></div>}
+                <div className="flex justify-between"><span>{t("pdv.cart.subtotal")}</span><span>{formatCurrency(subtotal)}</span></div>
+                {discount > 0 && <div className="flex justify-between text-red-600"><span>{t("pdv.cart.discount")}</span><span>- {formatCurrency(discount)}</span></div>}
                 <div className="flex items-end justify-between border-t-2 border-dashed border-ink/15 pt-2">
-                    <span className="font-[family-name:var(--font-bricolage)] text-sm font-black uppercase">Total</span>
+                    <span className="font-[family-name:var(--font-bricolage)] text-sm font-black uppercase">{t("pdv.cart.total")}</span>
                     <strong className="font-[family-name:var(--font-bricolage)] text-4xl font-black leading-none text-orange">{formatCurrency(total)}</strong>
                 </div>
             </div>

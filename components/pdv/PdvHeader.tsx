@@ -1,6 +1,7 @@
 "use client";
 
 import { ArrowLeft, Check, ChevronDown, Maximize, Minimize, Moon, Sprout, Sun } from "lucide-react";
+import { useT } from "@/i18n/provider";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 
@@ -59,6 +60,7 @@ export default function PdvHeader({ session, theme, onThemeChange }: { session: 
     const dateLabel = formatDateLong(clock);
     const timeLabel = formatTime(clock);
 
+    const t = useT();
     return (
         <header className="flex items-center justify-between gap-4 border-b border-pdv-line bg-pdv-panel px-5 py-3">
             <div className="flex min-w-0 items-center gap-4">
@@ -84,7 +86,7 @@ export default function PdvHeader({ session, theme, onThemeChange }: { session: 
                     <p className="font-[family-name:var(--font-bricolage)] text-lg font-black leading-none text-pdv-fg">{timeLabel}</p>
                 </div>
                 <div className={`hidden rounded-xl px-4 py-2 text-right sm:block ${register?.status === "OPEN" ? "bg-pdv-ok/15 text-pdv-ok" : "bg-pdv-warn/15 text-pdv-warn"}`}>
-                    <p className="font-mono text-[10px] text-pdv-fg/80">Caixa</p>
+                    <p className="font-mono text-[10px] text-pdv-fg/80">{t("pdv.cashRegister")}</p>
                     <p className="text-sm font-black">{register?.status === "OPEN" ? `Aberto · ${register.openedByName}` : "Fechado"}</p>
                 </div>
 

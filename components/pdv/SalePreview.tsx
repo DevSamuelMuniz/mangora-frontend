@@ -1,6 +1,7 @@
 "use client";
 
 import { ReceiptText, UserRound } from "lucide-react";
+import { useT } from "@/i18n/provider";
 
 import { formatCurrency } from "@/lib/format";
 import { paymentMethodLabels, type PaymentMethod } from "@/types/sale";
@@ -20,6 +21,7 @@ type SalePreviewProps = {
 
 /** Pré-visualização da venda (mini recibo) — persistente nas etapas 2–4. */
 export default function SalePreview({ cart, subtotal, discount, total, customerName, payments, customerDocument, received, change }: SalePreviewProps) {
+    const t = useT();
     return (
         <div className="sticky top-4 flex flex-col overflow-hidden rounded-2xl bg-cream text-ink shadow-2xl shadow-black/30">
             <div className="flex items-center justify-between border-b-2 border-dashed border-ink/15 px-4 py-3">
@@ -40,21 +42,21 @@ export default function SalePreview({ cart, subtotal, discount, total, customerN
                         </div>
                     ))
                 ) : (
-                    <p className="py-4 text-center font-mono text-[10px] text-ink/50">Carrinho vazio.</p>
+                    <p className="py-4 text-center font-mono text-[10px] text-ink/50">{t("pdv.cart.emptyShort")}</p>
                 )}
             </div>
 
             <div className="space-y-1 border-t-2 border-dashed border-ink/15 px-4 py-3 font-mono text-[11px] text-ink/70">
-                <div className="flex justify-between"><span>Subtotal</span><span>{formatCurrency(subtotal)}</span></div>
-                {discount > 0 && <div className="flex justify-between text-red-600"><span>Desconto</span><span>- {formatCurrency(discount)}</span></div>}
+                <div className="flex justify-between"><span>{t("pdv.cart.subtotal")}</span><span>{formatCurrency(subtotal)}</span></div>
+                {discount > 0 && <div className="flex justify-between text-red-600"><span>{t("pdv.cart.discount")}</span><span>- {formatCurrency(discount)}</span></div>}
                 <div className="flex items-end justify-between border-t border-ink/10 pt-1.5">
-                    <span className="font-[family-name:var(--font-bricolage)] text-xs font-black uppercase">Total</span>
+                    <span className="font-[family-name:var(--font-bricolage)] text-xs font-black uppercase">{t("pdv.cart.total")}</span>
                     <strong className="font-[family-name:var(--font-bricolage)] text-2xl font-black leading-none text-orange">{formatCurrency(total)}</strong>
                 </div>
                 {received !== undefined && change !== undefined && (
                     <>
-                        <div className="flex justify-between pt-1"><span>Valor recebido</span><span>{formatCurrency(received)}</span></div>
-                        <div className="flex justify-between font-bold text-green-700"><span>Troco</span><span>{formatCurrency(change)}</span></div>
+                        <div className="flex justify-between pt-1"><span>{t("pdv.cart.received")}</span><span>{formatCurrency(received)}</span></div>
+                        <div className="flex justify-between font-bold text-green-700"><span>{t("pdv.cart.change")}</span><span>{formatCurrency(change)}</span></div>
                     </>
                 )}
             </div>
