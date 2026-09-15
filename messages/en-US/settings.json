@@ -1,0 +1,14 @@
+{
+  "regional": {
+    "title": "Regional settings",
+    "description": "Language, country, currency and timezone are independent from each other.",
+    "language": "Language",
+    "country": "Operating country",
+    "currency": "Currency",
+    "timezone": "Time zone",
+    "save": "Save preferences",
+    "saved": "Regional preferences saved.",
+    "note": "Changing the language reloads the experience; country and currency do not change the language.",
+    "languageHint": "Used across the interface, emails and notifications."
+  }
+}

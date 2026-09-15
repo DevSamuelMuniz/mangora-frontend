@@ -1,0 +1,14 @@
+{
+  "regional": {
+    "title": "Configuración regional",
+    "description": "Idioma, país, moneda y zona horaria son independientes entre sí.",
+    "language": "Idioma",
+    "country": "País de operación",
+    "currency": "Moneda",
+    "timezone": "Zona horaria",
+    "save": "Guardar preferencias",
+    "saved": "Preferencias regionales guardadas.",
+    "note": "Cambiar el idioma recarga la experiencia; país y moneda no cambian el idioma.",
+    "languageHint": "Se usa en la interfaz, correos y notificaciones."
+  }
+}

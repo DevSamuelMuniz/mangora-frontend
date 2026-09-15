@@ -4,7 +4,11 @@ import { FormEvent, useState, type ReactNode } from "react";
 import { Activity, Bell, Building2, CheckCircle2, KeyRound, LoaderCircle, Monitor, RefreshCw, Save, ShieldCheck, ShoppingCart, SlidersHorizontal, type LucideIcon } from "lucide-react";
 import type { CompanySettings, SettingsTab } from "@/types/settings";
 import { formatDateTime } from "@/lib/format";
+import { useI18n, useT } from "@/i18n/provider";
+import { localeLabels, locales as supportedLocales, type Locale } from "@/i18n/config";
+import { CURRENCY_CODES, REGION_CODES, TIME_ZONE_OPTIONS, currencyName, regionName } from "@/lib/regional/options";
 import {
+  useAccountPreferences,
   useChangePassword,
   useCompanySettings,
   useDeleteSession,
@@ -12,6 +16,7 @@ import {
   useRunJob,
   useSaveCompanySettings,
   useSecurityOverview,
+  useUpdatePreferences,
   type JobStatusData,
 } from "@/features/settings/hooks/useSettings";
 
@@ -36,6 +41,8 @@ export default function SettingsPanel({ initialTab = "company" }: { initialTab?:
   const saving = saveMutation.isPending;
   const [actionError, setActionError] = useState("");
   const [success, setSuccess] = useState("");
+  const preferencesMutation = useUpdatePreferences();
+  const { locale, setLocale } = useI18n();
 
   const errorMessage = actionError || (loadError instanceof Error ? loadError.message : "");
 
@@ -49,7 +56,23 @@ export default function SettingsPanel({ initialTab = "company" }: { initialTab?:
       postalCode: data.get("postalCode"), street: data.get("street"), number: data.get("number"),
       city: data.get("city"), state: data.get("state"),
     };
-    else if (activeTab === "preferences") payload = { timezone: data.get("timezone") };
+    else if (activeTab === "preferences") {
+      try {
+        setActionError(""); setSuccess("");
+        const nextLocale = String(data.get("locale") ?? locale) as Locale;
+        await preferencesMutation.mutateAsync({
+          locale: nextLocale,
+          country: String(data.get("country") ?? ""),
+          preferredCurrency: String(data.get("preferredCurrency") ?? ""),
+          timezone: String(data.get("timezone") ?? ""),
+        });
+        setSuccess("Preferências regionais salvas.");
+        if (nextLocale !== locale) setLocale(nextLocale);
+      } catch (cause) {
+        setActionError(cause instanceof Error ? cause.message : "Não foi possível salvar as preferências regionais.");
+      }
+      return;
+    }
     else if (activeTab === "sales") payload = {
       defaultPayment: data.get("defaultPayment"), maximumDiscount: Number(data.get("maximumDiscount")),
       requireCustomer: data.get("requireCustomer") === "on", allowPendingSales: data.get("allowPendingSales") === "on", allowNegativeStock: data.get("allowNegativeStock") === "on",
@@ -83,14 +106,29 @@ export default function SettingsPanel({ initialTab = "company" }: { initialTab?:
     <div><p className="text-[11px] font-bold uppercase tracking-[0.14em] text-orange-600">Administração</p><h1 className="mt-1 text-2xl font-black text-slate-950 sm:text-3xl">Configurações</h1><p className="mt-1 text-xs text-slate-500">Personalize os dados e as regras reais da empresa.</p></div>
     {errorMessage && !company ? <div role="alert" className="mt-5 rounded-xl border border-red-200 bg-red-50 p-4 text-xs font-semibold text-red-700">{errorMessage}</div> : company && <div className="mt-5 grid items-start gap-4 lg:grid-cols-[240px_1fr]">
       <nav aria-label="Seções de configurações" className="overflow-x-auto rounded-2xl border border-slate-200 bg-white p-2 shadow-sm lg:sticky lg:top-20"><div className="flex min-w-max gap-1 lg:min-w-0 lg:flex-col">{tabs.map((item) => { const Icon = item.icon; const active = activeTab === item.id; return <button key={item.id} type="button" onClick={() => { setActiveTab(item.id); setActionError(""); setSuccess(""); }} className={`flex min-w-44 items-center gap-3 rounded-xl px-3 py-2.5 text-left lg:min-w-0 ${active ? "bg-orange-50 text-orange-700" : "text-slate-600 hover:bg-slate-50"}`}><div className={`flex size-8 items-center justify-center rounded-lg ${active ? "bg-orange-100" : "bg-slate-100 text-slate-400"}`}><Icon className="size-4" /></div><div><p className="text-xs font-bold">{item.label}</p><p className="text-[9px] text-slate-400">{item.description}</p></div></button>; })}</div></nav>
-      <form key={activeTab} onSubmit={handleSubmit} className="space-y-4"><div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm"><div className="flex items-center gap-3 border-b border-slate-100 pb-4"><div className="flex size-9 items-center justify-center rounded-xl bg-orange-50 text-orange-600"><ActiveIcon className="size-4" /></div><div><h2 className="text-sm font-bold text-slate-950">{tab.label}</h2><p className="text-[10px] text-slate-400">{tab.description}</p></div></div><div className="mt-4">{activeTab === "company" && <CompanyForm company={company} />}{activeTab === "preferences" && <PreferencesForm company={company} />}{activeTab === "sales" && <SalesForm company={company} />}{activeTab === "notifications" && <NotificationsForm company={company} />}{activeTab === "security" && <SecurityForm company={company} saving={saving} />}</div></div>
+      <form key={activeTab} onSubmit={handleSubmit} className="space-y-4"><div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm"><div className="flex items-center gap-3 border-b border-slate-100 pb-4"><div className="flex size-9 items-center justify-center rounded-xl bg-orange-50 text-orange-600"><ActiveIcon className="size-4" /></div><div><h2 className="text-sm font-bold text-slate-950">{tab.label}</h2><p className="text-[10px] text-slate-400">{tab.description}</p></div></div><div className="mt-4">{activeTab === "company" && <CompanyForm company={company} />}{activeTab === "preferences" && <PreferencesForm />}{activeTab === "sales" && <SalesForm company={company} />}{activeTab === "notifications" && <NotificationsForm company={company} />}{activeTab === "security" && <SecurityForm company={company} saving={saving} />}</div></div>
       {errorMessage && <Alert tone="error">{errorMessage}</Alert>}{success && <Alert tone="success"><CheckCircle2 className="size-4 shrink-0" />{success}</Alert>}<div className="flex justify-end"><button disabled={saving} className="flex h-11 items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-orange-600 to-amber-600 px-5 text-sm font-bold text-white disabled:opacity-70">{saving ? <><LoaderCircle className="size-4 animate-spin" />Salvando...</> : <><Save className="size-4" />Salvar alterações</>}</button></div></form>
     </div>}
   </section>;
 }
 
 function CompanyForm({ company }: { company: CompanySettings }) { return <div className="space-y-5"><div className="grid gap-4 sm:grid-cols-2"><Field label="Razão social" id="legalName"><input id="legalName" name="legalName" required minLength={2} defaultValue={company.legalName ?? ""} className={inputClass} /></Field><Field label="Nome fantasia" id="tradeName"><input id="tradeName" name="tradeName" required minLength={2} defaultValue={company.tradeName} className={inputClass} /></Field><Field label="CPF ou CNPJ (opcional)" id="document"><input id="document" name="document" defaultValue={company.document ?? ""} inputMode="numeric" placeholder="Informe apenas para faturamento" className={inputClass} /></Field><Field label="Segmento" id="segment"><select id="segment" name="segment" defaultValue={company.segment} className={inputClass}>{segments.map(([value, label]) => <option key={value} value={value}>{label}</option>)}</select></Field><Field label="E-mail comercial" id="email"><input id="email" name="email" type="email" required defaultValue={company.email ?? ""} className={inputClass} /></Field><Field label="Telefone" id="phone"><input id="phone" name="phone" required defaultValue={company.phone ?? ""} className={inputClass} /></Field></div><h3 className="border-t border-slate-100 pt-5 text-xs font-bold text-slate-800">Endereço da empresa</h3><div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4"><Field label="CEP" id="postalCode"><input id="postalCode" name="postalCode" required defaultValue={company.postalCode ?? ""} className={inputClass} /></Field><Field label="Endereço" id="street" className="lg:col-span-2"><input id="street" name="street" required defaultValue={company.street ?? ""} className={inputClass} /></Field><Field label="Número" id="number"><input id="number" name="number" required defaultValue={company.number ?? ""} className={inputClass} /></Field><Field label="Cidade" id="city" className="lg:col-span-2"><input id="city" name="city" required defaultValue={company.city ?? ""} className={inputClass} /></Field><Field label="Estado" id="state"><input id="state" name="state" required maxLength={2} defaultValue={company.state ?? ""} className={inputClass} /></Field></div></div>; }
-function PreferencesForm({ company }: { company: CompanySettings }) { return <div className="grid gap-4 sm:grid-cols-2"><Field label="Idioma" id="language"><input id="language" value="Português (Brasil)" disabled className={inputClass} /></Field><Field label="Fuso horário" id="timezone"><select id="timezone" name="timezone" defaultValue={company.timezone === "America/Sao_Paulo" ? company.timezone : "America/Sao_Paulo"} className={inputClass}><option value="America/Sao_Paulo">Horário de Brasília — UTC−3</option></select></Field><Field label="Moeda" id="currency"><input id="currency" value="Real brasileiro (R$)" disabled className={inputClass} /></Field><div className="rounded-xl border border-orange-100 bg-orange-50 p-3 text-[10px] leading-4 text-orange-700">Datas e horários usam America/Sao_Paulo. O banco preserva os instantes em UTC.</div></div>; }
+function PreferencesForm() {
+  const t = useT();
+  const { data: preferences } = useAccountPreferences();
+  const { locale } = useI18n();
+  return <div className="space-y-5">
+    <div className="grid gap-4 sm:grid-cols-2">
+      <Field label={t("settings.regional.language")} id="locale"><select id="locale" name="locale" defaultValue={preferences?.locale ?? locale} className={inputClass}>{supportedLocales.map((item) => <option key={item} value={item}>{localeLabels[item].label}</option>)}</select></Field>
+      <Field label={t("settings.regional.country")} id="country"><select id="country" name="country" defaultValue={preferences?.country ?? "BR"} className={inputClass}>{REGION_CODES.map((code) => <option key={code} value={code}>{regionName(code, locale)}</option>)}</select></Field>
+      <Field label={t("settings.regional.currency")} id="preferredCurrency"><select id="preferredCurrency" name="preferredCurrency" defaultValue={preferences?.preferredCurrency ?? "BRL"} className={inputClass}>{CURRENCY_CODES.map((code) => <option key={code} value={code}>{code} — {currencyName(code, locale)}</option>)}</select></Field>
+      <Field label={t("settings.regional.timezone")} id="timezone"><select id="timezone" name="timezone" defaultValue={preferences?.timezone ?? "America/Sao_Paulo"} className={inputClass}>{TIME_ZONE_OPTIONS.map((zone) => <option key={zone} value={zone}>{zone}</option>)}</select></Field>
+    </div>
+    <p className="rounded-xl border border-orange-100 bg-orange-50 p-3 text-[10px] leading-4 text-orange-700">{t("settings.regional.note")} {t("settings.regional.languageHint")}</p>
+    <p className="text-[10px] text-slate-400">{t("settings.regional.description")}</p>
+  </div>;
+}
+
 function SalesForm({ company }: { company: CompanySettings }) { return <div className="space-y-5"><div className="grid gap-4 sm:grid-cols-2"><Field label="Pagamento padrão" id="defaultPayment"><select id="defaultPayment" name="defaultPayment" defaultValue={company.defaultPayment} className={inputClass}><option value="PIX">PIX</option><option value="CASH">Dinheiro</option><option value="DEBIT_CARD">Cartão de débito</option><option value="CREDIT_CARD">Cartão de crédito</option><option value="BOLETO">Boleto</option></select></Field><Field label="Desconto máximo (%)" id="maximumDiscount"><input id="maximumDiscount" name="maximumDiscount" type="number" min={0} max={100} step="0.5" defaultValue={company.maximumDiscount} className={inputClass} /></Field></div><SettingsGroup title="Regras aplicadas"><Toggle name="requireCustomer" title="Exigir cliente identificado" description="Bloqueia venda e pedido sem cliente cadastrado." defaultChecked={company.requireCustomer} /><Toggle name="allowPendingSales" title="Permitir vendas pendentes" description="Preferência preparada para o fluxo de recebimentos." defaultChecked={company.allowPendingSales} /><Toggle name="allowNegativeStock" title="Permitir estoque negativo" description="Permite vender/pedir mais do que o disponível (desligado: bloqueia a operação)." defaultChecked={company.allowNegativeStock} /></SettingsGroup></div>; }
 function NotificationsForm({ company }: { company: CompanySettings }) { return <div className="space-y-5"><SettingsGroup title="Alertas no sistema"><Toggle name="lowStockNotification" title="Estoque baixo" description="Avisa gestores quando produtos atingem o estoque mínimo." defaultChecked={company.lowStockNotification} /><Toggle name="overdueAccountNotification" title="Contas vencidas" description="Avisa gestores sobre compromissos financeiros atrasados." defaultChecked={company.overdueAccountNotification} /><Toggle name="saleNotification" title="Novas vendas" description="Registra a preferência para alertas comerciais." defaultChecked={company.saleNotification} /></SettingsGroup><div className="grid gap-4 sm:grid-cols-2"><Field label="E-mail para resumos" id="summaryEmail"><input id="summaryEmail" name="summaryEmail" type="email" defaultValue={company.summaryEmail ?? ""} className={inputClass} /></Field><Field label="Frequência" id="summaryFrequency"><select id="summaryFrequency" name="summaryFrequency" defaultValue={company.summaryFrequency} className={inputClass}><option value="daily">Diariamente</option><option value="weekly">Semanalmente</option><option value="disabled">Desativado</option></select></Field></div><p className="text-[10px] text-slate-400">Os resumos são processados automaticamente, sem duplicação, e os e-mails com falha entram em reenvio gradual.</p></div>; }
 const emptyJobs: JobStatusData = { emails: { queued: 0, sent: 0, failed: 0 }, recentRuns: [] };

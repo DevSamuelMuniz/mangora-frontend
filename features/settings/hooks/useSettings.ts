@@ -107,3 +107,33 @@ export function useRunJob() {
         },
     });
 }
+
+
+export type RegionalPreferences = {
+    locale: string | null;
+    country: string | null;
+    preferredCurrency: string | null;
+    timezone: string | null;
+};
+
+export const accountPreferencesQueryKey = ["account-preferences"] as const;
+
+export function useAccountPreferences() {
+    return useQuery<RegionalPreferences, Error>({
+        queryKey: accountPreferencesQueryKey,
+        queryFn: async () => {
+            const session = await apiRequest<{ user: RegionalPreferences }>("/auth/me");
+            return session.user;
+        },
+    });
+}
+
+export function useUpdatePreferences() {
+    const queryClient = useQueryClient();
+    return useMutation<RegionalPreferences, Error, Partial<RegionalPreferences>>({
+        mutationFn: (payload) => apiRequest<RegionalPreferences>("/auth/preferences", { method: "PATCH", body: JSON.stringify(payload) }),
+        onSuccess: () => {
+            void queryClient.invalidateQueries({ queryKey: accountPreferencesQueryKey });
+        },
+    });
+}

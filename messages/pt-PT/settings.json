@@ -1,0 +1,14 @@
+{
+  "regional": {
+    "title": "Configuração regional",
+    "description": "Idioma, país, moeda e fuso horário são independentes entre si.",
+    "language": "Idioma",
+    "country": "País de operação",
+    "currency": "Moeda",
+    "timezone": "Fuso horário",
+    "save": "Guardar preferências",
+    "saved": "Preferências regionais guardadas.",
+    "note": "Alterar o idioma recarrega a experiência; país e moeda não alteram o idioma.",
+    "languageHint": "Usado na interface, e-mails e notificações."
+  }
+}
