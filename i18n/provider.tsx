@@ -19,6 +19,10 @@ export default function I18nProvider({ locale, messages, children }: { locale: L
   const setLocale = useCallback((next: Locale) => {
     // Cookie de 1 ano — usuários não autenticados também mantêm a escolha.
     document.cookie = `${LOCALE_COOKIE}=${next}; path=/; max-age=31536000; samesite=lax${window.location.protocol === "https:" ? "; secure" : ""}`;
+    // Preferência do perfil (quando autenticado) — falha em silêncio para convidados.
+    void import("@/lib/api/client").then(({ apiRequest }) =>
+      apiRequest("/auth/preferences", { method: "PATCH", body: JSON.stringify({ locale: next }) }).catch(() => undefined),
+    );
     window.location.reload();
   }, []);
 

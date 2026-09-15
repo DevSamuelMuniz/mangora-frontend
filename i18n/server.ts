@@ -1,4 +1,7 @@
+import { cache } from "react";
 import { cookies, headers } from "next/headers";
+
+import { getCurrentSession } from "@/lib/auth/server";
 
 import { LOCALE_COOKIE, resolveLocale, type Locale } from "./config";
 import { createTranslator, fallbackChain, mergeMessages, type Messages } from "./runtime";
@@ -57,11 +60,26 @@ export async function loadMessages(locale: Locale): Promise<Messages> {
   return messages;
 }
 
-/** Locale do usuário: cookie → Accept-Language → fallback pt-BR. */
+/** Sessão em cache por request (compartilhada com layouts) só quando há cookie de sessão. */
+const cachedSession = cache(async () => {
+  try {
+    return await getCurrentSession();
+  } catch {
+    return null;
+  }
+});
+
+/**
+ * Locale do usuário: preferência salva → cookie → Accept-Language → pt-BR.
+ * A preferência do perfil (independente do país/moeda) sempre vence.
+ */
 export async function getLocale(): Promise<Locale> {
   const [cookieStore, headerStore] = await Promise.all([cookies(), headers()]);
+  const cookieLocale = cookieStore.get(LOCALE_COOKIE)?.value ?? null;
+  const session = await cachedSession();
   return resolveLocale({
-    cookie: cookieStore.get(LOCALE_COOKIE)?.value ?? null,
+    preference: session?.user?.locale ?? session?.company?.locale ?? null,
+    cookie: cookieLocale,
     acceptLanguage: headerStore.get("accept-language"),
   });
 }
