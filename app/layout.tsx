@@ -74,7 +74,7 @@ export const metadata: Metadata = {
       "Vendas, estoque, clientes, caixa e financeiro em um só lugar. Conheça a Mangora e teste gratuitamente por 7 dias, sem cartão.",
     images: [
       {
-        url: "/mangora-share.png",
+        url: "https://www.mangora.com.br/mangora-whatsapp.png",
         width: 500,
         height: 500,
         alt: "Mascote da Mangora trabalhando no computador",
@@ -86,7 +86,7 @@ export const metadata: Metadata = {
     title: "Mangora — Gestão simples para o seu negócio",
     description:
       "Organize vendas, estoque, clientes, caixa e financeiro. Teste a Mangora gratuitamente por 7 dias.",
-    images: ["/mangora-share.png"],
+    images: ["https://www.mangora.com.br/mangora-whatsapp.png"],
   },
   icons: {
     icon: [{ url: "/favicon.ico", type: "image/x-icon" }],

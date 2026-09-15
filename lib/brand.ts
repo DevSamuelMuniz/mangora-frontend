@@ -3,7 +3,7 @@ export const brand = {
   url: "https://www.mangora.com.br",
   title: "Mangora | Sistema de gestão, vendas e estoque",
   description: "Conheça a Mangora: vendas, estoque, clientes, caixa e financeiro em um só sistema de gestão online. Experimente por 7 dias grátis, sem cartão.",
-  image: "/mangora-share.png",
+  image: "/mangora-whatsapp.png",
 };
 
 export const brandGraph = {
