@@ -19,6 +19,10 @@ async function proxy(request: NextRequest, context: RouteContext) {
     const value = request.headers.get(name);
     if (value) headers.set(name, value);
   }
+  const preferredCountry = request.cookies.get("mangora_country")?.value;
+  const inferredCountry = request.headers.get("x-vercel-ip-country") ?? request.headers.get("cf-ipcountry");
+  if (preferredCountry && /^[A-Z]{2}$/.test(preferredCountry)) headers.set("x-market-country", preferredCountry);
+  if (inferredCountry && /^[A-Z]{2}$/i.test(inferredCountry)) headers.set("x-vercel-ip-country", inferredCountry.toUpperCase());
   headers.set("x-forwarded-host", request.headers.get("host") ?? "");
   headers.set("x-forwarded-proto", request.nextUrl.protocol.replace(":", ""));
 

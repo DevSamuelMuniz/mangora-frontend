@@ -14,6 +14,10 @@ export type AuthSession = {
     name: string;
     email: string;
     phone: string | null;
+    country: string | null;
+    locale: string | null;
+    preferredCurrency: string | null;
+    timezone: string | null;
   };
   membership: {
     id: string;
@@ -25,6 +29,10 @@ export type AuthSession = {
     slug: string;
     segment: string;
     status: "ACTIVE" | "SUSPENDED";
+    country: string;
+    locale: string;
+    preferredCurrency: string;
+    timezone: string;
     subscriptionPlan: "FREE" | "START" | "BUSINESS" | "PREMIUM" | "ENTERPRISE";
     subscriptionStatus: "TRIAL" | "PENDING" | "ACTIVE" | "PAST_DUE" | "CANCELLED";
     trialEndsAt: string | null;

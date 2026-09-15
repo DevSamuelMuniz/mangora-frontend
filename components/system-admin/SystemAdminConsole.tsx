@@ -2,24 +2,27 @@
 
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
-import { Activity, ArrowLeft, Building2, CheckCircle2, CreditCard, KeyRound, LayoutDashboard, LifeBuoy, LoaderCircle, LockKeyhole, LogOut, Pencil, RefreshCw, Search, ShieldCheck, Tags, Unlock, Users, X } from "lucide-react";
+import { Activity, ArrowLeft, Building2, CheckCircle2, CreditCard, Globe2, KeyRound, LayoutDashboard, LifeBuoy, LoaderCircle, LockKeyhole, LogOut, Pencil, RefreshCw, Search, ShieldCheck, Tags, Unlock, Users, X } from "lucide-react";
 import BrandLogo from "@/components/brand/BrandLogo";
 import { ApiError, apiRequest } from "@/lib/api/client";
 import { formatCurrency, formatDate, formatNumber } from "@/lib/format";
 
-type Tab = "overview" | "companies" | "users" | "plans" | "coupons";
+type Tab = "overview" | "companies" | "users" | "plans" | "prices" | "coupons";
 type Overview = { metrics: { users: number; activeUsers: number; companies: number; activeCompanies: number; newCompanies: number; monthlyRecurringRevenue: number }; plans: Plan[]; recentCompanies: Company[] };
 type Plan = { id: string; name: string; price: number | null; ownerLimit: number | null; employeeLimit: number | null; unitLimit: number | null; companies: number };
 type User = { id: string; name: string; email: string; phone: string | null; status: string; isSystemAdmin: boolean; failedLoginAttempts: number; lockedUntil: string | null; createdAt: string; _count: { memberships: number; sessions: number } };
 type UserDetail = { id: string; name: string; email: string; phone: string | null; status: string; isSystemAdmin: boolean; failedLoginAttempts: number; lockedUntil: string | null; passwordChangedAt: string | null; createdAt: string; updatedAt: string; memberships: Array<{ id: string; role: string; active: boolean; createdAt: string; company: { id: string; tradeName: string; slug: string; status: string; subscriptionPlan: string; subscriptionStatus: string } }>; sessions: Array<{ id: string; ipAddress: string | null; createdAt: string }> };
 type Company = { id: string; tradeName: string; slug: string; email?: string | null; document?: string | null; status: string; subscriptionPlan: string; subscriptionStatus: string; subscriptionPrice?: number | string; subscriptionUnitPriceOverride?: number | string | null; subscriptionOwnerLimitOverride?: number | null; subscriptionEmployeeLimitOverride?: number | null; subscriptionUnitLimitOverride?: number | null; trialEndsAt?: string | null; nextBillingAt?: string | null; createdAt: string; _count: { memberships: number; sales?: number } };
 type Coupon = { id: string; code: string; type: "PERCENT" | "FIXED"; value: number; planScope: string | null; maxUses: number; usedCount: number; status: string };
+type PlanPrice = { id: string; market: string | null; country: string | null; currency: string; amount: number; interval: string; provider: string; providerPriceId: string | null; active: boolean };
+type PlanPricing = { id: string; code: string; name: string; active: boolean; prices: PlanPrice[] };
 
 const nav = [
   { id: "overview" as const, label: "Visão geral", icon: LayoutDashboard },
   { id: "companies" as const, label: "Empresas", icon: Building2 },
   { id: "users" as const, label: "Usuários", icon: Users },
   { id: "plans" as const, label: "Planos", icon: CreditCard },
+  { id: "prices" as const, label: "Preços globais", icon: Globe2 },
   { id: "coupons" as const, label: "Cupons", icon: Tags },
 ];
 
@@ -29,6 +32,7 @@ export default function SystemAdminConsole({ operatorName }: { operatorName: str
   const [users, setUsers] = useState<User[]>([]);
   const [companies, setCompanies] = useState<Company[]>([]);
   const [coupons, setCoupons] = useState<Coupon[]>([]);
+  const [planPrices, setPlanPrices] = useState<PlanPricing[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [accessDenied, setAccessDenied] = useState(false);
@@ -41,13 +45,14 @@ export default function SystemAdminConsole({ operatorName }: { operatorName: str
   async function load() {
     setLoading(true); setError(""); setAccessDenied(false);
     try {
-      const [summary, userList, companyList, couponList] = await Promise.all([
+      const [summary, userList, companyList, couponList, prices] = await Promise.all([
         apiRequest<Overview>("/system-admin/overview"),
         apiRequest<User[]>("/system-admin/users"),
         apiRequest<Company[]>("/system-admin/companies"),
         apiRequest<Coupon[]>("/system-admin/coupons"),
+        apiRequest<PlanPricing[]>("/system-admin/plan-prices"),
       ]);
-      setOverview(summary); setUsers(userList); setCompanies(companyList); setCoupons(couponList);
+      setOverview(summary); setUsers(userList); setCompanies(companyList); setCoupons(couponList); setPlanPrices(prices);
     } catch (cause) {
       const denied = cause instanceof ApiError && cause.status === 403;
       setAccessDenied(denied);
@@ -61,9 +66,10 @@ export default function SystemAdminConsole({ operatorName }: { operatorName: str
       apiRequest<User[]>("/system-admin/users"),
       apiRequest<Company[]>("/system-admin/companies"),
       apiRequest<Coupon[]>("/system-admin/coupons"),
-    ]).then(([summary, userList, companyList, couponList]) => {
+      apiRequest<PlanPricing[]>("/system-admin/plan-prices"),
+    ]).then(([summary, userList, companyList, couponList, prices]) => {
       if (!active) return;
-      setOverview(summary); setUsers(userList); setCompanies(companyList); setCoupons(couponList); setLoading(false);
+      setOverview(summary); setUsers(userList); setCompanies(companyList); setCoupons(couponList); setPlanPrices(prices); setLoading(false);
     }).catch((cause: unknown) => {
       if (!active) return;
       const denied = cause instanceof ApiError && cause.status === 403;
@@ -100,6 +106,7 @@ export default function SystemAdminConsole({ operatorName }: { operatorName: str
             {tab === "companies" && <CompaniesPanel items={visibleCompanies} onEdit={setEditingCompany} />}
             {tab === "users" && <UsersPanel items={visibleUsers} onEdit={setEditingUser} onSupport={setSupportingUser} />}
             {tab === "plans" && <PlansPanel plans={overview.plans} />}
+            {tab === "prices" && <PlanPricesPanel plans={planPrices} onReload={() => void load()} notify={notify} />}
             {tab === "coupons" && <CouponsPanel items={coupons} onCreated={(coupon) => { setCoupons((current) => [coupon, ...current]); notify("Cupom criado."); }} />}
           </>}
         </div>
@@ -123,6 +130,31 @@ function CompaniesPanel({ items, onEdit }: { items: Company[]; onEdit: (item: Co
 function CompanyRows({ items, onEdit, compact = false }: { items: Company[]; onEdit: ((item: Company) => void) | (() => void); compact?: boolean }) { return <div className="divide-y divide-[#123d2b]/10">{items.map((company) => <div key={company.id} className="grid gap-3 px-5 py-4 hover:bg-[#ffb21a]/5 md:grid-cols-[minmax(0,1.5fr)_1fr_1fr_auto] md:items-center"><div><p className="truncate text-xs font-black text-[#123d2b]">{company.tradeName}</p><p className="mt-1 truncate text-[9px] text-[#597064]">{company.email ?? company.slug} · desde {formatDate(company.createdAt)}</p></div><div><Badge value={company.status} /><p className="mt-1 text-[9px] text-[#597064]">{company._count.memberships} usuário(s)</p></div><div><p className="text-[10px] font-black text-[#a93a05]">{company.subscriptionPlan}</p><p className="mt-1 text-[9px] text-[#597064]">{company.subscriptionStatus}</p></div><button onClick={() => onEdit(company)} className="flex h-8 items-center justify-center gap-1 rounded-lg border border-[#123d2b]/15 bg-white px-3 text-[10px] font-bold hover:border-[#ce4a0a] hover:text-[#a93a05]"><Pencil className="size-3" />{compact ? "Abrir" : "Editar"}</button></div>)}{!items.length && <Empty text="Nenhuma empresa encontrada." />}</div>; }
 function UsersPanel({ items, onEdit, onSupport }: { items: User[]; onEdit: (item: User) => void; onSupport: (item: User) => void }) { return <section className="overflow-hidden rounded-2xl border border-[#123d2b]/15 bg-[#fffdf8] shadow-sm"><PanelTitle title="Usuários da plataforma" description={`${items.length} registros exibidos · edite dados e controle acessos`} /><div className="divide-y divide-[#123d2b]/10">{items.map((user) => <div key={user.id} className="grid gap-3 px-5 py-4 hover:bg-[#ffb21a]/5 md:grid-cols-[minmax(0,1.5fr)_1fr_1fr_auto] md:items-center"><div><div className="flex items-center gap-2"><p className="truncate text-xs font-black">{user.name}</p>{user.isSystemAdmin && <ShieldCheck className="size-3.5 text-[#147a45]" />}</div><p className="mt-1 truncate text-[9px] text-[#597064]">{user.email}</p></div><div><Badge value={user.status} /><p className="mt-1 text-[9px] text-[#597064]">{user._count.memberships} empresa(s)</p></div><div><p className="text-[10px] font-bold">{user._count.sessions} sessões</p><p className="mt-1 text-[9px] text-[#597064]">desde {formatDate(user.createdAt)}</p></div><div className="flex gap-2"><button onClick={() => onSupport(user)} className="flex h-8 items-center justify-center gap-1 rounded-lg border border-[#147a45]/25 bg-[#dff4e7] px-3 text-[10px] font-black text-[#147a45] hover:bg-[#c9ecd6]"><LifeBuoy className="size-3" />Suporte</button><button onClick={() => onEdit(user)} className="flex h-8 items-center justify-center gap-1 rounded-lg border border-[#123d2b]/15 bg-white px-3 text-[10px] font-bold hover:border-[#ce4a0a] hover:text-[#a93a05]"><Pencil className="size-3" />Editar</button></div></div>)}{!items.length && <Empty text="Nenhum usuário encontrado." />}</div></section>; }
 function PlansPanel({ plans }: { plans: Plan[] }) { return <div><div className="mb-5"><p className="text-[9px] font-black uppercase tracking-[.16em] text-[#a93a05]">Catálogo comercial</p><h2 className="mt-1 text-2xl font-black">Planos da Mangora</h2><p className="mt-1 text-xs text-[#597064]">Valores e limites vigentes no backend. A distribuição atual é calculada pelas empresas cadastradas.</p></div><div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">{plans.map((plan, index) => <article key={plan.id} className={`rounded-2xl border-2 p-5 ${index === 2 ? "border-[#ce4a0a] bg-[#fff8ea] shadow-[5px_5px_0_#ffb21a]" : "border-[#123d2b]/15 bg-[#fffdf8]"}`}><div className="flex items-start justify-between"><div><p className="text-[9px] font-black uppercase tracking-[.14em] text-[#597064]">{plan.id}</p><h3 className="mt-1 text-xl font-black">{plan.name}</h3></div><span className="rounded-full bg-[#d4ecdc] px-2.5 py-1 text-[9px] font-black text-[#147a45]">{plan.companies} empresa(s)</span></div><p className="mt-6 text-2xl font-black text-[#ce4a0a]">{plan.price === null ? "Sob consulta" : plan.price === 0 ? "Grátis" : `${formatCurrency(plan.price)}/mês`}</p><div className="mt-5 grid grid-cols-3 gap-2 border-t border-[#123d2b]/10 pt-4 text-[10px]"><span className="text-[#597064]">Donos<strong className="mt-1 block text-xs text-[#123d2b]">{plan.ownerLimit ?? "A combinar"}</strong></span><span className="text-[#597064]">Funcionários<strong className="mt-1 block text-xs text-[#123d2b]">{plan.employeeLimit ?? "A combinar"}</strong></span><span className="text-[#597064]">Lojas<strong className="mt-1 block text-xs text-[#123d2b]">{plan.unitLimit ?? "A combinar"}</strong></span></div></article>)}</div><p className="mt-5 rounded-xl border border-amber-200 bg-amber-50 p-4 text-[10px] leading-4 text-amber-800">Para evitar divergência de cobrança, a edição do catálogo deve permanecer versionada no backend. Nesta central você pode atribuir qualquer plano e valor diretamente a uma empresa.</p></div>; }
+
+function PlanPricesPanel({ plans, onReload, notify }: { plans: PlanPricing[]; onReload: () => void; notify: (text: string) => void }) {
+  return <div className="space-y-5"><div><p className="text-[9px] font-black uppercase tracking-[.16em] text-[#a93a05]">Country → Market → PlanPrice</p><h2 className="mt-1 text-2xl font-black">Preços por mercado</h2><p className="mt-1 max-w-2xl text-xs leading-5 text-[#597064]">Valores em centavos, independentes da cotação. O ID Paddle deve corresponder ao preço criado no mesmo ambiente.</p></div>{plans.map((plan) => <section key={plan.id} className="overflow-hidden rounded-2xl border border-[#123d2b]/15 bg-[#fffdf8]"><PanelTitle title={plan.name} description={`${plan.prices.filter((price) => price.active).length} preço(s) ativo(s)`} /><div className="divide-y divide-[#123d2b]/10">{plan.prices.map((price) => <PlanPriceRow key={price.id} planCode={plan.code} price={price} onSaved={() => { notify(`Preço ${plan.name} / ${price.country ?? price.market} atualizado.`); onReload(); }} />)}</div></section>)}</div>;
+}
+
+function PlanPriceRow({ planCode, price, onSaved }: { planCode: string; price: PlanPrice; onSaved: () => void }) {
+  const [amount, setAmount] = useState(String(price.amount));
+  const [providerPriceId, setProviderPriceId] = useState(price.providerPriceId ?? "");
+  const [active, setActive] = useState(price.active);
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState("");
+  async function save() {
+    setSaving(true); setError("");
+    try {
+      await apiRequest(`/system-admin/plan-prices/${price.id}`, { method: "PATCH", body: JSON.stringify({
+        planCode, market: price.market, country: price.country, currency: price.currency,
+        amount: Number(amount), interval: price.interval, provider: price.provider,
+        providerPriceId: providerPriceId || null, active,
+      }) });
+      onSaved();
+    } catch (cause) { setError(cause instanceof Error ? cause.message : "Não foi possível salvar o preço."); }
+    finally { setSaving(false); }
+  }
+  return <div className="grid gap-3 px-4 py-4 lg:grid-cols-[90px_100px_120px_130px_minmax(180px,1fr)_auto] lg:items-end"><div><p className="text-[9px] font-bold text-[#789083]">Mercado</p><strong className="mt-1 block text-xs">{price.country ?? price.market}</strong></div><div><p className="text-[9px] font-bold text-[#789083]">Moeda</p><strong className="mt-1 block text-xs">{price.currency}</strong></div><Field label="Valor (centavos)"><input type="number" min="0" step="1" value={amount} onChange={(event) => setAmount(event.target.value)} /></Field><div><p className="text-[9px] font-bold text-[#789083]">Provedor</p><strong className="mt-2 block text-xs">{price.provider}</strong></div><Field label="Provider price ID"><input value={providerPriceId} onChange={(event) => setProviderPriceId(event.target.value)} placeholder={price.provider === "PADDLE" ? "pri_..." : "asaas_dynamic_..."} /></Field><div className="flex items-center gap-2"><label className="flex items-center gap-1.5 text-[10px] font-bold"><input type="checkbox" checked={active} onChange={(event) => setActive(event.target.checked)} className="accent-[#147a45]" />Ativo</label><button type="button" disabled={saving || !Number.isInteger(Number(amount))} onClick={() => void save()} className="h-10 rounded-xl bg-[#ce4a0a] px-4 text-[10px] font-black text-white disabled:opacity-50">{saving ? "Salvando..." : "Salvar"}</button></div>{error && <p role="alert" className="text-xs font-bold text-red-600 lg:col-span-6">{error}</p>}</div>;
+}
 
 function UserEditor({ user, onClose, onSaved }: { user: User; onClose: () => void; onSaved: (user: Partial<User> & { id: string }) => void }) { const [form, setForm] = useState({ name: user.name, email: user.email, phone: user.phone ?? "", status: user.status, isSystemAdmin: user.isSystemAdmin }); return <Editor title="Editar usuário" description={form.isSystemAdmin ? "Administrador global da plataforma" : "Conta de acesso Mangora"} onClose={onClose} onSave={async () => { const updated = await apiRequest<Partial<User> & { id: string }>(`/system-admin/users/${user.id}`, { method: "PATCH", body: JSON.stringify(form) }); onSaved(updated); }}><Field label="Nome"><input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} /></Field><Field label="E-mail"><input type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} /></Field><Field label="Telefone"><input value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} /></Field><Field label="Status"><select value={form.status} onChange={(e) => setForm({ ...form, status: e.target.value })}><option value="ACTIVE">Ativo</option><option value="BLOCKED">Bloqueado</option></select></Field><label className="flex cursor-pointer items-center justify-between gap-3 rounded-xl border border-[#123d2b]/15 bg-white px-4 py-3 sm:col-span-2"><span className="flex items-center gap-2 text-[10px] font-bold text-[#315847]"><ShieldCheck className="size-4 text-[#147a45]" />Administrador do sistema</span><input type="checkbox" checked={form.isSystemAdmin} onChange={(e) => setForm({ ...form, isSystemAdmin: e.target.checked })} className="size-5 accent-[#147a45]" /></label></Editor>; }
 function CompanyEditor({ company, onClose, onSaved }: { company: Company; onClose: () => void; onSaved: (company: Partial<Company> & { id: string }) => void }) { const [form, setForm] = useState({ status: company.status, subscriptionPlan: company.subscriptionPlan, subscriptionStatus: company.subscriptionStatus, unitPrice: company.subscriptionUnitPriceOverride == null ? "" : String(company.subscriptionUnitPriceOverride), ownerLimit: company.subscriptionOwnerLimitOverride == null ? "" : String(company.subscriptionOwnerLimitOverride), employeeLimit: company.subscriptionEmployeeLimitOverride == null ? "" : String(company.subscriptionEmployeeLimitOverride), unitLimit: company.subscriptionUnitLimitOverride == null ? "" : String(company.subscriptionUnitLimitOverride), trialEndsAt: company.trialEndsAt?.slice(0, 10) ?? "" }); const optionalNumber = (value: string) => value === "" ? null : Number(value); return <Editor title={company.tradeName} description="Plano, cobrança e limites exclusivos desta conta" onClose={onClose} onSave={async () => { const updated = await apiRequest<Partial<Company> & { id: string }>(`/system-admin/companies/${company.id}`, { method: "PATCH", body: JSON.stringify({ status: form.status, subscriptionPlan: form.subscriptionPlan, subscriptionStatus: form.subscriptionStatus, subscriptionUnitPriceOverride: optionalNumber(form.unitPrice), subscriptionOwnerLimitOverride: optionalNumber(form.ownerLimit), subscriptionEmployeeLimitOverride: optionalNumber(form.employeeLimit), subscriptionUnitLimitOverride: optionalNumber(form.unitLimit), trialEndsAt: form.trialEndsAt ? `${form.trialEndsAt}T23:59:59.000-03:00` : undefined }) }); onSaved(updated); }}><Field label="Acesso da empresa"><select value={form.status} onChange={(e) => setForm({ ...form, status: e.target.value })}><option value="ACTIVE">Ativa</option><option value="SUSPENDED">Suspensa</option></select></Field><Field label="Plano"><select value={form.subscriptionPlan} onChange={(e) => setForm({ ...form, subscriptionPlan: e.target.value })}>{["FREE", "START", "BUSINESS", "PREMIUM", "ENTERPRISE"].map((plan) => <option key={plan}>{plan}</option>)}</select></Field><Field label="Status da assinatura"><select value={form.subscriptionStatus} onChange={(e) => setForm({ ...form, subscriptionStatus: e.target.value })}>{["TRIAL", "PENDING", "ACTIVE", "PAST_DUE", "CANCELLED"].map((status) => <option key={status}>{status}</option>)}</select></Field><Field label="Preço por loja personalizado"><input type="number" min="0" step="0.01" placeholder="Padrão do plano" value={form.unitPrice} onChange={(e) => setForm({ ...form, unitPrice: e.target.value })} /></Field><Field label="Limite de donos"><input type="number" min="1" placeholder="Padrão do plano" value={form.ownerLimit} onChange={(e) => setForm({ ...form, ownerLimit: e.target.value })} /></Field><Field label="Limite de funcionários"><input type="number" min="0" placeholder="Padrão do plano" value={form.employeeLimit} onChange={(e) => setForm({ ...form, employeeLimit: e.target.value })} /></Field><Field label="Limite de lojas"><input type="number" min="1" placeholder="Padrão do plano" value={form.unitLimit} onChange={(e) => setForm({ ...form, unitLimit: e.target.value })} /></Field><Field label="Fim do período grátis"><input type="date" value={form.trialEndsAt} onChange={(e) => setForm({ ...form, trialEndsAt: e.target.value })} /></Field><div className="sm:col-span-2 rounded-xl border border-amber-200 bg-amber-50 p-3 text-[10px] leading-4 text-amber-800">Deixe um campo vazio para usar o valor padrão do plano. Alterações em preço atualizam a assinatura única do grupo no Asaas.</div></Editor>; }

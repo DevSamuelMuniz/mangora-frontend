@@ -29,6 +29,8 @@ import { brazilDateKey } from "@/lib/timezone";
 import { brand, brandGraph } from "@/lib/brand";
 import ConversionTracking from "@/components/marketing/ConversionTracking";
 import ProductWalkthrough from "@/components/marketing/ProductWalkthrough";
+import MarketSelector from "@/components/marketing/MarketSelector";
+import RegionalPlanPrice from "@/components/marketing/RegionalPlanPrice";
 
 export const metadata: Metadata = {
   title: { absolute: brand.title },
@@ -332,10 +334,10 @@ export default function Home() {
                 </p>
                 <div className="mt-7 flex items-end gap-2 border-b border-[#123d2b]/10 pb-7">
                   <span className="pb-1 text-sm font-bold text-[#597064]">R$</span>
-                  <strong className="font-[family-name:var(--font-bricolage)] text-6xl leading-none tracking-[-0.06em] text-[#123d2b]">
-                    {plan.price === "0" ? "0" : plan.price}
+                  <strong className="font-[family-name:var(--font-bricolage)] text-4xl leading-none tracking-[-0.045em] text-[#123d2b] sm:text-5xl">
+                    <RegionalPlanPrice planCode={plan.id.toUpperCase()} fallback={plan.price === "0" ? "Grátis" : `R$ ${plan.price}`} />
                   </strong>
-                  <span className="pb-1 text-sm text-[#597064]">/mês</span>
+                  {plan.id !== "free" && <span className="pb-1 text-sm text-[#597064]">/mês</span>}
                 </div>
                 <ul className="mt-7 flex-1 space-y-4">
                   {plan.features.map((feature) => (
@@ -450,6 +452,7 @@ function Header() {
         </nav>
 
         <div className="flex items-center gap-2 sm:gap-3">
+          <div className="hidden md:block"><MarketSelector compact /></div>
           <Link
             href="/login"
             className="inline-flex min-h-11 items-center rounded-xl px-3 py-2 text-sm font-extrabold text-[#315847] transition hover:bg-white sm:px-5 sm:py-3"
