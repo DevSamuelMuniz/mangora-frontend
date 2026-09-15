@@ -260,7 +260,8 @@
     "errors": {
       "invalid": "Informe quantidade maior que zero e um custo unitário válido.",
       "receiveFailed": "Não foi possível receber o lote.",
-      "loadFailed": "Não foi possível carregar."
+      "loadFailed": "Não foi possível carregar.",
+      "activateFailed": "Não foi possível ativar o custo FIFO."
     },
     "toast": "Lote recebido — estoque atualizado com entrada justificada."
   }

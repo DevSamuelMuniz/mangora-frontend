@@ -260,7 +260,8 @@
     "errors": {
       "invalid": "Indica una cantidad mayor que cero y un coste unitario válido.",
       "receiveFailed": "No se pudo recibir el lote.",
-      "loadFailed": "No se pudo cargar."
+      "loadFailed": "No se pudo cargar.",
+      "activateFailed": "No se pudo activar el coste FIFO."
     },
     "toast": "Lote recibido — inventario actualizado con entrada justificada."
   }

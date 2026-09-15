@@ -260,7 +260,8 @@
     "errors": {
       "invalid": "Enter a quantity greater than zero and a valid unit cost.",
       "receiveFailed": "Could not receive the batch.",
-      "loadFailed": "Could not load."
+      "loadFailed": "Could not load.",
+      "activateFailed": "Could not enable FIFO cost."
     },
     "toast": "Batch received — stock updated with a justified entry."
   }
