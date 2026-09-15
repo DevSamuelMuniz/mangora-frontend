@@ -67,15 +67,17 @@ export default function EmployeeManagement() {
     try {
       setActionError("");
       const birthDate = String(data.get("birthDate") ?? "");
-      const updated = await updateProfileMutation.mutateAsync({ id: selected.id, payload: {
-        jobTitle: String(data.get("jobTitle") ?? "") || null,
-        employeeCode: String(data.get("employeeCode") ?? "") || null,
-        startDate: brazilDateTimeToIso(String(data.get("startDate"))),
-        birthDate: birthDate ? brazilDateTimeToIso(birthDate) : null,
-        notes: String(data.get("notes") ?? "") || null,
-        birthdayEmailEnabled: data.get("birthdayEmailEnabled") === "on",
-        workAnniversaryEmailEnabled: data.get("workAnniversaryEmailEnabled") === "on",
-      } });
+      const updated = await updateProfileMutation.mutateAsync({
+        id: selected.id, payload: {
+          jobTitle: String(data.get("jobTitle") ?? "") || null,
+          employeeCode: String(data.get("employeeCode") ?? "") || null,
+          startDate: brazilDateTimeToIso(String(data.get("startDate"))),
+          birthDate: birthDate ? brazilDateTimeToIso(birthDate) : null,
+          notes: String(data.get("notes") ?? "") || null,
+          birthdayEmailEnabled: data.get("birthdayEmailEnabled") === "on",
+          workAnniversaryEmailEnabled: data.get("workAnniversaryEmailEnabled") === "on",
+        }
+      });
       setSelected(updated);
       setFeedback("Dados do funcionário salvos.");
     } catch (cause) { setActionError(cause instanceof Error ? cause.message : "Não foi possível salvar os dados."); }
@@ -106,7 +108,7 @@ export default function EmployeeManagement() {
 
 function EmployeeModal({ employee, saving, onClose, onRole, onEdit, onToggle }: { employee: Employee; saving: boolean; onClose: () => void; onRole: (employee: Employee, role: EmployeeRole) => Promise<void>; onEdit: (event: FormEvent<HTMLFormElement>) => Promise<void>; onToggle: () => void }) {
   return <div className="fixed inset-0 z-[70] flex items-center justify-center bg-slate-950/50 p-3 backdrop-blur-sm sm:p-5" onMouseDown={(event) => { if (event.target === event.currentTarget) onClose(); }}><div role="dialog" aria-modal="true" aria-labelledby="employee-dialog-title" className="flex max-h-[92vh] w-full max-w-2xl flex-col overflow-hidden rounded-3xl bg-white shadow-2xl">
-    <header className="flex items-start justify-between border-b border-slate-200 bg-gradient-to-r from-orange-50 to-amber-50 px-5 py-4 sm:px-6"><div><p className="text-[10px] font-black uppercase tracking-[0.15em] text-orange-600">Ficha do funcionário</p><h2 id="employee-dialog-title" className="mt-1 text-xl font-black text-slate-950">{employee.name}</h2><p className="mt-1 text-[11px] text-slate-500">{employee.email} · último acesso {employee.lastAccessAt ? formatDateTime(employee.lastAccessAt) : "ainda não realizado"}</p></div><button type="button" aria-label="Fechar ficha" onClick={onClose} className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-white text-slate-500 shadow-sm hover:text-orange-600"><X className="size-4" /></button></header>
+    <header className="flex items-start justify-between border-b border-slate-200 bg-gradient-to-r from-orange-50 to-amber-50 px-5 py-4 sm:px-6"><div><p className="text-[10px] font-black uppercase tracking-[0.15em] text-white">Ficha do funcionário</p><h2 id="employee-dialog-title" className="mt-1 text-xl font-black text-slate-900">{employee.name}</h2><p className="mt-1 text-[11px] text-slate-50">{employee.email} · último acesso {employee.lastAccessAt ? formatDateTime(employee.lastAccessAt) : "ainda não realizado"}</p></div><button type="button" aria-label="Fechar ficha" onClick={onClose} className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-white text-slate-500 shadow-sm hover:text-orange-600"><X className="size-4" /></button></header>
     <form key={`${employee.id}:${employee.startDate}:${employee.birthDate ?? ""}`} onSubmit={(event) => void onEdit(event)} className="overflow-y-auto p-5 sm:p-6">
       <div className="grid gap-4 sm:grid-cols-2"><Field label="Cargo interno" id="jobTitle"><input id="jobTitle" name="jobTitle" defaultValue={employee.jobTitle ?? ""} className={inputClass} /></Field><Field label="Código interno" id="employeeCode"><input id="employeeCode" name="employeeCode" defaultValue={employee.employeeCode ?? ""} className={inputClass} /></Field><Field label="Data de admissão" id="startDate"><input id="startDate" name="startDate" type="date" required defaultValue={brazilDateKey(employee.startDate)} className={inputClass} /></Field><Field label="Data de nascimento" id="birthDate"><input id="birthDate" name="birthDate" type="date" max={new Date().toISOString().slice(0, 10)} defaultValue={employee.birthDate ? brazilDateKey(employee.birthDate) : ""} className={inputClass} /></Field></div>
       <div className="mt-4 grid gap-3 sm:grid-cols-2"><EmailToggle name="birthdayEmailEnabled" defaultChecked={employee.birthdayEmailEnabled} icon={<Cake className="size-4" />} title="Parabéns no aniversário" text="Envia um e-mail personalizado na data de nascimento." /><EmailToggle name="workAnniversaryEmailEnabled" defaultChecked={employee.workAnniversaryEmailEnabled} icon={<CalendarHeart className="size-4" />} title="Aniversário de empresa" text="Celebra cada ano desde a data de admissão." /></div>
