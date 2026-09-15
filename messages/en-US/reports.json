@@ -1,0 +1,63 @@
+{
+  "title": "Reports",
+  "subtitle": "Analyse sales, results, products and customers.",
+  "eyebrow": "Business intelligence",
+  "metrics": {
+    "revenue": "Revenue",
+    "sales": "Sales made",
+    "averageTicket": "Average ticket",
+    "averageTicketHint": "Average per completed sale",
+    "newCustomers": "New customers",
+    "newCustomersHint": "Registrations in the period",
+    "ordersHint": "Orders completed in the period"
+  },
+  "chart": {
+    "title": "Revenue performance",
+    "revenue": "Revenue",
+    "revenueShort": "Revenue",
+    "expenses": "Expenses",
+    "result": "Result",
+    "operationResult": "Operating result",
+    "operationHint": "Revenue and expenses actually received/paid",
+    "previous": "Previous",
+    "current": "Current"
+  },
+  "products": {
+    "title": "Best performing products",
+    "subtitle": "Ranking by revenue in the period",
+    "product": "Product or service",
+    "quantity": "Quantity",
+    "amount": "Amount",
+    "empty": "No products sold in the period.",
+    "share": "Revenue share"
+  },
+  "categories": {
+    "title": "Category"
+  },
+  "payments": {
+    "title": "Payment methods"
+  },
+  "period": {
+    "title": "Report period",
+    "last7": "Last 7 days",
+    "last30": "Last 30 days",
+    "last90": "Last 90 days"
+  },
+  "table": {
+    "indicator": "Indicator",
+    "value": "Value"
+  },
+  "sections": {
+    "sales": "Sales",
+    "relationship": "Relationship"
+  },
+  "empty": {
+    "sales": "No sales in the period."
+  },
+  "toasts": {
+    "exported": "CSV report exported successfully."
+  },
+  "actions": {
+    "closeNotice": "Dismiss notice"
+  }
+}

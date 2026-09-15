@@ -1,0 +1,63 @@
+{
+  "title": "Informes",
+  "subtitle": "Analiza ventas, resultados, productos y clientes.",
+  "eyebrow": "Inteligencia de negocio",
+  "metrics": {
+    "revenue": "Facturación",
+    "sales": "Ventas realizadas",
+    "averageTicket": "Ticket medio",
+    "averageTicketHint": "Media por venta completada",
+    "newCustomers": "Nuevos clientes",
+    "newCustomersHint": "Registros del período",
+    "ordersHint": "Pedidos completados en el período"
+  },
+  "chart": {
+    "title": "Desempeño de facturación",
+    "revenue": "Facturación",
+    "revenueShort": "Ingresos",
+    "expenses": "Gastos",
+    "result": "Resultado",
+    "operationResult": "Resultado operativo",
+    "operationHint": "Ingresos y gastos realizados",
+    "previous": "Anterior",
+    "current": "Actual"
+  },
+  "products": {
+    "title": "Productos con mejor desempeño",
+    "subtitle": "Ranking por facturación del período",
+    "product": "Producto o servicio",
+    "quantity": "Cantidad",
+    "amount": "Importe",
+    "empty": "Sin productos vendidos en el período.",
+    "share": "Participación en la facturación"
+  },
+  "categories": {
+    "title": "Categoría"
+  },
+  "payments": {
+    "title": "Formas de pago"
+  },
+  "period": {
+    "title": "Período del informe",
+    "last7": "Últimos 7 días",
+    "last30": "Últimos 30 días",
+    "last90": "Últimos 90 días"
+  },
+  "table": {
+    "indicator": "Indicador",
+    "value": "Valor"
+  },
+  "sections": {
+    "sales": "Ventas",
+    "relationship": "Relación"
+  },
+  "empty": {
+    "sales": "Sin ventas en el período."
+  },
+  "toasts": {
+    "exported": "Informe CSV exportado correctamente."
+  },
+  "actions": {
+    "closeNotice": "Cerrar aviso"
+  }
+}
