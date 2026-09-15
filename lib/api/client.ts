@@ -10,6 +10,12 @@ type ApiErrorPayload = {
   code?: string;
 };
 
+let pendingOperationPassword: string | null = null;
+
+export function rememberOperationPassword(password: string) {
+  pendingOperationPassword = password;
+}
+
 export class ApiError extends Error {
   constructor(
     message: string,
@@ -23,6 +29,7 @@ export class ApiError extends Error {
 export async function apiRequest<T>(path: string, init?: RequestInit): Promise<T> {
   const method = (init?.method ?? "GET").toUpperCase();
   const isRead = method === "GET" || method === "HEAD";
+  const operationPassword = !isRead ? pendingOperationPassword : null;
 
   let response: Response;
   try {
@@ -31,9 +38,11 @@ export async function apiRequest<T>(path: string, init?: RequestInit): Promise<T
       credentials: "include",
       headers: {
         "Content-Type": "application/json",
+        ...(operationPassword ? { "x-operation-password": operationPassword } : {}),
         ...init?.headers,
       },
     });
+    if (operationPassword) pendingOperationPassword = null;
   } catch {
     // Sem conexão: leituras usam o cache offline; mutações entram na fila de sync.
     if (isSensitivePath(path) || typeof window === "undefined" || typeof indexedDB === "undefined") {
