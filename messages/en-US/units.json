@@ -1,0 +1,62 @@
+{
+  "title": "Stores and consolidated view",
+  "subtitle": "Data separated by unit",
+  "eyebrow": "Multi-unit operation",
+  "actions": {
+    "access": "Open this store",
+    "addToGroup": "Add store to the group",
+    "add": "Add store",
+    "remove": "Remove store",
+    "cancel": "Cancel",
+    "closeForm": "Close form",
+    "retry": "Try again"
+  },
+  "filters": {
+    "store": "Filter by store",
+    "all": "All"
+  },
+  "period": {
+    "last7": "Last 7 days",
+    "last30": "Last 30 days",
+    "last90": "Last 90 days"
+  },
+  "metrics": {
+    "revenue": "Consolidated revenue",
+    "sales": "Group sales",
+    "averageTicket": "Average ticket",
+    "stock": "Total stock",
+    "receivable": "Receivable",
+    "storeRevenue": "Revenue",
+    "storeSales": "Sales",
+    "storeStock": "Stock"
+  },
+  "current": {
+    "label": "Current environment",
+    "independent": "Independent environment"
+  },
+  "activate": {
+    "title": "Ready to expand",
+    "hint": "Turn your current company into Store 1.",
+    "button": "Add store to the group",
+    "confirm": "I accept the extra monthly charge",
+    "notice": "Store group activated. You can now add up to two units.",
+    "failed": "Could not activate the group."
+  },
+  "newStore": {
+    "title": "New unit",
+    "groupName": "Group name",
+    "groupNamePlaceholder": "e.g. Mangora Group",
+    "legalName": "Legal name",
+    "tradeName": "Store name *",
+    "document": "Company tax ID (optional)",
+    "email": "Email",
+    "copyCatalog": "Copy catalogue from current store",
+    "copyCatalogHint": "Products and prices are copied; stock balance starts at zero.",
+    "submit": "Add store",
+    "created": "New store created with independent stock.",
+    "failed": "Could not create the store."
+  },
+  "removeFailed": "Could not remove the store.",
+  "switchFailed": "Could not switch store.",
+  "loading": "Consolidating stores..."
+}
