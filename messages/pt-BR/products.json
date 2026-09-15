@@ -1,0 +1,72 @@
+{
+  "title": "Catálogo",
+  "subtitle": "Cadastre itens, controle preços, estoque e visibilidade.",
+  "actions": {
+    "create": "Cadastrar produto",
+    "view": "Ver detalhes",
+    "edit": "Editar produto",
+    "delete": "Excluir produto",
+    "cancel": "Cancelar",
+    "close": "Fechar",
+    "retry": "Tentar novamente"
+  },
+  "search": {
+    "label": "Buscar produtos",
+    "placeholder": "Buscar por nome, SKU ou código..."
+  },
+  "filters": {
+    "category": "Categoria",
+    "status": "Status",
+    "all": "Todos"
+  },
+  "status": {
+    "active": "Ativo",
+    "inactive": "Inativo",
+    "activePlural": "Ativos",
+    "inactivePlural": "Inativos"
+  },
+  "stock": {
+    "label": "Estoque",
+    "physical": "Estoque físico",
+    "reserved": "Reservado",
+    "available": "Disponível",
+    "low": "Estoque baixo",
+    "out": "Sem estoque",
+    "untracked": "Não controlado",
+    "minimum": "Estoque mínimo"
+  },
+  "table": {
+    "product": "Produto",
+    "category": "Categoria",
+    "barcode": "Código de barras",
+    "price": "Preço",
+    "stock": "Estoque",
+    "status": "Status",
+    "actions": "Ações",
+    "actionsOf": "Ações do produto"
+  },
+  "details": {
+    "title": "Detalhes do produto",
+    "close": "Fechar detalhes",
+    "notInformed": "Não informado"
+  },
+  "empty": {
+    "title": "Nenhum produto encontrado",
+    "hint": "Ajuste os filtros para visualizar o catálogo.",
+    "hintFirst": "Cadastre o primeiro produto para começar seu catálogo."
+  },
+  "loading": "Carregando produtos...",
+  "deleteFailed": "Não foi possível excluir o produto.",
+  "deleteDialog": {
+    "title": "Excluir produto?",
+    "confirm": "Excluir",
+    "deleting": "Excluindo...",
+    "warning": "Esta ação remove o produto do catálogo e não pode ser desfeita."
+  },
+  "pagination": {
+    "previous": "Página anterior",
+    "next": "Próxima página",
+    "page": "Página {page} de {total}",
+    "showing": "Mostrando {shown} de {total} produto(s)"
+  }
+}

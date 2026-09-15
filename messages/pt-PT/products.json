@@ -1,0 +1,72 @@
+{
+  "title": "Catálogo",
+  "subtitle": "Registe artigos e controle preços, inventário e visibilidade.",
+  "actions": {
+    "create": "Registar produto",
+    "view": "Ver detalhes",
+    "edit": "Editar produto",
+    "delete": "Eliminar produto",
+    "cancel": "Cancelar",
+    "close": "Fechar",
+    "retry": "Tentar novamente"
+  },
+  "search": {
+    "label": "Pesquisar produtos",
+    "placeholder": "Pesquisar por nome, SKU ou código..."
+  },
+  "filters": {
+    "category": "Categoria",
+    "status": "Estado",
+    "all": "Todos"
+  },
+  "status": {
+    "active": "Ativo",
+    "inactive": "Inativo",
+    "activePlural": "Ativos",
+    "inactivePlural": "Inativos"
+  },
+  "stock": {
+    "label": "Inventário",
+    "physical": "Inventário físico",
+    "reserved": "Reservado",
+    "available": "Disponível",
+    "low": "Inventário baixo",
+    "out": "Sem inventário",
+    "untracked": "Não controlado",
+    "minimum": "Inventário mínimo"
+  },
+  "table": {
+    "product": "Produto",
+    "category": "Categoria",
+    "barcode": "Código de barras",
+    "price": "Preço",
+    "stock": "Inventário",
+    "status": "Estado",
+    "actions": "Ações",
+    "actionsOf": "Ações do produto"
+  },
+  "details": {
+    "title": "Detalhes do produto",
+    "close": "Fechar detalhes",
+    "notInformed": "Não informado"
+  },
+  "empty": {
+    "title": "Nenhum produto encontrado",
+    "hint": "Ajuste os filtros para ver o catálogo.",
+    "hintFirst": "Registe o primeiro produto para começar o seu catálogo."
+  },
+  "loading": "A carregar produtos...",
+  "deleteFailed": "Não foi possível eliminar o produto.",
+  "deleteDialog": {
+    "title": "Eliminar produto?",
+    "confirm": "Eliminar",
+    "deleting": "A eliminar...",
+    "warning": "Esta ação remove o produto do catálogo e não pode ser anulada."
+  },
+  "pagination": {
+    "previous": "Página anterior",
+    "next": "Página seguinte",
+    "page": "Página {page} de {total}",
+    "showing": "A mostrar {shown} de {total} produto(s)"
+  }
+}

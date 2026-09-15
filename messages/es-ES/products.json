@@ -1,0 +1,72 @@
+{
+  "title": "Catálogo",
+  "subtitle": "Registra artículos y controla precios, inventario y visibilidad.",
+  "actions": {
+    "create": "Agregar producto",
+    "view": "Ver detalles",
+    "edit": "Editar producto",
+    "delete": "Eliminar producto",
+    "cancel": "Cancelar",
+    "close": "Cerrar",
+    "retry": "Intentar de nuevo"
+  },
+  "search": {
+    "label": "Buscar productos",
+    "placeholder": "Buscar por nombre, SKU o código..."
+  },
+  "filters": {
+    "category": "Categoría",
+    "status": "Estado",
+    "all": "Todos"
+  },
+  "status": {
+    "active": "Activo",
+    "inactive": "Inactivo",
+    "activePlural": "Activos",
+    "inactivePlural": "Inactivos"
+  },
+  "stock": {
+    "label": "Inventario",
+    "physical": "Inventario físico",
+    "reserved": "Reservado",
+    "available": "Disponible",
+    "low": "Inventario bajo",
+    "out": "Sin inventario",
+    "untracked": "Sin control",
+    "minimum": "Inventario mínimo"
+  },
+  "table": {
+    "product": "Producto",
+    "category": "Categoría",
+    "barcode": "Código de barras",
+    "price": "Precio",
+    "stock": "Inventario",
+    "status": "Estado",
+    "actions": "Acciones",
+    "actionsOf": "Acciones del producto"
+  },
+  "details": {
+    "title": "Detalles del producto",
+    "close": "Cerrar detalles",
+    "notInformed": "No informado"
+  },
+  "empty": {
+    "title": "No se encontraron productos",
+    "hint": "Ajusta los filtros para ver el catálogo.",
+    "hintFirst": "Registra el primer producto para empezar tu catálogo."
+  },
+  "loading": "Cargando productos...",
+  "deleteFailed": "No se pudo eliminar el producto.",
+  "deleteDialog": {
+    "title": "¿Eliminar producto?",
+    "confirm": "Eliminar",
+    "deleting": "Eliminando...",
+    "warning": "Esto quita el producto del catálogo y no se puede deshacer."
+  },
+  "pagination": {
+    "previous": "Página anterior",
+    "next": "Página siguiente",
+    "page": "Página {page} de {total}",
+    "showing": "Mostrando {shown} de {total} producto(s)"
+  }
+}

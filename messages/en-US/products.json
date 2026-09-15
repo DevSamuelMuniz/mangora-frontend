@@ -1,0 +1,72 @@
+{
+  "title": "Catalog",
+  "subtitle": "Register items and control prices, stock and visibility.",
+  "actions": {
+    "create": "Add product",
+    "view": "View details",
+    "edit": "Edit product",
+    "delete": "Delete product",
+    "cancel": "Cancel",
+    "close": "Close",
+    "retry": "Try again"
+  },
+  "search": {
+    "label": "Search products",
+    "placeholder": "Search by name, SKU or barcode..."
+  },
+  "filters": {
+    "category": "Category",
+    "status": "Status",
+    "all": "All"
+  },
+  "status": {
+    "active": "Active",
+    "inactive": "Inactive",
+    "activePlural": "Active",
+    "inactivePlural": "Inactive"
+  },
+  "stock": {
+    "label": "Stock",
+    "physical": "On hand",
+    "reserved": "Reserved",
+    "available": "Available",
+    "low": "Low stock",
+    "out": "Out of stock",
+    "untracked": "Not tracked",
+    "minimum": "Minimum stock"
+  },
+  "table": {
+    "product": "Product",
+    "category": "Category",
+    "barcode": "Barcode",
+    "price": "Price",
+    "stock": "Stock",
+    "status": "Status",
+    "actions": "Actions",
+    "actionsOf": "Product actions"
+  },
+  "details": {
+    "title": "Product details",
+    "close": "Close details",
+    "notInformed": "Not provided"
+  },
+  "empty": {
+    "title": "No products found",
+    "hint": "Adjust the filters to browse the catalog.",
+    "hintFirst": "Add your first product to start your catalog."
+  },
+  "loading": "Loading products...",
+  "deleteFailed": "Could not delete the product.",
+  "deleteDialog": {
+    "title": "Delete product?",
+    "confirm": "Delete",
+    "deleting": "Deleting...",
+    "warning": "This removes the product from the catalog and cannot be undone."
+  },
+  "pagination": {
+    "previous": "Previous page",
+    "next": "Next page",
+    "page": "Page {page} of {total}",
+    "showing": "Showing {shown} of {total} product(s)"
+  }
+}
