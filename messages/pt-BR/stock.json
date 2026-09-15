@@ -1,0 +1,132 @@
+{
+  "title": "Estoque",
+  "subtitle": "Controle saldos, níveis mínimos e movimentações.",
+  "actions": {
+    "newMovement": "Nova movimentação",
+    "move": "Movimentar",
+    "transfer": "Transferir entre lojas",
+    "viewTransfers": "Ver transferências",
+    "registerProduct": "Cadastrar produto",
+    "retry": "Tentar novamente",
+    "clearFilters": "Limpar filtros"
+  },
+  "search": {
+    "label": "Buscar no estoque",
+    "placeholder": "Buscar por nome ou SKU..."
+  },
+  "filters": {
+    "category": "Categoria",
+    "categoryAll": "Categoria: todas",
+    "situation": "Situação",
+    "situationAll": "Situação: todas",
+    "low": "Estoque baixo",
+    "normal": "Estoque normal",
+    "out": "Sem estoque"
+  },
+  "metrics": {
+    "units": "Unidades em estoque",
+    "value": "Valor estimado"
+  },
+  "table": {
+    "product": "Produto",
+    "category": "Categoria",
+    "level": "Nível",
+    "situation": "Situação",
+    "price": "Preço",
+    "value": "Valor",
+    "action": "Ação",
+    "availableShort": "disp.",
+    "physicalShort": "físico",
+    "reservedShort": "reserv."
+  },
+  "movements": {
+    "title": "Movimentações recentes",
+    "subtitle": "Últimas entradas, saídas e ajustes",
+    "empty": "Nenhuma movimentação registrada."
+  },
+  "movementTypes": {
+    "ENTRY": "Entrada",
+    "EXIT": "Saída",
+    "ADJUSTMENT": "Ajuste",
+    "TRANSFER_IN": "Transferência recebida",
+    "TRANSFER_OUT": "Transferência enviada"
+  },
+  "empty": {
+    "title": "Nenhum produto encontrado",
+    "hint": "Ajuste os filtros para consultar outros saldos.",
+    "hintFirst": "Cadastre um produto com controle de estoque para começar."
+  },
+  "loading": "Carregando estoque...",
+  "loadFailed": "Não foi possível carregar o estoque",
+  "form": {
+    "eyebrow": "Operação",
+    "title": "Nova movimentação",
+    "subtitle": "Registre uma entrada, saída ou ajuste de saldo.",
+    "back": "Voltar para estoque",
+    "sections": {
+      "type": "Tipo de movimentação",
+      "typeHint": "Escolha como o saldo deve ser atualizado.",
+      "data": "Dados da movimentação",
+      "dataHint": "Informe produto, quantidade e motivo.",
+      "projection": "Projeção do saldo",
+      "projectionHint": "Confira o impacto antes de registrar."
+    },
+    "types": {
+      "ENTRY": {
+        "label": "Entrada",
+        "description": "Compra, devolução ou reposição"
+      },
+      "EXIT": {
+        "label": "Saída",
+        "description": "Perda, consumo ou retirada"
+      },
+      "ADJUSTMENT": {
+        "label": "Ajuste",
+        "description": "Correção após contagem física"
+      }
+    },
+    "reasons": {
+      "ENTRY": {
+        "0": "Compra de fornecedor",
+        "1": "Devolução de cliente",
+        "2": "Reposição",
+        "3": "Outro"
+      },
+      "EXIT": {
+        "0": "Perda ou avaria",
+        "1": "Consumo interno",
+        "2": "Retirada",
+        "3": "Outro"
+      },
+      "ADJUSTMENT": {
+        "0": "Contagem física",
+        "1": "Correção de cadastro",
+        "2": "Avaria identificada",
+        "3": "Outro"
+      }
+    },
+    "fields": {
+      "product": "Produto",
+      "costOptional": "Custo unitário (opcional)",
+      "reason": "Motivo",
+      "reasonPlaceholder": "Selecione um motivo",
+      "notes": "Observações (opcional)",
+      "notesPlaceholder": "Detalhes adicionais...",
+      "currentStock": "Saldo atual",
+      "projectedStock": "Saldo projetado",
+      "units": "unidades"
+    },
+    "errors": {
+      "product": "Selecione um produto.",
+      "quantity": "Informe uma quantidade inteira maior que zero.",
+      "counted": "Informe um saldo contado válido.",
+      "projected": "Saldo projetado inválido. Reduza a quantidade.",
+      "aboveStock": "A saída não pode ultrapassar o saldo atual de {available} unidade(s).",
+      "failed": "Não foi possível registrar a movimentação."
+    },
+    "save": "Registrar movimentação",
+    "saving": "Registrando...",
+    "cancel": "Cancelar",
+    "toast": "Movimentação registrada"
+  }
+}

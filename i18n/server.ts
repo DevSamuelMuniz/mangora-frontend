@@ -6,7 +6,7 @@ import { getCurrentSession } from "@/lib/auth/server";
 import { LOCALE_COOKIE, resolveLocale, type Locale } from "./config";
 import { createTranslator, fallbackChain, mergeMessages, type Messages } from "./runtime";
 
-const NAMESPACES = ["common", "navigation", "validations", "statuses", "paymentMethods", "errors", "settings", "dashboard", "sales", "pdv", "products"] as const;
+const NAMESPACES = ["common", "navigation", "validations", "statuses", "paymentMethods", "errors", "settings", "dashboard", "sales", "pdv", "products", "stock"] as const;
 type Namespace = (typeof NAMESPACES)[number];
 
 const localeLoaders: Record<Locale, Record<Namespace, () => Promise<{ default: Messages }>>> = {
@@ -22,6 +22,7 @@ const localeLoaders: Record<Locale, Record<Namespace, () => Promise<{ default: M
     sales: () => import("../messages/pt-BR/sales.json") as Promise<{ default: Messages }>,
     pdv: () => import("../messages/pt-BR/pdv.json") as Promise<{ default: Messages }>,
     products: () => import("../messages/pt-BR/products.json") as Promise<{ default: Messages }>,
+    stock: () => import("../messages/pt-BR/stock.json") as Promise<{ default: Messages }>,
   },
   "en-US": {
     common: () => import("../messages/en-US/common.json") as Promise<{ default: Messages }>,
@@ -35,6 +36,7 @@ const localeLoaders: Record<Locale, Record<Namespace, () => Promise<{ default: M
     sales: () => import("../messages/en-US/sales.json") as Promise<{ default: Messages }>,
     pdv: () => import("../messages/en-US/pdv.json") as Promise<{ default: Messages }>,
     products: () => import("../messages/en-US/products.json") as Promise<{ default: Messages }>,
+    stock: () => import("../messages/en-US/stock.json") as Promise<{ default: Messages }>,
   },
   "es-ES": {
     common: () => import("../messages/es-ES/common.json") as Promise<{ default: Messages }>,
@@ -48,6 +50,7 @@ const localeLoaders: Record<Locale, Record<Namespace, () => Promise<{ default: M
     sales: () => import("../messages/es-ES/sales.json") as Promise<{ default: Messages }>,
     pdv: () => import("../messages/es-ES/pdv.json") as Promise<{ default: Messages }>,
     products: () => import("../messages/es-ES/products.json") as Promise<{ default: Messages }>,
+    stock: () => import("../messages/es-ES/stock.json") as Promise<{ default: Messages }>,
   },
   "pt-PT": {
     common: () => import("../messages/pt-PT/common.json") as Promise<{ default: Messages }>,
@@ -61,6 +64,7 @@ const localeLoaders: Record<Locale, Record<Namespace, () => Promise<{ default: M
     sales: () => import("../messages/pt-PT/sales.json") as Promise<{ default: Messages }>,
     pdv: () => import("../messages/pt-PT/pdv.json") as Promise<{ default: Messages }>,
     products: () => import("../messages/pt-PT/products.json") as Promise<{ default: Messages }>,
+    stock: () => import("../messages/pt-PT/stock.json") as Promise<{ default: Messages }>,
   },
 };
 

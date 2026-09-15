@@ -1,0 +1,132 @@
+{
+  "title": "Inventory",
+  "subtitle": "Track balances, minimum levels and movements.",
+  "actions": {
+    "newMovement": "New movement",
+    "move": "Move stock",
+    "transfer": "Transfer between stores",
+    "viewTransfers": "View transfers",
+    "registerProduct": "Add product",
+    "retry": "Try again",
+    "clearFilters": "Clear filters"
+  },
+  "search": {
+    "label": "Search inventory",
+    "placeholder": "Search by name or SKU..."
+  },
+  "filters": {
+    "category": "Category",
+    "categoryAll": "Category: all",
+    "situation": "Status",
+    "situationAll": "Status: all",
+    "low": "Low stock",
+    "normal": "Normal stock",
+    "out": "Out of stock"
+  },
+  "metrics": {
+    "units": "Units in stock",
+    "value": "Estimated value"
+  },
+  "table": {
+    "product": "Product",
+    "category": "Category",
+    "level": "Level",
+    "situation": "Status",
+    "price": "Price",
+    "value": "Value",
+    "action": "Action",
+    "availableShort": "avail.",
+    "physicalShort": "on hand",
+    "reservedShort": "reserved"
+  },
+  "movements": {
+    "title": "Recent movements",
+    "subtitle": "Latest entries, exits and adjustments",
+    "empty": "No movements recorded."
+  },
+  "movementTypes": {
+    "ENTRY": "Entry",
+    "EXIT": "Exit",
+    "ADJUSTMENT": "Adjustment",
+    "TRANSFER_IN": "Transfer received",
+    "TRANSFER_OUT": "Transfer sent"
+  },
+  "empty": {
+    "title": "No products found",
+    "hint": "Adjust the filters to browse other balances.",
+    "hintFirst": "Add a product with stock control to get started."
+  },
+  "loading": "Loading inventory...",
+  "loadFailed": "Could not load inventory",
+  "form": {
+    "eyebrow": "Operation",
+    "title": "New movement",
+    "subtitle": "Record an entry, exit or balance adjustment.",
+    "back": "Back to inventory",
+    "sections": {
+      "type": "Movement type",
+      "typeHint": "Choose how the balance should be updated.",
+      "data": "Movement details",
+      "dataHint": "Provide product, quantity and reason.",
+      "projection": "Balance projection",
+      "projectionHint": "Check the impact before recording."
+    },
+    "types": {
+      "ENTRY": {
+        "label": "Entry",
+        "description": "Purchase, return or restock"
+      },
+      "EXIT": {
+        "label": "Exit",
+        "description": "Loss, internal use or withdrawal"
+      },
+      "ADJUSTMENT": {
+        "label": "Adjustment",
+        "description": "Correction after a physical count"
+      }
+    },
+    "reasons": {
+      "ENTRY": {
+        "0": "Supplier purchase",
+        "1": "Customer return",
+        "2": "Restock",
+        "3": "Other"
+      },
+      "EXIT": {
+        "0": "Loss or damage",
+        "1": "Internal use",
+        "2": "Withdrawal",
+        "3": "Other"
+      },
+      "ADJUSTMENT": {
+        "0": "Physical count",
+        "1": "Record correction",
+        "2": "Damage found",
+        "3": "Other"
+      }
+    },
+    "fields": {
+      "product": "Product",
+      "costOptional": "Unit cost (optional)",
+      "reason": "Reason",
+      "reasonPlaceholder": "Select a reason",
+      "notes": "Notes (optional)",
+      "notesPlaceholder": "Additional details...",
+      "currentStock": "Current balance",
+      "projectedStock": "Projected balance",
+      "units": "units"
+    },
+    "errors": {
+      "product": "Select a product.",
+      "quantity": "Enter a whole quantity greater than zero.",
+      "counted": "Enter a valid counted balance.",
+      "projected": "Invalid projected balance. Reduce the quantity.",
+      "aboveStock": "The exit cannot exceed the current balance of {available} unit(s).",
+      "failed": "Could not record the movement."
+    },
+    "save": "Record movement",
+    "saving": "Recording...",
+    "cancel": "Cancel",
+    "toast": "Movement recorded"
+  }
+}

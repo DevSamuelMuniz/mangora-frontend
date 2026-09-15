@@ -1,0 +1,132 @@
+{
+  "title": "Inventario",
+  "subtitle": "Controla saldos, niveles mínimos y movimientos.",
+  "actions": {
+    "newMovement": "Nuevo movimiento",
+    "move": "Mover inventario",
+    "transfer": "Transferir entre tiendas",
+    "viewTransfers": "Ver transferencias",
+    "registerProduct": "Agregar producto",
+    "retry": "Intentar de nuevo",
+    "clearFilters": "Limpiar filtros"
+  },
+  "search": {
+    "label": "Buscar en inventario",
+    "placeholder": "Buscar por nombre o SKU..."
+  },
+  "filters": {
+    "category": "Categoría",
+    "categoryAll": "Categoría: todas",
+    "situation": "Estado",
+    "situationAll": "Estado: todos",
+    "low": "Inventario bajo",
+    "normal": "Inventario normal",
+    "out": "Sin inventario"
+  },
+  "metrics": {
+    "units": "Unidades en inventario",
+    "value": "Valor estimado"
+  },
+  "table": {
+    "product": "Producto",
+    "category": "Categoría",
+    "level": "Nivel",
+    "situation": "Estado",
+    "price": "Precio",
+    "value": "Valor",
+    "action": "Acción",
+    "availableShort": "disp.",
+    "physicalShort": "físico",
+    "reservedShort": "reserv."
+  },
+  "movements": {
+    "title": "Movimientos recientes",
+    "subtitle": "Últimas entradas, salidas y ajustes",
+    "empty": "No hay movimientos registrados."
+  },
+  "movementTypes": {
+    "ENTRY": "Entrada",
+    "EXIT": "Salida",
+    "ADJUSTMENT": "Ajuste",
+    "TRANSFER_IN": "Transferencia recibida",
+    "TRANSFER_OUT": "Transferencia enviada"
+  },
+  "empty": {
+    "title": "No se encontraron productos",
+    "hint": "Ajusta los filtros para consultar otros saldos.",
+    "hintFirst": "Registra un producto con control de inventario para empezar."
+  },
+  "loading": "Cargando inventario...",
+  "loadFailed": "No se pudo cargar el inventario",
+  "form": {
+    "eyebrow": "Operación",
+    "title": "Nuevo movimiento",
+    "subtitle": "Registra una entrada, salida o ajuste de saldo.",
+    "back": "Volver al inventario",
+    "sections": {
+      "type": "Tipo de movimiento",
+      "typeHint": "Elige cómo se actualiza el saldo.",
+      "data": "Datos del movimiento",
+      "dataHint": "Indica producto, cantidad y motivo.",
+      "projection": "Proyección del saldo",
+      "projectionHint": "Revisa el impacto antes de registrar."
+    },
+    "types": {
+      "ENTRY": {
+        "label": "Entrada",
+        "description": "Compra, devolución o reposición"
+      },
+      "EXIT": {
+        "label": "Salida",
+        "description": "Pérdida, consumo o retirada"
+      },
+      "ADJUSTMENT": {
+        "label": "Ajuste",
+        "description": "Corrección tras conteo físico"
+      }
+    },
+    "reasons": {
+      "ENTRY": {
+        "0": "Compra a proveedor",
+        "1": "Devolución de cliente",
+        "2": "Reposición",
+        "3": "Otro"
+      },
+      "EXIT": {
+        "0": "Pérdida o daño",
+        "1": "Consumo interno",
+        "2": "Retirada",
+        "3": "Otro"
+      },
+      "ADJUSTMENT": {
+        "0": "Conteo físico",
+        "1": "Corrección de registro",
+        "2": "Daño detectado",
+        "3": "Otro"
+      }
+    },
+    "fields": {
+      "product": "Producto",
+      "costOptional": "Coste unitario (opcional)",
+      "reason": "Motivo",
+      "reasonPlaceholder": "Selecciona un motivo",
+      "notes": "Observaciones (opcional)",
+      "notesPlaceholder": "Detalles adicionales...",
+      "currentStock": "Saldo actual",
+      "projectedStock": "Saldo proyectado",
+      "units": "unidades"
+    },
+    "errors": {
+      "product": "Selecciona un producto.",
+      "quantity": "Introduce una cantidad entera mayor que cero.",
+      "counted": "Introduce un saldo contado válido.",
+      "projected": "Saldo proyectado no válido. Reduce la cantidad.",
+      "aboveStock": "La salida no puede superar el saldo actual de {available} unidad(es).",
+      "failed": "No se pudo registrar el movimiento."
+    },
+    "save": "Registrar movimiento",
+    "saving": "Registrando...",
+    "cancel": "Cancelar",
+    "toast": "Movimiento registrado"
+  }
+}

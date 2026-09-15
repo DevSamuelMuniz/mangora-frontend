@@ -1,0 +1,132 @@
+{
+  "title": "Inventário",
+  "subtitle": "Controle saldos, níveis mínimos e movimentos.",
+  "actions": {
+    "newMovement": "Novo movimento",
+    "move": "Movimentar",
+    "transfer": "Transferir entre lojas",
+    "viewTransfers": "Ver transferências",
+    "registerProduct": "Registar produto",
+    "retry": "Tentar novamente",
+    "clearFilters": "Limpar filtros"
+  },
+  "search": {
+    "label": "Pesquisar no inventário",
+    "placeholder": "Pesquisar por nome ou SKU..."
+  },
+  "filters": {
+    "category": "Categoria",
+    "categoryAll": "Categoria: todas",
+    "situation": "Situação",
+    "situationAll": "Situação: todas",
+    "low": "Inventário baixo",
+    "normal": "Inventário normal",
+    "out": "Sem inventário"
+  },
+  "metrics": {
+    "units": "Unidades em inventário",
+    "value": "Valor estimado"
+  },
+  "table": {
+    "product": "Produto",
+    "category": "Categoria",
+    "level": "Nível",
+    "situation": "Situação",
+    "price": "Preço",
+    "value": "Valor",
+    "action": "Ação",
+    "availableShort": "disp.",
+    "physicalShort": "físico",
+    "reservedShort": "reserv."
+  },
+  "movements": {
+    "title": "Movimentos recentes",
+    "subtitle": "Últimas entradas, saídas e ajustes",
+    "empty": "Nenhum movimento registado."
+  },
+  "movementTypes": {
+    "ENTRY": "Entrada",
+    "EXIT": "Saída",
+    "ADJUSTMENT": "Ajuste",
+    "TRANSFER_IN": "Transferência recebida",
+    "TRANSFER_OUT": "Transferência enviada"
+  },
+  "empty": {
+    "title": "Nenhum produto encontrado",
+    "hint": "Ajuste os filtros para consultar outros saldos.",
+    "hintFirst": "Registe um produto com controlo de inventário para começar."
+  },
+  "loading": "A carregar inventário...",
+  "loadFailed": "Não foi possível carregar o inventário",
+  "form": {
+    "eyebrow": "Operação",
+    "title": "Novo movimento",
+    "subtitle": "Registe uma entrada, saída ou ajuste de saldo.",
+    "back": "Voltar ao inventário",
+    "sections": {
+      "type": "Tipo de movimento",
+      "typeHint": "Escolha como o saldo deve ser atualizado.",
+      "data": "Dados do movimento",
+      "dataHint": "Indique produto, quantidade e motivo.",
+      "projection": "Projeção do saldo",
+      "projectionHint": "Confirme o impacto antes de registar."
+    },
+    "types": {
+      "ENTRY": {
+        "label": "Entrada",
+        "description": "Compra, devolução ou reposição"
+      },
+      "EXIT": {
+        "label": "Saída",
+        "description": "Perda, consumo ou retirada"
+      },
+      "ADJUSTMENT": {
+        "label": "Ajuste",
+        "description": "Correção após contagem física"
+      }
+    },
+    "reasons": {
+      "ENTRY": {
+        "0": "Compra a fornecedor",
+        "1": "Devolução de cliente",
+        "2": "Reposição",
+        "3": "Outro"
+      },
+      "EXIT": {
+        "0": "Perda ou avaria",
+        "1": "Consumo interno",
+        "2": "Retirada",
+        "3": "Outro"
+      },
+      "ADJUSTMENT": {
+        "0": "Contagem física",
+        "1": "Correção de registo",
+        "2": "Avaria identificada",
+        "3": "Outro"
+      }
+    },
+    "fields": {
+      "product": "Produto",
+      "costOptional": "Custo unitário (opcional)",
+      "reason": "Motivo",
+      "reasonPlaceholder": "Selecione um motivo",
+      "notes": "Observações (opcional)",
+      "notesPlaceholder": "Detalhes adicionais...",
+      "currentStock": "Saldo atual",
+      "projectedStock": "Saldo projetado",
+      "units": "unidades"
+    },
+    "errors": {
+      "product": "Selecione um produto.",
+      "quantity": "Indique uma quantidade inteira superior a zero.",
+      "counted": "Indique um saldo contado válido.",
+      "projected": "Saldo projetado inválido. Reduza a quantidade.",
+      "aboveStock": "A saída não pode exceder o saldo atual de {available} unidade(s).",
+      "failed": "Não foi possível registar o movimento."
+    },
+    "save": "Registar movimento",
+    "saving": "A registar...",
+    "cancel": "Cancelar",
+    "toast": "Movimento registado"
+  }
+}
