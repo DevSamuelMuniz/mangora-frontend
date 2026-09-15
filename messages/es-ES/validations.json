@@ -1,0 +1,9 @@
+{
+  "required": "Campo obligatorio.",
+  "email": "Correo electrónico inválido.",
+  "minLength": "Este campo debe tener al menos {min} caracteres.",
+  "maxLength": "Este campo debe tener como máximo {max} caracteres.",
+  "number": "Introduce un número válido.",
+  "positive": "Introduce un valor mayor que cero.",
+  "invalidDocument": "Documento inválido."
+}

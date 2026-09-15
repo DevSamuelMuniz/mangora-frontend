@@ -1,0 +1,11 @@
+{
+  "CASH": "Numerário",
+  "PIX": "Pix",
+  "CREDIT_CARD": "Cartão de crédito",
+  "DEBIT_CARD": "Cartão de débito",
+  "BOLETO": "Referência Multibanco",
+  "BANK_TRANSFER": "Transferência bancária",
+  "CHECK": "Cheque",
+  "STORE_CREDIT": "Crédito de loja",
+  "OTHER": "Outro"
+}

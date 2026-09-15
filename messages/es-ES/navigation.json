@@ -1,0 +1,34 @@
+{
+  "groups": {
+    "operation": "Operación",
+    "catalog": "Catálogo",
+    "supplies": "Suministros",
+    "management": "Gestión"
+  },
+  "items": {
+    "sales": "Ventas",
+    "cash": "Caja",
+    "orders": "Pedidos",
+    "products": "Productos",
+    "services": "Servicios",
+    "categories": "Categorías",
+    "stock": "Inventario",
+    "transfers": "Transferencias",
+    "inventory": "Conteo físico",
+    "batches": "Lotes y coste",
+    "purchases": "Compras",
+    "suppliers": "Proveedores",
+    "customers": "Clientes",
+    "finance": "Finanzas",
+    "reports": "Informes",
+    "fiscal": "Facturas",
+    "reviews": "Reseñas",
+    "data": "Datos",
+    "ai": "Gerente IA",
+    "log": "Novedades",
+    "stores": "Tiendas",
+    "employees": "Empleados",
+    "subscription": "Suscripción",
+    "settings": "Configuración"
+  }
+}

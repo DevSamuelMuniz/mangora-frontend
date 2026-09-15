@@ -1,0 +1,16 @@
+{
+  "ACTIVE": "Active",
+  "INACTIVE": "Inactive",
+  "PENDING": "Pending",
+  "PAID": "Paid",
+  "PARTIALLY_PAID": "Partially paid",
+  "OVERDUE": "Overdue",
+  "CANCELLED": "Canceled",
+  "CLOSED": "Closed",
+  "OPEN": "Open",
+  "PROCESSING": "Processing",
+  "COMPLETED": "Completed",
+  "FAILED": "Failed",
+  "AUTHORIZED": "Authorized",
+  "REJECTED": "Rejected"
+}

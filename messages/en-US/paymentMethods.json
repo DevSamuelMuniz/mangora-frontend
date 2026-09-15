@@ -1,0 +1,11 @@
+{
+  "CASH": "Cash",
+  "PIX": "Pix",
+  "CREDIT_CARD": "Credit card",
+  "DEBIT_CARD": "Debit card",
+  "BOLETO": "Bank slip",
+  "BANK_TRANSFER": "Bank transfer",
+  "CHECK": "Check",
+  "STORE_CREDIT": "Store credit",
+  "OTHER": "Other"
+}

@@ -19,6 +19,7 @@ import { setUserProperties, track } from "@/lib/analytics";
 import { roleLabels, type AuthSession } from "@/lib/auth/types";
 import { can } from "@/lib/permissions";
 import NotificationCenter from "./NotificationCenter";
+import LocaleSwitcher from "@/components/i18n/LocaleSwitcher";
 
 type DashboardHeaderProps = {
   onOpenSidebar: () => void;
@@ -115,6 +116,7 @@ export default function DashboardHeader({ onOpenSidebar, session, simpleMode, on
             <span aria-hidden="true" className="relative h-5 w-9 rounded-full bg-slate-200 transition peer-checked:bg-orange-500 after:absolute after:left-0.5 after:top-0.5 after:size-4 after:rounded-full after:bg-white after:shadow-sm after:transition-transform peer-checked:after:translate-x-4" />
           </label>
           <Link href="/gerente-ia" className="hidden h-10 items-center gap-1.5 rounded-xl bg-[#123d2b] px-3 text-[11px] font-black text-white transition hover:bg-[#147a45] md:flex"><Bot className="size-4" />Gerente de IA</Link>
+          <LocaleSwitcher className="hidden sm:inline-flex" />
           <NotificationCenter onOpen={() => setProfileOpen(false)} />
 
           <div ref={profileMenuRef} className="relative">

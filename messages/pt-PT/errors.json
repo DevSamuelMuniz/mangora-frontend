@@ -1,0 +1,8 @@
+{
+  "NETWORK_ERROR": "Não foi possível ligar ao servidor. Verifique a ligação e tente novamente.",
+  "UNKNOWN_ERROR": "Algo correu mal. Tente novamente.",
+  "PERMISSION_DENIED": "Não tem permissão para esta ação.",
+  "SESSION_EXPIRED": "A sua sessão expirou. Inicie sessão novamente.",
+  "NOT_FOUND": "Registo não encontrado.",
+  "RATE_LIMITED": "Demasiadas tentativas. Aguarde um momento."
+}

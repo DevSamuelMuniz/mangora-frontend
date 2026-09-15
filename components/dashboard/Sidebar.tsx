@@ -34,6 +34,7 @@ import {
 } from "lucide-react";
 import { roleLabels, type AuthSession, type MembershipRole } from "@/lib/auth/types";
 import BrandLogo from "@/components/brand/BrandLogo";
+import { useT } from "@/i18n/provider";
 import { can } from "@/lib/permissions";
 import { useSwitchCompany, useUnitGroup } from "@/features/units/hooks/useUnits";
 
@@ -45,65 +46,65 @@ type SidebarProps = {
 };
 
 type NavigationItem = {
-  label: string;
+  key: string;
   href: string;
   icon: LucideIcon;
   roles?: MembershipRole[];
   simple?: boolean;
 };
 
-type NavigationGroup = { label: string; icon: LucideIcon; items: NavigationItem[] };
+type NavigationGroup = { key: string; icon: LucideIcon; items: NavigationItem[] };
 
 const navigationGroups: NavigationGroup[] = [
-  { label: "Operação", icon: ShoppingBag, items: [
-    { label: "Vendas", href: "/vendas", icon: ShoppingBag, simple: true },
-    { label: "Caixa", href: "/caixa", icon: Banknote, roles: ["OWNER", "ADMIN", "MANAGER", "CASHIER"], simple: true },
-    { label: "Pedidos", href: "/pedidos", icon: FileText },
+  { key: "operation", icon: ShoppingBag, items: [
+    { key: "sales", href: "/vendas", icon: ShoppingBag, simple: true },
+    { key: "cash", href: "/caixa", icon: Banknote, roles: ["OWNER", "ADMIN", "MANAGER", "CASHIER"], simple: true },
+    { key: "orders", href: "/pedidos", icon: FileText },
   ] },
-  { label: "Catálogo", icon: Package, items: [
-    { label: "Produtos", href: "/produtos", icon: Package, simple: true },
-    { label: "Serviços", href: "/servicos", icon: Wrench, roles: ["OWNER", "ADMIN", "MANAGER"] },
-    { label: "Categorias", href: "/categorias", icon: FolderTree, roles: ["OWNER", "ADMIN", "MANAGER"] },
+  { key: "catalog", icon: Package, items: [
+    { key: "products", href: "/produtos", icon: Package, simple: true },
+    { key: "services", href: "/servicos", icon: Wrench, roles: ["OWNER", "ADMIN", "MANAGER"] },
+    { key: "categories", href: "/categorias", icon: FolderTree, roles: ["OWNER", "ADMIN", "MANAGER"] },
   ] },
-  { label: "Suprimentos", icon: Boxes, items: [
-    { label: "Estoque", href: "/estoque", icon: Boxes, simple: true },
-    { label: "Transferências", href: "/estoque/transferencias", icon: ArrowRightLeft, roles: ["OWNER", "ADMIN", "MANAGER"] },
-    { label: "Inventário físico", href: "/estoque/inventario", icon: ClipboardCheck, roles: ["OWNER", "ADMIN", "MANAGER"] },
-    { label: "Lotes & custo", href: "/estoque/lotes", icon: Layers3, roles: ["OWNER", "ADMIN", "MANAGER"] },
-    { label: "Compras", href: "/compras", icon: ClipboardList, roles: ["OWNER", "ADMIN", "MANAGER"] },
-    { label: "Fornecedores", href: "/fornecedores", icon: Truck, roles: ["OWNER", "ADMIN", "MANAGER"] },
+  { key: "supplies", icon: Boxes, items: [
+    { key: "stock", href: "/estoque", icon: Boxes, simple: true },
+    { key: "transfers", href: "/estoque/transferencias", icon: ArrowRightLeft, roles: ["OWNER", "ADMIN", "MANAGER"] },
+    { key: "inventory", href: "/estoque/inventario", icon: ClipboardCheck, roles: ["OWNER", "ADMIN", "MANAGER"] },
+    { key: "batches", href: "/estoque/lotes", icon: Layers3, roles: ["OWNER", "ADMIN", "MANAGER"] },
+    { key: "purchases", href: "/compras", icon: ClipboardList, roles: ["OWNER", "ADMIN", "MANAGER"] },
+    { key: "suppliers", href: "/fornecedores", icon: Truck, roles: ["OWNER", "ADMIN", "MANAGER"] },
   ] },
-  { label: "Gestão", icon: CircleDollarSign, items: [
-    { label: "Clientes", href: "/clientes", icon: Users, simple: true },
-    { label: "Financeiro", href: "/financeiro", icon: CircleDollarSign, roles: ["OWNER", "ADMIN", "MANAGER"], simple: true },
-    { label: "Relatórios", href: "/relatorios", icon: BarChart3, roles: ["OWNER", "ADMIN", "MANAGER"] },
-    { label: "Dados", href: "/dados", icon: Database, roles: ["OWNER", "ADMIN", "MANAGER"] },
-    { label: "Gerente de IA", href: "/gerente-ia", icon: Bot, roles: ["OWNER", "ADMIN", "MANAGER"] },
-    { label: "LOG", href: "/logs", icon: ScrollText, roles: ["OWNER"] },
+  { key: "management", icon: CircleDollarSign, items: [
+    { key: "customers", href: "/clientes", icon: Users, simple: true },
+    { key: "finance", href: "/financeiro", icon: CircleDollarSign, roles: ["OWNER", "ADMIN", "MANAGER"], simple: true },
+    { key: "reports", href: "/relatorios", icon: BarChart3, roles: ["OWNER", "ADMIN", "MANAGER"] },
+    { key: "data", href: "/dados", icon: Database, roles: ["OWNER", "ADMIN", "MANAGER"] },
+    { key: "ai", href: "/gerente-ia", icon: Bot, roles: ["OWNER", "ADMIN", "MANAGER"] },
+    { key: "log", href: "/logs", icon: ScrollText, roles: ["OWNER"] },
   ] },
 ];
 
 const secondaryNavigation: NavigationItem[] = [
   {
-    label: "Lojas",
+    key: "stores",
     href: "/unidades",
     icon: Store,
     roles: ["OWNER", "ADMIN", "MANAGER"],
   },
   {
-    label: "Funcionários",
+    key: "employees",
     href: "/funcionarios",
     icon: Building2,
     roles: ["OWNER", "ADMIN"],
   },
   {
-    label: "Assinatura",
+    key: "subscription",
     href: "/assinatura",
     icon: CreditCard,
     roles: ["OWNER"],
   },
   {
-    label: "Configurações",
+    key: "settings",
     href: "/configuracoes",
     icon: Settings,
     roles: ["OWNER", "ADMIN"],
@@ -118,13 +119,14 @@ export default function Sidebar({
   simpleMode,
 }: SidebarProps) {
   const pathname = usePathname();
+  const t = useT();
   const router = useRouter();
   const { data: group } = useUnitGroup();
   const switchCompany = useSwitchCompany();
   const [companyOpen, setCompanyOpen] = useState(false);
   const units = group?.units ?? [];
   const [switching, setSwitching] = useState("");
-  const [openGroups, setOpenGroups] = useState<Record<string, boolean>>(() => Object.fromEntries(navigationGroups.map((group) => [group.label, group.items.some((item) => pathname === item.href || pathname.startsWith(item.href + "/"))])));
+  const [openGroups, setOpenGroups] = useState<Record<string, boolean>>(() => Object.fromEntries(navigationGroups.map((group) => [group.key, group.items.some((item) => pathname === item.href || pathname.startsWith(item.href + "/"))])));
   const visibleNavigationGroups = navigationGroups.map((group) => ({ ...group, items: group.items.filter((item) => (!item.roles || item.roles.includes(session.membership.role)) && (!simpleMode || item.simple)) })).filter((group) => group.items.length > 0);
   const visibleSecondaryNavigation = secondaryNavigation.filter((item) => (!item.roles || item.roles.includes(session.membership.role)) && (!simpleMode || item.simple));
 
@@ -264,20 +266,20 @@ export default function Sidebar({
               const active = isActive(item.href);
               return <Link key={item.href} href={item.href} onClick={onClose} className={`flex h-10 items-center gap-3 rounded-xl px-3 text-sm font-semibold transition ${active ? "bg-orange-50 text-orange-700" : "text-slate-600 hover:bg-slate-100 hover:text-slate-950"}`}>
                 <ItemIcon className={`size-4.5 ${active ? "text-orange-600" : "text-slate-400"}`} />
-                {item.label}
+                {t(`navigation.items.${item.key}`)}
               </Link>;
             }) : visibleNavigationGroups.map((group) => {
               const GroupIcon = group.icon;
               const active = group.items.some((item) => isActive(item.href));
-              const expanded = Boolean(openGroups[group.label]);
-              return <div key={group.label} className="rounded-xl">
-                <button type="button" data-active={active} onClick={() => setOpenGroups((current) => ({ ...current, [group.label]: !expanded }))} aria-expanded={expanded} className="mangora-nav-group flex h-10 w-full items-center gap-3 rounded-xl px-3 text-sm font-semibold transition">
+              const expanded = Boolean(openGroups[group.key]);
+              return <div key={group.key} className="rounded-xl">
+                <button type="button" data-active={active} onClick={() => setOpenGroups((current) => ({ ...current, [group.key]: !expanded }))} aria-expanded={expanded} className="mangora-nav-group flex h-10 w-full items-center gap-3 rounded-xl px-3 text-sm font-semibold transition">
                   <GroupIcon className={`size-4.5 ${active ? "text-orange-600" : "text-slate-400"}`} />
-                  <span className="flex-1 text-left">{group.label}</span>
+                  <span className="flex-1 text-left">{t(`navigation.groups.${group.key}`)}</span>
                   <ChevronDown className={`size-3.5 text-slate-400 transition-transform ${expanded ? "rotate-180" : ""}`} />
                 </button>
                 {expanded && <div className="mb-1 ml-5 space-y-0.5 border-l border-white/15 pl-2">
-                  {group.items.map((item) => { const ItemIcon = item.icon; const itemActive = isActive(item.href); return <Link key={item.href} href={item.href} data-active={itemActive} onClick={onClose} className="mangora-nav-child flex h-9 items-center gap-2.5 rounded-lg px-2.5 text-xs font-semibold transition"><ItemIcon className="size-3.5" />{item.label}</Link>; })}
+                  {group.items.map((item) => { const ItemIcon = item.icon; const itemActive = isActive(item.href); return <Link key={item.href} href={item.href} data-active={itemActive} onClick={onClose} className="mangora-nav-child flex h-9 items-center gap-2.5 rounded-lg px-2.5 text-xs font-semibold transition"><ItemIcon className="size-3.5" />{t(`navigation.items.${item.key}`)}</Link>; })}
                 </div>}
               </div>;
             })}
@@ -313,7 +315,7 @@ export default function Sidebar({
                     }`}
                   />
 
-                  {item.label}
+                  {t(`navigation.items.${item.key}`)}
                 </Link>
               );
             })}

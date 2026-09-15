@@ -1,0 +1,11 @@
+{
+  "CASH": "Efectivo",
+  "PIX": "Pix",
+  "CREDIT_CARD": "Tarjeta de crédito",
+  "DEBIT_CARD": "Tarjeta de débito",
+  "BOLETO": "Boleto bancario",
+  "BANK_TRANSFER": "Transferencia bancaria",
+  "CHECK": "Cheque",
+  "STORE_CREDIT": "Fiado",
+  "OTHER": "Otro"
+}

@@ -5,6 +5,7 @@ import { FormEvent, useState } from "react";
 import { ArrowLeft, ArrowRight, Eye, EyeOff, LoaderCircle, LockKeyhole, Mail, ShieldCheck } from "lucide-react";
 import AuthVisualPanel from "@/components/auth/AuthVisualPanel";
 import BrandLogo from "@/components/brand/BrandLogo";
+import LocaleSwitcher from "@/components/i18n/LocaleSwitcher";
 import { apiRequest } from "@/lib/api/client";
 import { setUserProperties, track } from "@/lib/analytics";
 import type { AuthSession } from "@/lib/auth/types";
@@ -46,6 +47,7 @@ export default function LoginPage() {
           <div className="absolute -right-20 top-12 size-60 rounded-full bg-[#ffb21a]/15 blur-3xl" />
           <div className="absolute bottom-0 left-0 size-52 rounded-full bg-[#147a45]/10 blur-3xl" />
           <div className="relative w-full max-w-[30rem]">
+            <div className="mb-4 flex justify-end"><LocaleSwitcher /></div>
             <div className="mb-9 flex items-center justify-between lg:hidden">
               <Link href="/" aria-label="Página inicial da Mangora"><BrandLogo className="h-9" priority /></Link>
               <Link href="/" aria-label="Voltar para o início" className="flex size-11 items-center justify-center rounded-xl border-2 border-[#123d2b]/15 bg-white text-[#123d2b]"><ArrowLeft className="size-4" /></Link>

@@ -1,0 +1,34 @@
+{
+  "groups": {
+    "operation": "Operations",
+    "catalog": "Catalog",
+    "supplies": "Supply",
+    "management": "Management"
+  },
+  "items": {
+    "sales": "Sales",
+    "cash": "Cash Register",
+    "orders": "Orders",
+    "products": "Products",
+    "services": "Services",
+    "categories": "Categories",
+    "stock": "Inventory",
+    "transfers": "Transfers",
+    "inventory": "Physical count",
+    "batches": "Batches & cost",
+    "purchases": "Purchases",
+    "suppliers": "Suppliers",
+    "customers": "Customers",
+    "finance": "Finance",
+    "reports": "Reports",
+    "fiscal": "Invoices",
+    "reviews": "Reviews",
+    "data": "Data",
+    "ai": "AI Manager",
+    "log": "Changelog",
+    "stores": "Stores",
+    "employees": "Employees",
+    "subscription": "Subscription",
+    "settings": "Settings"
+  }
+}

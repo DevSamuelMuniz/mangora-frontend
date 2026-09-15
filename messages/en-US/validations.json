@@ -1,0 +1,9 @@
+{
+  "required": "Required field.",
+  "email": "Invalid email.",
+  "minLength": "This field must contain at least {min} characters.",
+  "maxLength": "This field must contain at most {max} characters.",
+  "number": "Enter a valid number.",
+  "positive": "Enter a value greater than zero.",
+  "invalidDocument": "Invalid document."
+}

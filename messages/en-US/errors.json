@@ -1,0 +1,8 @@
+{
+  "NETWORK_ERROR": "Could not reach the server. Check your connection and try again.",
+  "UNKNOWN_ERROR": "Something went wrong. Please try again.",
+  "PERMISSION_DENIED": "You don't have permission for this action.",
+  "SESSION_EXPIRED": "Your session expired. Please sign in again.",
+  "NOT_FOUND": "Record not found.",
+  "RATE_LIMITED": "Too many attempts. Please wait a moment."
+}

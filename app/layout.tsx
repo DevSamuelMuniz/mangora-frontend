@@ -6,6 +6,8 @@ import {
   Manrope,
 } from "next/font/google";
 import Script from "next/script";
+import I18nProvider from "@/i18n/provider";
+import { getLocale, loadMessages } from "@/i18n/server";
 import QueryProvider from "@/components/providers/QueryProvider";
 import { ToastProvider } from "@/components/ui/toast";
 import { brand } from "@/lib/brand";
@@ -95,14 +97,16 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const locale = await getLocale();
+  const messages = await loadMessages(locale);
   return (
     <html
-      lang="pt-BR"
+      lang={locale}
       className={`${geistSans.variable} ${geistMono.variable} ${bricolage.variable} ${manrope.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
@@ -128,9 +132,11 @@ export default function RootLayout({
           </>
         )}
 
-        <QueryProvider>
-          <ToastProvider>{children}</ToastProvider>
-        </QueryProvider>
+        <I18nProvider locale={locale} messages={messages}>
+          <QueryProvider>
+            <ToastProvider>{children}</ToastProvider>
+          </QueryProvider>
+        </I18nProvider>
       </body>
     </html>
   );
