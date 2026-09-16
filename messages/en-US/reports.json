@@ -59,5 +59,10 @@
   },
   "actions": {
     "closeNotice": "Dismiss notice"
-  }
+  },
+  "last30Days": "Last 30 days",
+  "averageTicket": "Average ticket",
+  "exportFailed": "We could not export the report.",
+  "realDataNote": "Indicators calculated with real company data.",
+  "previous30Days": "Previous 30 days"
 }

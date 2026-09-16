@@ -63,7 +63,9 @@
       "empty": "Añade al menos un producto o servicio al pedido.",
       "customer": "Selecciona un cliente.",
       "save": "No se pudo guardar el pedido."
-    }
+    },
+    "scheduledTime": "Hora prevista",
+    "notesPlaceholder": "Preferencias, entrega o instrucciones."
   },
   "errors": {
     "update": "No se pudo actualizar el pedido.",

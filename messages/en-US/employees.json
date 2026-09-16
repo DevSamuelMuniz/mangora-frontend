@@ -103,7 +103,14 @@
       "email": "Enter a valid email.",
       "password": "The password must have at least 8 characters.",
       "createFailed": "Could not create the employee."
-    }
+    },
+    "dataSection": "Employee data",
+    "dataHint": "Identification and initial team access.",
+    "temporaryPassword": "Temporary password",
+    "roleSection": "Role and permissions",
+    "roleHint": "Defines what this employee can access.",
+    "notesSection": "Internal notes (optional)",
+    "roleApiHint": "The API applies these limits to every operation."
   },
   "roles": {
     "OWNER": "Owner",

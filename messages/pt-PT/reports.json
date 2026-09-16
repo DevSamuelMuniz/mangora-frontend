@@ -59,5 +59,10 @@
   },
   "actions": {
     "closeNotice": "Fechar aviso"
-  }
+  },
+  "last30Days": "Últimos 30 dias",
+  "averageTicket": "Ticket médio",
+  "exportFailed": "Não foi possível exportar o relatório.",
+  "realDataNote": "Indicadores calculados com dados reais da empresa.",
+  "previous30Days": "30 dias anteriores"
 }

@@ -63,7 +63,9 @@
       "empty": "Adicione pelo menos um produto ou serviço à encomenda.",
       "customer": "Selecione um cliente.",
       "save": "Não foi possível guardar a encomenda."
-    }
+    },
+    "scheduledTime": "Hora prevista",
+    "notesPlaceholder": "Preferências, entrega ou instruções."
   },
   "errors": {
     "update": "Não foi possível atualizar a encomenda.",

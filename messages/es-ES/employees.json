@@ -103,7 +103,14 @@
       "email": "Introduce un correo válido.",
       "password": "La contraseña debe tener al menos 8 caracteres.",
       "createFailed": "No se pudo registrar el empleado."
-    }
+    },
+    "dataSection": "Datos del empleado",
+    "dataHint": "Identificación y acceso inicial del equipo.",
+    "temporaryPassword": "Contraseña temporal",
+    "roleSection": "Rol y permisos",
+    "roleHint": "Define a qué puede acceder este empleado.",
+    "notesSection": "Observaciones internas (opcional)",
+    "roleApiHint": "La API aplicará estos límites en cada operación."
   },
   "roles": {
     "OWNER": "Propietario",

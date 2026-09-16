@@ -103,7 +103,14 @@
       "email": "Informe um e-mail válido.",
       "password": "A senha deve ter ao menos 8 caracteres.",
       "createFailed": "Não foi possível cadastrar o funcionário."
-    }
+    },
+    "dataSection": "Dados do funcionário",
+    "dataHint": "Identificação e acesso inicial da equipe.",
+    "temporaryPassword": "Senha temporária",
+    "roleSection": "Papel e permissões",
+    "roleHint": "Define o que este funcionário pode acessar.",
+    "notesSection": "Observações internas (opcional)",
+    "roleApiHint": "A API aplicará estes limites em cada operação."
   },
   "roles": {
     "OWNER": "Proprietário",

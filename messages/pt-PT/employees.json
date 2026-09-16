@@ -103,7 +103,14 @@
       "email": "Indique um e-mail válido.",
       "password": "A palavra-passe deve ter pelo menos 8 caracteres.",
       "createFailed": "Não foi possível registar o funcionário."
-    }
+    },
+    "dataSection": "Dados do funcionário",
+    "dataHint": "Identificação e acesso inicial da equipa.",
+    "temporaryPassword": "Palavra-passe temporária",
+    "roleSection": "Papel e permissões",
+    "roleHint": "Define o que este funcionário pode aceder.",
+    "notesSection": "Observações internas (opcional)",
+    "roleApiHint": "A API aplicará estes limites em cada operação."
   },
   "roles": {
     "OWNER": "Proprietário",

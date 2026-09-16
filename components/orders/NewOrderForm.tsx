@@ -105,8 +105,8 @@ export default function NewOrderForm() {
               <Field label="Canal" id="channel"><select id="channel" name="channel" defaultValue="COUNTER" className={inputClassName}>{channels.map((channel) => <option key={channel} value={channel}>{orderChannelLabels[channel]}</option>)}</select></Field>
               <Field label="Forma de atendimento" id="fulfillment"><select id="fulfillment" name="fulfillment" defaultValue="PICKUP" className={inputClassName}>{fulfillments.map((method) => <option key={method} value={method}>{fulfillmentLabels[method]}</option>)}</select></Field>
               <Field label="Data prevista" id="scheduledDate"><input id="scheduledDate" name="scheduledDate" type="date" required defaultValue={localDateValue()} className={inputClassName} /></Field>
-              <Field label="Horário previsto" id="scheduledTime"><input id="scheduledTime" name="scheduledTime" type="time" required defaultValue="12:30" className={inputClassName} /></Field>
-              <Field label="Observações" id="notes" className="sm:col-span-2"><textarea id="notes" name="notes" rows={3} placeholder="Preferências, entrega ou instruções..." className="w-full resize-none rounded-xl border border-slate-200 px-3.5 py-3 text-sm outline-none focus:border-orange-400 focus:ring-4 focus:ring-orange-100" /></Field>
+              <Field label={t("orders.form.scheduledTime")} id="scheduledTime"><input id="scheduledTime" name="scheduledTime" type="time" required defaultValue="12:30" className={inputClassName} /></Field>
+              <Field label="Observações" id="notes" className="sm:col-span-2"><textarea id="notes" name="notes" rows={3} placeholder={t("orders.form.notesPlaceholder")} className="w-full resize-none rounded-xl border border-slate-200 px-3.5 py-3 text-sm outline-none focus:border-orange-400 focus:ring-4 focus:ring-orange-100" /></Field>
             </div>
           </div>
 

@@ -63,7 +63,9 @@
       "empty": "Add at least one product or service to the order.",
       "customer": "Select a customer.",
       "save": "Could not save the order."
-    }
+    },
+    "scheduledTime": "Scheduled time",
+    "notesPlaceholder": "Preferences, delivery or instructions."
   },
   "errors": {
     "update": "Could not update the order.",

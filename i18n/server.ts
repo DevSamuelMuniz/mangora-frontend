@@ -6,7 +6,7 @@ import { getCurrentSession } from "@/lib/auth/server";
 import { LOCALE_COOKIE, resolveLocale, type Locale } from "./config";
 import { createTranslator, fallbackChain, mergeMessages, type Messages } from "./runtime";
 
-const NAMESPACES = ["common", "navigation", "validations", "statuses", "paymentMethods", "errors", "settings", "dashboard", "sales", "pdv", "products", "stock", "customers", "suppliers", "finance", "reports", "employees", "units", "bank", "operations", "workspace", "forms", "orders", "billing", "publicUi", "landing", "site", "publicPages", "systemAdmin", "aiManager", "pageMeta"] as const;
+const NAMESPACES = ["common", "navigation", "validations", "statuses", "paymentMethods", "errors", "settings", "dashboard", "sales", "pdv", "products", "stock", "customers", "suppliers", "finance", "reports", "employees", "units", "bank", "operations", "workspace", "forms", "orders", "billing", "publicUi", "landing", "site", "publicPages", "systemAdmin", "aiManager", "pageMeta", "accountSecurity"] as const;
 type Namespace = (typeof NAMESPACES)[number];
 
 const localeLoaders: Record<Locale, Record<Namespace, () => Promise<{ default: Messages }>>> = {
@@ -42,6 +42,7 @@ const localeLoaders: Record<Locale, Record<Namespace, () => Promise<{ default: M
     systemAdmin: () => import("../messages/pt-BR/system-admin.json") as Promise<{ default: Messages }>,
     aiManager: () => import("../messages/pt-BR/ai-manager.json") as Promise<{ default: Messages }>,
     pageMeta: () => import("../messages/pt-BR/page-meta.json") as Promise<{ default: Messages }>,
+    accountSecurity: () => import("../messages/pt-BR/account-security.json") as Promise<{ default: Messages }>,
   },
   "en-US": {
     common: () => import("../messages/en-US/common.json") as Promise<{ default: Messages }>,
@@ -75,6 +76,7 @@ const localeLoaders: Record<Locale, Record<Namespace, () => Promise<{ default: M
     systemAdmin: () => import("../messages/en-US/system-admin.json") as Promise<{ default: Messages }>,
     aiManager: () => import("../messages/en-US/ai-manager.json") as Promise<{ default: Messages }>,
     pageMeta: () => import("../messages/en-US/page-meta.json") as Promise<{ default: Messages }>,
+    accountSecurity: () => import("../messages/en-US/account-security.json") as Promise<{ default: Messages }>,
   },
   "es-ES": {
     common: () => import("../messages/es-ES/common.json") as Promise<{ default: Messages }>,
@@ -108,6 +110,7 @@ const localeLoaders: Record<Locale, Record<Namespace, () => Promise<{ default: M
     systemAdmin: () => import("../messages/es-ES/system-admin.json") as Promise<{ default: Messages }>,
     aiManager: () => import("../messages/es-ES/ai-manager.json") as Promise<{ default: Messages }>,
     pageMeta: () => import("../messages/es-ES/page-meta.json") as Promise<{ default: Messages }>,
+    accountSecurity: () => import("../messages/es-ES/account-security.json") as Promise<{ default: Messages }>,
   },
   "pt-PT": {
     common: () => import("../messages/pt-PT/common.json") as Promise<{ default: Messages }>,
@@ -141,6 +144,7 @@ const localeLoaders: Record<Locale, Record<Namespace, () => Promise<{ default: M
     systemAdmin: () => import("../messages/pt-PT/system-admin.json") as Promise<{ default: Messages }>,
     aiManager: () => import("../messages/pt-PT/ai-manager.json") as Promise<{ default: Messages }>,
     pageMeta: () => import("../messages/pt-PT/page-meta.json") as Promise<{ default: Messages }>,
+    accountSecurity: () => import("../messages/pt-PT/account-security.json") as Promise<{ default: Messages }>,
   },
 };
 

@@ -63,5 +63,11 @@
     "download": "Download copy",
     "template": "Full table with Mangora fields",
     "csvReady": "CSV ready to open in Excel or Google Sheets."
+  },
+  "confirm": {
+    "checking": "Checking operation protection...",
+    "passwordHint": "Enter your account password to unlock this action. The confirmation lasts only a few minutes.",
+    "capsLock": "Caps Lock is on.",
+    "secureNote": "Your password is validated securely and never appears in activity logs."
   }
 }

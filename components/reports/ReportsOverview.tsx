@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import type { FormatLocale } from "@/lib/format";
 import { useI18n, useT } from "@/i18n/provider";
+import type { Translate } from "@/i18n/runtime";
 import {
   ArrowDownRight,
   ArrowUpRight,
@@ -26,19 +27,21 @@ import type { ReportDataset, ReportPeriod } from "@/types/report";
 import { formatCurrency, formatNumber } from "@/lib/format";
 import { useReports } from "@/features/reports/hooks/useReports";
 
-const emptyReport: ReportDataset = {
-  label: "Últimos 30 dias",
-  comparisonLabel: "30 dias anteriores",
+function buildEmptyReport(t: Translate): ReportDataset {
+  return {
+    label: t("reports.last30Days"),
+  comparisonLabel: t("reports.previous30Days"),
   metrics: { revenue: 0, sales: 0, averageTicket: 0, newCustomers: 0, revenueVariation: 0, salesVariation: 0, ticketVariation: 0, customersVariation: 0 },
   performance: [], products: [], payments: [], income: 0, expenses: 0, recurringCustomers: 0,
-};
+  };
+}
 
 export default function ReportsOverview() {
   const t = useT();
   const { locale } = useI18n();
   const [period, setPeriod] = useState<ReportPeriod>("30d");
   const [message, setMessage] = useState("");
-  const { data: dataset = emptyReport, isLoading: loading, error } = useReports(period);
+  const { data: dataset = buildEmptyReport(t), isLoading: loading, error } = useReports(period);
   const errorMessage = error instanceof Error ? error.message : "";
 
   function changePeriod(nextPeriod: ReportPeriod) {
@@ -58,7 +61,7 @@ export default function ReportsOverview() {
       ["Indicador", "Valor"],
       ["Faturamento", dataset.metrics.revenue],
       ["Vendas", dataset.metrics.sales],
-      ["Ticket médio", dataset.metrics.averageTicket],
+      [t("reports.averageTicket"), dataset.metrics.averageTicket],
       ["Novos clientes", dataset.metrics.newCustomers],
       [],
       ["Produto", "Categoria", "Quantidade", "Faturamento"],
@@ -124,7 +127,7 @@ export default function ReportsOverview() {
         </div>
       </div>
 
-      <div className="rounded-xl border border-green-200 bg-green-50 p-3 text-[10px] leading-4 text-green-800">Indicadores calculados com dados reais da empresa e o período selecionado.</div>
+      <div className="rounded-xl border border-green-200 bg-green-50 p-3 text-[10px] leading-4 text-green-800">{t("reports.realDataNote")}resa e o período selecionado.</div>
     </section>
   );
 }

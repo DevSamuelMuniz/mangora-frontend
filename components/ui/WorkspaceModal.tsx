@@ -76,7 +76,7 @@ export default function WorkspaceModal({ children, closeHref, label, size = "lar
         {isLoading && policy ? (
           <div className="flex min-h-64 items-center justify-center gap-2 text-sm font-bold text-[#597064]">
             <LoaderCircle className="size-4 animate-spin" />
-            Verificando proteção da operação...
+            {t("workspace.confirm.checking")}
           </div>
         ) : passwordRequired && !unlocked ? (
           <form onSubmit={(event) => void verify(event)} className="mx-auto w-full max-w-lg pb-3 sm:pb-5">
@@ -101,7 +101,7 @@ export default function WorkspaceModal({ children, closeHref, label, size = "lar
                 </div>
 
                 <p id="operation-password-help" className="mt-4 text-sm leading-6 text-[#597064]">
-                  Digite a senha da sua conta para liberar esta ação. A confirmação vale apenas por alguns minutos.
+                  {t("workspace.confirm.passwordHint")}
                 </p>
 
                 <label htmlFor="operation-password" className="mt-5 block text-xs font-black text-[#173d2b]">
@@ -142,7 +142,7 @@ export default function WorkspaceModal({ children, closeHref, label, size = "lar
                 {capsLock && (
                   <p id="operation-password-caps" className="mt-2 flex items-center gap-1.5 text-xs font-bold text-amber-700">
                     <AlertCircle className="size-3.5" />
-                    Caps Lock está ativado.
+                    {t("workspace.confirm.capsLock")}
                   </p>
                 )}
 
@@ -163,7 +163,7 @@ export default function WorkspaceModal({ children, closeHref, label, size = "lar
                   </button>
                 </div>
 
-                <p className="mt-4 text-center text-[11px] leading-4 text-[#597064]">Sua senha é validada com segurança e não aparece nos registros de atividade.</p>
+                <p className="mt-4 text-center text-[11px] leading-4 text-[#597064]">{t("workspace.confirm.secureNote")}</p>
               </div>
             </div>
           </form>
