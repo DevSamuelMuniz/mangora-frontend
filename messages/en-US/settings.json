@@ -170,5 +170,6 @@
       "saveRegional": "Could not save the regional preferences.",
       "run": "Could not run the processing."
     }
-  }
+  },
+  "planHint": "Check the plan, usage and support requests."
 }

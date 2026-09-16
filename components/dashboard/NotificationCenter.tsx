@@ -53,7 +53,7 @@ export default function NotificationCenter({ onOpen }: { onOpen?: () => void }) 
   }
 
   return <div ref={rootRef} className="relative">
-    <button type="button" onClick={() => setOpen((current) => { if (!current) onOpen?.(); return !current; })} aria-label={unread ? `Notificações, ${unread} não lidas` : "Notificações"} aria-expanded={open} className={`relative flex size-10 items-center justify-center rounded-xl border transition ${open ? "border-orange-300 bg-orange-50 text-orange-700 shadow-sm" : "border-slate-200 bg-white text-slate-500 hover:border-orange-200 hover:bg-orange-50 hover:text-orange-600"}`}>
+    <button type="button" onClick={() => setOpen((current) => { if (!current) onOpen?.(); return !current; })} aria-label={unread ? t("dashboard.notifications.unreadLabel", { count: unread }) : t("dashboard.notifications.label")} aria-expanded={open} className={`relative flex size-10 items-center justify-center rounded-xl border transition ${open ? "border-orange-300 bg-orange-50 text-orange-700 shadow-sm" : "border-slate-200 bg-white text-slate-500 hover:border-orange-200 hover:bg-orange-50 hover:text-orange-600"}`}>
       <Bell className={`size-[18px] ${unread ? "fill-orange-100" : ""}`} />
       {unread > 0 && <span className="absolute -right-1.5 -top-1.5 flex min-h-5 min-w-5 items-center justify-center rounded-full border-2 border-white bg-red-500 px-1 text-[9px] font-black leading-none text-white shadow-sm">{unread > 9 ? "9+" : unread}</span>}
     </button>

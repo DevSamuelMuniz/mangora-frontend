@@ -75,5 +75,9 @@
       "request": "No se pudo registrar la devolución."
     },
     "titleOf": "Devolver artículos de {code}"
-  }
+  },
+  "actionsAria": "Acciones de la venta {code}",
+  "cashNote": "Las ventas en efectivo se registran en la caja abierta de la empresa.",
+  "receivableNote": "El importe quedará en cuentas por cobrar y podrá liquidarse parcialmente.",
+  "finalNote": "Al finalizar, la venta y la salida de inventario se registran juntas."
 }

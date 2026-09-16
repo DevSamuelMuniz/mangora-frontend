@@ -170,5 +170,8 @@
     "accounting": "Não foi possível atualizar a categoria contábil.",
     "createCostCenter": "Não foi possível criar o centro de custo.",
     "createAccounting": "Não foi possível criar a categoria contábil."
-  }
+  },
+  "recurrences": "Recorrências",
+  "upcoming": "Próximos compromissos",
+  "upcomingHint": "Contas pendentes e vencidas"
 }

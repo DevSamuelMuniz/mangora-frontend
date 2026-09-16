@@ -170,5 +170,6 @@
       "saveRegional": "Não foi possível guardar as preferências regionais.",
       "run": "Não foi possível executar o processamento."
     }
-  }
+  },
+  "planHint": "Consulte o plano, a utilização e os pedidos de apoio."
 }

@@ -20,7 +20,7 @@ export default function ProductWalkthrough() {
   return <section id="por-dentro" className="bg-[#fff8ea] px-5 py-16 text-[#123d2b] sm:px-8 sm:py-24 lg:px-10">
     <div className="mx-auto max-w-[1200px]">
       <p className="text-xs font-black uppercase tracking-widest text-[#147a45]">{t("publicUi.walkthrough.title")}</p>
-      <h2 className="mt-4 max-w-3xl font-[family-name:var(--font-bricolage)] text-4xl font-extrabold tracking-tight sm:text-5xl">As respostas que seu negócio precisa, sem procurar em várias planilhas.</h2>
+      <h2 className="mt-4 max-w-3xl font-[family-name:var(--font-bricolage)] text-4xl font-extrabold tracking-tight sm:text-5xl">{t("publicUi.walkthrough.closingTitle")}</h2>
       <p className="mt-5 text-[#315847]">{t("publicUi.walkthrough.subtitle")}</p>
       <div className="mt-8 flex flex-wrap gap-3" aria-label={t("publicUi.walkthrough.rotations")}>
         {buildExamples(t).map((item, index) => <button key={item.name} type="button" aria-pressed={selected === index} aria-controls="product-example" onClick={() => { setSelected(index); track("product_demo_viewed", { module: item.name }); }} className={`min-h-12 rounded-xl border-2 border-[#123d2b] px-6 font-bold focus-visible:outline-4 focus-visible:outline-offset-4 focus-visible:outline-[#ff6b1a] ${selected === index ? "bg-[#123d2b] text-white" : "bg-white text-[#123d2b] hover:bg-[#ffb21a]/20"}`}>{item.name}</button>)}
@@ -35,7 +35,7 @@ export default function ProductWalkthrough() {
         <div className="min-w-0 p-5 sm:p-9">
           <p className="mb-6 text-xs font-semibold text-[#597064]">{t("publicUi.walkthrough.disclaimer")}</p>
           <div className="overflow-x-auto"><table className="w-full text-left text-sm"><caption className="sr-only">Exemplo de {example.name}</caption><thead><tr>{example.columns.map(column => <th key={column} scope="col" className="border-b border-[#123d2b]/20 pb-4 pr-4">{column}</th>)}</tr></thead><tbody>{example.rows.map(row => <tr key={row[0]}>{row.map((cell, index) => <td key={index} className="border-b border-[#123d2b]/10 py-5 pr-4 text-[#315847]">{cell}</td>)}</tr>)}</tbody></table></div>
-          <p className="mt-6 text-xs leading-5 text-[#597064]">A apresentação foi simplificada para esta demonstração. A disponibilidade dos recursos varia por plano.</p>
+          <p className="mt-6 text-xs leading-5 text-[#597064]">{t("publicUi.walkthrough.disclaimer")}</p>
         </div>
       </div>
     </div>

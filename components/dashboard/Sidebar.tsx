@@ -288,7 +288,7 @@ export default function Sidebar({
           <div className="my-4 h-px bg-slate-200" />
 
           <p className="mb-2 px-3 text-[10px] font-bold uppercase tracking-[0.14em] text-slate-400">
-            Administração
+            {t("navigation.admin")}
           </p>
 
           <div className="space-y-1">
@@ -333,7 +333,7 @@ export default function Sidebar({
             </div>
 
             <p className="mt-2 text-[10px] leading-4 text-white/70">
-              Consulte o plano, o uso e as solicitações de atendimento.
+              {t("settings.planHint")}
             </p>
 
             <Link

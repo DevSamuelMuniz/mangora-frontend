@@ -170,5 +170,8 @@
     "accounting": "Não foi possível atualizar a conta contabilística.",
     "createCostCenter": "Não foi possível criar o centro de custo.",
     "createAccounting": "Não foi possível criar a conta contabilística."
-  }
+  },
+  "recurrences": "Recorrências",
+  "upcoming": "Próximos compromissos",
+  "upcomingHint": "Contas pendentes e vencidas"
 }

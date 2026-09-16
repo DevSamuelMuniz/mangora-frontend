@@ -41,10 +41,11 @@
     "viewDetails": "Ver detalles"
   },
   "lowStock": {
-    "title": "Inventario bajo",
+    "title": "Productos que necesitan reposición",
     "subtitle": "Productos en el mínimo o por debajo",
     "empty": "Ningún producto con inventario bajo.",
-    "remaining": "quedan {count}"
+    "remaining": "quedan {count}",
+    "minimum": "Mín. {count}"
   },
   "chart": {
     "title": "Rendimiento de ventas",
@@ -53,5 +54,9 @@
     "days7": "Últimos 7 días",
     "days30": "Últimos 30 días",
     "days90": "Últimos 90 días"
+  },
+  "notifications": {
+    "label": "Notificaciones",
+    "unreadLabel": "Notificaciones, {count} sin leer"
   }
 }

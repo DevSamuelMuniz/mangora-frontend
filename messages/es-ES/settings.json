@@ -170,5 +170,6 @@
       "saveRegional": "No se pudieron guardar las preferencias regionales.",
       "run": "No se pudo ejecutar el procesamiento."
     }
-  }
+  },
+  "planHint": "Consulta el plan, el uso y las solicitudes de atención."
 }

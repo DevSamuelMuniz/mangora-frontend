@@ -171,7 +171,7 @@ export default function ProductCatalog() {
                             <button
                               type="button"
                               onClick={() => setActionsProduct(product)}
-                              aria-label={`Ações do produto ${product.name}`}
+                              aria-label={t("products.actionsAria", { name: product.name })}
                               className="flex size-8 items-center justify-center rounded-lg text-slate-400 transition hover:bg-slate-100 hover:text-slate-700"
                             >
                               <MoreHorizontal className="size-4" />
@@ -187,7 +187,7 @@ export default function ProductCatalog() {
                 <p className="text-[11px] text-slate-500">Mostrando {visibleProducts.length} de {filteredProducts.length} produto(s)</p>
                 <div className="flex items-center gap-2">
                   <button type="button" aria-label={t("products.pagination.previous")} disabled={currentPage === 1} onClick={() => setPage((current) => Math.max(1, current - 1))} className="flex size-9 items-center justify-center rounded-xl border border-slate-200 text-slate-500 transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40"><ChevronLeft className="size-4" /></button>
-                  <span className="min-w-20 text-center text-[11px] font-semibold text-slate-600">Página {currentPage} de {totalPages}</span>
+                  <span className="min-w-20 text-center text-[11px] font-semibold text-slate-600">{t("products.page", { current: currentPage, total: totalPages })}</span>
                   <button type="button" aria-label={t("products.pagination.next")} disabled={currentPage === totalPages} onClick={() => setPage((current) => Math.min(totalPages, current + 1))} className="flex size-9 items-center justify-center rounded-xl border border-slate-200 text-slate-500 transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40"><ChevronRight className="size-4" /></button>
                 </div>
               </div>

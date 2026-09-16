@@ -2,18 +2,22 @@
 
 import { useState } from "react";
 import { useT } from "@/i18n/provider";
+import type { Translate } from "@/i18n/runtime";
 import { Download, FileSpreadsheet, LoaderCircle, Package, Upload, Users, Warehouse } from "lucide-react";
 
 import { downloadCsv, useImportCsv, type ImportKind } from "@/features/data/hooks/useDataTransfer";
 
-const importKinds: { kind: ImportKind; label: string; icon: typeof Package; hint: string }[] = [
-  { kind: "products", label: "Produtos", icon: Package, hint: "Colunas: nome, preco (obrigatórias) · sku, codigo_barras, categoria, estoque, estoque_minimo, custo" },
-  { kind: "customers", label: "Clientes", icon: Users, hint: "Colunas: nome (obrigatória) · email, telefone, documento, nome_fantasia" },
-  { kind: "suppliers", label: "Fornecedores", icon: Warehouse, hint: "Colunas: nome (obrigatória) · email, telefone, documento, nome_fantasia" },
-];
+function buildImportKinds(t: Translate): { kind: ImportKind; label: string; icon: typeof Package; hint: string }[] {
+  return [
+    { kind: "products", label: t("modules.dataTransfer.products"), icon: Package, hint: t("modules.dataTransfer.productsHint") },
+    { kind: "customers", label: t("modules.dataTransfer.customers"), icon: Users, hint: t("modules.dataTransfer.customersHint") },
+    { kind: "suppliers", label: t("modules.dataTransfer.suppliers"), icon: Warehouse, hint: t("modules.dataTransfer.suppliersHint") },
+  ];
+}
 
 export default function DataTransferPanel() {
   const t = useT();
+  const importKinds = buildImportKinds(t);
   const [kind, setKind] = useState<ImportKind>("products");
   const [content, setContent] = useState("");
   const [notice, setNotice] = useState("");

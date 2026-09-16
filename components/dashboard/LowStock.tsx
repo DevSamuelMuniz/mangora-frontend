@@ -25,7 +25,7 @@ export default function LowStock({ products }: { products: DashboardData["lowSto
             </h2>
 
             <p className="mt-0.5 text-[10px] text-slate-400">
-              Produtos que precisam de reposição
+              {t("dashboard.lowStock.title")}
             </p>
           </div>
         </div>
@@ -74,7 +74,7 @@ export default function LowStock({ products }: { products: DashboardData["lowSto
                       </p>
 
                       <p className="text-[9px] text-slate-400">
-                        Mín. {product.minimumStock}
+                        {t("dashboard.lowStock.minimum", { count: product.minimumStock })}
                       </p>
                     </div>
                   </div>

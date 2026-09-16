@@ -75,5 +75,9 @@
       "request": "We could not record the return."
     },
     "titleOf": "Return items from {code}"
-  }
+  },
+  "actionsAria": "Actions for sale {code}",
+  "cashNote": "Cash sales are recorded in the company's open register.",
+  "receivableNote": "The amount will go to accounts receivable and can be settled partially.",
+  "finalNote": "When you finish, the sale and the stock decrease are recorded together."
 }

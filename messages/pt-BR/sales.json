@@ -75,5 +75,9 @@
       "request": "Não foi possível registrar a devolução."
     },
     "titleOf": "Devolver itens da {code}"
-  }
+  },
+  "actionsAria": "Ações da venda {code}",
+  "cashNote": "Vendas em dinheiro são registradas no caixa aberto da empresa.",
+  "receivableNote": "O valor ficará em contas a receber e poderá ser baixado parcialmente.",
+  "finalNote": "Ao finalizar, a venda e a baixa de estoque são registradas juntas."
 }

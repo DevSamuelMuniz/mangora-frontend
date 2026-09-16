@@ -75,5 +75,9 @@
       "request": "Não foi possível registar a devolução."
     },
     "titleOf": "Devolver artigos de {code}"
-  }
+  },
+  "actionsAria": "Ações da venda {code}",
+  "cashNote": "As vendas em dinheiro são registadas na caixa aberta da empresa.",
+  "receivableNote": "O valor ficará em contas a receber e poderá ser liquidado parcialmente.",
+  "finalNote": "Ao finalizar, a venda e a baixa de inventário são registadas em conjunto."
 }

@@ -127,5 +127,11 @@
       "updated": "Product updated"
     },
     "loading": "Loading product..."
-  }
+  },
+  "catalogEyebrow": "Catalogue",
+  "actionsAria": "Actions for product {name}",
+  "page": "Page {current} of {total}",
+  "notFound": "Product not found.",
+  "imageHint": "Provide a public image over HTTP or HTTPS.",
+  "publicImage": "Public image"
 }

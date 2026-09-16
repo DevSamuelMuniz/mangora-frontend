@@ -16,7 +16,9 @@
       "environment": "Protected environment",
       "synced": "Synced routine",
       "keepGoing": "Your operation continues here"
-    }
+    },
+    "ariaHome": "Go to the home page",
+    "loginCopy": "Sign in and find sales, stock and finance exactly as you left them."
   },
   "walkthrough": {
     "title": "Explore before creating your account",

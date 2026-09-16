@@ -131,5 +131,14 @@
     "accessUpdate": "No se pudo cambiar el acceso.",
     "save": "No se pudieron guardar los datos.",
     "load": "No se pudo cargar el equipo"
-  }
+  },
+  "accessTitleDeactivate": "¿Inactivar el acceso de {name}?",
+  "accessTitleActivate": "¿Activar el acceso de {name}?",
+  "deactivateHint": "Las sesiones abiertas se cerrarán de inmediato. El historial se conserva.",
+  "activateHint": "El empleado podrá entrar de nuevo en la plataforma.",
+  "back": "Volver",
+  "confirm": "Confirmar",
+  "deactivate": "Inactivar acceso",
+  "activate": "Activar acceso",
+  "roleAccess": "Función y nivel de acceso"
 }

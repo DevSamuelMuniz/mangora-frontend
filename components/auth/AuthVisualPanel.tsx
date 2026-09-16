@@ -10,7 +10,7 @@ function buildContent(t: (key: string) => string) { return {
   login: {
     eyebrow: t("publicUi.auth.features.keepGoing"),
     title: t("publicUi.auth.welcome"),
-    copy: "Entre e encontre vendas, estoque e financeiro do jeito que você deixou.",
+    copy: t("publicUi.auth.loginCopy"),
     pose: "stand" as const,
     label: t("publicUi.auth.visualLabelReady"),
     note: t("publicUi.auth.welcomeReady"),
@@ -39,11 +39,11 @@ export default function AuthVisualPanel({ variant }: AuthVisualPanelProps) {
       <div className="absolute inset-x-0 bottom-0 h-[38%] bg-[linear-gradient(8deg,rgba(20,122,69,0.55)_0_48%,transparent_49%)]" />
 
       {variant === "login" ? (
-        <Link href="/" aria-label="Ir para a página inicial" className="relative z-10 w-fit">
+        <Link href="/" aria-label={t("publicUi.auth.ariaHome")} className="relative z-10 w-fit">
           <BrandLogo className="h-12 xl:h-14" priority />
         </Link>
       ) : (
-        <Link href="/" aria-label="Ir para a página inicial" className="relative z-10 w-fit rounded-xl bg-[#fff8ea] px-4 py-2.5 shadow-[4px_4px_0_#ffb21a]">
+        <Link href="/" aria-label={t("publicUi.auth.ariaHome")} className="relative z-10 w-fit rounded-xl bg-[#fff8ea] px-4 py-2.5 shadow-[4px_4px_0_#ffb21a]">
           <BrandLogo className="h-8 xl:h-9" surface="light" priority />
         </Link>
       )}

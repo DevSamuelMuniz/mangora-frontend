@@ -41,10 +41,11 @@
     "viewDetails": "Ver detalhes"
   },
   "lowStock": {
-    "title": "Estoque baixo",
+    "title": "Produtos que precisam de reposição",
     "subtitle": "Produtos no mínimo ou abaixo",
     "empty": "Nenhum produto com estoque baixo.",
-    "remaining": "restam {count}"
+    "remaining": "restam {count}",
+    "minimum": "Mín. {count}"
   },
   "chart": {
     "title": "Desempenho de vendas",
@@ -53,5 +54,9 @@
     "days7": "Últimos 7 dias",
     "days30": "Últimos 30 dias",
     "days90": "Últimos 90 dias"
+  },
+  "notifications": {
+    "label": "Notificações",
+    "unreadLabel": "Notificações, {count} não lidas"
   }
 }

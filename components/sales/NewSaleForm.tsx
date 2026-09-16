@@ -211,9 +211,9 @@ export default function NewSaleForm() {
                   {paymentMethods.map((method) => <option key={method} value={method}>{paymentMethodLabels[method]}</option>)}
                 </select>
               </Field>
-              {paymentMethod === "CASH" && <p className="rounded-xl bg-amber-50 p-3 text-[10px] leading-4 text-amber-700">Vendas em dinheiro são registradas no caixa aberto da empresa.</p>}
+              {paymentMethod === "CASH" && <p className="rounded-xl bg-amber-50 p-3 text-[10px] leading-4 text-amber-700">{t("sales.cashNote")}</p>}
               {(paymentMethod === "CHECK" || paymentMethod === "STORE_CREDIT") && <>
-                <p className="rounded-xl bg-amber-50 p-3 text-[10px] leading-4 text-amber-700">O valor ficará em contas a receber e poderá ser baixado parcialmente.</p>
+                <p className="rounded-xl bg-amber-50 p-3 text-[10px] leading-4 text-amber-700">{t("sales.receivableNote")}</p>
                 <Field label={t("forms.sale.dueDate")} id="dueDate"><input id="dueDate" type="date" required min={brazilDateKey()} value={dueDate} onChange={(event) => setDueDate(event.target.value)} className={inputClassName} /></Field>
               </>}
               <Field label={t("forms.sale.discount")} id="discount">
@@ -228,7 +228,7 @@ export default function NewSaleForm() {
             <button type="button" disabled={createSale.isPending || loadingOptions} onClick={finishSale} className="mt-5 flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-orange-600 to-amber-600 px-4 text-sm font-bold text-white shadow-lg shadow-orange-200 transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-70 disabled:hover:translate-y-0">
               {createSale.isPending ? <><LoaderCircle className="size-4 animate-spin" />{t("forms.sale.submitting")}</> : <><CheckCircle2 className="size-4" />{t("forms.sale.submit")}</>}
             </button>
-            <p className="mt-3 text-center text-[9px] leading-4 text-slate-400">Ao finalizar, a venda e a baixa de estoque são registradas juntas.</p>
+            <p className="mt-3 text-center text-[9px] leading-4 text-slate-400">{t("sales.finalNote")}</p>
           </div>
         </aside>
       </div>

@@ -170,5 +170,8 @@
     "accounting": "Could not update the chart account.",
     "createCostCenter": "Could not create the cost center.",
     "createAccounting": "Could not create the chart account."
-  }
+  },
+  "recurrences": "Recurrences",
+  "upcoming": "Upcoming commitments",
+  "upcomingHint": "Pending and overdue bills"
 }

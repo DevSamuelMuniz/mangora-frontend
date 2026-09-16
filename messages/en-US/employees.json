@@ -131,5 +131,14 @@
     "accessUpdate": "Could not change the access.",
     "save": "Could not save the details.",
     "load": "Could not load the team"
-  }
+  },
+  "accessTitleDeactivate": "Deactivate access for {name}?",
+  "accessTitleActivate": "Activate access for {name}?",
+  "deactivateHint": "Open sessions will be ended immediately. The history is preserved.",
+  "activateHint": "The employee will be able to sign in to the platform again.",
+  "back": "Back",
+  "confirm": "Confirm",
+  "deactivate": "Deactivate access",
+  "activate": "Activate access",
+  "roleAccess": "Role and access level"
 }

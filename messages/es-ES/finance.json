@@ -170,5 +170,8 @@
     "accounting": "No se pudo actualizar la cuenta contable.",
     "createCostCenter": "No se pudo crear el centro de coste.",
     "createAccounting": "No se pudo crear la cuenta contable."
-  }
+  },
+  "recurrences": "Recurrencias",
+  "upcoming": "Próximos compromisos",
+  "upcomingHint": "Cuentas pendientes y vencidas"
 }

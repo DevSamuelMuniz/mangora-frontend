@@ -1,5 +1,7 @@
 "use client";
 
+import { useT } from "@/i18n/provider";
+
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
@@ -29,6 +31,7 @@ type DashboardHeaderProps = {
 };
 
 export default function DashboardHeader({ onOpenSidebar, session, simpleMode, onSimpleModeChange }: DashboardHeaderProps) {
+  const t = useT();
   const router = useRouter();
   const [profileOpen, setProfileOpen] = useState(false);
   const [logoutLoading, setLogoutLoading] = useState(false);
@@ -109,7 +112,7 @@ export default function DashboardHeader({ onOpenSidebar, session, simpleMode, on
         </div>
 
         <div className="flex items-center gap-2">
-          <label className="flex h-10 cursor-pointer items-center gap-2 rounded-xl border border-slate-200 bg-white px-2.5 transition hover:border-orange-200 hover:bg-orange-50" title="Exibir somente as funções essenciais">
+          <label className="flex h-10 cursor-pointer items-center gap-2 rounded-xl border border-slate-200 bg-white px-2.5 transition hover:border-orange-200 hover:bg-orange-50" title={t("dashboard.essentialOnly")}>
             <WandSparkles className={`size-4 ${simpleMode ? "text-orange-600" : "text-slate-400"}`} />
             <span className="hidden text-[10px] font-black text-slate-700 xl:inline">Modo simples</span>
             <input type="checkbox" aria-label="Ativar modo simples" checked={simpleMode} onChange={(event) => onSimpleModeChange(event.target.checked)} className="peer sr-only" />
@@ -130,7 +133,7 @@ export default function DashboardHeader({ onOpenSidebar, session, simpleMode, on
               <div role="menu" aria-label="Menu do perfil" className="absolute right-0 mt-2 w-56 rounded-2xl border border-slate-200 bg-white p-2 shadow-2xl shadow-slate-300/50">
                 <div className="border-b border-slate-100 px-3 py-2"><p className="text-xs font-black text-slate-900">{session.user.name}</p><p className="mt-0.5 truncate text-[10px] text-slate-400">{session.user.email}</p></div>
                 {can(session.membership.role, "company:configure") && <Link href="/configuracoes?secao=company" role="menuitem" className="mt-1 flex items-center gap-2 rounded-xl px-3 py-2.5 text-xs font-semibold text-slate-600 hover:bg-slate-50 hover:text-orange-700"><UserRound className="size-4" /> Dados da empresa</Link>}
-                {can(session.membership.role, "company:configure") && <Link href="/configuracoes?secao=preferences" role="menuitem" className="flex items-center gap-2 rounded-xl px-3 py-2.5 text-xs font-semibold text-slate-600 hover:bg-slate-50 hover:text-orange-700"><Settings className="size-4" /> Preferências</Link>}
+                {can(session.membership.role, "company:configure") && <Link href="/configuracoes?secao=preferences" role="menuitem" className="flex items-center gap-2 rounded-xl px-3 py-2.5 text-xs font-semibold text-slate-600 hover:bg-slate-50 hover:text-orange-700"><Settings className="size-4" /> {t("settings.panel.tabs.preferences")}</Link>}
                 {can(session.membership.role, "subscription:manage") && <Link href="/assinatura" role="menuitem" className="flex items-center gap-2 rounded-xl px-3 py-2.5 text-xs font-semibold text-slate-600 hover:bg-slate-50 hover:text-orange-700"><CreditCard className="size-4" /> Assinatura</Link>}
                 <button type="button" role="menuitem" disabled={logoutLoading} onClick={() => void handleLogout()} className="mt-1 flex w-full items-center gap-2 border-t border-slate-100 px-3 py-2.5 text-xs font-semibold text-red-600 hover:bg-red-50 disabled:cursor-wait disabled:opacity-60"><LogOut className="size-4" /> {logoutLoading ? "Saindo..." : "Sair"}</button>
               </div>

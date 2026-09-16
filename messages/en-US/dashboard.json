@@ -41,10 +41,11 @@
     "viewDetails": "View details"
   },
   "lowStock": {
-    "title": "Low stock",
+    "title": "Products that need restocking",
     "subtitle": "Products at or below minimum",
     "empty": "No products with low stock.",
-    "remaining": "{count} left"
+    "remaining": "{count} left",
+    "minimum": "Min. {count}"
   },
   "chart": {
     "title": "Sales performance",
@@ -53,5 +54,9 @@
     "days7": "Last 7 days",
     "days30": "Last 30 days",
     "days90": "Last 90 days"
+  },
+  "notifications": {
+    "label": "Notifications",
+    "unreadLabel": "Notifications, {count} unread"
   }
 }

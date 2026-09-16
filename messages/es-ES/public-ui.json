@@ -16,7 +16,9 @@
       "environment": "Entorno protegido",
       "synced": "Rutina sincronizada",
       "keepGoing": "Tu operación continúa aquí"
-    }
+    },
+    "ariaHome": "Ir a la página inicial",
+    "loginCopy": "Entra y encuentra ventas, inventario y finanzas tal como lo dejaste."
   },
   "walkthrough": {
     "title": "Conoce antes de crear tu cuenta",

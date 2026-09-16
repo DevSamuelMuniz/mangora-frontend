@@ -153,7 +153,7 @@ export default function FinancialOverview() {
           </div>
           <div className="flex flex-wrap items-center gap-2">
             <button type="button" onClick={() => void runRecurring()} disabled={generateRecurring.isPending} className="inline-flex h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 text-sm font-bold text-slate-700 transition hover:bg-slate-50 disabled:opacity-50">
-              {generateRecurring.isPending ? <LoaderCircle className="size-4 animate-spin" /> : <RefreshCw className="size-4" />}Recorrências
+              {generateRecurring.isPending ? <LoaderCircle className="size-4 animate-spin" /> : <RefreshCw className="size-4" />}{t("finance.recurrences")}
             </button>
             <button type="button" onClick={() => setShowStructure(true)} className="inline-flex h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 text-sm font-bold text-slate-700 transition hover:bg-slate-50">
               <Layers3 className="size-4" />Estrutura
@@ -183,7 +183,7 @@ export default function FinancialOverview() {
           </article>
 
           <article className="rounded-2xl border border-slate-200 bg-white shadow-sm">
-            <div className="border-b border-slate-200 px-4 py-4 sm:px-5"><h2 className="text-sm font-bold text-slate-950">Próximos compromissos</h2><p className="mt-0.5 text-[10px] text-slate-400">Contas pendentes e vencidas</p></div>
+            <div className="border-b border-slate-200 px-4 py-4 sm:px-5"><h2 className="text-sm font-bold text-slate-950">{t("finance.upcoming")}</h2><p className="mt-0.5 text-[10px] text-slate-400">{t("finance.upcomingHint")}</p></div>
             <div className="divide-y divide-slate-100">
               {pendingEntries.length ? pendingEntries.map((entry) => <div key={entry.id} className="flex items-center gap-3 px-4 py-3 sm:px-5"><div className={`flex size-8 shrink-0 items-center justify-center rounded-xl ${entry.displayStatus === "OVERDUE" ? "bg-red-50 text-red-600" : entry.type === "INCOME" ? "bg-green-50 text-green-600" : "bg-amber-50 text-amber-600"}`}>{entry.type === "INCOME" ? <ArrowUpRight className="size-3.5" /> : <ArrowDownRight className="size-3.5" />}</div><div className="min-w-0 flex-1"><p className="truncate text-xs font-bold text-slate-800">{entry.description}</p><p className="mt-1 text-[9px] text-slate-400">Vence em {formatDate(entry.dueDate)}</p></div><div className="shrink-0 text-right"><p className={`text-xs font-black ${entry.type === "INCOME" ? "text-green-600" : "text-slate-800"}`}>{formatCurrency(entry.amount, locale)}</p><p className={`mt-1 text-[9px] font-bold ${entry.displayStatus === "OVERDUE" ? "text-red-600" : "text-amber-600"}`}>{financialStatusLabels[entry.displayStatus]}</p></div></div>) : <p className="px-5 py-8 text-center text-xs text-slate-400">{t("finance.empty.upcoming")}</p>}
             </div>

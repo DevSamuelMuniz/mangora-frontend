@@ -99,7 +99,7 @@ export default function ProductForm({ productId }: { productId?: string }) {
   if (editing && !product) {
     return (
       <div className="rounded-2xl border border-red-200 bg-red-50 p-6 text-center">
-        <p className="text-sm font-bold text-red-700">{error || "Produto não encontrado."}</p>
+        <p className="text-sm font-bold text-red-700">{error || t("products.notFound")}</p>
         <Link href="/produtos" className="mt-4 inline-flex h-10 items-center rounded-xl bg-white px-4 text-xs font-bold text-orange-600 shadow-sm">
           {t("products.form.back")}
         </Link>
@@ -114,7 +114,7 @@ export default function ProductForm({ productId }: { productId?: string }) {
           <ArrowLeft className="size-4" />
         </Link>
         <div>
-          <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-orange-600">Catálogo</p>
+          <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-orange-600">{t("products.catalogEyebrow")}</p>
           <h1 className="mt-1 text-2xl font-black tracking-tight text-slate-950 sm:text-3xl">
             {editing ? t("products.form.titleEdit") : t("products.form.titleNew")}
           </h1>
@@ -191,7 +191,7 @@ export default function ProductForm({ productId }: { productId?: string }) {
 
           <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:p-5">
             <div className="flex items-center gap-2"><ImageIcon className="size-4 text-yellow-600" /><h2 className="text-sm font-bold text-slate-950">{t("products.form.sections.image")}</h2></div>
-            <p className="mt-1 text-[10px] text-slate-400">Informe uma imagem pública em HTTP ou HTTPS.</p>
+            <p className="mt-1 text-[10px] text-slate-400">{t("products.imageHint")}</p>
             <Field label="URL da imagem (opcional)" id="imageUrl" className="mt-4">
               <input id="imageUrl" name="imageUrl" type="url" defaultValue={product?.imageUrl ?? ""} placeholder={t("products.form.fields.imagePlaceholder")} className={inputClassName} />
             </Field>
