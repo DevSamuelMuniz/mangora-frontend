@@ -1,0 +1,79 @@
+{
+  "title": "Orders",
+  "subtitle": "Organise requests, reservations, pickup and delivery.",
+  "eyebrow": "Commercial",
+  "actions": {
+    "create": "New order",
+    "addItem": "Add item",
+    "convert": "Convert to sale",
+    "startPreparing": "Start preparing",
+    "markReady": "Mark as ready",
+    "cancel": "Cancel order",
+    "details": "Order details",
+    "processing": "Processing...",
+    "saving": "Saving..."
+  },
+  "search": {
+    "label": "Search orders",
+    "placeholder": "Search by customer or number..."
+  },
+  "filters": {
+    "channel": "Channel",
+    "status": "Status",
+    "all": "All"
+  },
+  "channels": {
+    "COUNTER": "Counter",
+    "PICKUP": "Pickup",
+    "DELIVERY": "Delivery",
+    "SCHEDULED": "Scheduled"
+  },
+  "table": {
+    "order": "Order",
+    "customer": "Customer",
+    "channel": "Channel",
+    "items": "Items",
+    "total": "Total",
+    "status": "Status",
+    "actions": "Actions"
+  },
+  "empty": {
+    "list": "No orders found",
+    "items": "No items added.",
+    "products": "No product or service available."
+  },
+  "loading": "Loading orders...",
+  "loadingProducts": "Loading products...",
+  "loadFailed": "Could not load orders",
+  "form": {
+    "title": "New order",
+    "subtitle": "Record the details and reserve the items for service.",
+    "dataSection": "Order details",
+    "dataHint": "Customer, origin and service",
+    "itemsSection": "Order items",
+    "itemsHint": "Controlled items will be reserved on save.",
+    "summarySection": "Summary",
+    "productsSection": "Available products and services",
+    "customer": "Customer",
+    "select": "Select",
+    "notes": "Notes",
+    "submit": "Create order",
+    "created": "Order created",
+    "errors": {
+      "empty": "Add at least one product or service to the order.",
+      "customer": "Select a customer.",
+      "save": "Could not save the order."
+    }
+  },
+  "errors": {
+    "update": "Could not update the order.",
+    "cancel": "Could not cancel the order.",
+    "convert": "Could not convert the order."
+  },
+  "metrics": {
+    "today": "Orders today",
+    "inProgress": "In progress",
+    "awaitingDelivery": "Awaiting delivery",
+    "todayValue": "Value today"
+  }
+}

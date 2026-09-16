@@ -1,0 +1,77 @@
+{
+  "title": "Subscription and plans",
+  "subtitle": "Track the real state, usage and charges of your subscription.",
+  "eyebrow": "Administration",
+  "loading": "Loading subscription...",
+  "loadFailed": "Could not load the subscription.",
+  "actions": {
+    "checkout": "Continue to checkout",
+    "createCharge": "Create charge",
+    "cancel": "Cancel subscription",
+    "reactivate": "Reactivate subscription",
+    "contactSales": "Request contact",
+    "contactSalesQuestion": "Request contact about Enterprise?"
+  },
+  "status": {
+    "ACTIVE": "Active subscription",
+    "TRIAL": "Free trial",
+    "PAST_DUE": "Payment overdue",
+    "CANCELLED": "Subscription cancelled",
+    "PENDING": "Awaiting payment",
+    "CONTACT": "On request",
+    "FREE": "Free plan",
+    "ENTERPRISE": "Enterprise"
+  },
+  "plan": {
+    "free": "Free",
+    "freeHint": "Essential access with no charge and no card.",
+    "upgrade": "When you need more capacity, choose a paid plan.",
+    "included": "Included by default",
+    "pricePending": "Price to be confirmed",
+    "priceUpdated": "Price updated",
+    "priceCurrent": "Calculated on the current company",
+    "noCharge": "No charge",
+    "toDefine": "To be defined"
+  },
+  "provider": {
+    "title": "Available provider",
+    "asaas": "Asaas",
+    "paddle": "Paddle",
+    "sandbox": "Sandbox",
+    "production": "Production",
+    "notIntegrated": "Not integrated",
+    "accountCreated": "Account created",
+    "credentialPending": "Credential pending",
+    "billing": "Payment"
+  },
+  "history": {
+    "title": "History",
+    "planChanged": "Plan change requested",
+    "activated": "Plan activated",
+    "discountUpdated": "Discount updated",
+    "received": "Received",
+    "confirmed": "Confirmed",
+    "overdue": "Overdue",
+    "refunded": "Refunded",
+    "cycleClosed": "Cycle closed",
+    "cancelScheduled": "Cancellation scheduled.",
+    "cancelled": "Cancelled"
+  },
+  "toasts": {
+    "cancelled": "Subscription cancelled",
+    "reactivated": "Subscription reactivated",
+    "contactRequested": "Commercial contact request recorded.",
+    "contactNote": "Commercial contact request from the dashboard.",
+    "contactHint": "Our commercial team will get in touch."
+  },
+  "errors": {
+    "cancel": "Could not cancel the subscription.",
+    "reactivate": "Could not reactivate the subscription.",
+    "contact": "Could not record the request."
+  },
+  "billingTypes": {
+    "BOLETO": "Bank slip",
+    "PIX": "Pix",
+    "CREDIT_CARD": "Credit card"
+  }
+}

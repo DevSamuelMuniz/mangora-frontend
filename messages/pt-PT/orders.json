@@ -1,0 +1,79 @@
+{
+  "title": "Encomendas",
+  "subtitle": "Organize pedidos, reservas, recolha e entrega.",
+  "eyebrow": "Comercial",
+  "actions": {
+    "create": "Nova encomenda",
+    "addItem": "Adicionar artigo",
+    "convert": "Converter em venda",
+    "startPreparing": "Iniciar preparação",
+    "markReady": "Marcar como pronta",
+    "cancel": "Cancelar encomenda",
+    "details": "Detalhes da encomenda",
+    "processing": "A processar...",
+    "saving": "A guardar..."
+  },
+  "search": {
+    "label": "Pesquisar encomendas",
+    "placeholder": "Pesquisar por cliente ou número..."
+  },
+  "filters": {
+    "channel": "Canal",
+    "status": "Estado",
+    "all": "Todas"
+  },
+  "channels": {
+    "COUNTER": "Balcão",
+    "PICKUP": "Recolha",
+    "DELIVERY": "Entrega",
+    "SCHEDULED": "Agendamento"
+  },
+  "table": {
+    "order": "Encomenda",
+    "customer": "Cliente",
+    "channel": "Canal",
+    "items": "Artigos",
+    "total": "Total",
+    "status": "Estado",
+    "actions": "Ações"
+  },
+  "empty": {
+    "list": "Nenhuma encomenda encontrada",
+    "items": "Nenhum artigo adicionado.",
+    "products": "Nenhum produto ou serviço disponível."
+  },
+  "loading": "A carregar encomendas...",
+  "loadingProducts": "A carregar produtos...",
+  "loadFailed": "Não foi possível carregar as encomendas",
+  "form": {
+    "title": "Nova encomenda",
+    "subtitle": "Registe os dados e reserve os artigos para atendimento.",
+    "dataSection": "Dados da encomenda",
+    "dataHint": "Cliente, origem e atendimento",
+    "itemsSection": "Artigos da encomenda",
+    "itemsHint": "Os artigos controlados serão reservados ao guardar.",
+    "summarySection": "Resumo",
+    "productsSection": "Produtos e serviços disponíveis",
+    "customer": "Cliente",
+    "select": "Selecione",
+    "notes": "Observações",
+    "submit": "Criar encomenda",
+    "created": "Encomenda criada",
+    "errors": {
+      "empty": "Adicione pelo menos um produto ou serviço à encomenda.",
+      "customer": "Selecione um cliente.",
+      "save": "Não foi possível guardar a encomenda."
+    }
+  },
+  "errors": {
+    "update": "Não foi possível atualizar a encomenda.",
+    "cancel": "Não foi possível cancelar a encomenda.",
+    "convert": "Não foi possível converter a encomenda."
+  },
+  "metrics": {
+    "today": "Encomendas hoje",
+    "inProgress": "Em curso",
+    "awaitingDelivery": "A aguardar entrega",
+    "todayValue": "Valor hoje"
+  }
+}

@@ -1,0 +1,79 @@
+{
+  "title": "Pedidos",
+  "subtitle": "Organiza solicitudes, reservas, recogida y entrega.",
+  "eyebrow": "Comercial",
+  "actions": {
+    "create": "Nuevo pedido",
+    "addItem": "Añadir artículo",
+    "convert": "Convertir en venta",
+    "startPreparing": "Iniciar preparación",
+    "markReady": "Marcar como listo",
+    "cancel": "Cancelar pedido",
+    "details": "Detalles del pedido",
+    "processing": "Procesando...",
+    "saving": "Guardando..."
+  },
+  "search": {
+    "label": "Buscar pedidos",
+    "placeholder": "Buscar por cliente o número..."
+  },
+  "filters": {
+    "channel": "Canal",
+    "status": "Estado",
+    "all": "Todos"
+  },
+  "channels": {
+    "COUNTER": "Mostrador",
+    "PICKUP": "Recogida",
+    "DELIVERY": "Entrega",
+    "SCHEDULED": "Programado"
+  },
+  "table": {
+    "order": "Pedido",
+    "customer": "Cliente",
+    "channel": "Canal",
+    "items": "Artículos",
+    "total": "Total",
+    "status": "Estado",
+    "actions": "Acciones"
+  },
+  "empty": {
+    "list": "Ningún pedido encontrado",
+    "items": "Ningún artículo añadido.",
+    "products": "Ningún producto o servicio disponible."
+  },
+  "loading": "Cargando pedidos...",
+  "loadingProducts": "Cargando productos...",
+  "loadFailed": "No se pudieron cargar los pedidos",
+  "form": {
+    "title": "Nuevo pedido",
+    "subtitle": "Registra los datos y reserva los artículos para el servicio.",
+    "dataSection": "Datos del pedido",
+    "dataHint": "Cliente, origen y atención",
+    "itemsSection": "Artículos del pedido",
+    "itemsHint": "Los artículos controlados se reservarán al guardar.",
+    "summarySection": "Resumen",
+    "productsSection": "Productos y servicios disponibles",
+    "customer": "Cliente",
+    "select": "Selecciona",
+    "notes": "Observaciones",
+    "submit": "Crear pedido",
+    "created": "Pedido creado",
+    "errors": {
+      "empty": "Añade al menos un producto o servicio al pedido.",
+      "customer": "Selecciona un cliente.",
+      "save": "No se pudo guardar el pedido."
+    }
+  },
+  "errors": {
+    "update": "No se pudo actualizar el pedido.",
+    "cancel": "No se pudo cancelar el pedido.",
+    "convert": "No se pudo convertir el pedido."
+  },
+  "metrics": {
+    "today": "Pedidos hoy",
+    "inProgress": "En curso",
+    "awaitingDelivery": "Esperando entrega",
+    "todayValue": "Valor hoy"
+  }
+}

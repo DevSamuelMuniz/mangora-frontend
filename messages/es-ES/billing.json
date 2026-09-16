@@ -1,0 +1,77 @@
+{
+  "title": "Suscripción y planes",
+  "subtitle": "Sigue el estado real, el uso y los cobros de la suscripción.",
+  "eyebrow": "Administración",
+  "loading": "Cargando suscripción...",
+  "loadFailed": "No se pudo cargar la suscripción.",
+  "actions": {
+    "checkout": "Continuar al pago",
+    "createCharge": "Crear cobro",
+    "cancel": "Cancelar suscripción",
+    "reactivate": "Reactivar suscripción",
+    "contactSales": "Solicitar contacto",
+    "contactSalesQuestion": "¿Solicitar contacto sobre Enterprise?"
+  },
+  "status": {
+    "ACTIVE": "Suscripción activa",
+    "TRIAL": "Prueba gratis",
+    "PAST_DUE": "Pago atrasado",
+    "CANCELLED": "Suscripción cancelada",
+    "PENDING": "Pendiente de pago",
+    "CONTACT": "Bajo consulta",
+    "FREE": "Plan Free",
+    "ENTERPRISE": "Enterprise"
+  },
+  "plan": {
+    "free": "Gratis",
+    "freeHint": "Acceso esencial continuo, sin cobro y sin tarjeta.",
+    "upgrade": "Cuando necesites más capacidad, elige un plan de pago.",
+    "included": "Incluido por defecto",
+    "pricePending": "Precio por confirmar",
+    "priceUpdated": "Precio actualizado",
+    "priceCurrent": "Calculado en la empresa actual",
+    "noCharge": "Sin cobro",
+    "toDefine": "Por definir"
+  },
+  "provider": {
+    "title": "Proveedor disponible",
+    "asaas": "Asaas",
+    "paddle": "Paddle",
+    "sandbox": "Sandbox",
+    "production": "Producción",
+    "notIntegrated": "No integrado",
+    "accountCreated": "Cuenta creada",
+    "credentialPending": "Credencial pendiente",
+    "billing": "Pago"
+  },
+  "history": {
+    "title": "Historial",
+    "planChanged": "Cambio de plan solicitado",
+    "activated": "Plan activado",
+    "discountUpdated": "Descuento actualizado",
+    "received": "Recibida",
+    "confirmed": "Confirmada",
+    "overdue": "Atrasada",
+    "refunded": "Reembolsada",
+    "cycleClosed": "Ciclo cerrado",
+    "cancelScheduled": "Cancelación programada.",
+    "cancelled": "Cancelada"
+  },
+  "toasts": {
+    "cancelled": "Suscripción cancelada",
+    "reactivated": "Suscripción reactivada",
+    "contactRequested": "Solicitud de contacto comercial registrada.",
+    "contactNote": "Solicitud de contacto comercial desde el panel.",
+    "contactHint": "Nuestro equipo comercial se pondrá en contacto."
+  },
+  "errors": {
+    "cancel": "No se pudo cancelar la suscripción.",
+    "reactivate": "No se pudo reactivar la suscripción.",
+    "contact": "No se pudo registrar la solicitud."
+  },
+  "billingTypes": {
+    "BOLETO": "Recibo bancario",
+    "PIX": "Pix",
+    "CREDIT_CARD": "Tarjeta de crédito"
+  }
+}

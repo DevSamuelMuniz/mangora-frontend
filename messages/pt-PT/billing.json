@@ -1,0 +1,77 @@
+{
+  "title": "Assinatura e planos",
+  "subtitle": "Acompanhe o estado real, a utilização e as cobranças da assinatura.",
+  "eyebrow": "Administração",
+  "loading": "A carregar assinatura...",
+  "loadFailed": "Não foi possível carregar a assinatura.",
+  "actions": {
+    "checkout": "Continuar para o pagamento",
+    "createCharge": "Criar cobrança",
+    "cancel": "Cancelar assinatura",
+    "reactivate": "Reativar assinatura",
+    "contactSales": "Solicitar contacto",
+    "contactSalesQuestion": "Solicitar contacto sobre Enterprise?"
+  },
+  "status": {
+    "ACTIVE": "Assinatura ativa",
+    "TRIAL": "Teste grátis",
+    "PAST_DUE": "Pagamento atrasado",
+    "CANCELLED": "Assinatura cancelada",
+    "PENDING": "A aguardar pagamento",
+    "CONTACT": "Sob consulta",
+    "FREE": "Plano Free",
+    "ENTERPRISE": "Enterprise"
+  },
+  "plan": {
+    "free": "Grátis",
+    "freeHint": "Acesso essencial contínuo, sem cobrança e sem cartão.",
+    "upgrade": "Quando precisar de mais capacidade, escolha um plano pago.",
+    "included": "Incluído por predefinição",
+    "pricePending": "Preço a confirmar",
+    "priceUpdated": "Preço atualizado",
+    "priceCurrent": "Calculado na empresa atual",
+    "noCharge": "Sem cobrança",
+    "toDefine": "A definir"
+  },
+  "provider": {
+    "title": "Provedor disponível",
+    "asaas": "Asaas",
+    "paddle": "Paddle",
+    "sandbox": "Sandbox",
+    "production": "Produção",
+    "notIntegrated": "Não integrado",
+    "accountCreated": "Conta criada",
+    "credentialPending": "Credencial pendente",
+    "billing": "Pagamento"
+  },
+  "history": {
+    "title": "Histórico",
+    "planChanged": "Troca de plano solicitada",
+    "activated": "Plano ativado",
+    "discountUpdated": "Desconto atualizado",
+    "received": "Recebida",
+    "confirmed": "Confirmada",
+    "overdue": "Atrasada",
+    "refunded": "Estornada",
+    "cycleClosed": "Ciclo encerrado",
+    "cancelScheduled": "Cancelamento agendado.",
+    "cancelled": "Cancelada"
+  },
+  "toasts": {
+    "cancelled": "Assinatura cancelada",
+    "reactivated": "Assinatura reativada",
+    "contactRequested": "Pedido de contacto comercial registado.",
+    "contactNote": "Pedido de contacto comercial pelo painel.",
+    "contactHint": "A nossa equipa comercial entrará em contacto."
+  },
+  "errors": {
+    "cancel": "Não foi possível cancelar a assinatura.",
+    "reactivate": "Não foi possível reativar a assinatura.",
+    "contact": "Não foi possível registar o pedido."
+  },
+  "billingTypes": {
+    "BOLETO": "Referência bancária",
+    "PIX": "Pix",
+    "CREDIT_CARD": "Cartão de crédito"
+  }
+}

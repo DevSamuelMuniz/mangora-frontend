@@ -1,0 +1,79 @@
+{
+  "title": "Pedidos",
+  "subtitle": "Organize solicitações, reservas, retirada e entrega.",
+  "eyebrow": "Comercial",
+  "actions": {
+    "create": "Novo pedido",
+    "addItem": "Adicionar item",
+    "convert": "Converter em venda",
+    "startPreparing": "Iniciar preparação",
+    "markReady": "Marcar como pronto",
+    "cancel": "Cancelar pedido",
+    "details": "Detalhes do pedido",
+    "processing": "Processando...",
+    "saving": "Salvando..."
+  },
+  "search": {
+    "label": "Buscar pedidos",
+    "placeholder": "Buscar por cliente ou número..."
+  },
+  "filters": {
+    "channel": "Canal",
+    "status": "Status",
+    "all": "Todos"
+  },
+  "channels": {
+    "COUNTER": "Atendimento",
+    "PICKUP": "Retirada",
+    "DELIVERY": "Entrega",
+    "SCHEDULED": "Agendamento"
+  },
+  "table": {
+    "order": "Pedido",
+    "customer": "Cliente",
+    "channel": "Canal",
+    "items": "Itens",
+    "total": "Total",
+    "status": "Status",
+    "actions": "Ações"
+  },
+  "empty": {
+    "list": "Nenhum pedido encontrado",
+    "items": "Nenhum item adicionado.",
+    "products": "Nenhum produto ou serviço disponível."
+  },
+  "loading": "Carregando pedidos...",
+  "loadingProducts": "Carregando produtos...",
+  "loadFailed": "Não foi possível carregar os pedidos",
+  "form": {
+    "title": "Novo pedido",
+    "subtitle": "Registre os dados e reserve os itens para atendimento.",
+    "dataSection": "Dados do pedido",
+    "dataHint": "Cliente, origem e atendimento",
+    "itemsSection": "Itens do pedido",
+    "itemsHint": "Os itens controlados serão reservados ao salvar.",
+    "summarySection": "Resumo",
+    "productsSection": "Produtos e serviços disponíveis",
+    "customer": "Cliente",
+    "select": "Selecione",
+    "notes": "Observações",
+    "submit": "Criar pedido",
+    "created": "Pedido criado",
+    "errors": {
+      "empty": "Adicione pelo menos um produto ou serviço ao pedido.",
+      "customer": "Selecione um cliente.",
+      "save": "Não foi possível salvar o pedido."
+    }
+  },
+  "errors": {
+    "update": "Não foi possível atualizar o pedido.",
+    "cancel": "Não foi possível cancelar o pedido.",
+    "convert": "Não foi possível converter o pedido."
+  },
+  "metrics": {
+    "today": "Pedidos hoje",
+    "inProgress": "Em andamento",
+    "awaitingDelivery": "Aguardando entrega",
+    "todayValue": "Valor hoje"
+  }
+}

@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useI18n, useT } from "@/i18n/provider";
 import { useRouter } from "next/navigation";
 import { FormEvent, type ReactNode, useMemo, useState } from "react";
 import { ArrowLeft, LoaderCircle, Minus, PackagePlus, Plus, Save, ShoppingBag, Trash2 } from "lucide-react";
@@ -17,6 +18,8 @@ const channels = Object.keys(orderChannelLabels) as OrderChannel[];
 const fulfillments = Object.keys(fulfillmentLabels) as FulfillmentMethod[];
 
 export default function NewOrderForm() {
+  const t = useT();
+  const { locale } = useI18n();
   const router = useRouter();
   const { data: options, isLoading: loadingOptions, error: optionsError } = useSaleOptions();
   const createOrder = useCreateOrder();
@@ -71,8 +74,8 @@ export default function NewOrderForm() {
     const scheduledDate = String(formData.get("scheduledDate") ?? "");
     const scheduledTime = String(formData.get("scheduledTime") ?? "");
     setError("");
-    if (!customerId) return setError("Selecione um cliente.");
-    if (!items.length) return setError("Adicione pelo menos um produto ou serviço ao pedido.");
+    if (!customerId) return setError(t("orders.form.errors.customer"));
+    if (!items.length) return setError(t("orders.form.errors.empty"));
     try {
       await createOrder.mutateAsync({
         customerId,
@@ -83,20 +86,20 @@ export default function NewOrderForm() {
         notes: String(formData.get("notes") ?? "") || undefined,
         items: items.map((item) => ({ productId: item.product.id, quantity: item.quantity })),
       });
-      router.push(`/pedidos?toast=${encodeURIComponent("Pedido criado")}`);
+      router.push(`/pedidos?toast=${encodeURIComponent(t("orders.form.created"))}`);
     } catch (requestError) {
-      setError(requestError instanceof Error ? requestError.message : "Não foi possível salvar o pedido.");
+      setError(requestError instanceof Error ? requestError.message : t("orders.form.errors.save"));
     }
   }
 
   return (
     <section>
-      <div className="flex items-start gap-3"><Link href="/pedidos" aria-label="Voltar para pedidos" className="mt-0.5 flex size-10 shrink-0 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-500 shadow-sm hover:border-orange-200 hover:text-orange-600"><ArrowLeft className="size-4" /></Link><div><p className="text-[11px] font-bold uppercase tracking-[0.14em] text-orange-600">Comercial</p><h1 className="mt-1 text-2xl font-black tracking-tight text-slate-950 sm:text-3xl">Novo pedido</h1><p className="mt-1 text-xs text-slate-500">Registre os dados e reserve os itens para atendimento.</p></div></div>
+      <div className="flex items-start gap-3"><Link href="/pedidos" aria-label="Voltar para pedidos" className="mt-0.5 flex size-10 shrink-0 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-500 shadow-sm hover:border-orange-200 hover:text-orange-600"><ArrowLeft className="size-4" /></Link><div><p className="text-[11px] font-bold uppercase tracking-[0.14em] text-orange-600">Comercial</p><h1 className="mt-1 text-2xl font-black tracking-tight text-slate-950 sm:text-3xl">{t("orders.form.title")}</h1><p className="mt-1 text-xs text-slate-500">{t("orders.form.subtitle")}</p></div></div>
 
       <form onSubmit={handleSubmit} className="mt-5 grid items-start gap-4 xl:grid-cols-[1fr_360px]">
         <div className="space-y-4">
           <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:p-5">
-            <SectionTitle icon={<ShoppingBag className="size-4" />} title="Dados do pedido" description="Cliente, origem e atendimento" />
+            <SectionTitle icon={<ShoppingBag className="size-4" />} title="Dados do pedido" description={t("orders.form.dataHint")} />
             <div className="mt-4 grid gap-4 sm:grid-cols-2">
               <Field label="Cliente" id="customerId" className="sm:col-span-2"><select id="customerId" name="customerId" required defaultValue="" className={inputClassName}><option value="" disabled>Selecione o cliente</option>{customers.map((customer) => <option key={customer.id} value={customer.id}>{customer.tradeName || customer.name}</option>)}</select></Field>
               <Field label="Canal" id="channel"><select id="channel" name="channel" defaultValue="COUNTER" className={inputClassName}>{channels.map((channel) => <option key={channel} value={channel}>{orderChannelLabels[channel]}</option>)}</select></Field>
@@ -109,12 +112,12 @@ export default function NewOrderForm() {
 
           <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:p-5">
             <SectionTitle icon={<PackagePlus className="size-4" />} title="Itens do pedido" description="Produtos e serviços disponíveis" />
-            <div className="mt-4 flex flex-col gap-2 sm:flex-row"><select value={selectedProductId} disabled={loadingOptions || !products.length} onChange={(event) => setSelectedProductId(event.target.value)} className={`${inputClassName} flex-1`}>{products.map((product) => <option key={product.id} value={product.id}>{product.name} · {formatCurrency(product.price)} · {product.trackStock ? `${product.stock - product.reservedStock} disp.` : "serviço"}</option>)}</select><button type="button" disabled={!selectedProductId} onClick={addProduct} className="flex h-11 items-center justify-center gap-2 rounded-xl border border-orange-200 bg-orange-50 px-4 text-xs font-bold text-orange-700 disabled:opacity-50"><Plus className="size-4" />Adicionar item</button></div>
-            {items.length ? <div className="mt-4 overflow-hidden rounded-xl border border-slate-200">{items.map((item) => <div key={item.product.id} className="flex flex-col gap-3 border-b border-slate-100 p-3 last:border-0 sm:flex-row sm:items-center"><div className="min-w-0 flex-1"><p className="truncate text-xs font-bold text-slate-800">{item.product.name}</p><p className="mt-0.5 text-[10px] text-slate-400">{formatCurrency(item.product.price)} por unidade</p></div><div className="flex items-center gap-3"><div className="flex items-center rounded-xl border"><button type="button" onClick={() => changeQuantity(item.product.id, -1)} className="flex size-9 items-center justify-center"><Minus className="size-3.5" /></button><span className="w-8 text-center text-xs font-bold">{item.quantity}</span><button type="button" onClick={() => changeQuantity(item.product.id, 1)} className="flex size-9 items-center justify-center"><Plus className="size-3.5" /></button></div><p className="w-24 text-right text-xs font-black">{formatCurrency(item.product.price * item.quantity)}</p><button type="button" onClick={() => setItems((current) => current.filter((currentItem) => currentItem.product.id !== item.product.id))} aria-label={`Remover ${item.product.name}`} className="flex size-9 items-center justify-center rounded-xl text-red-500 hover:bg-red-50"><Trash2 className="size-3.5" /></button></div></div>)}</div> : <div className="mt-4 rounded-xl border border-dashed border-slate-200 px-4 py-8 text-center text-xs text-slate-500">{loadingOptions ? "Carregando produtos..." : "Nenhum item adicionado."}</div>}
+            <div className="mt-4 flex flex-col gap-2 sm:flex-row"><select value={selectedProductId} disabled={loadingOptions || !products.length} onChange={(event) => setSelectedProductId(event.target.value)} className={`${inputClassName} flex-1`}>{products.map((product) => <option key={product.id} value={product.id}>{product.name} · {formatCurrency(product.price, locale)} · {product.trackStock ? `${product.stock - product.reservedStock} disp.` : "serviço"}</option>)}</select><button type="button" disabled={!selectedProductId} onClick={addProduct} className="flex h-11 items-center justify-center gap-2 rounded-xl border border-orange-200 bg-orange-50 px-4 text-xs font-bold text-orange-700 disabled:opacity-50"><Plus className="size-4" />{t("orders.actions.addItem")}</button></div>
+            {items.length ? <div className="mt-4 overflow-hidden rounded-xl border border-slate-200">{items.map((item) => <div key={item.product.id} className="flex flex-col gap-3 border-b border-slate-100 p-3 last:border-0 sm:flex-row sm:items-center"><div className="min-w-0 flex-1"><p className="truncate text-xs font-bold text-slate-800">{item.product.name}</p><p className="mt-0.5 text-[10px] text-slate-400">{formatCurrency(item.product.price, locale)} por unidade</p></div><div className="flex items-center gap-3"><div className="flex items-center rounded-xl border"><button type="button" onClick={() => changeQuantity(item.product.id, -1)} className="flex size-9 items-center justify-center"><Minus className="size-3.5" /></button><span className="w-8 text-center text-xs font-bold">{item.quantity}</span><button type="button" onClick={() => changeQuantity(item.product.id, 1)} className="flex size-9 items-center justify-center"><Plus className="size-3.5" /></button></div><p className="w-24 text-right text-xs font-black">{formatCurrency(item.product.price * item.quantity, locale)}</p><button type="button" onClick={() => setItems((current) => current.filter((currentItem) => currentItem.product.id !== item.product.id))} aria-label={`Remover ${item.product.name}`} className="flex size-9 items-center justify-center rounded-xl text-red-500 hover:bg-red-50"><Trash2 className="size-3.5" /></button></div></div>)}</div> : <div className="mt-4 rounded-xl border border-dashed border-slate-200 px-4 py-8 text-center text-xs text-slate-500">{loadingOptions ? "Carregando produtos..." : "Nenhum item adicionado."}</div>}
           </div>
         </div>
 
-        <aside className="xl:sticky xl:top-20"><div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:p-5"><h2 className="text-sm font-bold text-slate-950">Resumo</h2><div className="mt-4 space-y-3 border-y border-slate-100 py-4"><div className="flex justify-between text-xs text-slate-500"><span>Itens</span><strong>{items.reduce((sum, item) => sum + item.quantity, 0)}</strong></div><div className="flex justify-between text-xs text-slate-500"><span>Total</span><strong>{formatCurrency(total)}</strong></div></div>{errorMessage && <div role="alert" className="mt-4 rounded-xl border border-red-200 bg-red-50 p-3 text-xs font-semibold text-red-700">{errorMessage}</div>}<button type="submit" disabled={loading || loadingOptions} className="mt-4 flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-orange-600 to-amber-600 px-4 text-sm font-bold text-white disabled:opacity-60">{loading ? <><LoaderCircle className="size-4 animate-spin" />Salvando...</> : <><Save className="size-4" />Salvar pedido</>}</button><p className="mt-3 text-center text-[9px] text-slate-400">Os itens controlados serão reservados ao salvar.</p></div></aside>
+        <aside className="xl:sticky xl:top-20"><div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:p-5"><h2 className="text-sm font-bold text-slate-950">{t("orders.form.summarySection")}</h2><div className="mt-4 space-y-3 border-y border-slate-100 py-4"><div className="flex justify-between text-xs text-slate-500"><span>Itens</span><strong>{items.reduce((sum, item) => sum + item.quantity, 0)}</strong></div><div className="flex justify-between text-xs text-slate-500"><span>Total</span><strong>{formatCurrency(total, locale)}</strong></div></div>{errorMessage && <div role="alert" className="mt-4 rounded-xl border border-red-200 bg-red-50 p-3 text-xs font-semibold text-red-700">{errorMessage}</div>}<button type="submit" disabled={loading || loadingOptions} className="mt-4 flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-orange-600 to-amber-600 px-4 text-sm font-bold text-white disabled:opacity-60">{loading ? <><LoaderCircle className="size-4 animate-spin" />{t("orders.actions.saving")}</> : <><Save className="size-4" />Salvar pedido</>}</button><p className="mt-3 text-center text-[9px] text-slate-400">{t("orders.form.itemsHint")}</p></div></aside>
       </form>
     </section>
   );
