@@ -35,9 +35,11 @@ export function normalizeLocale(value: string | null | undefined): Locale | null
 }
 
 /** Cadeia: preferência salva → cookie → Accept-Language → fallback pt-BR. */
-export function resolveLocale(input: { preference?: string | null; cookie?: string | null; acceptLanguage?: string | null }): Locale {
+export function resolveLocale(input: { preference?: string | null; path?: string | null; cookie?: string | null; acceptLanguage?: string | null }): Locale {
   const fromPreference = normalizeLocale(input.preference);
   if (fromPreference) return fromPreference;
+  const fromPath = normalizeLocale(input.path);
+  if (fromPath) return fromPath;
   const fromCookie = normalizeLocale(input.cookie);
   if (fromCookie) return fromCookie;
   if (input.acceptLanguage) {

@@ -187,6 +187,7 @@ export async function getLocale(): Promise<Locale> {
   const session = await cachedSession();
   return resolveLocale({
     preference: session?.user?.locale ?? session?.company?.locale ?? null,
+    path: headerStore.get("x-mangora-locale"),
     cookie: cookieLocale,
     acceptLanguage: headerStore.get("accept-language"),
   });

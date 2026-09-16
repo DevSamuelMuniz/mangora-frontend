@@ -23,6 +23,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { getTranslator } from "@/i18n/server";
+import { alternateLanguages, localePath } from "@/i18n/urls";
 import BrandLogo from "@/components/brand/BrandLogo";
 import MascotPose from "@/components/brand/MascotPose";
 import { marketingPlans } from "@/lib/plans";
@@ -40,7 +41,7 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title: { absolute: title },
     description,
-  alternates: { canonical: "/" },
+  alternates: { canonical: localePath("/", locale), languages: alternateLanguages("/") },
   openGraph: { url: "/", type: "website", locale: locale.replace("-", "_"), siteName: brand.name, title, description, images: [{ url: brand.image, width: 500, height: 500, alt: "Mangora — sistema de gestão online" }] },
   twitter: { card: "summary_large_image", title, description, images: [brand.image] },
   };
