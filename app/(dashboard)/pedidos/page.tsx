@@ -1,13 +1,17 @@
+import { getTranslator } from "@/i18n/server";
 import type { Metadata } from "next";
 
 import OrderCatalog from "@/components/orders/OrderCatalog";
 import NewOrderForm from "@/components/orders/NewOrderForm";
 import WorkspaceModal from "@/components/ui/WorkspaceModal";
 
-export const metadata: Metadata = {
-  title: "Pedidos",
-  description: "Organize e acompanhe os pedidos da sua empresa.",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const { t } = await getTranslator();
+  return {
+    title: t("pageMeta.pedidos.title"),
+    description: t("pageMeta.pedidos.description"),
+  };
+}
 
 export default async function OrdersPage({ searchParams }: { searchParams: Promise<{ acao?: string }> }) {
   const { acao } = await searchParams;

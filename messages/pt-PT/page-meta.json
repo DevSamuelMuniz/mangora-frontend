@@ -1,0 +1,77 @@
+{
+  "pageMeta": {
+    "assinatura": {
+      "title": "Subscrição e planos",
+      "description": "Faça a gestão do plano e acompanhe as cobranças da empresa."
+    },
+    "categorias": {
+      "title": "Categorias",
+      "description": "Faça a gestão de categorias de produtos e serviços."
+    },
+    "configuracoes": {
+      "title": "Configurações",
+      "description": "Configure a empresa e as preferências da plataforma."
+    },
+    "estoque": {
+      "title": "Inventário",
+      "description": "Acompanhe produtos e movimentos de inventário."
+    },
+    "estoqueInventario": {
+      "title": "Inventário físico"
+    },
+    "estoqueTransferencias": {
+      "title": "Transferências"
+    },
+    "financeiro": {
+      "title": "Finanças",
+      "description": "Acompanhe receitas, despesas e fluxo de caixa."
+    },
+    "financeiroContas": {
+      "title": "Contas e conciliação"
+    },
+    "funcionarios": {
+      "title": "Funcionários",
+      "description": "Faça a gestão da equipa e dos papéis de acesso."
+    },
+    "gerenteIa": {
+      "title": "Gestor de IA | Mangora",
+      "description": "O seu especialista em finanças e marketing, com dados da sua empresa."
+    },
+    "logs": {
+      "title": "LOG",
+      "description": "Histórico completo das ações realizadas no sistema."
+    },
+    "produtos": {
+      "title": "Produtos",
+      "description": "Faça a gestão do catálogo de produtos da sua empresa."
+    },
+    "pedidos": {
+      "title": "Encomendas",
+      "description": "Organize e acompanhe as encomendas da sua empresa."
+    },
+    "compras": {
+      "title": "Compras",
+      "description": "Acompanhe encomendas de compra e receções."
+    },
+    "relatorios": {
+      "title": "Relatórios",
+      "description": "Analise os resultados e o desempenho da sua empresa."
+    },
+    "servicos": {
+      "title": "Serviços",
+      "description": "Faça a gestão dos serviços oferecidos pela empresa."
+    },
+    "loading": {
+      "assinatura": "A carregar subscrição",
+      "clientes": "A carregar clientes",
+      "configuracoes": "A carregar configurações",
+      "estoque": "A carregar inventário",
+      "financeiro": "A carregar finanças",
+      "funcionarios": "A carregar funcionários",
+      "pedidos": "A carregar encomendas",
+      "produtos": "A carregar produtos",
+      "relatorios": "A carregar relatórios",
+      "vendas": "A carregar vendas"
+    }
+  }
+}

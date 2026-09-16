@@ -34,14 +34,14 @@ import MarketSelector from "@/components/marketing/MarketSelector";
 import RegionalPlanPrice from "@/components/marketing/RegionalPlanPrice";
 
 export async function generateMetadata(): Promise<Metadata> {
-  const { t } = await getTranslator();
+  const { t, locale } = await getTranslator();
   const title = t("landing.meta.title");
   const description = t("landing.meta.description");
   return {
     title: { absolute: title },
     description,
   alternates: { canonical: "/" },
-  openGraph: { url: "/", type: "website", locale: "pt_BR", siteName: brand.name, title, description, images: [{ url: brand.image, width: 500, height: 500, alt: "Mangora — sistema de gestão online" }] },
+  openGraph: { url: "/", type: "website", locale: locale.replace("-", "_"), siteName: brand.name, title, description, images: [{ url: brand.image, width: 500, height: 500, alt: "Mangora — sistema de gestão online" }] },
   twitter: { card: "summary_large_image", title, description, images: [brand.image] },
   };
 }

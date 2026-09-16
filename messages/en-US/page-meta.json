@@ -1,0 +1,77 @@
+{
+  "pageMeta": {
+    "assinatura": {
+      "title": "Subscription and plans",
+      "description": "Manage the plan and follow the company charges."
+    },
+    "categorias": {
+      "title": "Categories",
+      "description": "Manage product and service categories."
+    },
+    "configuracoes": {
+      "title": "Settings",
+      "description": "Configure the company and platform preferences."
+    },
+    "estoque": {
+      "title": "Stock",
+      "description": "Follow products and stock movements."
+    },
+    "estoqueInventario": {
+      "title": "Physical inventory"
+    },
+    "estoqueTransferencias": {
+      "title": "Transfers"
+    },
+    "financeiro": {
+      "title": "Finance",
+      "description": "Follow revenue, expenses and cash flow."
+    },
+    "financeiroContas": {
+      "title": "Bills & Reconciliation"
+    },
+    "funcionarios": {
+      "title": "Employees",
+      "description": "Manage the team and access roles."
+    },
+    "gerenteIa": {
+      "title": "AI Manager | Mangora",
+      "description": "Your finance and marketing specialist, with your company data."
+    },
+    "logs": {
+      "title": "LOG",
+      "description": "Full history of the actions performed in the system."
+    },
+    "produtos": {
+      "title": "Products",
+      "description": "Manage your company product catalogue."
+    },
+    "pedidos": {
+      "title": "Orders",
+      "description": "Organise and follow your company orders."
+    },
+    "compras": {
+      "title": "Purchases",
+      "description": "Follow purchase orders and receipts."
+    },
+    "relatorios": {
+      "title": "Reports",
+      "description": "Analyse results and your company performance."
+    },
+    "servicos": {
+      "title": "Services",
+      "description": "Manage the services offered by the company."
+    },
+    "loading": {
+      "assinatura": "Loading subscription",
+      "clientes": "Loading customers",
+      "configuracoes": "Loading settings",
+      "estoque": "Loading stock",
+      "financeiro": "Loading finance",
+      "funcionarios": "Loading employees",
+      "pedidos": "Loading orders",
+      "produtos": "Loading products",
+      "relatorios": "Loading reports",
+      "vendas": "Loading sales"
+    }
+  }
+}

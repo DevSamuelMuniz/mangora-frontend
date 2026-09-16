@@ -1,11 +1,15 @@
+import { getTranslator } from "@/i18n/server";
 import type { Metadata } from "next";
 
 import ReportsOverview from "@/components/reports/ReportsOverview";
 
-export const metadata: Metadata = {
-  title: "Relatórios",
-  description: "Analise os resultados e o desempenho da sua empresa.",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const { t } = await getTranslator();
+  return {
+    title: t("pageMeta.relatorios.title"),
+    description: t("pageMeta.relatorios.description"),
+  };
+}
 
 export default function ReportsPage() {
   return <ReportsOverview />;

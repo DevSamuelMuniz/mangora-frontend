@@ -164,5 +164,103 @@
     "sentSuffix": "enviaremos las instrucciones de recuperación.",
     "backToLogin": "Volver al inicio de sesión",
     "devLink": "Abrir enlace de desarrollo"
+  },
+  "about": {
+    "metaTitle": "Sobre Mangora",
+    "metaDescription": "Conoce Mangora y nuestra misión de simplificar la gestión empresarial para negocios reales.",
+    "eyebrow": "Empresa",
+    "title": "Gestión simple para negocios reales",
+    "description": "Mangora nació para reunir las rutinas esenciales de pequeñas y medianas empresas en una experiencia clara, rápida y accesible.",
+    "missionTitle": "Nuestra misión",
+    "missionBody": "Reducir la complejidad de la gestión para que los emprendedores dediquen más tiempo a los clientes y al crecimiento del negocio.",
+    "missionItems": [
+      "Información centralizada.",
+      "Decisiones apoyadas en indicadores.",
+      "Operación simple en cualquier dispositivo."
+    ],
+    "howTitle": "Cómo trabajamos",
+    "howBody": "Construimos la plataforma a partir de flujos cotidianos de ventas, inventario, clientes y finanzas.",
+    "howItems": [
+      "Evolución continua del producto.",
+      "Seguridad desde el diseño.",
+      "Soporte cercano al cliente."
+    ]
+  },
+  "partners": {
+    "metaTitle": "Socios",
+    "metaDescription": "Conoce el programa de socios de Mangora para contadores, consultores, integradores y agencias.",
+    "eyebrow": "Ecosistema",
+    "title": "Crece junto a Mangora",
+    "description": "Creamos alianzas con profesionales y empresas que ayudan a los negocios a vender, organizarse y crecer.",
+    "whoTitle": "Quién puede participar",
+    "whoBody": "Contadores, consultores, integradores, agencias y proveedores de tecnología pueden formar parte del ecosistema.",
+    "whoItems": [
+      "Recomendación de nuevos clientes.",
+      "Implantación y formación.",
+      "Integraciones y soluciones complementarias."
+    ],
+    "nextTitle": "Próximos pasos",
+    "nextBody": "Envía una presentación a parceiros@mangora.com.br con tu región, experiencia y modelo de colaboración deseado.",
+    "nextItems": [
+      "Analizamos encaje y cobertura.",
+      "Definimos responsabilidades y beneficios.",
+      "Seguimos los resultados de la alianza."
+    ]
+  },
+  "security": {
+    "metaTitle": "Seguridad",
+    "metaDescription": "Conoce las prácticas de seguridad y protección de datos adoptadas por Mangora.",
+    "eyebrow": "Confianza",
+    "title": "Seguridad en todas las etapas",
+    "description": "Aplicamos controles técnicos y operativos para proteger cuentas, información empresarial y la disponibilidad de la plataforma.",
+    "accountTitle": "Protección de la cuenta",
+    "accountBody": "El acceso es individual y debe usar credenciales fuertes y exclusivas.",
+    "accountItems": [
+      "Control de acceso por perfil.",
+      "Monitorización de actividad sospechosa.",
+      "Prácticas seguras de autenticación."
+    ],
+    "dataTitle": "Protección de los datos",
+    "dataBody": "Adoptamos medidas proporcionales al riesgo y revisamos continuamente nuestra arquitectura.",
+    "dataItems": [
+      "Comunicación protegida en tránsito.",
+      "Separación lógica de la información.",
+      "Rutinas de continuidad y recuperación."
+    ],
+    "reportTitle": "Reporta una vulnerabilidad",
+    "reportBody": "Envía detalles de forma responsable a seguranca@mangora.com.br. No explotes ni expongas datos de terceros.",
+    "reportItems": [
+      "Describe el impacto potencial.",
+      "Incluye pasos mínimos de reproducción.",
+      "Espera nuestro análisis antes de divulgar."
+    ]
+  },
+  "lgpd": {
+    "metaTitle": "LGPD (protección de datos)",
+    "metaDescription": "Sabe cómo Mangora trata los datos personales y cumple los principios de la Ley General de Protección de Datos de Brasil.",
+    "eyebrow": "Protección de datos",
+    "title": "Compromiso con la protección de datos",
+    "description": "Tratamos datos personales con transparencia, finalidad definida y medidas compatibles con la Ley General de Protección de Datos de Brasil.",
+    "rolesTitle": "Roles y finalidades",
+    "rolesBody": "Según el tratamiento, Mangora puede actuar como responsable o encargado. Las responsabilidades se definen según la relación con el cliente.",
+    "rolesItems": [
+      "Finalidades informadas y legítimas.",
+      "Recogida limitada a lo necesario.",
+      "Conservación según obligaciones aplicables."
+    ],
+    "holdersTitle": "Atención a los titulares",
+    "holdersBody": "Las solicitudes relacionadas con datos personales pueden enviarse a privacidade@mangora.com.br.",
+    "holdersItems": [
+      "Identificamos y validamos al solicitante.",
+      "Evaluamos obligaciones legales de conservación.",
+      "Respondemos dentro de los plazos aplicables."
+    ],
+    "governanceTitle": "Gobernanza",
+    "governanceBody": "Mantenemos procesos para evaluar riesgos, proveedores, incidentes y cambios relevantes en el tratamiento de datos.",
+    "governanceItems": [
+      "Revisión periódica de controles.",
+      "Registro de decisiones y operaciones.",
+      "Formación y concienciación."
+    ]
   }
 }

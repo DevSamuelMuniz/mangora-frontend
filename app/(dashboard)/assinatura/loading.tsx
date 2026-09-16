@@ -1,6 +1,9 @@
-export default function SubscriptionLoading() {
+import { getTranslator } from "@/i18n/server";
+
+export default async function SubscriptionLoading() {
+  const { t } = await getTranslator();
   return (
-    <div className="animate-pulse space-y-5" aria-label="Carregando assinatura">
+    <div className="animate-pulse space-y-5" aria-label={t("pageMeta.loading.assinatura")}>
       <div>
         <div className="h-3 w-24 rounded bg-orange-100" />
         <div className="mt-3 h-8 w-64 rounded-lg bg-slate-200" />

@@ -1,0 +1,77 @@
+{
+  "pageMeta": {
+    "assinatura": {
+      "title": "Suscripción y planes",
+      "description": "Gestiona el plan y sigue los cobros de la empresa."
+    },
+    "categorias": {
+      "title": "Categorías",
+      "description": "Gestiona categorías de productos y servicios."
+    },
+    "configuracoes": {
+      "title": "Configuración",
+      "description": "Configura la empresa y las preferencias de la plataforma."
+    },
+    "estoque": {
+      "title": "Inventario",
+      "description": "Sigue productos y movimientos de inventario."
+    },
+    "estoqueInventario": {
+      "title": "Inventario físico"
+    },
+    "estoqueTransferencias": {
+      "title": "Transferencias"
+    },
+    "financeiro": {
+      "title": "Finanzas",
+      "description": "Sigue ingresos, gastos y flujo de caja."
+    },
+    "financeiroContas": {
+      "title": "Cuentas y conciliación"
+    },
+    "funcionarios": {
+      "title": "Empleados",
+      "description": "Gestiona el equipo y los roles de acceso."
+    },
+    "gerenteIa": {
+      "title": "Gerente de IA | Mangora",
+      "description": "Tu especialista en finanzas y marketing, con datos de tu empresa."
+    },
+    "logs": {
+      "title": "LOG",
+      "description": "Historial completo de las acciones realizadas en el sistema."
+    },
+    "produtos": {
+      "title": "Productos",
+      "description": "Gestiona el catálogo de productos de tu empresa."
+    },
+    "pedidos": {
+      "title": "Pedidos",
+      "description": "Organiza y sigue los pedidos de tu empresa."
+    },
+    "compras": {
+      "title": "Compras",
+      "description": "Sigue pedidos de compra y recepciones."
+    },
+    "relatorios": {
+      "title": "Informes",
+      "description": "Analiza los resultados y el desempeño de tu empresa."
+    },
+    "servicos": {
+      "title": "Servicios",
+      "description": "Gestiona los servicios ofrecidos por la empresa."
+    },
+    "loading": {
+      "assinatura": "Cargando suscripción",
+      "clientes": "Cargando clientes",
+      "configuracoes": "Cargando configuración",
+      "estoque": "Cargando inventario",
+      "financeiro": "Cargando finanzas",
+      "funcionarios": "Cargando empleados",
+      "pedidos": "Cargando pedidos",
+      "produtos": "Cargando productos",
+      "relatorios": "Cargando informes",
+      "vendas": "Cargando ventas"
+    }
+  }
+}
