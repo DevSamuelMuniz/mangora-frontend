@@ -32,7 +32,8 @@ export function preferredCountry() {
 }
 
 export function savePreferredCountry(country: string) {
-  document.cookie = `mangora_country=${country}; Path=/; Max-Age=31536000; SameSite=Lax; Secure`;
+  document.cookie = `mangora_country=${country}; Path=/; Max-Age=31536000; SameSite=Lax${window.location.protocol === "https:" ? "; Secure" : ""}`;
+  window.dispatchEvent(new Event("mangora-country-change"));
 }
 
 export function formatMinorUnits(amount: number, currency: CurrencyCode, locale: string) {

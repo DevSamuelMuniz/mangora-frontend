@@ -1,5 +1,7 @@
 "use client";
 
+import { useFormatters } from "@/i18n/provider";
+
 import Link from "next/link";
 import { useI18n, useT } from "@/i18n/provider";
 import { useRouter } from "next/navigation";
@@ -8,7 +10,7 @@ import { ArrowLeft, LoaderCircle, Minus, PackagePlus, Plus, Save, ShoppingBag, T
 
 import { fulfillmentLabels, orderChannelLabels, type FulfillmentMethod, type OrderChannel } from "@/types/order";
 import type { Product } from "@/types/product";
-import { formatCurrency } from "@/lib/format";
+
 import { brazilDateKey, brazilDateTimeToIso } from "@/lib/timezone";
 import { useCreateOrder } from "@/features/orders/hooks/useOrders";
 import { useSaleOptions } from "@/features/sales/hooks/useSales";
@@ -18,6 +20,7 @@ const channels = Object.keys(orderChannelLabels) as OrderChannel[];
 const fulfillments = Object.keys(fulfillmentLabels) as FulfillmentMethod[];
 
 export default function NewOrderForm() {
+  const { formatCurrency } = useFormatters();
   const t = useT();
   const { locale } = useI18n();
   const router = useRouter();

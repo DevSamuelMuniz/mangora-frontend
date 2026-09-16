@@ -7,7 +7,7 @@ import {
 } from "next/font/google";
 import Script from "next/script";
 import I18nProvider from "@/i18n/provider";
-import { getLocale, getTranslator, loadMessages } from "@/i18n/server";
+import { getLocale, getTranslator, loadMessages, getRegionalPreferences } from "@/i18n/server";
 import { alternateLanguages } from "@/i18n/urls";
 import QueryProvider from "@/components/providers/QueryProvider";
 import { ToastProvider } from "@/components/ui/toast";
@@ -36,7 +36,7 @@ const manrope = Manrope({
 const GA_ID = process.env.NEXT_PUBLIC_GA_ID;
 
 export async function generateMetadata(): Promise<Metadata> {
-  const { t } = await getTranslator();
+  const { locale, t } = await getTranslator();
   return {
   metadataBase: new URL("https://www.mangora.com.br"),
   title: {
@@ -63,7 +63,7 @@ export async function generateMetadata(): Promise<Metadata> {
   },
   openGraph: {
     type: "website",
-    locale: "pt_BR",
+    locale: locale.replace("-", "_"),
     siteName: "Mangora",
     title: t("site.meta.ogTitle"),
     description: t("site.meta.ogDescription"),
@@ -97,6 +97,7 @@ export default async function RootLayout({
 }>) {
   const locale = await getLocale();
   const messages = await loadMessages(locale);
+  const regional = await getRegionalPreferences();
   return (
     <html
       lang={locale}
@@ -125,7 +126,7 @@ export default async function RootLayout({
           </>
         )}
 
-        <I18nProvider locale={locale} messages={messages}>
+        <I18nProvider locale={locale} messages={messages} {...regional}>
           <QueryProvider>
             <ToastProvider>{children}</ToastProvider>
           </QueryProvider>

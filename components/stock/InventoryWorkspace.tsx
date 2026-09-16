@@ -1,12 +1,14 @@
 "use client";
 
+import { useFormatters } from "@/i18n/provider";
+
 import { useMemo, useState } from "react";
 import { useT } from "@/i18n/provider";
 import { CheckCircle2, ClipboardCheck, LoaderCircle, PackageCheck, Plus, Search, X } from "lucide-react";
 
 import { useProducts } from "@/features/products/hooks/useProducts";
 import { useAddCountItems, useCancelStockCount, useCompleteStockCount, useCreateStockCount, useStockCounts } from "@/features/stock/hooks/useInventoryBatches";
-import { formatDate } from "@/lib/format";
+
 import { stockCountStatusLabels, type StockCount } from "@/types/stock";
 
 const statusStyle: Record<StockCount["status"], string> = {
@@ -16,6 +18,7 @@ const statusStyle: Record<StockCount["status"], string> = {
 };
 
 export default function InventoryWorkspace() {
+  const { formatDate } = useFormatters();
   const t = useT();
   const { data: counts = [], isLoading, error, refetch } = useStockCounts();
   const [notice, setNotice] = useState("");
@@ -103,6 +106,7 @@ function CountEditor({ count, onDone, onError }: { count: StockCount; onDone: (m
 }
 
 function CountSummary({ count }: { count: StockCount }) {
+  const { formatDate } = useFormatters();
   const t = useT();
   const differences = count.items.filter((item) => item.difference !== 0);
   return <div><p className="text-xs text-slate-600">{count.completedByName ? `Concluída por ${count.completedByName}` : "Concluída"}{count.completedAt ? ` em ${formatDate(count.completedAt)}` : ""}.</p><div className="mt-3 max-h-64 divide-y divide-slate-100 overflow-y-auto rounded-xl border border-slate-200">{count.items.map((item) => <div key={item.id} className="flex items-center justify-between gap-3 p-3"><div className="min-w-0"><p className="truncate text-xs font-bold text-slate-800">{item.product.name}</p><p className="mt-0.5 text-[10px] text-slate-400">{t("stock.inventory.system")} {item.expectedStock} · {t("stock.inventory.countedDiff")} {item.countedStock}</p></div><span className={`text-xs font-black ${item.difference === 0 ? "text-green-600" : item.difference < 0 ? "text-red-600" : "text-amber-600"}`}>{item.difference === 0 ? t("stock.inventory.summary.ok") : `${item.difference > 0 ? "+" : ""}${item.difference} un.`}</span></div>)}</div>{differences.length > 0 && <p className="mt-2 rounded-xl bg-slate-50 p-3 text-[11px] text-slate-500">{differences.length} item(ns) com diferença — ajustados com movimento justificado no histórico de estoque.</p>}</div>;

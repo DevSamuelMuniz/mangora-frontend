@@ -1,12 +1,14 @@
 "use client";
 
+import { useFormatters } from "@/i18n/provider";
+
 import Link from "next/link";
 import { useT } from "@/i18n/provider";
 import { FormEvent, useEffect, useMemo, useState, type ReactNode } from "react";
 import { Cake, CalendarHeart, CheckCircle2, LoaderCircle, Pencil, Search, ShieldCheck, UserPlus, UserRoundCheck, UserRoundX, Users, X } from "lucide-react";
 import type { Employee, EmployeeRole } from "@/types/employee";
 import { roleLabels, rolePermissions } from "./employee-data";
-import { formatDate, formatDateTime } from "@/lib/format";
+
 import { brazilDateKey, brazilDateTimeToIso } from "@/lib/timezone";
 import { useEmployees, useToggleEmployeeStatus, useUpdateEmployeeProfile, useUpdateEmployeeRole } from "@/features/employees/hooks/useEmployees";
 
@@ -14,6 +16,7 @@ const roles = Object.keys(roleLabels) as EmployeeRole[];
 const inputClass = "h-11 w-full rounded-xl border border-slate-200 bg-white px-3 text-xs font-semibold text-slate-700 outline-none focus:border-orange-400 focus:ring-4 focus:ring-orange-100";
 
 export default function EmployeeManagement() {
+  const { formatDate } = useFormatters();
   const t = useT();
   const { data: employees = [], isLoading: loading, error } = useEmployees();
   const toggleStatusMutation = useToggleEmployeeStatus();
@@ -109,6 +112,7 @@ export default function EmployeeManagement() {
 }
 
 function EmployeeModal({ employee, saving, onClose, onRole, onEdit, onToggle }: { employee: Employee; saving: boolean; onClose: () => void; onRole: (employee: Employee, role: EmployeeRole) => Promise<void>; onEdit: (event: FormEvent<HTMLFormElement>) => Promise<void>; onToggle: () => void }) {
+  const { formatDateTime } = useFormatters();
   const t = useT();
   return <div className="fixed inset-0 z-[70] flex items-center justify-center bg-slate-950/50 p-3 backdrop-blur-sm sm:p-5" onMouseDown={(event) => { if (event.target === event.currentTarget) onClose(); }}><div role="dialog" aria-modal="true" aria-labelledby="employee-dialog-title" className="flex max-h-[92vh] w-full max-w-2xl flex-col overflow-hidden rounded-3xl bg-white shadow-2xl">
     <header className="flex items-start justify-between border-b border-slate-200 bg-gradient-to-r from-orange-50 to-amber-50 px-5 py-4 sm:px-6"><div><p className="text-[10px] font-black uppercase tracking-[0.15em] text-white">{t("employees.drawer.title")}</p><h2 id="employee-dialog-title" className="mt-1 text-xl font-black text-slate-900">{employee.name}</h2><p className="mt-1 text-[11px] text-slate-50">{employee.email} · último acesso {employee.lastAccessAt ? formatDateTime(employee.lastAccessAt) : "ainda não realizado"}</p></div><button type="button" aria-label="Fechar ficha" onClick={onClose} className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-white text-slate-500 shadow-sm hover:text-orange-600"><X className="size-4" /></button></header>

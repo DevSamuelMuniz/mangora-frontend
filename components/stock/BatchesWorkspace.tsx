@@ -1,15 +1,18 @@
 "use client";
 
+import { useFormatters } from "@/i18n/provider";
+
 import { useMemo, useState } from "react";
 import { useI18n, useT } from "@/i18n/provider";
 import { Boxes, LoaderCircle, Plus, ShieldAlert } from "lucide-react";
 
 import { useProductForm, useProducts, useSaveProduct } from "@/features/products/hooks/useProducts";
 import { useCreateBatch, useProductBatches } from "@/features/stock/hooks/useInventoryBatches";
-import { formatCurrency, formatDate } from "@/lib/format";
+
 import type { Product } from "@/types/product";
 
 export default function BatchesWorkspace() {
+  const { formatDate, formatCurrency } = useFormatters();
   const t = useT();
   const { locale } = useI18n();
   const { data: products = [], isLoading } = useProducts();

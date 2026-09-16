@@ -4,10 +4,22 @@ import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 
 import { defaultLocale, locales, normalizeLocale, resolveLocale } from "@/i18n/config";
-import { fallbackChain, translate, translateList } from "@/i18n/runtime";
-import { formatCurrency, formatDate, formatNumber, formatPercent, formatPercentage } from "@/lib/format";
+import { fallbackChain, mergeMessages, translate, translateList } from "@/i18n/runtime";
+import { createFormatters, formatCurrency, formatDate, formatNumber, formatPercent, formatPercentage } from "@/lib/format";
 
 describe("resolveLocale", () => {
+  it("prioriza perfil, caminho e cookie antes da negociação HTTP", () => {
+    expect(resolveLocale({ preference: "pt-PT", path: "en-US", cookie: "es-ES" })).toBe("pt-PT");
+    expect(resolveLocale({ path: "en-US", cookie: "es-ES" })).toBe("en-US");
+  });
+
+  it("respeita pesos, exclusões, empates e pesos inválidos", () => {
+    expect(resolveLocale({ acceptLanguage: "en;q=0.2,es;q=0.9" })).toBe("es-ES");
+    expect(resolveLocale({ acceptLanguage: "en;q=0,es;q=1" })).toBe("es-ES");
+    expect(resolveLocale({ acceptLanguage: "pt-PT;q=0.5,en;q=0.5" })).toBe("pt-PT");
+    expect(resolveLocale({ acceptLanguage: "en;q=bad,es;q=2,pt-PT;q=0.8" })).toBe("pt-PT");
+    expect(resolveLocale({ acceptLanguage: "de;q=1,es;q=0.8" })).toBe("es-ES");
+  });
   it("segue a cadeia preferência → cookie → Accept-Language → fallback", () => {
     expect(resolveLocale({ preference: "en-US", cookie: "es-ES", acceptLanguage: "pt-BR" })).toBe("en-US");
     expect(resolveLocale({ cookie: "es-ES", acceptLanguage: "pt-BR" })).toBe("es-ES");
@@ -27,10 +39,22 @@ describe("resolveLocale", () => {
 });
 
 describe("fallbackChain", () => {
-  it("pt-PT herda do pt-BR; en-US/es-ES não caem para português", () => {
+  it("aplica pt-BR como fallback dos outros idiomas", () => {
     expect(fallbackChain("pt-PT")).toEqual(["pt-PT", "pt-BR"]);
     expect(fallbackChain("en-US")).toEqual(["en-US", "pt-BR"]);
     expect(fallbackChain("pt-BR")).toEqual(["pt-BR"]);
+  });
+});
+
+describe("mergeMessages", () => {
+  it("substitui listas inteiras sem transformar arrays em objetos nem manter itens antigos", () => {
+    const base = { nested: { items: ["Base", "Extra"], retained: "Fallback" } };
+    const merged = mergeMessages(base, { nested: { items: ["Translated"] } });
+    expect(translateList(merged, "nested.items")).toEqual(["Translated"]);
+    expect(translate(merged, "nested.items.0")).toBe("Translated");
+    expect(translate(merged, "nested.retained")).toBe("Fallback");
+    expect(base.nested.items).toEqual(["Base", "Extra"]);
+    expect(translateList(mergeMessages(base, { nested: { items: [] } }), "nested.items")).toEqual([]);
   });
 });
 
@@ -89,7 +113,8 @@ describe("formatação por locale", () => {
     expect(formatNumber(1500.5, "pt-BR")).toBe("1.500,5");
     expect(formatNumber(1500.5, "en-US")).toBe("1,500.5");
     expect(formatCurrency(1249.9, "pt-BR")).toContain("1.249,90");
-    expect(formatCurrency(1249.9, "en-US")).toBe("$1,249.90");
+    expect(formatCurrency(1249.9, "en-US")).toBe("R$1,249.90");
+    expect(formatCurrency(1249.9, "en-US", "USD")).toBe("$1,249.90");
     expect(formatPercentage(0.125, "en-US", 1)).toBe("12.5%");
     expect(formatPercent(12.5, 1, "pt-BR")).toBe("12,5%");
   });
@@ -97,5 +122,19 @@ describe("formatação por locale", () => {
   it("data curta respeita a ordem do locale", () => {
     const date = new Date("2026-09-15T15:00:00.000Z");
     expect(formatDate(date)).toBe("15/09/2026");
+  });
+
+  it("mantém moeda e fuso independentes do idioma e isolados entre formatadores", () => {
+    const english = createFormatters("en-US", "BRL", "UTC");
+    const portuguese = createFormatters("pt-BR", "BRL", "America/Sao_Paulo");
+    const dollars = createFormatters("en-US", "USD", "America/Sao_Paulo");
+    const date = "2026-09-16T01:00:00Z";
+    expect(english.formatCurrency(1249.9)).toBe("R$1,249.90");
+    expect(portuguese.formatCurrency(1249.9)).toMatch(/R\$\s1\.249,90/);
+    expect(dollars.formatCurrency(1249.9)).toBe("$1,249.90");
+    expect(english.formatDate(date)).toBe("09/16/2026");
+    expect(dollars.formatDate(date)).toBe("09/15/2026");
+    expect(english.formatDate(date)).toBe("09/16/2026");
+    expect(english.formatCurrency(1249.9)).toBe("R$1,249.90");
   });
 });

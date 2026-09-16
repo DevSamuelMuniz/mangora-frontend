@@ -1,9 +1,11 @@
 "use client";
 
+import { useFormatters } from "@/i18n/provider";
+
 import { ReceiptText, UserRound } from "lucide-react";
 import { useT } from "@/i18n/provider";
 
-import { formatCurrency } from "@/lib/format";
+
 import { paymentMethodLabels, type PaymentMethod } from "@/types/sale";
 import type { CartItem } from "./CartPanel";
 
@@ -21,6 +23,7 @@ type SalePreviewProps = {
 
 /** Pré-visualização da venda (mini recibo) — persistente nas etapas 2–4. */
 export default function SalePreview({ cart, subtotal, discount, total, customerName, payments, customerDocument, received, change }: SalePreviewProps) {
+  const { formatCurrency } = useFormatters();
     const t = useT();
     return (
         <div className="sticky top-4 flex flex-col overflow-hidden rounded-2xl bg-cream text-ink shadow-2xl shadow-black/30">

@@ -1,5 +1,7 @@
 "use client";
 
+import { useFormatters } from "@/i18n/provider";
+
 import Link from "next/link";
 import { useI18n, useT } from "@/i18n/provider";
 import { useMemo, useState } from "react";
@@ -20,7 +22,7 @@ import {
 } from "lucide-react";
 
 import type { Product } from "@/types/product";
-import { formatCurrency } from "@/lib/format";
+
 import { useDeleteProduct, useProducts } from "@/features/products/hooks/useProducts";
 import { FilterSelect } from "@/components/shared/FilterSelect";
 
@@ -30,6 +32,7 @@ type StockFilter = "all" | "available" | "low" | "out";
 type StatusFilter = "all" | "active" | "inactive";
 
 export default function ProductCatalog() {
+  const { formatCurrency } = useFormatters();
   const t = useT();
   const { locale } = useI18n();
   const { data: products = [], isLoading: loading, error, refetch: loadProducts } = useProducts();
@@ -241,6 +244,7 @@ function ProductActionsModal({ product, onClose, onView, onDelete }: { product: 
 }
 
 function ProductDetailsModal({ product, onClose }: { product: Product; onClose: () => void }) {
+  const { formatCurrency } = useFormatters();
   const t = useT();
   const { locale } = useI18n();
   return (

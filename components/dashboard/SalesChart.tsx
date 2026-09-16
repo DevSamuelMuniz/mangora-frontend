@@ -1,15 +1,18 @@
 "use client";
 
+import { useFormatters } from "@/i18n/provider";
+
 import { useState } from "react";
 import { useT } from "@/i18n/provider";
 import { BarChart3, Check, ChevronDown, TrendingUp } from "lucide-react";
 import type { DashboardData } from "@/types/analytics";
 import type { ReportPeriod } from "@/types/report";
-import { formatCurrency } from "@/lib/format";
+
 
 const periodKeys: Record<ReportPeriod, string> = { "7d": "days7", "30d": "days30", "90d": "days90" };
 
 export default function SalesChart({ charts }: { charts: DashboardData["charts"] }) {
+  const { formatCurrency } = useFormatters();
   const [period, setPeriod] = useState<ReportPeriod>("7d");
   const [periodOpen, setPeriodOpen] = useState(false);
   const current = charts[period];

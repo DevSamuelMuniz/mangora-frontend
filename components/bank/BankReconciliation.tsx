@@ -1,5 +1,7 @@
 "use client";
 
+import { useFormatters } from "@/i18n/provider";
+
 import { useMemo, useState } from "react";
 import { useI18n, useT } from "@/i18n/provider";
 import {
@@ -20,7 +22,7 @@ import {
 
 import { useBankAccounts, useBankTransactions, useCreateBankAccount, useIgnoreTransaction, useImportStatement, useMatchTransaction, useReconcileAccount } from "@/features/bank/hooks/useBank";
 import { useFinancialOverview } from "@/features/financial/hooks/useFinancialEntries";
-import { formatCurrency, formatDate } from "@/lib/format";
+
 import type { FinancialEntry } from "@/types/financial";
 import { accountTypeLabels, type AccountType, type BankAccount, type BankTransaction } from "@/types/bank";
 
@@ -114,6 +116,7 @@ export default function BankReconciliation() {
 }
 
 function AccountCard({ account, selected, onClick }: { account: BankAccount; selected: boolean; onClick: () => void }) {
+  const { formatCurrency } = useFormatters();
   const { locale } = useI18n();
   const config = accountTypeConfig[account.type];
   const Icon = config.icon;
@@ -138,6 +141,7 @@ function AccountWorkspace(props: {
   onMatch: (transactionId: string, financialEntryId: string) => void;
   onIgnore: (transactionId: string) => void;
 }) {
+  const { formatCurrency } = useFormatters();
   const { account, transactions, showImport, onToggleImport, onReconcile, reconciling, onImport, importing, onMatch, onIgnore } = props;
   const t = useT();
   const { locale } = useI18n();
@@ -190,6 +194,7 @@ function ImportPanel({ onImport, importing }: { onImport: (format: "ofx" | "csv"
 }
 
 function TransactionRow({ transaction, entries, onMatch, onIgnore }: { transaction: BankTransaction; entries: FinancialEntry[]; onMatch: (entryId: string) => void; onIgnore: () => void }) {
+  const { formatDate, formatCurrency } = useFormatters();
   const t = useT();
   const { locale } = useI18n();
   const [entryId, setEntryId] = useState("");

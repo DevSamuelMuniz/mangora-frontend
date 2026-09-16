@@ -1,12 +1,14 @@
 "use client";
 
+import { useFormatters } from "@/i18n/provider";
+
 import { useT } from "@/i18n/provider";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { ArrowLeft, LoaderCircle, Minus, Package, Plus, Save, ShoppingCart, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import type { Product } from "@/types/product";
-import { formatCurrency } from "@/lib/format";
+
 import { addDaysToBrazilDateKey, brazilDateKey, brazilDateTimeToIso } from "@/lib/timezone";
 import { useCreatePurchase, usePurchaseForm } from "@/features/purchases/hooks/usePurchases";
 import { paymentMethodLabels } from "@/types/sale";
@@ -19,6 +21,7 @@ const initialDueDate = addDaysToBrazilDateKey(30);
 const purchasePaymentMethods: PurchasePaymentMethod[] = ["PIX", "CREDIT_CARD", "DEBIT_CARD", "CASH", "BOLETO", "CHECK", "STORE_CREDIT"];
 
 export default function NewPurchaseForm() {
+  const { formatCurrency } = useFormatters();
   const t = useT();
   const router = useRouter();
   const { data: options, isLoading: loading, error: loadError } = usePurchaseForm();

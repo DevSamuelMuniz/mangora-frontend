@@ -1,9 +1,11 @@
 "use client";
 
+import { useFormatters } from "@/i18n/provider";
+
 import { Barcode, LoaderCircle, Minus, Plus } from "lucide-react";
 import { useT } from "@/i18n/provider";
 
-import { formatCurrency } from "@/lib/format";
+
 import type { Product } from "@/types/product";
 
 type ProductGridProps = {
@@ -16,6 +18,7 @@ type ProductGridProps = {
 
 /** Lista de produtos do terminal: imagem à esquerda, infos à direita em coluna. */
 export default function ProductGrid({ products, loading, cartCounts, onAdd, onChangeQuantity }: ProductGridProps) {
+  const { formatCurrency } = useFormatters();
     const t = useT();
     if (loading) {
         return (

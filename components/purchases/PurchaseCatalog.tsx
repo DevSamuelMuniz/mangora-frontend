@@ -1,16 +1,19 @@
 "use client";
 
+import { useFormatters } from "@/i18n/provider";
+
 import { useT } from "@/i18n/provider";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { CheckCircle2, Clock3, Eye, LoaderCircle, PackageCheck, Plus, Search, ShoppingCart, X, XCircle } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import type { Purchase, PurchaseStatus } from "@/types/purchase";
-import { formatCurrency, formatDate } from "@/lib/format";
+
 import { usePurchaseAction, usePurchases } from "@/features/purchases/hooks/usePurchases";
 
  const labels: Record<PurchaseStatus, string> = { PENDING: "Pendente", RECEIVED: "Recebida", CANCELLED: "Cancelada" };
 export default function PurchaseCatalog() {
+  const { formatDate, formatCurrency } = useFormatters();
   const t = useT();
   const query = useSearchParams(); const selectedId = query.get("selecionada"); const { data: purchases = [], isLoading: loading, error } = usePurchases(); const purchaseAction = usePurchaseAction(); const [actionError, setActionError] = useState(""); const [search, setSearch] = useState(""); const [status, setStatus] = useState("all"); const [selected, setSelected] = useState<Purchase | null>(null); const [reason, setReason] = useState("");
   const errorMessage = actionError || (error instanceof Error ? error.message : "");

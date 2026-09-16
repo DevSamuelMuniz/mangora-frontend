@@ -1,7 +1,8 @@
 "use client";
 
+import { usePreferredCountry } from "@/lib/regional/use-preferred-country";
 import Link from "next/link";
-import { FormEvent, useEffect, useRef, useState } from "react";
+import { FormEvent, useRef, useState } from "react";
 import { ArrowLeft, ArrowRight, Building2, CheckCircle2, Eye, EyeOff, Globe2, LoaderCircle, LockKeyhole, Mail, Phone, ShieldCheck, Store, TicketPercent, User, type LucideIcon } from "lucide-react";
 import AuthVisualPanel from "@/components/auth/AuthVisualPanel";
 import { useT } from "@/i18n/provider";
@@ -9,7 +10,7 @@ import BrandLogo from "@/components/brand/BrandLogo";
 import { apiRequest } from "@/lib/api/client";
 import { setUserProperties, track } from "@/lib/analytics";
 import type { AuthSession } from "@/lib/auth/types";
-import { marketCountries, preferredCountry, savePreferredCountry } from "@/lib/international";
+import { marketCountries } from "@/lib/international";
 
 const segmentCodes = [
   "RETAIL",
@@ -32,8 +33,7 @@ export default function CadastroPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
-  const [country, setCountry] = useState("BR");
-  useEffect(() => setCountry(preferredCountry()), []);
+  const [country, setCountry] = usePreferredCountry();
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -109,7 +109,7 @@ export default function CadastroPage() {
                   <InputField id="name" name="name" label={t("publicPages.register.nameLabel")} type="text" placeholder={t("publicPages.register.namePlaceholder")} autoComplete="name" icon={User} />
                   <InputField id="companyName" name="companyName" label={t("publicPages.register.companyLabel")} type="text" placeholder={t("publicPages.register.companyPlaceholder")} autoComplete="organization" icon={Building2} />
                   <SelectField />
-                  <div><FieldLabel htmlFor="country">{t("publicPages.register.countryLabel")}</FieldLabel><div className="relative"><Globe2 className="pointer-events-none absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-[#6a7d73]" /><select id="country" name="country" value={country} onChange={(event) => { setCountry(event.target.value); savePreferredCountry(event.target.value); }} className="h-11 w-full appearance-none rounded-xl border-2 border-[#123d2b]/15 bg-[#fffdf7] pl-10 pr-8 text-sm font-semibold text-[#123d2b] outline-none transition focus:border-[#ff6b1a] focus:bg-white focus:ring-4 focus:ring-[#ffb21a]/20">{marketCountries.map((item) => <option key={item.country} value={item.country}>{item.label} — {item.currency}</option>)}</select></div><p className="mt-1 text-[10px] font-medium text-[#6a7d73]">{t("publicPages.register.countryHint")}</p></div>
+                  <div><FieldLabel htmlFor="country">{t("publicPages.register.countryLabel")}</FieldLabel><div className="relative"><Globe2 className="pointer-events-none absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-[#6a7d73]" /><select id="country" name="country" value={country} onChange={(event) => { setCountry(event.target.value); }} className="h-11 w-full appearance-none rounded-xl border-2 border-[#123d2b]/15 bg-[#fffdf7] pl-10 pr-8 text-sm font-semibold text-[#123d2b] outline-none transition focus:border-[#ff6b1a] focus:bg-white focus:ring-4 focus:ring-[#ffb21a]/20">{marketCountries.map((item) => <option key={item.country} value={item.country}>{item.label} — {item.currency}</option>)}</select></div><p className="mt-1 text-[10px] font-medium text-[#6a7d73]">{t("publicPages.register.countryHint")}</p></div>
                   <InputField id="phone" name="phone" label={t("publicPages.register.phoneLabel")} type="tel" placeholder={t("publicPages.register.phonePlaceholder")} autoComplete="tel" icon={Phone} />
                   <div className="sm:col-span-2"><InputField id="email" name="email" label={t("publicPages.register.emailLabel")} type="email" placeholder={t("publicPages.register.emailPlaceholder")} autoComplete="email" icon={Mail} /></div>
                   <div className="sm:col-span-2"><FieldLabel htmlFor="couponCode">{t("publicPages.register.couponLabel")}</FieldLabel><div className="relative"><TicketPercent className="pointer-events-none absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-[#6a7d73]" /><input id="couponCode" name="couponCode" maxLength={32} pattern="[A-Za-z0-9_-]{3,32}" placeholder={t("publicPages.register.couponPlaceholder")} autoComplete="off" className="h-11 w-full rounded-xl border-2 border-[#123d2b]/15 bg-[#fffdf7] pl-10 pr-3 text-sm font-semibold uppercase text-[#123d2b] outline-none transition placeholder:normal-case placeholder:text-[#789083] focus:border-[#ff6b1a] focus:bg-white focus:ring-4 focus:ring-[#ffb21a]/20" /></div><p className="mt-1 text-[10px] font-medium text-[#6a7d73]">{t("publicPages.register.couponHint")}</p></div>

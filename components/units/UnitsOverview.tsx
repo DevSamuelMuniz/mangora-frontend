@@ -1,17 +1,20 @@
 "use client";
 
+import { useFormatters } from "@/i18n/provider";
+
 import { useState } from "react";
 import { useI18n, useT } from "@/i18n/provider";
 import { useRouter } from "next/navigation";
 import { ArrowRightLeft, Boxes, Building2, CircleDollarSign, LoaderCircle, Plus, ReceiptText, Store, Trash2, TrendingUp, X } from "lucide-react";
 
-import { formatCurrency, formatNumber } from "@/lib/format";
+
 import { useConsolidated, useCreateGroup, useCreateUnit, useRemoveUnit, useSwitchCompany, useUnitGroup } from "@/features/units/hooks/useUnits";
 import { useToast } from "@/components/ui/toast";
 
 type Period = "7d" | "30d" | "90d";
 
 export default function UnitsOverview() {
+  const { formatCurrency, formatNumber } = useFormatters();
   const t = useT();
   const { locale } = useI18n();
   const router = useRouter();

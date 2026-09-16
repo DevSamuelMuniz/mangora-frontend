@@ -1,9 +1,11 @@
 "use client";
 
+import { useFormatters } from "@/i18n/provider";
+
 import { FormEvent, useState, type ReactNode } from "react";
 import { Activity, Bell, Building2, CheckCircle2, KeyRound, LoaderCircle, Monitor, RefreshCw, Save, ShieldCheck, ShoppingCart, SlidersHorizontal, type LucideIcon } from "lucide-react";
 import type { CompanySettings, SettingsTab } from "@/types/settings";
-import { formatDateTime } from "@/lib/format";
+
 import { useI18n, useT } from "@/i18n/provider";
 import { localeLabels, locales as supportedLocales, type Locale } from "@/i18n/config";
 import { CURRENCY_CODES, REGION_CODES, TIME_ZONE_OPTIONS, currencyName, regionName } from "@/lib/regional/options";
@@ -137,6 +139,7 @@ function NotificationsForm({ company }: { company: CompanySettings }) { const t 
 const emptyJobs: JobStatusData = { emails: { queued: 0, sent: 0, failed: 0 }, recentRuns: [] };
 
 function SecurityForm({ company, saving }: { company: CompanySettings; saving: boolean }) {
+  const { formatDateTime } = useFormatters();
   const t = useT();
   const { data: overview } = useSecurityOverview();
   const changePasswordMutation = useChangePassword();

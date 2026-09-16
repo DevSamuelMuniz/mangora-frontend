@@ -1,5 +1,7 @@
 "use client";
 
+import { useFormatters } from "@/i18n/provider";
+
 import Link from "next/link";
 import { useI18n, useT } from "@/i18n/provider";
 import { useRouter } from "next/navigation";
@@ -19,7 +21,7 @@ import {
 
 import type { Product } from "@/types/product";
 import { paymentMethodLabels, type PaymentMethod } from "@/types/sale";
-import { formatCurrency } from "@/lib/format";
+
 import { brazilDateKey, brazilDateTimeToIso } from "@/lib/timezone";
 import { useToast } from "@/components/ui/toast";
 import { useCreateSale, useSaleOptions } from "@/features/sales/hooks/useSales";
@@ -32,6 +34,7 @@ type CartItem = {
 const paymentMethods: PaymentMethod[] = ["PIX", "CREDIT_CARD", "DEBIT_CARD", "CASH", "BOLETO", "CHECK", "STORE_CREDIT"];
 
 export default function NewSaleForm() {
+  const { formatCurrency } = useFormatters();
   const t = useT();
   const { locale } = useI18n();
   const router = useRouter();

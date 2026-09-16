@@ -1,9 +1,11 @@
 "use client";
 
+import { useFormatters } from "@/i18n/provider";
+
 import { ArrowLeft, CheckCheck, ReceiptText } from "lucide-react";
 import { useT } from "@/i18n/provider";
 
-import { formatCurrency } from "@/lib/format";
+
 import type { CartItem } from "./CartPanel";
 
 type ReviewItemsProps = {
@@ -17,6 +19,7 @@ type ReviewItemsProps = {
 
 /** Etapa 2 — revisar os itens antes de seguir para o pagamento. */
 export default function ReviewItems({ cart, subtotal, discount, total, onBack, onNext }: ReviewItemsProps) {
+  const { formatCurrency } = useFormatters();
     const t = useT();
     return (
         <div className="mx-auto flex w-full max-w-2xl flex-col rounded-2xl border-2 border-pdv-line bg-pdv-panel p-6">

@@ -1,16 +1,19 @@
 "use client";
 
+import { useFormatters } from "@/i18n/provider";
+
 import { FormEvent, useMemo, useState } from "react";
 import { useI18n, useT } from "@/i18n/provider";
-import type { FormatLocale } from "@/lib/format";
+import { FormatLocale } from "@/lib/format";
 import { ArrowDownToLine, ArrowUpFromLine, Banknote, CheckCircle2, LoaderCircle, LockKeyhole, PlusCircle, RefreshCw, WalletCards } from "lucide-react";
 import type { CashMovementType } from "@/types/cash-register";
-import { formatCurrency, formatDateTime } from "@/lib/format";
+
 import { useApproveDiscrepancy, useCashRegister, useCloseRegister, useOpenRegister, useRegisterMovement } from "@/features/cash-registers/hooks/useCashRegister";
 
 const movementLabels: Record<CashMovementType, string> = { OPENING: "Abertura", SUPPLY: "Suprimento", WITHDRAWAL: "Sangria", SALE: "Venda em dinheiro", SALE_REVERSAL: "Estorno de venda" };
 
 export default function CashRegisterPanel() {
+  const { formatCurrency, formatDateTime } = useFormatters();
   const t = useT();
   const { locale } = useI18n();
   const { data, isLoading: loading, error: loadError, refetch: refresh } = useCashRegister();
@@ -87,7 +90,8 @@ export default function CashRegisterPanel() {
   </section>;
 }
 
-function Metric({ icon: Icon, label, value, tone, locale }: { icon: typeof Banknote; label: string; value: number; locale: FormatLocale; tone: "orange" | "green" | "yellow" | "red" }) { const colors = { orange: "bg-orange-50 text-orange-600", green: "bg-green-50 text-green-600", yellow: "bg-yellow-50 text-yellow-600", red: "bg-red-50 text-red-600" }; return <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm"><div className={`flex size-9 items-center justify-center rounded-xl ${colors[tone]}`}><Icon className="size-4" /></div><p className="mt-3 text-[10px] font-bold uppercase tracking-wide text-slate-400">{label}</p><p className="mt-1 text-xl font-black text-slate-950">{formatCurrency(value, locale)}</p></div>; }
+function Metric({ icon: Icon, label, value, tone, locale }: { icon: typeof Banknote; label: string; value: number; locale: FormatLocale; tone: "orange" | "green" | "yellow" | "red" }) {
+  const { formatCurrency } = useFormatters(); const colors = { orange: "bg-orange-50 text-orange-600", green: "bg-green-50 text-green-600", yellow: "bg-yellow-50 text-yellow-600", red: "bg-red-50 text-red-600" }; return <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm"><div className={`flex size-9 items-center justify-center rounded-xl ${colors[tone]}`}><Icon className="size-4" /></div><p className="mt-3 text-[10px] font-bold uppercase tracking-wide text-slate-400">{label}</p><p className="mt-1 text-xl font-black text-slate-950">{formatCurrency(value, locale)}</p></div>; }
 const inputClass = "h-11 w-full rounded-xl border border-slate-200 bg-white px-3.5 text-sm text-slate-950 outline-none focus:border-orange-400 focus:ring-4 focus:ring-orange-100";
 const textareaClass = "mt-1.5 w-full resize-none rounded-xl border border-slate-200 bg-white p-3 text-sm outline-none focus:border-orange-400 focus:ring-4 focus:ring-orange-100";
 const secondaryButton = "flex h-10 items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 text-xs font-bold text-slate-600 hover:border-orange-200 hover:text-orange-700";

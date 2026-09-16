@@ -1,10 +1,12 @@
 "use client";
 
+import { useFormatters } from "@/i18n/provider";
+
 import { Banknote, CheckCircle2, ChevronRight, Plus, Search, Trash2, UserPlus, WalletCards, X } from "lucide-react";
 import { useI18n, useT } from "@/i18n/provider";
 import { useState } from "react";
 
-import { formatCurrency, formatDocument, formatPhone, parseCurrency } from "@/lib/format";
+import { formatDocument, formatPhone, parseCurrency } from "@/lib/format";
 import { paymentMethodLabels, type PaymentMethod } from "@/types/sale";
 import type { Customer } from "@/types/customer";
 
@@ -50,6 +52,7 @@ export default function PaymentStep({
     receivedAmount,
     onReceivedAmount,
 }: PaymentStepProps) {
+  const { formatCurrency } = useFormatters();
   const t = useT();
   const { locale } = useI18n();
     const isSingle = parts.length === 1;

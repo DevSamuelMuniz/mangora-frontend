@@ -1,10 +1,12 @@
 "use client";
 
+import { useFormatters } from "@/i18n/provider";
+
 import { useT } from "@/i18n/provider";
 
 import { ArrowDownRight, ArrowUpRight, FileClock, Minus, ScrollText } from "lucide-react";
 
-import { formatCurrency, formatDateTime } from "@/lib/format";
+
 import type { SubscriptionOverview } from "@/types/subscription";
 
 const historyTone: Record<SubscriptionOverview["history"][number]["type"], string> = {
@@ -26,6 +28,7 @@ function planName(id: string | null, overview: SubscriptionOverview) {
 
 /** Contrato (versão congelada do catálogo) + extrato do histórico de assinatura. */
 export default function ContractAndHistory({ overview }: { overview: SubscriptionOverview }) {
+  const { formatDateTime, formatCurrency } = useFormatters();
   const t = useT();
   const snapshot = overview.contract.planSnapshot as null | { version?: number; plan?: string; name?: string } | undefined;
 

@@ -1,11 +1,13 @@
 "use client";
 
+import { useFormatters } from "@/i18n/provider";
+
 import { useMemo, useState, type ReactNode } from "react";
 import { useI18n, useT } from "@/i18n/provider";
 import { useQuery } from "@tanstack/react-query";
 import { Activity, AlertTriangle, LoaderCircle, RefreshCw, Search, ShieldCheck } from "lucide-react";
 import { apiRequest } from "@/lib/api/client";
-import { formatDateTime } from "@/lib/format";
+
 
 type LogEntry = { id: string; action: string; userName: string; entityType: string; entityId: string | null; ipAddress: string | null; metadata: Record<string, unknown> | null; createdAt: string };
 const labelKeys: Record<string, string> = {
@@ -38,6 +40,7 @@ function translateLabel(action: string, t: (key: string) => string) { const key 
 
 
 export default function ActivityLog() {
+  const { formatDateTime } = useFormatters();
   const t = useT();
   const { locale } = useI18n();
   const [search, setSearch] = useState("");

@@ -1,5 +1,7 @@
 "use client";
 
+import { useFormatters } from "@/i18n/provider";
+
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useT } from "@/i18n/provider";
 import type { Translate } from "@/i18n/runtime";
@@ -8,7 +10,7 @@ import { ArrowLeft, LoaderCircle, ShieldCheck } from "lucide-react";
 import { useCreateSale, useSaleOptions } from "@/features/sales/hooks/useSales";
 import { useCompanySettings } from "@/features/settings/hooks/useSettings";
 import { useToast } from "@/components/ui/toast";
-import { formatCurrency, parseCurrency } from "@/lib/format";
+import { parseCurrency } from "@/lib/format";
 import { track } from "@/lib/analytics";
 import { addDaysToBrazilDateKey, brazilDateTimeToIso } from "@/lib/timezone";
 import type { PaymentMethod, Sale } from "@/types/sale";
@@ -30,6 +32,7 @@ type PaymentPart = { method: PaymentMethod; amount: string };
 const DEFERRED: PaymentMethod[] = ["CHECK", "STORE_CREDIT"];
 
 export default function PdvScreen({ session }: { session: AuthSession }) {
+  const { formatCurrency } = useFormatters();
   const t = useT();
   const allLabel = t("pdv.review.all");
     const { data: options, isLoading: loadingOptions } = useSaleOptions();

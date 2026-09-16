@@ -1,17 +1,20 @@
 "use client";
 
+import { useFormatters } from "@/i18n/provider";
+
 import { useState, type ReactNode } from "react";
 import { useI18n, useT } from "@/i18n/provider";
 import { ArrowRight, Building2, CalendarDays, Check, CheckCircle2, CreditCard, ExternalLink, FileText, LoaderCircle, ShieldCheck, Sparkles, Users } from "lucide-react";
 import { subscriptionPlans } from "./subscription-data";
 import ContractAndHistory from "./ContractAndHistory";
 import type { SubscriptionOverview, SubscriptionPlan } from "@/types/subscription";
-import { formatCurrency, formatDate } from "@/lib/format";
+
 import { addDaysToBrazilDateKey } from "@/lib/timezone";
 import { useCancelSubscription, useReactivateSubscription, useSubscription, useSubscriptionCheckout, useSubscriptionRequest } from "@/features/subscription/hooks/useSubscription";
 
 
 export default function SubscriptionManagement() {
+  const { formatCurrency, formatDate } = useFormatters();
   const t = useT();
   const { locale } = useI18n();
   const { data: overview, isPending: loading, error } = useSubscription();
@@ -104,7 +107,8 @@ function CheckoutCard({ selected, overview, saving, billingType, nextDueDate, co
 }
 
 function Detail({ icon: Icon, label, value }: { icon: typeof CalendarDays; label: string; value: string }) { return <div className="flex items-center gap-3"><div className="flex size-8 items-center justify-center rounded-lg bg-white/10"><Icon className="size-3.5" /></div><div><p className="text-[9px] text-white/55">{label}</p><p className="text-[11px] font-bold">{value}</p></div></div>; }
-function PlanCard({ plan, displayPrice, current, onSelect }: { plan: SubscriptionPlan; displayPrice?: string; current: boolean; onSelect: (plan: SubscriptionPlan) => void }) { const t = useT(); const { locale } = useI18n(); const freeUnavailable = plan.id === "free" && !current; return <article className={`flex flex-col rounded-2xl border bg-white p-4 shadow-sm ${plan.highlighted ? "border-orange-300 ring-2 ring-orange-100" : "border-slate-200"}`}><div className="flex justify-between"><div><h3 className="text-sm font-black text-slate-950">{plan.name}</h3><p className="mt-1 min-h-8 text-[10px] leading-4 text-slate-500">{plan.description}</p></div><Building2 className="size-4 text-orange-500" /></div><p className="mt-4 border-b border-slate-100 pb-4 text-lg font-black text-slate-950">{plan.price === null ? t("billing.status.CONTACT") : plan.price === 0 ? t("billing.plan.free") : displayPrice ?? formatCurrency(plan.price, locale)}</p><ul className="my-4 flex-1 space-y-2.5">{plan.features.map((feature) => <li key={feature} className="flex gap-2 text-[10px] leading-4 text-slate-600"><Check className="size-3.5 shrink-0 text-green-500" />{feature}</li>)}</ul><button disabled={current || freeUnavailable} onClick={() => onSelect(plan)} className={`flex h-10 items-center justify-center gap-2 rounded-xl text-xs font-bold ${current ? "bg-orange-50 text-orange-700" : freeUnavailable ? "bg-slate-50 text-slate-400" : "border border-slate-200 text-slate-700 hover:bg-orange-50"}`}>{current ? <><CheckCircle2 className="size-3.5" />Plano atual</> : freeUnavailable ? t("billing.plan.included") : <>{plan.id === "enterprise" ? "Solicitar contato" : `Solicitar ${plan.name}`}<ArrowRight className="size-3.5" /></>}</button></article>; }
+function PlanCard({ plan, displayPrice, current, onSelect }: { plan: SubscriptionPlan; displayPrice?: string; current: boolean; onSelect: (plan: SubscriptionPlan) => void }) {
+  const { formatCurrency } = useFormatters(); const t = useT(); const { locale } = useI18n(); const freeUnavailable = plan.id === "free" && !current; return <article className={`flex flex-col rounded-2xl border bg-white p-4 shadow-sm ${plan.highlighted ? "border-orange-300 ring-2 ring-orange-100" : "border-slate-200"}`}><div className="flex justify-between"><div><h3 className="text-sm font-black text-slate-950">{plan.name}</h3><p className="mt-1 min-h-8 text-[10px] leading-4 text-slate-500">{plan.description}</p></div><Building2 className="size-4 text-orange-500" /></div><p className="mt-4 border-b border-slate-100 pb-4 text-lg font-black text-slate-950">{plan.price === null ? t("billing.status.CONTACT") : plan.price === 0 ? t("billing.plan.free") : displayPrice ?? formatCurrency(plan.price, locale)}</p><ul className="my-4 flex-1 space-y-2.5">{plan.features.map((feature) => <li key={feature} className="flex gap-2 text-[10px] leading-4 text-slate-600"><Check className="size-3.5 shrink-0 text-green-500" />{feature}</li>)}</ul><button disabled={current || freeUnavailable} onClick={() => onSelect(plan)} className={`flex h-10 items-center justify-center gap-2 rounded-xl text-xs font-bold ${current ? "bg-orange-50 text-orange-700" : freeUnavailable ? "bg-slate-50 text-slate-400" : "border border-slate-200 text-slate-700 hover:bg-orange-50"}`}>{current ? <><CheckCircle2 className="size-3.5" />Plano atual</> : freeUnavailable ? t("billing.plan.included") : <>{plan.id === "enterprise" ? "Solicitar contato" : `Solicitar ${plan.name}`}<ArrowRight className="size-3.5" /></>}</button></article>; }
 function Notice({ tone, children }: { tone: "error" | "success"; children: ReactNode }) { return <div role={tone === "error" ? "alert" : "status"} className={`flex items-start gap-2 rounded-xl border px-4 py-3 text-xs font-semibold ${tone === "error" ? "border-red-200 bg-red-50 text-red-700" : "border-green-200 bg-green-50 text-green-700"}`}>{children}</div>; }
 
 function defaultDueDate() { return addDaysToBrazilDateKey(1); }

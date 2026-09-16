@@ -1,5 +1,7 @@
 "use client";
 
+import { useFormatters } from "@/i18n/provider";
+
 import { useState } from "react";
 import { useT } from "@/i18n/provider";
 import { ArrowRight, Check, CornerUpLeft, LoaderCircle, Package, Truck } from "lucide-react";
@@ -10,7 +12,7 @@ import {
   useReceiveStockTransfer,
   useStockTransfers,
 } from "@/features/stock/hooks/useStockOverview";
-import { formatDate } from "@/lib/format";
+
 import type { StockTransfer } from "@/types/stock";
 
 const statusStamp: Record<StockTransfer["status"], { className: string; labelKey: string }> = {
@@ -98,6 +100,7 @@ function TransferWaybill({ transfer, receiving, onStartReceiving, onReceive, onC
   onCancel: () => void;
   busy: boolean;
 }) {
+  const { formatDate } = useFormatters();
   const t = useT();
   const stamp = statusStamp[transfer.status];
   const isSource = transfer.side === "SOURCE";

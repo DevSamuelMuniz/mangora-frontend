@@ -1,5 +1,7 @@
 "use client";
 
+import { useFormatters } from "@/i18n/provider";
+
 import Link from "next/link";
 import { useT } from "@/i18n/provider";
 import { useState } from "react";
@@ -7,7 +9,7 @@ import { ArrowRight, CheckCircle2, ExternalLink, MoreHorizontal, ReceiptText, XC
 
 import type { DashboardData } from "@/types/analytics";
 import { saleStatusLabels, type SaleStatus } from "@/types/sale";
-import { formatCurrency, formatDateTime } from "@/lib/format";
+
 
 
 function getStatusStyle(status: SaleStatus) {
@@ -17,6 +19,7 @@ function getStatusStyle(status: SaleStatus) {
 }
 
 export default function RecentSales({ sales }: { sales: DashboardData["recentSales"] }) {
+  const { formatDateTime, formatCurrency } = useFormatters();
   const [openSale, setOpenSale] = useState<string | null>(null);
 
   const t = useT();

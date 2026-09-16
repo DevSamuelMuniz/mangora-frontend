@@ -1,5 +1,7 @@
 "use client";
 
+import { useFormatters } from "@/i18n/provider";
+
 import Link from "next/link";
 import { useI18n, useT } from "@/i18n/provider";
 import { useMemo, useState } from "react";
@@ -7,7 +9,7 @@ import { AlertTriangle, CheckCircle2, ChevronLeft, ChevronRight, CircleDollarSig
 
 import { paymentMethodLabels, type PaymentMethod } from "@/types/sale";
 import { fulfillmentLabels, orderChannelLabels, orderStatusLabels, type Order, type OrderChannel, type OrderStatus } from "@/types/order";
-import { formatCurrency, formatDateTime } from "@/lib/format";
+
 import { brazilDateKey } from "@/lib/timezone";
 import { useCancelOrder, useConvertOrder, useOrderStatus, useOrders } from "@/features/orders/hooks/useOrders";
 import { FilterSelect } from "@/components/shared/FilterSelect";
@@ -20,6 +22,7 @@ const channels = Object.keys(orderChannelLabels) as OrderChannel[];
 const paymentMethods = Object.keys(paymentMethodLabels) as PaymentMethod[];
 
 export default function OrderCatalog() {
+  const { formatCurrency, formatDateTime } = useFormatters();
   const t = useT();
   const { locale } = useI18n();
   const { data: orders = [], isLoading: loading, error, refetch: loadOrders } = useOrders();
@@ -84,6 +87,7 @@ export default function OrderCatalog() {
 }
 
 function OrderDetails({ order, loading, onClose, onStatus, onCancel, onConvert }: { order: Order; loading: boolean; onClose: () => void; onStatus: (order: Order, status: OrderStatus) => Promise<void>; onCancel: (order: Order, reason: string) => Promise<void>; onConvert: (order: Order, method: PaymentMethod) => Promise<void> }) {
+  const { formatDateTime, formatCurrency } = useFormatters();
   const t = useT();
   const { locale } = useI18n();
   const [reason, setReason] = useState("");

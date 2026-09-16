@@ -13,9 +13,9 @@ import RecentSales from "@/components/dashboard/RecentSales";
 import LowStock from "@/components/dashboard/LowStock";
 import QuickActions from "@/components/dashboard/QuickActions";
 import { getCurrentSession } from "@/lib/auth/server";
-import { getTranslator } from "@/i18n/server";
+import { getTranslator, getFormatters } from "@/i18n/server";
 import { serverApiRequest } from "@/lib/api/server-client";
-import { formatCurrency, formatDateLong, formatNumber } from "@/lib/format";
+
 import type { DashboardData } from "@/types/analytics";
 
 export default async function DashboardPage() {
@@ -23,6 +23,7 @@ export default async function DashboardPage() {
     if (!session) redirect("/login");
     const dashboard = await serverApiRequest<DashboardData>("/analytics/dashboard");
     const { locale, t } = await getTranslator();
+    const { formatCurrency, formatDateLong, formatNumber } = await getFormatters();
     const firstName = session.user.name.split(" ")[0] || session.user.name;
     const currentDate = formatDateLong(new Date(), locale);
 

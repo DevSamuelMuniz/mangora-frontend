@@ -1,11 +1,13 @@
 "use client";
 
+import { useFormatters } from "@/i18n/provider";
+
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { useT } from "@/i18n/provider";
 import { useRouter } from "next/navigation";
 import { Bell, Boxes, CheckCheck, ChevronRight, CircleDollarSign, Inbox, LoaderCircle, ShieldAlert, Sparkles, X, type LucideIcon } from "lucide-react";
 import { useMarkAllNotificationsRead, useMarkNotificationRead, useNotifications, type NotificationItem } from "@/features/notifications/hooks/useNotifications";
-import { formatDateTime } from "@/lib/format";
+
 
 type NotificationStyle = { icon: LucideIcon; iconClass: string; href: string; labelKey: string };
 const styles: Record<string, NotificationStyle> = {
@@ -73,6 +75,7 @@ export default function NotificationCenter({ onOpen }: { onOpen?: () => void }) 
 }
 
 function NotificationRow({ notification, busy, onOpen }: { notification: NotificationItem; busy: boolean; onOpen: () => void }) {
+  const { formatDateTime } = useFormatters();
   const t = useT();
   const style = styles[notification.type] ?? styles.INFO;
   const Icon = style.icon;

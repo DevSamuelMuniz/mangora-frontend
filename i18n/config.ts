@@ -34,7 +34,7 @@ export function normalizeLocale(value: string | null | undefined): Locale | null
   return byPrefix ?? null;
 }
 
-/** Cadeia: preferência salva → cookie → Accept-Language → fallback pt-BR. */
+/** Cadeia: preferência salva → caminho → cookie → Accept-Language → fallback pt-BR. */
 export function resolveLocale(input: { preference?: string | null; path?: string | null; cookie?: string | null; acceptLanguage?: string | null }): Locale {
   const fromPreference = normalizeLocale(input.preference);
   if (fromPreference) return fromPreference;
@@ -43,9 +43,14 @@ export function resolveLocale(input: { preference?: string | null; path?: string
   const fromCookie = normalizeLocale(input.cookie);
   if (fromCookie) return fromCookie;
   if (input.acceptLanguage) {
-    // "en-US,en;q=0.9,es;q=0.8" — testa na ordem de prioridade declarada.
-    for (const part of input.acceptLanguage.split(",")) {
-      const tag = part.split(";")[0];
+    const accepted = input.acceptLanguage.split(",").map((part) => {
+      const [tag, ...parameters] = part.trim().split(";");
+      const quality = parameters.map((parameter) => parameter.trim()).find((parameter) => /^q\s*=/i.test(parameter));
+      const raw = quality?.split("=")[1]?.trim();
+      const weight = raw === undefined ? 1 : /^(?:0(?:\.\d{0,3})?|1(?:\.0{0,3})?)$/.test(raw) ? Number(raw) : 0;
+      return { tag, weight };
+    }).filter(({ weight }) => weight > 0).sort((a, b) => b.weight - a.weight);
+    for (const { tag } of accepted) {
       const resolved = normalizeLocale(tag);
       if (resolved) return resolved;
     }

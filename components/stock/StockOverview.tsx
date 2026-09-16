@@ -1,5 +1,7 @@
 "use client";
 
+import { useFormatters } from "@/i18n/provider";
+
 import Link from "next/link";
 import { useI18n, useT } from "@/i18n/provider";
 import { useMemo, useState } from "react";
@@ -19,7 +21,7 @@ import {
 } from "lucide-react";
 
 import type { StockOverviewResponse } from "@/types/stock";
-import { formatCurrency, formatDateTime } from "@/lib/format";
+
 import { useStockOverview } from "@/features/stock/hooks/useStockOverview";
 import { SummaryCard } from "@/components/shared/SummaryCard";
 
@@ -31,6 +33,7 @@ const emptyOverview: StockOverviewResponse = {
 };
 
 export default function StockOverview() {
+  const { formatCurrency, formatDateTime } = useFormatters();
   const t = useT();
   const { locale } = useI18n();
   const { data: overview = emptyOverview, isLoading: loading, error, refetch: loadOverview } = useStockOverview();

@@ -11,24 +11,25 @@ export type FormatLocale = "pt-BR" | "en-US" | "es-ES" | "pt-PT";
 const DEFAULT_LOCALE: FormatLocale = "pt-BR";
 
 type FormatterBundle = { currency: Intl.NumberFormat; dateLong: Intl.DateTimeFormat; dateShort: Intl.DateTimeFormat; dateTime: Intl.DateTimeFormat; time: Intl.DateTimeFormat };
-const formatters = new Map<FormatLocale, FormatterBundle>();
-function bundle(locale: FormatLocale = DEFAULT_LOCALE, timeZone: string = BRAZIL_TIME_ZONE): FormatterBundle {
-    const cached = formatters.get(locale);
+const formatters = new Map<string, FormatterBundle>();
+function bundle(locale: FormatLocale = DEFAULT_LOCALE, timeZone: string = BRAZIL_TIME_ZONE, currency = "BRL"): FormatterBundle {
+    const key = `${locale}:${timeZone}:${currency}`;
+    const cached = formatters.get(key);
     if (cached) return cached;
     const created: FormatterBundle = {
-        currency: new Intl.NumberFormat(locale, { style: "currency", currency: locale === "en-US" ? "USD" : locale === "es-ES" || locale === "pt-PT" ? "EUR" : "BRL" }),
+        currency: new Intl.NumberFormat(locale, { style: "currency", currency }),
         dateLong: new Intl.DateTimeFormat(locale, { timeZone, weekday: "long", day: "numeric", month: "long" }),
         dateShort: new Intl.DateTimeFormat(locale, { timeZone, day: "2-digit", month: "2-digit", year: "numeric" }),
         dateTime: new Intl.DateTimeFormat(locale, { timeZone, day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit" }),
         time: new Intl.DateTimeFormat(locale, { timeZone, hour: "2-digit", minute: "2-digit" }),
     };
-    formatters.set(locale, created);
+    formatters.set(key, created);
     return created;
 }
 
 /** Formata um número como moeda BRL: 1234.5 -> "R$ 1.234,50". */
-export function formatCurrency(value: number, locale: FormatLocale = DEFAULT_LOCALE): string {
-    return bundle(locale).currency.format(value);
+export function formatCurrency(value: number, locale: FormatLocale = DEFAULT_LOCALE, currency = "BRL"): string {
+    return bundle(locale, BRAZIL_TIME_ZONE, currency).currency.format(value);
 }
 
 /** Formata um número com separador pt-BR: 12345 -> "12.345". */
@@ -50,28 +51,28 @@ export function formatPercentage(ratio: number, locale: FormatLocale = DEFAULT_L
 }
 
 /** Data longa com capitalização inicial: "sexta-feira, 30 de agosto". */
-export function formatDateLong(date: Date | string, locale: FormatLocale = DEFAULT_LOCALE): string {
+export function formatDateLong(date: Date | string, locale: FormatLocale = DEFAULT_LOCALE, timeZone = BRAZIL_TIME_ZONE): string {
     const value = typeof date === "string" ? new Date(date) : date;
-    const formatted = bundle(locale).dateLong.format(value);
+    const formatted = bundle(locale, timeZone).dateLong.format(value);
     return formatted.charAt(0).toUpperCase() + formatted.slice(1);
 }
 
 /** Data curta: 30/08/2026. */
-export function formatDate(date: Date | string, locale: FormatLocale = DEFAULT_LOCALE): string {
+export function formatDate(date: Date | string, locale: FormatLocale = DEFAULT_LOCALE, timeZone = BRAZIL_TIME_ZONE): string {
     const value = typeof date === "string" ? new Date(date) : date;
-    return bundle(locale).dateShort.format(value);
+    return bundle(locale, timeZone).dateShort.format(value);
 }
 
 /** Data e hora: 30/08/2026 14:05. */
-export function formatDateTime(date: Date | string, locale: FormatLocale = DEFAULT_LOCALE): string {
+export function formatDateTime(date: Date | string, locale: FormatLocale = DEFAULT_LOCALE, timeZone = BRAZIL_TIME_ZONE): string {
     const value = typeof date === "string" ? new Date(date) : date;
-    return bundle(locale).dateTime.format(value);
+    return bundle(locale, timeZone).dateTime.format(value);
 }
 
 /** Hora: 14:05. */
-export function formatTime(date: Date | string, locale: FormatLocale = DEFAULT_LOCALE): string {
+export function formatTime(date: Date | string, locale: FormatLocale = DEFAULT_LOCALE, timeZone = BRAZIL_TIME_ZONE): string {
     const value = typeof date === "string" ? new Date(date) : date;
-    return bundle(locale).time.format(value);
+    return bundle(locale, timeZone).time.format(value);
 }
 
 /** Formata CPF (11 dígitos) ou CNPJ (14 dígitos) conforme o tipo de cliente. */
@@ -105,4 +106,18 @@ export function parseCurrency(value: string): number {
     }
     const result = Number(normalized);
     return Number.isFinite(result) ? result : 0;
+}
+
+/** Formatadores por request/render; idioma, moeda e fuso são independentes. */
+export function createFormatters(locale: FormatLocale, currency = "BRL", timeZone = BRAZIL_TIME_ZONE) {
+    return {
+        formatCurrency: (value: number, language = locale, unit = currency) => formatCurrency(value, language, unit),
+        formatNumber: (value: number, language = locale) => formatNumber(value, language),
+        formatPercent: (value: number, digits = 0, language = locale) => formatPercent(value, digits, language),
+        formatPercentage: (value: number, language = locale, digits = 1) => formatPercentage(value, language, digits),
+        formatDate: (value: Date | string, language = locale) => formatDate(value, language, timeZone),
+        formatDateLong: (value: Date | string, language = locale) => formatDateLong(value, language, timeZone),
+        formatDateTime: (value: Date | string, language = locale) => formatDateTime(value, language, timeZone),
+        formatTime: (value: Date | string, language = locale) => formatTime(value, language, timeZone),
+    };
 }

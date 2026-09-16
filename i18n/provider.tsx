@@ -4,17 +4,20 @@ import { createContext, useCallback, useContext, useMemo, type ReactNode } from 
 
 import { LOCALE_COOKIE, localeLabels, locales, type Locale } from "@/i18n/config";
 import { createTranslator, type Messages } from "@/i18n/runtime";
+import { createFormatters } from "@/lib/format";
 
 type I18nValue = {
   locale: Locale;
   t: (key: string, params?: Record<string, string | number>) => string;
   setLocale: (locale: Locale) => void;
+  formatters: ReturnType<typeof createFormatters>;
 };
 
 const I18nContext = createContext<I18nValue | null>(null);
 
-export default function I18nProvider({ locale, messages, children }: { locale: Locale; messages: Messages; children: ReactNode }) {
+export default function I18nProvider({ locale, messages, currency = "BRL", timezone = "America/Sao_Paulo", children }: { locale: Locale; messages: Messages; currency?: string; timezone?: string; children: ReactNode }) {
   const t = useMemo(() => createTranslator(messages), [messages]);
+  const formatters = useMemo(() => createFormatters(locale, currency, timezone), [locale, currency, timezone]);
 
   const setLocale = useCallback((next: Locale) => {
     // Cookie de 1 ano — usuários não autenticados também mantêm a escolha.
@@ -26,7 +29,7 @@ export default function I18nProvider({ locale, messages, children }: { locale: L
     window.location.reload();
   }, []);
 
-  const value = useMemo(() => ({ locale, t, setLocale }), [locale, t, setLocale]);
+  const value = useMemo(() => ({ locale, t, setLocale, formatters }), [locale, t, setLocale, formatters]);
   return <I18nContext.Provider value={value}>{children}</I18nContext.Provider>;
 }
 
@@ -43,6 +46,10 @@ export function useT() {
 
 export function useLocale() {
   return useI18n().locale;
+}
+
+export function useFormatters() {
+  return useI18n().formatters;
 }
 
 /** Nome do idioma exibido ao usuário (nunca o código cru). */

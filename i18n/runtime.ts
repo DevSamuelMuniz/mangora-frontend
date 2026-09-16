@@ -69,7 +69,7 @@ export function mergeMessages(base: Messages, override: Messages): Messages {
   const result: Messages = { ...base };
   for (const [key, value] of Object.entries(override)) {
     const current = result[key];
-    result[key] = typeof value === "object" && value !== null && typeof current === "object" && current !== null
+    result[key] = typeof value === "object" && value !== null && !Array.isArray(value) && typeof current === "object" && current !== null && !Array.isArray(current)
       ? mergeMessages(current as Messages, value as Messages)
       : value;
   }

@@ -1,5 +1,7 @@
 "use client";
 
+import { useFormatters } from "@/i18n/provider";
+
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import {
@@ -23,7 +25,7 @@ import {
 import { useI18n, useT } from "@/i18n/provider";
 
 import type { PaymentMethod, Sale, SaleStatus } from "@/types/sale";
-import { formatCurrency, formatDate, formatTime } from "@/lib/format";
+
 import SaleReturnForm from "@/components/sales/SaleReturnForm";
 import { brazilDateKey } from "@/lib/timezone";
 import { useCancelSale, useSales } from "@/features/sales/hooks/useSales";
@@ -36,6 +38,7 @@ const PAGE_SIZE = 6;
 const paymentMethods: PaymentMethod[] = ["PIX", "CREDIT_CARD", "DEBIT_CARD", "CASH", "BOLETO", "CHECK", "STORE_CREDIT"];
 
 export default function SalesCatalog() {
+  const { formatCurrency, formatDate, formatTime } = useFormatters();
   const t = useT();
   const { locale } = useI18n();
   const { data: sales = [], isLoading: loading, error, refetch: loadSales } = useSales();
@@ -210,6 +213,7 @@ export default function SalesCatalog() {
 }
 
 function SaleDetails({ sale, onClose }: { sale: Sale; onClose: () => void }) {
+  const { formatDate, formatTime, formatCurrency } = useFormatters();
   const t = useT();
   const { locale } = useI18n();
   return (

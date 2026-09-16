@@ -1,9 +1,11 @@
 "use client";
 
+import { useFormatters } from "@/i18n/provider";
+
 import { Minus, Plus, ShoppingCart, Trash2 } from "lucide-react";
 import { useT } from "@/i18n/provider";
 
-import { formatCurrency } from "@/lib/format";
+
 import type { Product } from "@/types/product";
 
 export type CartItem = { product: Product; quantity: number };
@@ -20,6 +22,7 @@ type CartPanelProps = {
 
 /** Carrinho do terminal: itens + totais sobre a barra creme tipo "recibo". */
 export default function CartPanel({ cart, subtotal, discountValue, maxDiscount, total, onQuantity, onDiscount }: CartPanelProps) {
+  const { formatCurrency } = useFormatters();
     const itemCount = cart.reduce((sum, item) => sum + item.quantity, 0);
 
     const t = useT();

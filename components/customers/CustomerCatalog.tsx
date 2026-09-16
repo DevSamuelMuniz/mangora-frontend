@@ -1,5 +1,7 @@
 "use client";
 
+import { useFormatters } from "@/i18n/provider";
+
 import Link from "next/link";
 import { useI18n, useT } from "@/i18n/provider";
 import { useMemo, useState } from "react";
@@ -23,7 +25,7 @@ import {
 } from "lucide-react";
 
 import type { Customer, CustomerType } from "@/types/customer";
-import { formatCurrency, formatDate, formatDocument, formatPhone } from "@/lib/format";
+import { formatDocument, formatPhone } from "@/lib/format";
 import { useCustomers, useDeleteCustomer } from "@/features/customers/hooks/useCustomers";
 import { FilterSelect } from "@/components/shared/FilterSelect";
 import { PageButton } from "@/components/shared/PageButton";
@@ -33,6 +35,7 @@ const PAGE_SIZE = 6;
 type StatusFilter = "all" | "active" | "inactive";
 
 export default function CustomerCatalog() {
+  const { formatDate, formatCurrency } = useFormatters();
   const t = useT();
   const { locale } = useI18n();
   const { data: customers = [], isLoading: loading, error, refetch: loadCustomers } = useCustomers();
@@ -145,6 +148,7 @@ export default function CustomerCatalog() {
 }
 
 function CustomerDetails({ customer, onClose }: { customer: Customer; onClose: () => void }) {
+  const { formatCurrency, formatDate } = useFormatters();
   const t = useT();
   const { locale } = useI18n();
   const location = [customer.street, customer.number, customer.district, customer.city, customer.state].filter(Boolean).join(", ") || t("customers.details.notInformed");

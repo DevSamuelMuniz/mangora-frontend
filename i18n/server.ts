@@ -2,6 +2,7 @@ import { cache } from "react";
 import { cookies, headers } from "next/headers";
 
 import { getCurrentSession } from "@/lib/auth/server";
+import { createFormatters } from "@/lib/format";
 
 import { LOCALE_COOKIE, resolveLocale, type Locale } from "./config";
 import { createTranslator, fallbackChain, mergeMessages, type Messages } from "./runtime";
@@ -209,4 +210,17 @@ export async function getTranslator() {
   const locale = await getLocale();
   const messages = await loadMessages(locale);
   return { locale, messages, t: createTranslator(messages) };
+}
+
+export async function getRegionalPreferences() {
+  const session = await cachedSession();
+  return {
+    currency: session?.user.preferredCurrency ?? session?.company.preferredCurrency ?? "BRL",
+    timezone: session?.user.timezone ?? session?.company.timezone ?? "America/Sao_Paulo",
+  };
+}
+
+export async function getFormatters() {
+  const [locale, { currency, timezone }] = await Promise.all([getLocale(), getRegionalPreferences()]);
+  return createFormatters(locale, currency, timezone);
 }

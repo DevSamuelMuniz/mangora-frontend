@@ -1,5 +1,7 @@
 "use client";
 
+import { useFormatters } from "@/i18n/provider";
+
 import { ArrowLeft, Check, ChevronDown, Maximize, Minimize, Moon, Sprout, Sun } from "lucide-react";
 import { useT } from "@/i18n/provider";
 import Link from "next/link";
@@ -9,7 +11,7 @@ import BrandLogo from "@/components/brand/BrandLogo";
 import { useCashRegister } from "@/features/cash-registers/hooks/useCashRegister";
 import { useCompanySettings } from "@/features/settings/hooks/useSettings";
 import type { AuthSession } from "@/lib/auth/types";
-import { formatDateLong, formatTime } from "@/lib/format";
+
 
 export type PdvTheme = "dark" | "verde" | "light";
 
@@ -24,6 +26,7 @@ const THEMES: { id: PdvTheme; label: string; icon: typeof Moon }[] = [
  * seletor de tema (verde / claro / escuro) e tela cheia (kiosk).
  */
 export default function PdvHeader({ session, theme, onThemeChange }: { session: AuthSession; theme: PdvTheme; onThemeChange: (theme: PdvTheme) => void }) {
+  const { formatDateLong, formatTime } = useFormatters();
     const { data: company } = useCompanySettings();
     const { data: registerOverview } = useCashRegister();
     const register = registerOverview?.register ?? null;

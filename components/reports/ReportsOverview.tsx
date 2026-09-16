@@ -1,7 +1,9 @@
 "use client";
 
+import { useFormatters } from "@/i18n/provider";
+
 import { useMemo, useState } from "react";
-import type { FormatLocale } from "@/lib/format";
+import { FormatLocale } from "@/lib/format";
 import { useI18n, useT } from "@/i18n/provider";
 import type { Translate } from "@/i18n/runtime";
 import {
@@ -24,7 +26,7 @@ import {
 } from "lucide-react";
 
 import type { ReportDataset, ReportPeriod } from "@/types/report";
-import { formatCurrency, formatNumber } from "@/lib/format";
+
 import { useReports } from "@/features/reports/hooks/useReports";
 
 function buildEmptyReport(t: Translate): ReportDataset {
@@ -37,6 +39,7 @@ function buildEmptyReport(t: Translate): ReportDataset {
 }
 
 export default function ReportsOverview() {
+  const { formatCurrency, formatNumber } = useFormatters();
   const t = useT();
   const { locale } = useI18n();
   const [period, setPeriod] = useState<ReportPeriod>("30d");
@@ -134,4 +137,5 @@ export default function ReportsOverview() {
 
 function MetricCard({ icon: Icon, label, value, variation, description, iconClassName }: { icon: LucideIcon; label: string; value: string; variation: number; description: string; iconClassName: string }) { const positive = variation >= 0; return <article className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm"><div className="flex items-start justify-between gap-3"><div className={`flex size-9 items-center justify-center rounded-xl ${iconClassName}`}><Icon className="size-4" /></div><span className={`inline-flex items-center gap-1 rounded-full px-2 py-1 text-[9px] font-bold ${positive ? "bg-green-50 text-green-600" : "bg-red-50 text-red-600"}`}>{positive ? <ArrowUpRight className="size-3" /> : <ArrowDownRight className="size-3" />}{Math.abs(variation).toLocaleString("pt-BR")}%</span></div><p className="mt-4 text-[10px] font-semibold text-slate-400">{label}</p><p className="mt-1 truncate text-xl font-black text-slate-950">{value}</p><p className="mt-1 text-[9px] text-slate-400">{description}</p></article>; }
 function Legend({ color, label }: { color: string; label: string }) { return <span className="flex items-center gap-1.5"><span className={`size-2 rounded-full ${color}`} />{label}</span>; }
-function ResultRow({ icon: Icon, label, value, className, locale }: { icon: LucideIcon; label: string; value: number; className: string; locale: FormatLocale }) { return <div className="flex items-center justify-between"><span className="flex items-center gap-2 text-xs font-semibold text-slate-500"><Icon className={`size-3.5 ${className}`} />{label}</span><span className={`text-xs font-black ${className}`}>{formatCurrency(value, locale)}</span></div>; }
+function ResultRow({ icon: Icon, label, value, className, locale }: { icon: LucideIcon; label: string; value: number; className: string; locale: FormatLocale }) {
+  const { formatCurrency } = useFormatters(); return <div className="flex items-center justify-between"><span className="flex items-center gap-2 text-xs font-semibold text-slate-500"><Icon className={`size-3.5 ${className}`} />{label}</span><span className={`text-xs font-black ${className}`}>{formatCurrency(value, locale)}</span></div>; }

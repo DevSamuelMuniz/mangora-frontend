@@ -1,15 +1,18 @@
 "use client";
 
+import { useFormatters } from "@/i18n/provider";
+
 import { useT } from "@/i18n/provider";
 
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { Eye, LoaderCircle, Pencil, Plus, Search, Trash2, Wrench, X } from "lucide-react";
 import type { Service } from "@/types/service";
-import { formatCurrency } from "@/lib/format";
+
 import { useDeleteService, useServices } from "@/features/services/hooks/useServices";
 
 export default function ServiceCatalog() {
+  const { formatCurrency } = useFormatters();
   const t = useT();
   const { data: services = [], isLoading: loading, error } = useServices();
   const deleteService = useDeleteService();

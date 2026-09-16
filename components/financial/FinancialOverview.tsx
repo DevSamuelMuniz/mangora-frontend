@@ -1,5 +1,7 @@
 "use client";
 
+import { useFormatters } from "@/i18n/provider";
+
 import Link from "next/link";
 import { useI18n, useT } from "@/i18n/provider";
 import { useMemo, useState } from "react";
@@ -29,7 +31,7 @@ import {
   XCircle,
 } from "lucide-react";
 
-import { formatCurrency, formatDate } from "@/lib/format";
+
 import { brazilDateKey, brazilDateTimeToIso } from "@/lib/timezone";
 import { PageButton } from "@/components/shared/PageButton";
 import { FilterSelect } from "@/components/shared/FilterSelect";
@@ -65,6 +67,7 @@ const emptySummary: FinancialOverviewData["summary"] = { balance: 0, paidIncome:
 type PaymentInput = { amount: number; interest?: number; discount?: number; paymentMethod: PaymentMethod; paidAt: string; notes?: string };
 
 export default function FinancialOverview() {
+  const { formatCurrency, formatDate } = useFormatters();
   const t = useT();
   const { locale } = useI18n();
   const { data: overview, isLoading: loading, error, refetch: loadEntries } = useFinancialOverview();
@@ -218,6 +221,7 @@ function Legend({
  color, label }: { color: string; label: string }) { return <span className="flex items-center gap-1.5 text-slate-500"><span className={`size-2 rounded-full ${color}`} />{label}</span>; }
 
 function EntryDetails({ entry, onClose, onPay, onReverse }: { entry: FinancialEntry; onClose: () => void; onPay: () => void; onReverse: () => void }) {
+  const { formatDate, formatCurrency } = useFormatters();
   const t = useT();
   const details: Array<[string, string]> = [
     ["Tipo", financialTypeLabels[entry.type]],
@@ -236,6 +240,7 @@ function EntryDetails({ entry, onClose, onPay, onReverse }: { entry: FinancialEn
 }
 
 function ConfirmPayment({ entry, loading, onCancel, onConfirm }: { entry: FinancialEntry; loading: boolean; onCancel: () => void; onConfirm: (input: PaymentInput) => void }) {
+  const { formatCurrency } = useFormatters();
   const t = useT();
   const [amount, setAmount] = useState(String(entry.outstandingAmount));
   const [interest, setInterest] = useState("");
@@ -252,6 +257,7 @@ function ConfirmPayment({ entry, loading, onCancel, onConfirm }: { entry: Financ
 }
 
 function ReverseEntry({ entry, loading, onCancel, onConfirm }: { entry: FinancialEntry; loading: boolean; onCancel: () => void; onConfirm: (reason: string) => void }) {
+  const { formatCurrency } = useFormatters();
   const t = useT();
   const { locale } = useI18n();
   const [reason, setReason] = useState("");

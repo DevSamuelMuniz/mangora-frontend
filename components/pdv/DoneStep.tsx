@@ -1,10 +1,12 @@
 "use client";
 
+import { useFormatters } from "@/i18n/provider";
+
 import { useState } from "react";
 import { useT } from "@/i18n/provider";
 import { CheckCircle2, Printer, RotateCcw, X } from "lucide-react";
 
-import { formatCurrency } from "@/lib/format";
+
 import { paymentMethodLabels, type Sale } from "@/types/sale";
 import type { CompanySettings } from "@/types/settings";
 import { printReceipt } from "@/lib/pdv/print";
@@ -19,6 +21,7 @@ type DoneStepProps = {
 
 /** Etapa final — venda registrada: imprimir o cupom de compra ou concluir. */
 export default function DoneStep({ sale, company, received, change, onFinish }: DoneStepProps) {
+  const { formatCurrency } = useFormatters();
   const t = useT();
     const [printOptionsOpen, setPrintOptionsOpen] = useState(false);
     const changeInfo = received !== undefined && change !== undefined ? { received, change } : undefined;
