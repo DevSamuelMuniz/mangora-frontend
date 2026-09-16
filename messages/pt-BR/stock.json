@@ -267,5 +267,6 @@
   },
   "movementToast": "Movimentação registrada",
   "transferSubmit": "Registrar transferência",
-  "transferConfirm": "Confirmar transferência"
+  "transferConfirm": "Confirmar transferência",
+  "outOfStock": "Sem estoque"
 }

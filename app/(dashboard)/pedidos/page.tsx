@@ -14,6 +14,7 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function OrdersPage({ searchParams }: { searchParams: Promise<{ acao?: string }> }) {
+  const { t } = await getTranslator();
   const { acao } = await searchParams;
-  return <><OrderCatalog />{acao === "novo" && <WorkspaceModal closeHref="/pedidos" label="Novo pedido" size="wide"><NewOrderForm /></WorkspaceModal>}</>;
+  return <><OrderCatalog />{acao === "novo" && <WorkspaceModal closeHref="/pedidos" label={t("workspace.modal.newOrder")} size="wide"><NewOrderForm /></WorkspaceModal>}</>;
 }

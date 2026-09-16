@@ -1,3 +1,4 @@
+import { getTranslator } from "@/i18n/server";
 import type { Metadata } from "next";
 
 import SalesCatalog from "@/components/sales/SalesCatalog";
@@ -10,6 +11,7 @@ export const metadata: Metadata = {
 };
 
 export default async function SalesPage({ searchParams }: { searchParams: Promise<{ acao?: string }> }) {
+  const { t } = await getTranslator();
   const { acao } = await searchParams;
-  return <><SalesCatalog />{acao === "novo" && <WorkspaceModal closeHref="/vendas" label="Nova venda" size="wide"><NewSaleForm /></WorkspaceModal>}</>;
+  return <><SalesCatalog />{acao === "novo" && <WorkspaceModal closeHref="/vendas" label={t("workspace.modal.newSale")} size="wide"><NewSaleForm /></WorkspaceModal>}</>;
 }

@@ -14,4 +14,6 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-export default async function PurchasesPage({ searchParams }: { searchParams: Promise<{ acao?: string }> }) { const session = await getCurrentSession(); if (!session || !["OWNER", "ADMIN", "MANAGER"].includes(session.membership.role)) redirect("/dashboard"); const { acao } = await searchParams; return <><PurchaseCatalog />{acao === "novo" && <WorkspaceModal closeHref="/compras" label="Nova compra" size="wide"><NewPurchaseForm /></WorkspaceModal>}</>; }
+export default async function PurchasesPage({ searchParams }: { searchParams: Promise<{ acao?: string }> }) {
+  const { t } = await getTranslator();
+  const session = await getCurrentSession(); if (!session || !["OWNER", "ADMIN", "MANAGER"].includes(session.membership.role)) redirect("/dashboard"); const { acao } = await searchParams; return <><PurchaseCatalog />{acao === "novo" && <WorkspaceModal closeHref="/compras" label={t("workspace.modal.newPurchase")} size="wide"><NewPurchaseForm /></WorkspaceModal>}</>; }

@@ -37,3 +37,37 @@ Sempre traduzir por este glossário — nunca palavra por palavra.
 2. **Dados do usuário não são traduzidos** (nome de produto, descrição, cliente).
 3. Valores monetários usam o **locale do usuário** (`Intl.NumberFormat`), não o país da operação.
 4. Novos termos entram **primeiro neste glossário** e depois nos catálogos `messages/<locale>/`.
+
+## Decisões de produto que afetam a tradução
+
+| Tema | Regra |
+|---|---|
+| Preferências regionais | país, idioma, moeda e fuso são **independentes**; trocar idioma não muda mercado nem moeda |
+| Impressos | **cupom térmico/recibo** seguem o idioma do operador; **documentos fiscais (NF-e, DANFE)** permanecem sempre em pt-BR |
+| E-mails | apenas os **essenciais** (redefinição de senha, alerta de segurança, confirmação de e-mail) seguem `user.locale`; resumo, aniversário e tempo de casa ficam em pt-BR |
+| URLs públicas | `pt-BR` na raiz; `/en`, `/es`, `/pt` para os demais, via `middleware.ts`; rotas do app sem prefixo |
+| Fallback | `pt-PT` herda de `pt-BR`; falta de chave nunca quebra a tela (retorna a própria chave) |
+
+## Como adicionar ou alterar um texto
+
+1. Termo novo? Registre neste glossário (colunas `en-US`, `es-ES`, `pt-PT`).
+2. Escolha o namespace existente (ver `frontend/i18n/server.ts` → `NAMESPACES`) e use **chave semântica** (`modulo.grupo.chave`).
+3. Adicione a chave nos **quatro** arquivos `messages/<locale>/<namespace>.json` — a paridade é exigida pelo teste `test/i18n.test.ts`.
+4. No código use `t("modulo.grupo.chave")`; para valores use interpolação (`t("...", { total })`) e, para contagem, `{ count }` com chaves `...One`/`...Other`.
+5. Códigos vindos da API (status, plano, papel, forma de pagamento) **nunca** viram texto: traduza na apresentação pela chave do código.
+6. Rode o gate: `npx tsc --noEmit && npx eslint <arquivos> && npm test && npx next build`.
+7. Se o texto for público (site, páginas informativas), confira `canonical`, `hreflang` e `<html lang>`.
+
+## Onde cada coisa mora
+
+| Preciso… | Procure em |
+|---|---|
+| Configuração de locales e fallback | `frontend/i18n/config.ts` |
+| Namespaces e carregamento por idioma | `frontend/i18n/server.ts` |
+| URLs com prefixo e `hreflang` | `frontend/i18n/urls.ts`, `frontend/middleware.ts` |
+| Formatação de datas/moeda/número/% | `frontend/lib/format.ts` |
+| Regiões, moedas e fusos disponíveis | `frontend/lib/regional/options.ts` |
+| Textos por idioma | `frontend/messages/<locale>/*.json` |
+| Textos dos e-mails essenciais | `backend/src/email/email-copy.ts` |
+| Textos possivelmente esquecidos | `frontend/docs/i18n-inventory.md` (regerar com o script) |
+| Estado final do projeto | `frontend/docs/i18n-final-report.md` |

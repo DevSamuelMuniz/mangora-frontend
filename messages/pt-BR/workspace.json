@@ -72,6 +72,18 @@
   },
   "modal": {
     "newEntry": "Novo lançamento",
-    "newEmployee": "Novo funcionário"
+    "newEmployee": "Novo funcionário",
+    "newCustomer": "Novo cliente",
+    "editCustomer": "Editar cliente",
+    "newProduct": "Novo produto",
+    "editProduct": "Editar produto",
+    "newService": "Novo serviço",
+    "editService": "Editar serviço",
+    "newSupplier": "Novo fornecedor",
+    "editSupplier": "Editar fornecedor",
+    "moveStock": "Movimentar estoque",
+    "newPurchase": "Nova compra",
+    "newOrder": "Novo pedido",
+    "newSale": "Nova venda"
   }
 }

@@ -1,3 +1,4 @@
+import { getTranslator } from "@/i18n/server";
 import type { Metadata } from "next";
 
 import CustomerCatalog from "@/components/customers/CustomerCatalog";
@@ -10,7 +11,8 @@ export const metadata: Metadata = {
 };
 
 export default async function CustomersPage({ searchParams }: { searchParams: Promise<{ acao?: string; id?: string }> }) {
+  const { t } = await getTranslator();
   const { acao, id } = await searchParams;
   const editing = acao === "editar" && Boolean(id);
-  return <><CustomerCatalog />{(acao === "novo" || editing) && <WorkspaceModal closeHref="/clientes" label={editing ? "Editar cliente" : "Novo cliente"}><CustomerForm customerId={editing ? id : undefined} /></WorkspaceModal>}</>;
+  return <><CustomerCatalog />{(acao === "novo" || editing) && <WorkspaceModal closeHref="/clientes" label={editing ? t("workspace.modal.editCustomer") : t("workspace.modal.newCustomer")}><CustomerForm customerId={editing ? id : undefined} /></WorkspaceModal>}</>;
 }

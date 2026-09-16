@@ -72,6 +72,18 @@
   },
   "modal": {
     "newEntry": "Nuevo asiento",
-    "newEmployee": "Nuevo empleado"
+    "newEmployee": "Nuevo empleado",
+    "newCustomer": "Nuevo cliente",
+    "editCustomer": "Editar cliente",
+    "newProduct": "Nuevo producto",
+    "editProduct": "Editar producto",
+    "newService": "Nuevo servicio",
+    "editService": "Editar servicio",
+    "newSupplier": "Nuevo proveedor",
+    "editSupplier": "Editar proveedor",
+    "moveStock": "Mover inventario",
+    "newPurchase": "Nueva compra",
+    "newOrder": "Nuevo pedido",
+    "newSale": "Nueva venta"
   }
 }

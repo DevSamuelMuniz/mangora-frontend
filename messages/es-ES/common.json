@@ -21,11 +21,38 @@
     "close": "Cerrar",
     "remove": "Quitar"
   },
-  "language": { "label": "Idioma", "change": "Cambiar idioma" },
-  "search": { "placeholder": "Buscar...", "empty": "Sin resultados.", "hint": "Escribe para buscar." },
-  "pagination": { "page": "Página {page} de {total}", "previous": "Anterior", "next": "Siguiente", "rowsPerPage": "Filas por página" },
-  "empty": { "default": "Aún no hay nada aquí.", "action": "Crea tu primer registro para empezar." },
-  "confirm": { "title": "¿Estás seguro?", "irreversible": "Esta acción no se puede deshacer." },
-  "status": { "loading": "Cargando...", "saving": "Guardando..." },
-  "plurals": { "productsOne": "{count} producto", "productsOther": "{count} productos" }
+  "language": {
+    "label": "Idioma",
+    "change": "Cambiar idioma"
+  },
+  "search": {
+    "placeholder": "Buscar...",
+    "empty": "Sin resultados.",
+    "hint": "Escribe para buscar."
+  },
+  "pagination": {
+    "page": "Página {page} de {total}",
+    "previous": "Anterior",
+    "next": "Siguiente",
+    "rowsPerPage": "Filas por página"
+  },
+  "empty": {
+    "default": "Aún no hay nada aquí.",
+    "action": "Crea tu primer registro para empezar."
+  },
+  "confirm": {
+    "title": "¿Estás seguro?",
+    "irreversible": "Esta acción no se puede deshacer."
+  },
+  "status": {
+    "loading": "Cargando...",
+    "saving": "Guardando..."
+  },
+  "plurals": {
+    "productsOne": "{count} producto",
+    "productsOther": "{count} productos"
+  },
+  "close": "Cerrar",
+  "closeMenu": "Cerrar menú",
+  "closeStoreSelector": "Cerrar selector de tiendas"
 }

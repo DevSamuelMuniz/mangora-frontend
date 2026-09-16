@@ -67,7 +67,13 @@
       "allowNegativeStock": "Permitir estoque negativo",
       "allowNegativeStockHint": "Permite vender mesmo sem saldo disponível no controlo de inventário.",
       "allowPendingSales": "Permitir vendas pendentes",
-      "allowPendingSalesHint": "Mantém vendas a aguardar pagamento no fluxo de caixa."
+      "allowPendingSalesHint": "Mantém vendas a aguardar pagamento no fluxo de caixa.",
+      "defaultPayment": "Pagamento predefinido",
+      "maxDiscount": "Desconto máximo (%)",
+      "rulesApplied": "Regras aplicadas",
+      "requireCustomerTitle": "Exigir cliente identificado",
+      "allowPendingSalesTitle": "Permitir vendas pendentes",
+      "allowNegativeStockTitle": "Permitir inventário negativo"
     },
     "notifications": {
       "system": "Alertas no sistema",
@@ -83,7 +89,13 @@
       "weekly": "Semanalmente",
       "disabled": "Desativado",
       "generate": "Gerar resumo",
-      "receivablesNote": "Preferência preparada para o fluxo de recebimentos."
+      "receivablesNote": "Preferência preparada para o fluxo de recebimentos.",
+      "systemTitle": "Alertas no sistema",
+      "lowStockTitle": "Inventário baixo",
+      "overdueTitle": "Contas vencidas",
+      "newSalesTitle": "Novas vendas",
+      "summaryEmail": "E-mail para resumos",
+      "frequencyTitle": "Frequência"
     },
     "security": {
       "sessions": "Sessões e dispositivos",
@@ -114,7 +126,17 @@
       "applied": "Regras aplicadas",
       "endOthersDone": "{count} outra(s) sessão(ões) encerrada(s).",
       "policyNote": "As políticas são aplicadas no próximo início de sessão. O bloqueio dura 15 minutos após o limite de tentativas inválidas.",
-      "sessionTimeout": "Duração máxima da sessão (minutos)"
+      "sessionTimeout": "Duração máxima da sessão (minutos)",
+      "lockoutAttempts": "Tentativas antes do bloqueio",
+      "recordsTitle": "Registos e edições",
+      "stockTitle": "Alterações no inventário",
+      "returnsTitle": "Cancelamento de artigos vendidos",
+      "currentPassword": "Palavra-passe atual",
+      "newPasswordLabel": "Nova palavra-passe",
+      "confirmPassword": "Confirmar nova palavra-passe",
+      "queue": "Em fila",
+      "sent": "Enviados",
+      "failed": "Falhas"
     },
     "audit": {
       "title": "Auditoria recente",

@@ -67,7 +67,13 @@
       "allowNegativeStock": "Permitir stock negativo",
       "allowNegativeStockHint": "Permite vender aunque no haya saldo disponible en el control de inventario.",
       "allowPendingSales": "Permitir ventas pendientes",
-      "allowPendingSalesHint": "Mantiene ventas a la espera de pago en el flujo de caja."
+      "allowPendingSalesHint": "Mantiene ventas a la espera de pago en el flujo de caja.",
+      "defaultPayment": "Forma de pago predeterminada",
+      "maxDiscount": "Descuento máximo (%)",
+      "rulesApplied": "Reglas aplicadas",
+      "requireCustomerTitle": "Exigir cliente identificado",
+      "allowPendingSalesTitle": "Permitir ventas pendientes",
+      "allowNegativeStockTitle": "Permitir inventario negativo"
     },
     "notifications": {
       "system": "Alertas en el sistema",
@@ -83,7 +89,13 @@
       "weekly": "Semanalmente",
       "disabled": "Desactivado",
       "generate": "Generar resumen",
-      "receivablesNote": "Preferencia preparada para el flujo de cobros."
+      "receivablesNote": "Preferencia preparada para el flujo de cobros.",
+      "systemTitle": "Alertas del sistema",
+      "lowStockTitle": "Inventario bajo",
+      "overdueTitle": "Cuentas vencidas",
+      "newSalesTitle": "Nuevas ventas",
+      "summaryEmail": "Correo para resúmenes",
+      "frequencyTitle": "Frecuencia"
     },
     "security": {
       "sessions": "Sesiones y dispositivos",
@@ -114,7 +126,17 @@
       "applied": "Reglas aplicadas",
       "endOthersDone": "{count} otra(s) sesión(es) cerrada(s).",
       "policyNote": "Las políticas se aplican en el próximo inicio de sesión. El bloqueo dura 15 minutos tras el límite de intentos inválidos.",
-      "sessionTimeout": "Duración máxima de la sesión (minutos)"
+      "sessionTimeout": "Duración máxima de la sesión (minutos)",
+      "lockoutAttempts": "Intentos antes del bloqueo",
+      "recordsTitle": "Registros y ediciones",
+      "stockTitle": "Cambios en el inventario",
+      "returnsTitle": "Cancelación de artículos vendidos",
+      "currentPassword": "Contraseña actual",
+      "newPasswordLabel": "Nueva contraseña",
+      "confirmPassword": "Confirmar nueva contraseña",
+      "queue": "En cola",
+      "sent": "Enviados",
+      "failed": "Fallos"
     },
     "audit": {
       "title": "Auditoría reciente",

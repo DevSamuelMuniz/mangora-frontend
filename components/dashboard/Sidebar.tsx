@@ -156,7 +156,7 @@ export default function Sidebar({
       {open && (
         <button
           type="button"
-          aria-label="Fechar menu"
+          aria-label={t("common.closeMenu")}
           onClick={onClose}
           className="fixed inset-0 z-40 bg-slate-950/30 backdrop-blur-sm lg:hidden"
         />
@@ -179,7 +179,7 @@ export default function Sidebar({
           <button
             type="button"
             onClick={onClose}
-            aria-label="Fechar menu"
+            aria-label={t("common.closeMenu")}
             className="flex size-9 items-center justify-center rounded-lg text-slate-500 hover:bg-slate-100 lg:hidden"
           >
             <X className="size-4" />
@@ -210,7 +210,7 @@ export default function Sidebar({
           </button>
 
           {companyOpen && (
-            <><button type="button" aria-label="Fechar seletor de lojas" onClick={() => setCompanyOpen(false)} className="fixed inset-0 z-10 cursor-default" /><div
+            <><button type="button" aria-label={t("common.closeStoreSelector")} onClick={() => setCompanyOpen(false)} className="fixed inset-0 z-10 cursor-default" /><div
               role="menu"
               aria-label="Menu da empresa"
               className="absolute inset-x-3 top-[4.5rem] z-20 rounded-xl border border-slate-200 bg-white p-1.5 shadow-xl"

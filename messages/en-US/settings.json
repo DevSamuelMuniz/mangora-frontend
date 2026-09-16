@@ -67,7 +67,13 @@
       "allowNegativeStock": "Allow negative stock",
       "allowNegativeStockHint": "Allows selling even without available balance in stock control.",
       "allowPendingSales": "Allow pending sales",
-      "allowPendingSalesHint": "Keeps sales awaiting payment in the cash flow."
+      "allowPendingSalesHint": "Keeps sales awaiting payment in the cash flow.",
+      "defaultPayment": "Default payment",
+      "maxDiscount": "Maximum discount (%)",
+      "rulesApplied": "Applied rules",
+      "requireCustomerTitle": "Require identified customer",
+      "allowPendingSalesTitle": "Allow pending sales",
+      "allowNegativeStockTitle": "Allow negative stock"
     },
     "notifications": {
       "system": "In-app alerts",
@@ -83,7 +89,13 @@
       "weekly": "Weekly",
       "disabled": "Disabled",
       "generate": "Generate digest",
-      "receivablesNote": "Preference prepared for the receivables flow."
+      "receivablesNote": "Preference prepared for the receivables flow.",
+      "systemTitle": "System alerts",
+      "lowStockTitle": "Low stock",
+      "overdueTitle": "Overdue bills",
+      "newSalesTitle": "New sales",
+      "summaryEmail": "E-mail for summaries",
+      "frequencyTitle": "Frequency"
     },
     "security": {
       "sessions": "Sessions and devices",
@@ -114,7 +126,17 @@
       "applied": "Rules applied",
       "endOthersDone": "{count} other session(s) ended.",
       "policyNote": "Policies apply on the next login. The lock lasts 15 minutes after the invalid attempt limit.",
-      "sessionTimeout": "Maximum session duration (minutes)"
+      "sessionTimeout": "Maximum session duration (minutes)",
+      "lockoutAttempts": "Attempts before lockout",
+      "recordsTitle": "Records and edits",
+      "stockTitle": "Stock changes",
+      "returnsTitle": "Cancellation of sold items",
+      "currentPassword": "Current password",
+      "newPasswordLabel": "New password",
+      "confirmPassword": "Confirm new password",
+      "queue": "Queued",
+      "sent": "Sent",
+      "failed": "Failures"
     },
     "audit": {
       "title": "Recent audit",

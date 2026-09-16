@@ -21,11 +21,38 @@
     "close": "Close",
     "remove": "Remove"
   },
-  "language": { "label": "Language", "change": "Change language" },
-  "search": { "placeholder": "Search...", "empty": "No results.", "hint": "Type to search." },
-  "pagination": { "page": "Page {page} of {total}", "previous": "Previous", "next": "Next", "rowsPerPage": "Rows per page" },
-  "empty": { "default": "Nothing here yet.", "action": "Create your first record to get started." },
-  "confirm": { "title": "Are you sure?", "irreversible": "This action cannot be undone." },
-  "status": { "loading": "Loading...", "saving": "Saving..." },
-  "plurals": { "productsOne": "{count} product", "productsOther": "{count} products" }
+  "language": {
+    "label": "Language",
+    "change": "Change language"
+  },
+  "search": {
+    "placeholder": "Search...",
+    "empty": "No results.",
+    "hint": "Type to search."
+  },
+  "pagination": {
+    "page": "Page {page} of {total}",
+    "previous": "Previous",
+    "next": "Next",
+    "rowsPerPage": "Rows per page"
+  },
+  "empty": {
+    "default": "Nothing here yet.",
+    "action": "Create your first record to get started."
+  },
+  "confirm": {
+    "title": "Are you sure?",
+    "irreversible": "This action cannot be undone."
+  },
+  "status": {
+    "loading": "Loading...",
+    "saving": "Saving..."
+  },
+  "plurals": {
+    "productsOne": "{count} product",
+    "productsOther": "{count} products"
+  },
+  "close": "Close",
+  "closeMenu": "Close menu",
+  "closeStoreSelector": "Close store selector"
 }

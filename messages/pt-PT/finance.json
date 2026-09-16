@@ -146,7 +146,8 @@
       "amount": "Indique um valor superior a zero.",
       "dueDate": "Indique a data de vencimento.",
       "category": "Selecione uma categoria."
-    }
+    },
+    "type": "Tipo de lançamento"
   },
   "structure": {
     "costCenterNamePlaceholder": "Nome (ex.: Impostos)",

@@ -134,7 +134,7 @@ export default function CustomerForm({ customerId }: { customerId?: string }) {
         </div>
 
         <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:p-5">
-          <SectionTitle icon={MapPin} title="Endereço" description={t("customers.form.sections.addressHint")} />
+          <SectionTitle icon={MapPin} title={t("customers.form.sections.address")} description={t("customers.form.sections.addressHint")} />
           <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             <Field label="CEP" id="postalCode"><input id="postalCode" name="postalCode" type="text" inputMode="numeric" defaultValue={customer?.postalCode ?? ""} placeholder="00000-000" autoComplete="postal-code" className={inputClassName} /></Field>
             <Field label={t("customers.form.fields.street")} id="street" className="lg:col-span-2"><input id="street" name="street" type="text" maxLength={200} defaultValue={customer?.street ?? ""} placeholder="Rua ou avenida" autoComplete="street-address" className={inputClassName} /></Field>
@@ -147,7 +147,7 @@ export default function CustomerForm({ customerId }: { customerId?: string }) {
 
         <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:p-5">
           <SectionTitle icon={Building2} title={t("customers.form.sections.notes")} description={t("customers.form.sections.notesHint")} />
-          <Field label={t("customers.form.fields.notes")} id="notes" className="mt-4"><textarea id="notes" name="notes" rows={3} maxLength={2000} defaultValue={customer?.notes ?? ""} placeholder="Informações adicionais sobre o cliente..." className="w-full resize-y rounded-xl border border-slate-200 bg-white px-3.5 py-3 text-sm text-slate-950 outline-none transition placeholder:text-slate-400 focus:border-orange-400 focus:ring-4 focus:ring-orange-100" /></Field>
+          <Field label={t("customers.form.fields.notes")} id="notes" className="mt-4"><textarea id="notes" name="notes" rows={3} maxLength={2000} defaultValue={customer?.notes ?? ""} placeholder={t("customers.form.fields.notesPlaceholder")} className="w-full resize-y rounded-xl border border-slate-200 bg-white px-3.5 py-3 text-sm text-slate-950 outline-none transition placeholder:text-slate-400 focus:border-orange-400 focus:ring-4 focus:ring-orange-100" /></Field>
         </div>
 
         {errorMessage && <div role="alert" className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-xs font-semibold text-red-700">{errorMessage}</div>}

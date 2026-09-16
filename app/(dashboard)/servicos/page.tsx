@@ -14,4 +14,6 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-export default async function ServicesPage({ searchParams }: { searchParams: Promise<{ acao?: string; id?: string }> }) { const session = await getCurrentSession(); if (!session || !["OWNER", "ADMIN", "MANAGER"].includes(session.membership.role)) redirect("/dashboard"); const { acao, id } = await searchParams; const editing = acao === "editar" && Boolean(id); return <><ServiceCatalog />{(acao === "novo" || editing) && <WorkspaceModal closeHref="/servicos" label={editing ? "Editar serviço" : "Novo serviço"}><ServiceForm serviceId={editing ? id : undefined} /></WorkspaceModal>}</>; }
+export default async function ServicesPage({ searchParams }: { searchParams: Promise<{ acao?: string; id?: string }> }) {
+  const { t } = await getTranslator();
+  const session = await getCurrentSession(); if (!session || !["OWNER", "ADMIN", "MANAGER"].includes(session.membership.role)) redirect("/dashboard"); const { acao, id } = await searchParams; const editing = acao === "editar" && Boolean(id); return <><ServiceCatalog />{(acao === "novo" || editing) && <WorkspaceModal closeHref="/servicos" label={editing ? t("workspace.modal.editService") : t("workspace.modal.newService")}><ServiceForm serviceId={editing ? id : undefined} /></WorkspaceModal>}</>; }

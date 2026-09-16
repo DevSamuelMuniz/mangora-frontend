@@ -14,7 +14,8 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function ProductsPage({ searchParams }: { searchParams: Promise<{ acao?: string; id?: string }> }) {
+  const { t } = await getTranslator();
   const { acao, id } = await searchParams;
   const editing = acao === "editar" && Boolean(id);
-  return <><ProductCatalog />{(acao === "novo" || editing) && <WorkspaceModal closeHref="/produtos" label={editing ? "Editar produto" : "Novo produto"}><ProductForm productId={editing ? id : undefined} /></WorkspaceModal>}</>;
+  return <><ProductCatalog />{(acao === "novo" || editing) && <WorkspaceModal closeHref="/produtos" label={editing ? t("workspace.modal.editProduct") : t("workspace.modal.newProduct")}><ProductForm productId={editing ? id : undefined} /></WorkspaceModal>}</>;
 }

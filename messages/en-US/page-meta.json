@@ -75,6 +75,10 @@
       "produtos": "Loading products",
       "relatorios": "Loading reports",
       "vendas": "Loading sales"
+    },
+    "fornecedores": {
+      "title": "Suppliers",
+      "description": "Manage your company suppliers."
     }
   }
 }

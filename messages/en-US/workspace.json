@@ -72,6 +72,18 @@
   },
   "modal": {
     "newEntry": "New entry",
-    "newEmployee": "New employee"
+    "newEmployee": "New employee",
+    "newCustomer": "New customer",
+    "editCustomer": "Edit customer",
+    "newProduct": "New product",
+    "editProduct": "Edit product",
+    "newService": "New service",
+    "editService": "Edit service",
+    "newSupplier": "New supplier",
+    "editSupplier": "Edit supplier",
+    "moveStock": "Move stock",
+    "newPurchase": "New purchase",
+    "newOrder": "New order",
+    "newSale": "New sale"
   }
 }

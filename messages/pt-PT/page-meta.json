@@ -75,6 +75,10 @@
       "produtos": "A carregar produtos",
       "relatorios": "A carregar relatórios",
       "vendas": "A carregar vendas"
+    },
+    "fornecedores": {
+      "title": "Fornecedores",
+      "description": "Faça a gestão dos fornecedores da empresa."
     }
   }
 }

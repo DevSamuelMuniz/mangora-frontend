@@ -267,5 +267,6 @@
   },
   "movementToast": "Movement recorded",
   "transferSubmit": "Record transfer",
-  "transferConfirm": "Confirm transfer"
+  "transferConfirm": "Confirm transfer",
+  "outOfStock": "Out of stock"
 }
