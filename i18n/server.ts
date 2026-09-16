@@ -6,7 +6,7 @@ import { getCurrentSession } from "@/lib/auth/server";
 import { LOCALE_COOKIE, resolveLocale, type Locale } from "./config";
 import { createTranslator, fallbackChain, mergeMessages, type Messages } from "./runtime";
 
-const NAMESPACES = ["common", "navigation", "validations", "statuses", "paymentMethods", "errors", "settings", "dashboard", "sales", "pdv", "products", "stock", "customers", "suppliers", "finance", "reports", "employees", "units", "bank", "operations", "workspace", "forms", "orders", "billing"] as const;
+const NAMESPACES = ["common", "navigation", "validations", "statuses", "paymentMethods", "errors", "settings", "dashboard", "sales", "pdv", "products", "stock", "customers", "suppliers", "finance", "reports", "employees", "units", "bank", "operations", "workspace", "forms", "orders", "billing", "publicUi"] as const;
 type Namespace = (typeof NAMESPACES)[number];
 
 const localeLoaders: Record<Locale, Record<Namespace, () => Promise<{ default: Messages }>>> = {
@@ -35,6 +35,7 @@ const localeLoaders: Record<Locale, Record<Namespace, () => Promise<{ default: M
     forms: () => import("../messages/pt-BR/forms.json") as Promise<{ default: Messages }>,
     orders: () => import("../messages/pt-BR/orders.json") as Promise<{ default: Messages }>,
     billing: () => import("../messages/pt-BR/billing.json") as Promise<{ default: Messages }>,
+    publicUi: () => import("../messages/pt-BR/public-ui.json") as Promise<{ default: Messages }>,
   },
   "en-US": {
     common: () => import("../messages/en-US/common.json") as Promise<{ default: Messages }>,
@@ -61,6 +62,7 @@ const localeLoaders: Record<Locale, Record<Namespace, () => Promise<{ default: M
     forms: () => import("../messages/en-US/forms.json") as Promise<{ default: Messages }>,
     orders: () => import("../messages/en-US/orders.json") as Promise<{ default: Messages }>,
     billing: () => import("../messages/en-US/billing.json") as Promise<{ default: Messages }>,
+    publicUi: () => import("../messages/en-US/public-ui.json") as Promise<{ default: Messages }>,
   },
   "es-ES": {
     common: () => import("../messages/es-ES/common.json") as Promise<{ default: Messages }>,
@@ -87,6 +89,7 @@ const localeLoaders: Record<Locale, Record<Namespace, () => Promise<{ default: M
     forms: () => import("../messages/es-ES/forms.json") as Promise<{ default: Messages }>,
     orders: () => import("../messages/es-ES/orders.json") as Promise<{ default: Messages }>,
     billing: () => import("../messages/es-ES/billing.json") as Promise<{ default: Messages }>,
+    publicUi: () => import("../messages/es-ES/public-ui.json") as Promise<{ default: Messages }>,
   },
   "pt-PT": {
     common: () => import("../messages/pt-PT/common.json") as Promise<{ default: Messages }>,
@@ -113,6 +116,7 @@ const localeLoaders: Record<Locale, Record<Namespace, () => Promise<{ default: M
     forms: () => import("../messages/pt-PT/forms.json") as Promise<{ default: Messages }>,
     orders: () => import("../messages/pt-PT/orders.json") as Promise<{ default: Messages }>,
     billing: () => import("../messages/pt-PT/billing.json") as Promise<{ default: Messages }>,
+    publicUi: () => import("../messages/pt-PT/public-ui.json") as Promise<{ default: Messages }>,
   },
 };
 

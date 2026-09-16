@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useT } from "@/i18n/provider";
 import { Download, X } from "lucide-react";
 import { track } from "@/lib/analytics";
 
@@ -11,6 +12,7 @@ type BeforeInstallPromptEvent = Event & {
 
 /** Registra o service worker e mostra o convite de instalação PWA (após o login). */
 export default function InstallPrompt() {
+  const t = useT();
   const [promptEvent, setPromptEvent] = useState<BeforeInstallPromptEvent | null>(null);
   const [visible, setVisible] = useState(false);
   const [installing, setInstalling] = useState(false);
@@ -83,16 +85,16 @@ export default function InstallPrompt() {
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="/icons/icon-192.png" alt="Mangora" className="size-11 rounded-xl" />
             <div>
-              <p className="text-sm font-black text-slate-950">Instale o Mangora</p>
-              <p className="text-[10px] text-slate-500">Acesse mais rápido, direto do seu aparelho.</p>
+              <p className="text-sm font-black text-slate-950">{t("publicUi.pwa.title")}</p>
+              <p className="text-[10px] text-slate-500">{t("publicUi.pwa.subtitle")}</p>
             </div>
           </div>
-          <button type="button" onClick={dismiss} aria-label="Agora não" className="flex size-7 items-center justify-center rounded-lg text-slate-400 transition hover:bg-slate-100 hover:text-slate-600"><X className="size-4" /></button>
+          <button type="button" onClick={dismiss} aria-label={t("publicUi.pwa.later")} className="flex size-7 items-center justify-center rounded-lg text-slate-400 transition hover:bg-slate-100 hover:text-slate-600"><X className="size-4" /></button>
         </div>
         <div className="mt-3 flex gap-2">
-          <button type="button" onClick={dismiss} className="h-10 flex-1 rounded-xl border border-slate-200 text-xs font-bold text-slate-500 transition hover:bg-slate-50">Agora não</button>
+          <button type="button" onClick={dismiss} className="h-10 flex-1 rounded-xl border border-slate-200 text-xs font-bold text-slate-500 transition hover:bg-slate-50">{t("publicUi.pwa.later")}</button>
           <button type="button" onClick={() => void install()} disabled={installing} className="flex h-10 flex-1 items-center justify-center gap-1.5 rounded-xl bg-[#123d2b] text-xs font-black text-white transition hover:bg-[#147a45] disabled:opacity-60">
-            <Download className="size-3.5" />{installing ? "Instalando..." : "Instalar"}
+            <Download className="size-3.5" />{installing ? t("publicUi.pwa.installing") : t("publicUi.pwa.install")}
           </button>
         </div>
       </div>

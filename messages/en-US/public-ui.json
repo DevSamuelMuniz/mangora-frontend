@@ -1,0 +1,67 @@
+{
+  "auth": {
+    "welcome": "Good to see you back.",
+    "welcomeReady": "Everything ready for another business day.",
+    "trialBadge": "Start for 7 days · no card",
+    "trialNote": "Seven days to change your routine.",
+    "trialContinuation": "You start today. Free continues after the trial.",
+    "freeBadge": "Free with no end date",
+    "visualLabel": "Mangora mascot welcoming to sign up",
+    "visualLabelReady": "Mangora mascot ready to start",
+    "features": {
+      "mobile": "Access from your phone",
+      "fullAccess": "Full access for 7 days",
+      "noCard": "No card at sign up",
+      "protected": "Protected data",
+      "environment": "Protected environment",
+      "synced": "Synced routine",
+      "keepGoing": "Your operation continues here"
+    }
+  },
+  "walkthrough": {
+    "title": "Explore before creating your account",
+    "subtitle": "Pick a routine to explore a simplified demo.",
+    "disclaimer": "Illustrative example · not real customer data",
+    "rotations": "Demonstrated routines",
+    "home": "Go to the home page",
+    "withMyData": "Try with my data",
+    "rotinas": {
+      "sales": "Sales",
+      "salesQuestion": "How much did I sell today?",
+      "salesHint": "Organised history to check the day's movement.",
+      "finance": "Finance",
+      "financeQuestion": "How much is still to be received?",
+      "financeHint": "Receipts and pending items visible in the same routine.",
+      "stock": "Stock",
+      "stockQuestion": "What do I need to restock?",
+      "stockHint": "More clarity to decide the next purchase.",
+      "salesDescription": "Check the sales and identify the payment method of each order.",
+      "stockDescription": "See product balances and follow items that reached the minimum stock.",
+      "financeDescription": "Follow the entries and tell received amounts from the ones still pending."
+    },
+    "samples": {
+      "sale": "Sale",
+      "order": "Order",
+      "product": "Product",
+      "value": "Amount"
+    },
+    "status": {
+      "received": "Received",
+      "pending": "Pending",
+      "available": "Available",
+      "lowStock": "Low stock",
+      "situation": "Status",
+      "balance": "Balance",
+      "payment": "Payment",
+      "cash": "Cash",
+      "card": "Card"
+    }
+  },
+  "pwa": {
+    "title": "Install Mangora",
+    "subtitle": "Open it faster, straight from your device.",
+    "install": "Install",
+    "installing": "Installing...",
+    "later": "Not now"
+  }
+}

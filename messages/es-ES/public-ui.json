@@ -1,0 +1,67 @@
+{
+  "auth": {
+    "welcome": "Qué bueno verte de nuevo.",
+    "welcomeReady": "Todo listo para otro día de negocio.",
+    "trialBadge": "Start por 7 días · sin tarjeta",
+    "trialNote": "Siete días para cambiar tu rutina.",
+    "trialContinuation": "Hoy empiezas. El Free continúa después de la prueba.",
+    "freeBadge": "Free sin fecha de fin",
+    "visualLabel": "Mascota Mangora dando la bienvenida al registro",
+    "visualLabelReady": "Mascota Mangora lista para empezar",
+    "features": {
+      "mobile": "Acceso desde el móvil",
+      "fullAccess": "Acceso completo por 7 días",
+      "noCard": "Sin tarjeta en el registro",
+      "protected": "Datos protegidos",
+      "environment": "Entorno protegido",
+      "synced": "Rutina sincronizada",
+      "keepGoing": "Tu operación continúa aquí"
+    }
+  },
+  "walkthrough": {
+    "title": "Conoce antes de crear tu cuenta",
+    "subtitle": "Elige una rutina para explorar una demostración simplificada.",
+    "disclaimer": "Ejemplo ilustrativo · no son datos de clientes",
+    "rotations": "Rutinas demostradas",
+    "home": "Ir a la página inicial",
+    "withMyData": "Probar con mis datos",
+    "rotinas": {
+      "sales": "Ventas",
+      "salesQuestion": "¿Cuánto vendí hoy?",
+      "salesHint": "Historial organizado para revisar el movimiento del día.",
+      "finance": "Finanzas",
+      "financeQuestion": "¿Cuánto falta por cobrar?",
+      "financeHint": "Cobros y pendientes visibles en la misma rutina.",
+      "stock": "Inventario",
+      "stockQuestion": "¿Qué necesito reponer?",
+      "stockHint": "Más claridad para decidir la próxima compra.",
+      "salesDescription": "Revisa las ventas e identifica la forma de pago de cada pedido.",
+      "stockDescription": "Consulta los saldos de los productos y los artículos que llegaron al stock mínimo.",
+      "financeDescription": "Sigue los asientos y diferencia los importes recibidos de los pendientes."
+    },
+    "samples": {
+      "sale": "Venta",
+      "order": "Pedido",
+      "product": "Producto",
+      "value": "Importe"
+    },
+    "status": {
+      "received": "Recibido",
+      "pending": "Pendiente",
+      "available": "Disponible",
+      "lowStock": "Stock bajo",
+      "situation": "Situación",
+      "balance": "Saldo",
+      "payment": "Pago",
+      "cash": "Efectivo",
+      "card": "Tarjeta"
+    }
+  },
+  "pwa": {
+    "title": "Instala Mangora",
+    "subtitle": "Accede más rápido, directo desde tu dispositivo.",
+    "install": "Instalar",
+    "installing": "Instalando...",
+    "later": "Ahora no"
+  }
+}

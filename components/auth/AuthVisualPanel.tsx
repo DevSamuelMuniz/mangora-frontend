@@ -1,33 +1,36 @@
 import Link from "next/link";
+import { useT } from "@/i18n/provider";
 import { Check, ShieldCheck, Sparkles } from "lucide-react";
 import BrandLogo from "@/components/brand/BrandLogo";
 import MascotPose from "@/components/brand/MascotPose";
 
 type AuthVisualPanelProps = { variant: "login" | "register" };
 
-const content = {
+function buildContent(t: (key: string) => string) { return {
   login: {
-    eyebrow: "Sua operação continua daqui",
-    title: "Bom te ver de volta.",
+    eyebrow: t("publicUi.auth.features.keepGoing"),
+    title: t("publicUi.auth.welcome"),
     copy: "Entre e encontre vendas, estoque e financeiro do jeito que você deixou.",
     pose: "stand" as const,
-    label: "Mascote Mangora pronto para começar",
-    note: "Tudo em ordem para mais um dia de negócio.",
-    items: ["Dados protegidos", "Rotina sincronizada", "Acesso pelo celular"],
+    label: t("publicUi.auth.visualLabelReady"),
+    note: t("publicUi.auth.welcomeReady"),
+    items: [t("publicUi.auth.features.protected"), t("publicUi.auth.features.synced"), t("publicUi.auth.features.mobile")],
   },
   register: {
-    eyebrow: "Start por 7 dias · sem cartão",
-    title: "Sete dias para mudar sua rotina.",
+    eyebrow: t("publicUi.auth.trialBadge"),
+    title: t("publicUi.auth.trialNote"),
     copy: "Use vendas, estoque, clientes e financeiro por 7 dias. Depois, continue no Free ou escolha o plano que fizer sentido.",
     pose: "wave" as const,
-    label: "Mascote Mangora dando boas-vindas ao cadastro",
-    note: "Hoje você começa. O Free continua depois do teste.",
-    items: ["Acesso completo por 7 dias", "Free sem prazo para acabar", "Sem cartão no cadastro"],
+    label: t("publicUi.auth.visualLabel"),
+    note: t("publicUi.auth.trialContinuation"),
+    items: [t("publicUi.auth.features.fullAccess"), t("publicUi.auth.freeBadge"), t("publicUi.auth.features.noCard")],
   },
-};
+}; }
+
 
 export default function AuthVisualPanel({ variant }: AuthVisualPanelProps) {
-  const panel = content[variant];
+  const t = useT();
+  const panel = buildContent(t)[variant];
 
   return (
     <aside className="relative hidden min-h-screen overflow-hidden bg-[#123d2b] px-9 py-8 text-white lg:flex lg:flex-col xl:px-12 xl:py-10">
@@ -62,7 +65,7 @@ export default function AuthVisualPanel({ variant }: AuthVisualPanelProps) {
         <MascotPose pose={panel.pose} label={panel.label} className="drop-shadow-[0_28px_25px_rgba(0,0,0,0.3)]" />
       </div>
 
-      <div className="absolute bottom-8 right-8 z-20 flex items-center gap-2 rounded-full bg-white/10 px-3 py-2 text-[10px] font-black uppercase tracking-[0.13em] text-white/70 backdrop-blur xl:right-10"><ShieldCheck className="size-3.5 text-[#ffd56a]" />Ambiente protegido</div>
+      <div className="absolute bottom-8 right-8 z-20 flex items-center gap-2 rounded-full bg-white/10 px-3 py-2 text-[10px] font-black uppercase tracking-[0.13em] text-white/70 backdrop-blur xl:right-10"><ShieldCheck className="size-3.5 text-[#ffd56a]" />{t("publicUi.auth.features.environment")}</div>
     </aside>
   );
 }
