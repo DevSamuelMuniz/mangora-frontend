@@ -85,14 +85,7 @@
   "contract": {
     "frozen": "Preço e limites foram congelados quando o plano foi ativado.",
     "catalog": "Catálogo v{version} · {plan} · congelado",
-    "empty": "Nenhuma movimentação registrada ainda.",
-    "PRICE_CHANGED": "Preço atualizado",
-    "PLAN_CHANGED": "Plano alterado",
-    "DISCOUNT_APPLIED": "Desconto aplicado",
-    "STATUS_CHANGED": "Status alterado",
-    "CREATED": "Assinatura criada",
-    "RENEWED": "Assinatura renovada",
-    "CANCELLED": "Assinatura cancelada"
+    "empty": "Nenhuma movimentação registrada ainda."
   },
   "manage": {
     "couponApplied": "Cupom aplicado: primeira mensalidade {first} e depois {recurring}.",

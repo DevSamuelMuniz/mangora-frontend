@@ -85,14 +85,7 @@
   "contract": {
     "frozen": "Price and limits were frozen when the plan was activated.",
     "catalog": "Catalogue v{version} · {plan} · frozen",
-    "empty": "No movement recorded yet.",
-    "PRICE_CHANGED": "Price updated",
-    "PLAN_CHANGED": "Plan changed",
-    "DISCOUNT_APPLIED": "Discount applied",
-    "STATUS_CHANGED": "Status changed",
-    "CREATED": "Subscription created",
-    "RENEWED": "Subscription renewed",
-    "CANCELLED": "Subscription cancelled"
+    "empty": "No movement recorded yet."
   },
   "manage": {
     "couponApplied": "Coupon applied: first monthly payment {first}, then {recurring}.",
