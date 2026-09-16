@@ -22,6 +22,7 @@ import {
   Zap,
   type LucideIcon,
 } from "lucide-react";
+import { getTranslator } from "@/i18n/server";
 import BrandLogo from "@/components/brand/BrandLogo";
 import MascotPose from "@/components/brand/MascotPose";
 import { marketingPlans } from "@/lib/plans";
@@ -32,58 +33,68 @@ import ProductWalkthrough from "@/components/marketing/ProductWalkthrough";
 import MarketSelector from "@/components/marketing/MarketSelector";
 import RegionalPlanPrice from "@/components/marketing/RegionalPlanPrice";
 
-export const metadata: Metadata = {
-  title: { absolute: brand.title },
-  description: brand.description,
+export async function generateMetadata(): Promise<Metadata> {
+  const { t } = await getTranslator();
+  const title = t("landing.meta.title");
+  const description = t("landing.meta.description");
+  return {
+    title: { absolute: title },
+    description,
   alternates: { canonical: "/" },
-  openGraph: { url: "/", type: "website", locale: "pt_BR", siteName: brand.name, title: brand.title, description: brand.description, images: [{ url: brand.image, width: 500, height: 500, alt: "Mangora — sistema de gestão online" }] },
-  twitter: { card: "summary_large_image", title: brand.title, description: brand.description, images: [brand.image] },
-};
+  openGraph: { url: "/", type: "website", locale: "pt_BR", siteName: brand.name, title, description, images: [{ url: brand.image, width: 500, height: 500, alt: "Mangora — sistema de gestão online" }] },
+  twitter: { card: "summary_large_image", title, description, images: [brand.image] },
+  };
+}
 
-const resources = [
+function buildResources(t: (key: string) => string) {
+  return [
   {
     icon: ShoppingBag,
-    label: "Venda registrada",
-    title: "Venda sem perder o ritmo",
+    label: t("landing.features.items.sales.label"),
+    title: t("landing.features.items.sales.title"),
     description:
-      "Registre pedidos, pagamentos e vendas no balcão em poucos passos.",
+      t("landing.features.items.sales.copy"),
   },
   {
     icon: Boxes,
-    label: "Estoque sincronizado",
-    title: "Cada saída já dá baixa",
+    label: t("landing.features.items.stock.label"),
+    title: t("landing.features.items.stock.title"),
     description:
-      "Entradas, saídas e alertas de estoque mínimo acompanham sua operação.",
+      t("landing.features.items.stock.copy"),
   },
   {
     icon: CircleDollarSign,
-    label: "Caixa atualizado",
-    title: "Dinheiro sem mistério",
+    label: t("landing.features.items.finance.label"),
+    title: t("landing.features.items.finance.title"),
     description:
-      "Receitas, despesas, contas e fluxo de caixa reunidos para você decidir melhor.",
+      t("landing.features.items.finance.copy"),
   },
   {
     icon: Users,
-    label: "Relacionamento organizado",
-    title: "Clientes e equipe por perto",
+    label: t("landing.features.items.relationship.label"),
+    title: t("landing.features.items.relationship.title"),
     description:
-      "Histórico de clientes, funcionários e permissões no lugar certo.",
+      t("landing.features.items.relationship.copy"),
   },
 ];
+}
 
-const segments = [
-  [Store, "Lojas e comércios"],
-  [Utensils, "Restaurantes"],
-  [Sparkles, "Salões e barbearias"],
-  [Wrench, "Assistências técnicas"],
-  [Building2, "Prestadores de serviços"],
-] as const;
+function buildSegments(t: (key: string) => string) {
+  return [
+    [Store, t("landing.segments.stores")],
+    [Utensils, t("landing.segments.restaurants")],
+    [Sparkles, t("landing.segments.salons")],
+    [Wrench, t("landing.segments.technical")],
+    [Building2, t("landing.segments.services")],
+  ] as const;
+}
 
-export default function Home() {
+export default async function Home() {
+  const { t } = await getTranslator();
   return (
     <main className="mangora-landing min-h-screen overflow-hidden bg-[#fff8ea] font-[family-name:var(--font-manrope)] text-[#123d2b]">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(brandGraph).replace(/</g, "\\u003c") }} />
-      <Header />
+      <Header t={t} />
       <ConversionTracking />
 
       <section id="inicio" className="relative isolate pt-24 sm:pt-28 lg:pt-28">
@@ -95,13 +106,13 @@ export default function Home() {
           <div className="relative z-10 max-w-2xl">
             <p className="inline-flex -rotate-1 items-center gap-2 rounded-full border-2 border-[#123d2b]/10 bg-white px-4 py-2 text-xs font-extrabold uppercase tracking-[0.16em] text-[#147a45] shadow-[3px_3px_0_#ffb21a] sm:text-sm">
               <span className="size-2 rounded-full bg-[#ff6b1a]" />
-              Gestão online para pequenos negócios
+              {t("landing.hero.eyebrow")}
             </p>
 
             <h1 className="mt-6 max-w-[760px] text-balance font-[family-name:var(--font-bricolage)] text-[clamp(2.5rem,4.8vw,4.5rem)] font-extrabold leading-[1.04] tracking-[-0.045em] text-[#123d2b]">
-              Vendas, estoque e financeiro.
+              {t("landing.hero.titleLine1")}
               <span className="relative mt-2 block w-fit text-[#ff6b1a]">
-                Tudo sob controle.
+                {t("landing.hero.titleLine2")}
                 <svg
                   aria-hidden="true"
                   viewBox="0 0 460 22"
@@ -119,8 +130,7 @@ export default function Home() {
             </h1>
 
             <p className="mt-8 max-w-xl text-lg font-medium leading-8 text-[#315847] sm:text-xl">
-              Saiba quanto vendeu, o que tem para receber e quais produtos estão
-              acabando. Organize a rotina do seu negócio com a Mangora.
+              {t("landing.hero.copy")}
             </p>
 
             <div className="mt-9 flex flex-col gap-3 sm:flex-row sm:items-center">
@@ -128,35 +138,35 @@ export default function Home() {
                 href="/cadastro"
                 className="group inline-flex min-h-14 items-center justify-center gap-3 rounded-2xl bg-[#ff6b1a] px-7 font-extrabold text-white shadow-[0_8px_0_#c9460b] transition hover:-translate-y-1 hover:shadow-[0_12px_0_#c9460b] focus-visible:outline-4 focus-visible:outline-offset-4 focus-visible:outline-[#ffb21a]"
               >
-                Testar grátis por 7 dias
+                {t("landing.hero.ctaTrial")}
                 <ArrowRight className="size-5 transition group-hover:translate-x-1" />
               </Link>
               <Link
                 href="#por-dentro"
                 className="inline-flex min-h-14 items-center justify-center gap-2 rounded-2xl px-6 font-extrabold text-[#123d2b] transition hover:bg-white"
               >
-                Explorar demonstração
+                {t("landing.hero.ctaDemo")}
                 <ChevronRight className="size-5" />
               </Link>
             </div>
 
             <div className="mt-8 flex flex-wrap gap-x-6 gap-y-3 text-sm font-semibold text-[#4a695c]">
-              <Benefit>Sem cartão de crédito</Benefit>
-              <Benefit>Sem cobrança automática</Benefit>
+              <Benefit>{t("landing.hero.noCard")}</Benefit>
+              <Benefit>{t("landing.hero.noAutoCharge")}</Benefit>
             </div>
             <p className="mt-4 max-w-lg text-sm leading-6 text-[#4a695c]">Experimente por 7 dias. Depois, sua conta continua no Free; assine um plano se precisar de mais recursos.</p>
           </div>
 
-          <HeroCounter />
+          <HeroCounter t={t} />
         </div>
 
         <div className="border-y border-[#123d2b]/10 bg-white/65">
           <div className="mx-auto flex max-w-[1380px] flex-col gap-5 px-5 py-5 sm:px-8 lg:flex-row lg:items-center lg:justify-between lg:px-10">
             <p className="max-w-sm font-[family-name:var(--font-bricolage)] text-lg font-bold leading-tight text-[#123d2b]">
-              Um sistema só, do primeiro pedido ao fechamento do mês.
+              {t("landing.features.systemLine")}
             </p>
             <div className="flex flex-wrap gap-2">
-              {["Vendas", "Estoque", "Financeiro", "Clientes", "Relatórios"].map(
+              {[t("landing.features.tabs.sales"), t("landing.features.tabs.stock"), t("landing.features.tabs.finance"), t("landing.features.tabs.customers"), t("landing.features.tabs.reports")].map(
                 (item) => (
                   <span
                     key={item}
@@ -176,13 +186,13 @@ export default function Home() {
       <section id="recursos" className="bg-white py-16 sm:py-24">
         <div className="mx-auto max-w-[1380px] px-5 sm:px-8 lg:px-10">
           <SectionHeading
-            tag="Uma operação conectada"
-            title="Quando uma venda acontece, o resto acompanha."
-            copy="A Mangora reduz o trabalho repetido porque cada parte da gestão atualiza a próxima."
+            tag={t("landing.features.tag")}
+            title={t("landing.features.title")}
+            copy={t("landing.features.copy")}
           />
 
           <div className="mt-14 grid items-stretch gap-4 lg:grid-cols-12">
-            {resources.map((resource, index) => (
+            {buildResources(t).map((resource, index) => (
               <ResourceCard key={resource.title} resource={resource} index={index} />
             ))}
 
@@ -190,14 +200,13 @@ export default function Home() {
               <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_35%,rgba(255,178,26,0.18),transparent_28%)]" />
               <div className="relative z-10 max-w-md">
                 <span className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-2 text-xs font-extrabold uppercase tracking-[0.14em] text-[#ffd56a]">
-                  <Zap className="size-4" /> Atualização automática
+                  <Zap className="size-4" /> {t("landing.benefits.autoUpdate")}
                 </span>
                 <h3 className="mt-6 font-[family-name:var(--font-bricolage)] text-4xl font-bold leading-[1.02] tracking-[-0.04em]">
-                  Menos digitação. Mais visão do negócio.
+                  {t("landing.benefits.title")}
                 </h3>
                 <p className="mt-5 leading-7 text-white/70">
-                  A venda dá baixa no estoque, movimenta o caixa e aparece no
-                  seu painel. É assim que a rotina ganha tempo.
+                  {t("landing.benefits.copy")}
                 </p>
               </div>
 
@@ -207,7 +216,7 @@ export default function Home() {
               <div className="absolute inset-x-6 bottom-4 h-20 rounded-full bg-[#ffb21a]/20 blur-2xl" />
               <MascotPose
                 pose="work"
-                label="Mascote Mangora trabalhando no computador"
+                label={t("landing.features.items.sales.imageLabel")}
                 className="relative drop-shadow-[0_24px_24px_rgba(18,61,43,0.2)]"
               />
             </div>
@@ -222,37 +231,37 @@ export default function Home() {
             <div className="absolute inset-10 rounded-full bg-[#ffb21a]/25 blur-3xl" />
             <MascotPose
               pose="point"
-              label="Mascote Mangora apontando para as etapas"
+              label={t("landing.steps.imageLabel")}
               className="relative drop-shadow-[0_24px_22px_rgba(18,61,43,0.18)]"
             />
             <span className="absolute -bottom-2 right-0 rotate-3 rounded-2xl bg-[#ffb21a] px-5 py-3 font-[family-name:var(--font-bricolage)] text-lg font-extrabold text-[#123d2b] shadow-[4px_4px_0_#123d2b]">
-              Fácil assim!
+              {t("landing.steps.badge")}
             </span>
           </div>
 
           <div>
             <SectionHeading
-              tag="Do cadastro ao controle"
-              title="Sua empresa organizada em três movimentos."
-              copy="Você começa pequeno, configura o que realmente usa e amplia quando precisar."
+              tag={t("landing.steps.tag")}
+              title={t("landing.steps.title")}
+              copy={t("landing.steps.copy")}
               align="left"
             />
 
             <ol className="mt-12 space-y-4">
               <JourneyStep
                 number="1"
-                title="Conte como sua empresa funciona"
-                copy="Crie a conta e cadastre produtos, serviços e formas de pagamento."
+                title={t("landing.steps.setup.title")}
+                copy={t("landing.steps.setup.copy")}
               />
               <JourneyStep
                 number="2"
-                title="Registre o movimento do dia"
-                copy="Faça vendas, receba pedidos e acompanhe entradas e saídas."
+                title={t("landing.steps.register.title")}
+                copy={t("landing.steps.register.copy")}
               />
               <JourneyStep
                 number="3"
-                title="Decida com os números na mesa"
-                copy="Veja caixa, estoque e desempenho sem montar relatório manual."
+                title={t("landing.steps.decide.title")}
+                copy={t("landing.steps.decide.copy")}
               />
             </ol>
           </div>
@@ -264,20 +273,19 @@ export default function Home() {
           <div className="grid gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:items-end">
             <div>
               <p className="text-xs font-black uppercase tracking-[0.18em] text-[#123d2b]/70">
-                Feita para negócios reais
+                {t("landing.segments.eyebrow")}
               </p>
               <h2 className="mt-4 max-w-xl font-[family-name:var(--font-bricolage)] text-4xl font-extrabold leading-[0.98] tracking-[-0.045em] text-[#123d2b] sm:text-6xl">
-                A rotina muda. A Mangora se adapta.
+                {t("landing.segments.title")}
               </h2>
             </div>
             <p className="max-w-xl text-lg font-semibold leading-8 text-[#31523f] lg:justify-self-end">
-              Escolha os módulos que fazem sentido para o seu tipo de operação,
-              sem carregar funções que você nunca usa.
+              {t("landing.segments.copy")}
             </p>
           </div>
 
           <div className="mt-12 flex flex-wrap gap-3">
-            {segments.map(([Icon, label], index) => (
+            {buildSegments(t).map(([Icon, label], index) => (
               <div
                 key={label}
                 className={`flex items-center gap-3 rounded-2xl border-2 border-[#123d2b] px-5 py-4 font-extrabold shadow-[4px_4px_0_#123d2b] ${
@@ -298,15 +306,15 @@ export default function Home() {
         <div className="mx-auto max-w-[1380px] px-5 sm:px-8 lg:px-10">
           <div className="grid gap-8 lg:grid-cols-[1fr_auto] lg:items-end">
             <SectionHeading
-              tag="Planos sem labirinto"
-              title="Comece do tamanho certo."
-              copy="Experimente os recursos do Start por 7 dias grátis. Depois, continue no Free ou escolha o plano que atende sua operação."
+              tag={t("landing.plans.tag")}
+              title={t("landing.plans.title")}
+              copy={t("landing.plans.copy")}
               align="left"
             />
             <div className="relative hidden w-44 lg:block">
               <MascotPose
                 pose="approve"
-                label="Mascote Mangora fazendo sinal de positivo"
+                label={t("landing.plans.imageLabel")}
               />
             </div>
           </div>
@@ -323,7 +331,7 @@ export default function Home() {
               >
                 {plan.featured && (
                   <span className="absolute -top-4 right-6 rotate-2 rounded-full bg-[#ff6b1a] px-4 py-2 text-xs font-black uppercase tracking-wider text-white">
-                    Para crescer
+                    {t("landing.plans.featured")}
                   </span>
                 )}
                 <h3 className="font-[family-name:var(--font-bricolage)] text-3xl font-extrabold text-[#123d2b]">
@@ -335,9 +343,9 @@ export default function Home() {
                 <div className="mt-7 flex items-end gap-2 border-b border-[#123d2b]/10 pb-7">
                   <span className="pb-1 text-sm font-bold text-[#597064]">R$</span>
                   <strong className="font-[family-name:var(--font-bricolage)] text-4xl leading-none tracking-[-0.045em] text-[#123d2b] sm:text-5xl">
-                    <RegionalPlanPrice planCode={plan.id.toUpperCase()} fallback={plan.price === "0" ? "Grátis" : `R$ ${plan.price}`} />
+                    <RegionalPlanPrice planCode={plan.id.toUpperCase()} fallback={plan.price === "0" ? t("landing.plans.freePrice") : `R$ ${plan.price}`} />
                   </strong>
-                  {plan.id !== "free" && <span className="pb-1 text-sm text-[#597064]">/mês</span>}
+                  {plan.id !== "free" && <span className="pb-1 text-sm text-[#597064]">{t("landing.plans.perMonth")}</span>}
                 </div>
                 <ul className="mt-7 flex-1 space-y-4">
                   {plan.features.map((feature) => (
@@ -357,7 +365,7 @@ export default function Home() {
                       : "bg-[#123d2b] text-white hover:bg-[#147a45]"
                   }`}
                 >
-                  {plan.id === "free" ? "Começar no Free" : "Testar 7 dias grátis"}
+                  {plan.id === "free" ? t("landing.nav.startFree") : t("landing.nav.startTrial")}
                   <ArrowRight className="size-4" />
                 </Link>
               </article>
@@ -365,22 +373,21 @@ export default function Home() {
           </div>
 
           <p className="mt-8 text-center text-xs leading-5 text-[#6a7d73]">
-            Nenhuma cobrança é feita durante o teste. No 8º dia, sua conta
-            continua no Free; você só paga se escolher outro plano. Integrações externas podem ter custos próprios.
+            {t("landing.plans.billingNote")}
           </p>
         </div>
       </section>
 
       <section id="duvidas" className="bg-[#fff8ea] px-5 py-16 sm:px-8 sm:py-24">
         <div className="mx-auto max-w-3xl">
-          <h2 className="font-[family-name:var(--font-bricolage)] text-4xl font-extrabold tracking-tight text-[#123d2b]">Antes de começar</h2>
+          <h2 className="font-[family-name:var(--font-bricolage)] text-4xl font-extrabold tracking-tight text-[#123d2b]">{t("landing.faq.title")}</h2>
           <div className="mt-8 divide-y divide-[#123d2b]/15">
             {[
-              ["Preciso informar meu cartão?", "Não. Você cria sua conta e começa os 7 dias de experiência Start sem informar cartão de crédito."],
-              ["O que acontece depois dos 7 dias?", "Sua conta continua no plano Free, com os recursos e limites desse plano. Para continuar usando recursos pagos, escolha uma assinatura. O teste não gera cobrança automática."],
-              ["Preciso instalar algum programa?", "A Mangora funciona pelo navegador, com acesso à internet. Você pode acessar pelo computador ou celular."],
-              ["Por onde começo depois do cadastro?", "Cadastre sua empresa e os produtos ou serviços que vende. Depois, registre uma venda e acompanhe os dados no sistema."],
-              ["Posso tirar uma dúvida antes de me cadastrar?", "Sim. Use o botão Falar com a Mangora abaixo para entrar em contato pelo WhatsApp."],
+              [t("landing.faq.card.question"), t("landing.faq.card.answer")],
+              [t("landing.faq.afterTrial.question"), t("landing.faq.afterTrial.answer")],
+              [t("landing.faq.install.question"), t("landing.faq.install.answer")],
+              [t("landing.faq.firstSteps.question"), t("landing.faq.firstSteps.answer")],
+              [t("landing.faq.doubt.question"), t("landing.faq.doubt.answer")],
             ].map(([question, answer]) => <details key={question} className="group py-5"><summary className="cursor-pointer rounded-lg text-lg font-bold text-[#123d2b] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#147a45]">{question}</summary><p className="mt-4 max-w-2xl leading-7 text-[#315847]">{answer}</p></details>)}
           </div>
         </div>
@@ -393,21 +400,20 @@ export default function Home() {
 
           <div className="relative z-10 max-w-3xl">
             <p className="text-xs font-black uppercase tracking-[0.18em] text-[#ffd56a]">
-              A próxima venda pode ser mais simples
+              {t("landing.cta.eyebrow")}
             </p>
             <h2 className="mt-5 text-balance font-[family-name:var(--font-bricolage)] text-5xl font-extrabold leading-[0.95] tracking-[-0.05em] sm:text-7xl">
-              Comece pela próxima venda.
+              {t("landing.cta.title")}
             </h2>
             <p className="mt-6 max-w-xl text-lg leading-8 text-white/75">
-              São 7 dias para vender, organizar e sentir a diferença na rotina.
-              Você começa sem cartão e decide depois.
+              {t("landing.cta.copy")}
             </p>
             <div className="mt-9 flex flex-col gap-3 sm:flex-row">
               <Link
                 href="/cadastro"
                 className="group inline-flex min-h-14 items-center justify-center gap-3 rounded-2xl bg-[#ffb21a] px-7 font-extrabold text-[#123d2b] shadow-[0_7px_0_#a85d00] transition hover:-translate-y-1 hover:shadow-[0_10px_0_#a85d00]"
               >
-                Começar 7 dias grátis
+                {t("landing.cta.button")}
                 <ArrowRight className="size-5 transition group-hover:translate-x-1" />
               </Link>
               <Link
@@ -416,7 +422,7 @@ export default function Home() {
                 rel="noreferrer"
                 className="inline-flex min-h-14 items-center justify-center rounded-2xl border border-white/25 px-7 font-extrabold transition hover:bg-white/10"
               >
-                Falar com a Mangora
+                {t("landing.cta.whatsapp")}
               </Link>
             </div>
           </div>
@@ -424,31 +430,31 @@ export default function Home() {
           <div className="absolute -bottom-20 -right-4 hidden w-[34%] min-w-80 lg:block">
             <MascotPose
               pose="wave"
-              label="Mascote Mangora convidando você para começar"
+              label={t("landing.cta.imageLabel")}
               className="drop-shadow-[0_30px_25px_rgba(0,0,0,0.22)]"
             />
           </div>
         </div>
       </section>
 
-      <Footer />
+      <Footer t={t} />
     </main>
   );
 }
 
-function Header() {
+function Header({ t }: { t: (key: string, params?: Record<string, string | number>) => string }) {
   return (
     <header className="fixed inset-x-0 top-0 z-50 border-b border-[#123d2b]/10 bg-[#fff8ea]/90 backdrop-blur-xl">
       <div className="mx-auto flex h-16 max-w-[1380px] items-center justify-between gap-2 px-4 sm:h-20 sm:px-8 lg:px-10">
-        <Link href="/" aria-label="Página inicial da Mangora">
+        <Link href="/" aria-label={t("landing.nav.home")}>
           <BrandLogo className="h-8 sm:h-11" priority />
         </Link>
 
-        <nav aria-label="Navegação principal" className="hidden items-center gap-7 text-sm font-bold text-[#315847] lg:flex">
-          <Link href="#recursos" className="transition hover:text-[#ff6b1a]">Recursos</Link>
-          <Link href="#como-funciona" className="transition hover:text-[#ff6b1a]">Como funciona</Link>
-          <Link href="#segmentos" className="transition hover:text-[#ff6b1a]">Segmentos</Link>
-          <Link href="#planos" className="transition hover:text-[#ff6b1a]">Planos</Link>
+        <nav aria-label={t("landing.nav.label")} className="hidden items-center gap-7 text-sm font-bold text-[#315847] lg:flex">
+          <Link href="#recursos" className="transition hover:text-[#ff6b1a]">{t("landing.nav.features")}</Link>
+          <Link href="#como-funciona" className="transition hover:text-[#ff6b1a]">{t("landing.nav.howItWorks")}</Link>
+          <Link href="#segmentos" className="transition hover:text-[#ff6b1a]">{t("landing.nav.segments")}</Link>
+          <Link href="#planos" className="transition hover:text-[#ff6b1a]">{t("landing.nav.plans")}</Link>
         </nav>
 
         <div className="flex items-center gap-2 sm:gap-3">
@@ -457,13 +463,13 @@ function Header() {
             href="/login"
             className="inline-flex min-h-11 items-center rounded-xl px-3 py-2 text-sm font-extrabold text-[#315847] transition hover:bg-white sm:px-5 sm:py-3"
           >
-            Entrar
+            {t("landing.nav.login")}
           </Link>
           <Link
             href="/cadastro"
             className="inline-flex items-center gap-2 rounded-xl bg-[#123d2b] px-4 py-3 text-sm font-extrabold text-white transition hover:bg-[#147a45] sm:px-5"
           >
-            <span className="hidden sm:inline">7 dias grátis</span>
+            <span className="hidden sm:inline">{t("landing.nav.trialChip")}</span>
             <span className="sm:hidden">Testar</span>
             <ArrowRight className="size-4" />
           </Link>
@@ -473,13 +479,13 @@ function Header() {
   );
 }
 
-function HeroCounter() {
+function HeroCounter({ t }: { t: (key: string, params?: Record<string, string | number>) => string }) {
   return (
     <div id="demonstracao" className="relative mx-auto w-full max-w-[720px] scroll-mt-28 lg:ml-auto">
       <div className="absolute -right-2 -top-16 z-20 w-24 sm:-right-4 sm:-top-20 sm:w-28 pointer-events-none">
         <MascotPose
           pose="wave"
-          label="Mascote Mangora dando boas-vindas"
+          label={t("landing.preview.imageLabel")}
           className="mangora-float drop-shadow-[0_26px_22px_rgba(18,61,43,0.22)]"
         />
       </div>
@@ -487,26 +493,26 @@ function HeroCounter() {
       <div className="relative overflow-hidden rounded-[1.5rem] border-2 border-[#123d2b] bg-white shadow-[4px_6px_0_#123d2b] sm:rotate-1 sm:rounded-[2.5rem] sm:shadow-[10px_12px_0_#123d2b]">
         <div className="flex flex-wrap items-center justify-between gap-2 border-b-2 border-[#123d2b] bg-[#fff8ea] px-4 py-4 sm:px-7">
           <div>
-            <p className="font-[family-name:var(--font-bricolage)] text-lg font-extrabold">Movimento de hoje</p>
-            <p className="text-xs font-semibold text-[#6a7d73]">Prévia ilustrativa · dados de exemplo</p>
+            <p className="font-[family-name:var(--font-bricolage)] text-lg font-extrabold">{t("landing.hero.todayMovement")}</p>
+            <p className="text-xs font-semibold text-[#6a7d73]">{t("landing.hero.previewTag")}</p>
           </div>
           <span className="flex items-center gap-2 rounded-full bg-[#dff4e7] px-3 py-2 text-[10px] font-black uppercase tracking-wider text-[#147a45]">
-            Demonstração
+            {t("landing.preview.demo")}
           </span>
         </div>
 
         <div className="p-5 sm:p-7">
           <div className="hero-metrics grid gap-3 sm:grid-cols-3">
-            <CounterMetric icon={CircleDollarSign} label="Faturamento" value="R$ 18.450" detail="+12,5%" />
-            <CounterMetric icon={ShoppingBag} label="Vendas" value="284" detail="+8,2%" />
-            <CounterMetric icon={Users} label="Clientes" value="1.248" detail="+18" />
+            <CounterMetric icon={CircleDollarSign} label={t("landing.preview.revenue")} value="R$ 18.450" detail="+12,5%" />
+            <CounterMetric icon={ShoppingBag} label={t("landing.preview.sales")} value="284" detail="+8,2%" />
+            <CounterMetric icon={Users} label={t("landing.preview.customers")} value="1.248" detail="+18" />
           </div>
 
           <div className="mt-4 grid gap-4 md:grid-cols-[1.25fr_0.75fr]">
             <div className="rounded-2xl bg-[#fff8ea] p-5">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-xs font-extrabold uppercase tracking-wider text-[#6a7d73]">Vendas da semana</p>
+                  <p className="text-xs font-extrabold uppercase tracking-wider text-[#6a7d73]">{t("landing.hero.weekSales")}</p>
                   <p className="mt-1 font-[family-name:var(--font-bricolage)] text-2xl font-extrabold">R$ 7.840</p>
                 </div>
                 <BarChart3 className="size-5 text-[#ff6b1a]" />
@@ -524,9 +530,9 @@ function HeroCounter() {
             </div>
 
             <div className="space-y-3">
-              <FlowItem icon={ShoppingBag} title="Pedido #1024" detail="R$ 189,90" />
-              <FlowItem icon={PackageCheck} title="Estoque baixado" detail="3 itens" />
-              <FlowItem icon={ReceiptText} title="Caixa atualizado" detail="Recebido" />
+              <FlowItem icon={ShoppingBag} title={t("landing.preview.order")} detail="R$ 189,90" />
+              <FlowItem icon={PackageCheck} title={t("landing.preview.stockMoved")} detail={t("landing.preview.stockItems")} />
+              <FlowItem icon={ReceiptText} title={t("landing.preview.cashUpdated")} detail={t("landing.preview.received")} />
             </div>
           </div>
 
@@ -534,7 +540,7 @@ function HeroCounter() {
             <span className="mangora-flow absolute inset-y-0 left-0 w-1/3 rounded-full bg-[#147a45]" />
           </div>
           <p className="mt-2 text-center text-[10px] font-extrabold uppercase tracking-[0.16em] text-[#6a7d73]">
-            Uma ação atualiza toda a gestão
+            {t("landing.features.syncTitle")}
           </p>
         </div>
       </div>
@@ -617,24 +623,24 @@ function JourneyStep({ number, title, copy }: { number: string; title: string; c
   );
 }
 
-function Footer() {
+function Footer({ t }: { t: (key: string, params?: Record<string, string | number>) => string }) {
   const year = brazilDateKey().slice(0, 4);
   return (
     <footer className="border-t border-[#123d2b]/10 bg-[#fff8ea]">
       <div className="mx-auto grid max-w-[1380px] gap-12 px-5 py-14 sm:grid-cols-2 sm:px-8 lg:grid-cols-[1.4fr_1fr_1fr_1fr] lg:px-10">
         <div>
           <BrandLogo className="h-11" />
-          <p className="mt-5 max-w-xs text-sm font-medium leading-6 text-[#597064]">Gestão leve para negócios que não param.</p>
+          <p className="mt-5 max-w-xs text-sm font-medium leading-6 text-[#597064]">{t("landing.hero.title")}</p>
           <div className="mt-6 inline-flex items-center gap-2 rounded-full bg-[#dff4e7] px-4 py-2 text-xs font-extrabold text-[#147a45]"><ShieldCheck className="size-4" /> Seus dados protegidos</div>
         </div>
-        <FooterLinks title="Plataforma" links={[["Recursos", "#recursos"], ["Como funciona", "#como-funciona"], ["Planos", "#planos"], ["Entrar", "/login"]]} />
-        <FooterLinks title="Mangora" links={[["Sobre nós", "/sobre"], ["Suporte", "/suporte"], ["Parceiros", "/parceiros"], ["Contato", "#contato"]]} />
-        <FooterLinks title="Confiança" links={[["Termos de uso", "/termos"], ["Privacidade", "/privacidade"], ["Segurança", "/seguranca"], ["LGPD", "/lgpd"]]} />
+        <FooterLinks title={t("landing.footer.platform")} links={[[t("landing.nav.features"), "#recursos"], [t("landing.nav.howItWorks"), "#como-funciona"], [t("landing.nav.plans"), "#planos"], [t("landing.nav.login"), "/login"]]} />
+        <FooterLinks title={t("landing.footer.company")} links={[[t("landing.footer.about"), "/sobre"], [t("landing.footer.support"), "/suporte"], [t("landing.footer.partners"), "/parceiros"], [t("landing.footer.contact"), "#contato"]]} />
+        <FooterLinks title={t("landing.footer.trust")} links={[[t("landing.footer.terms"), "/termos"], [t("landing.footer.privacy"), "/privacidade"], [t("landing.footer.security"), "/seguranca"], [t("landing.footer.lgpd"), "/lgpd"]]} />
       </div>
       <div className="border-t border-[#123d2b]/10">
         <div className="mx-auto flex max-w-[1380px] flex-col gap-2 px-5 py-6 text-xs font-semibold text-[#6a7d73] sm:flex-row sm:justify-between sm:px-8 lg:px-10">
-          <p>© {year} Mangora. Todos os direitos reservados.</p>
-          <p className="flex items-center gap-2"><Clock3 className="size-3.5" /> Gestão disponível quando seu negócio precisar.</p>
+          <p>© {year} Mangora. {t("landing.footer.rights")}</p>
+          <p className="flex items-center gap-2"><Clock3 className="size-3.5" /> {t("landing.footer.availability")}</p>
         </div>
       </div>
     </footer>
