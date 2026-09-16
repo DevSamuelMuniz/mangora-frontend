@@ -7,10 +7,9 @@ import {
 } from "next/font/google";
 import Script from "next/script";
 import I18nProvider from "@/i18n/provider";
-import { getLocale, loadMessages } from "@/i18n/server";
+import { getLocale, getTranslator, loadMessages } from "@/i18n/server";
 import QueryProvider from "@/components/providers/QueryProvider";
 import { ToastProvider } from "@/components/ui/toast";
-import { brand } from "@/lib/brand";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -35,27 +34,30 @@ const manrope = Manrope({
 
 const GA_ID = process.env.NEXT_PUBLIC_GA_ID;
 
-export const metadata: Metadata = {
+export async function generateMetadata(): Promise<Metadata> {
+  const { t } = await getTranslator();
+  return {
   metadataBase: new URL("https://www.mangora.com.br"),
   title: {
-    default: brand.title,
+    default: t("site.meta.title"),
     template: "%s | Mangora",
   },
-  description:
-    "Conheça a Mangora: um sistema simples para cuidar de vendas, estoque, clientes, caixa e financeiro. Comece com 7 dias grátis, sem cartão.",
+  description: t("site.meta.description"),
+  alternates: {
+    canonical: "/",
+    languages: {
+      "pt-BR": "/",
+      "pt-PT": "/",
+      "en-US": "/?lang=en-US",
+      "es-ES": "/?lang=es-ES",
+      "x-default": "/",
+    },
+  },
   applicationName: "Mangora",
-  keywords: [
-    "gestão empresarial",
-    "sistema de vendas",
-    "controle de estoque",
-    "PDV",
-    "financeiro",
-    "Mangora",
-  ],
   authors: [{ name: "Mangora", url: "https://www.mangora.com.br" }],
   creator: "Mangora",
   publisher: "Mangora",
-  category: "Gestão empresarial",
+  category: t("site.meta.category"),
   robots: {
     index: true,
     follow: true,
@@ -71,23 +73,21 @@ export const metadata: Metadata = {
     type: "website",
     locale: "pt_BR",
     siteName: "Mangora",
-    title: "Mangora — Gestão simples para o seu negócio",
-    description:
-      "Vendas, estoque, clientes, caixa e financeiro em um só lugar. Conheça a Mangora e teste gratuitamente por 7 dias, sem cartão.",
+    title: t("site.meta.ogTitle"),
+    description: t("site.meta.ogDescription"),
     images: [
       {
         url: "https://www.mangora.com.br/mangora-whatsapp.png",
         width: 500,
         height: 500,
-        alt: "Mascote da Mangora trabalhando no computador",
+        alt: t("site.meta.imageAlt"),
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Mangora — Gestão simples para o seu negócio",
-    description:
-      "Organize vendas, estoque, clientes, caixa e financeiro. Teste a Mangora gratuitamente por 7 dias.",
+    title: t("site.meta.ogTitle"),
+    description: t("site.meta.twitterDescription"),
     images: ["https://www.mangora.com.br/mangora-whatsapp.png"],
   },
   icons: {
@@ -95,7 +95,8 @@ export const metadata: Metadata = {
     shortcut: "/favicon.ico",
     apple: "/apple-icon.png",
   },
-};
+  };
+}
 
 export default async function RootLayout({
   children,
