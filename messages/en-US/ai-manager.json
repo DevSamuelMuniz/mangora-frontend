@@ -1,0 +1,18 @@
+{
+  "aiManager": {
+    "eyebrow": "AI Manager",
+    "title": "Your finance and marketing specialist",
+    "subtitle": "Knows your whole store: sales, products, stock, finance and orders. Ask anything.",
+    "greeting": "Hi! I am your store's AI Manager. I follow sales, products, stock, finance and orders in real time — and I am here to help your store grow. How can I help?",
+    "thinking": "Checking your store...",
+    "placeholder": "Ask about sales, stock, finance or how to grow...",
+    "send": "Send",
+    "error": "I could not answer right now. Please try again in a moment.",
+    "suggestions": [
+      "How are today's sales?",
+      "What is low on stock?",
+      "How are the finances?",
+      "How can I increase sales?"
+    ]
+  }
+}

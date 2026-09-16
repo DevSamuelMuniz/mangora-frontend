@@ -1,0 +1,18 @@
+{
+  "aiManager": {
+    "eyebrow": "Gerente de IA",
+    "title": "Seu especialista em finanças e marketing",
+    "subtitle": "Conhece sua loja inteira: vendas, produtos, estoque, financeiro e pedidos. Pergunte o que quiser.",
+    "greeting": "Olá! Sou o Gerente de IA da sua loja. Acompanho vendas, produtos, estoque, financeiro e pedidos em tempo real — e estou aqui para ajudar a fazer sua loja crescer. Como posso ajudar?",
+    "thinking": "Consultando sua loja...",
+    "placeholder": "Pergunte sobre vendas, estoque, finanças ou como crescer...",
+    "send": "Enviar",
+    "error": "Não consegui responder agora. Tente de novo em instantes.",
+    "suggestions": [
+      "Como estão as vendas hoje?",
+      "O que está com estoque baixo?",
+      "Como está o financeiro?",
+      "Como aumentar as vendas?"
+    ]
+  }
+}
