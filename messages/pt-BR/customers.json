@@ -121,5 +121,10 @@
       "saveFailed": "Não foi possível salvar o cliente."
     },
     "loading": "Carregando cliente..."
+  },
+  "pagination": {
+    "previous": "Página anterior",
+    "next": "Próxima página",
+    "page": "Página {current} de {total}"
   }
 }

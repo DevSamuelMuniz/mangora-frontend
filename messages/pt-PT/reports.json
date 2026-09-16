@@ -64,5 +64,6 @@
   "averageTicket": "Ticket médio",
   "exportFailed": "Não foi possível exportar o relatório.",
   "realDataNote": "Indicadores calculados com dados reais da empresa.",
-  "previous30Days": "30 dias anteriores"
+  "previous30Days": "30 dias anteriores",
+  "export": "Exportar relatório"
 }

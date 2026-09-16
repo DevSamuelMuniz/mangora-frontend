@@ -59,5 +59,7 @@
     "label": "Notificações",
     "unreadLabel": "Notificações, {count} não lidas"
   },
-  "essentialOnly": "Mostrar apenas as funções essenciais"
+  "essentialOnly": "Mostrar apenas as funções essenciais",
+  "previousPeriod": "período anterior",
+  "saleOptionsAria": "Opções da venda {code}"
 }

@@ -265,5 +265,7 @@
     },
     "toast": "Lote recibido — inventario actualizado con entrada justificada."
   },
-  "movementToast": "Movimiento registrado"
+  "movementToast": "Movimiento registrado",
+  "transferSubmit": "Registrar transferencia",
+  "transferConfirm": "Confirmar transferencia"
 }

@@ -52,7 +52,10 @@
   "entryTypes": {
     "INCOME": "Receita",
     "EXPENSE": "Despesa",
-    "TRANSFER": "Transferência"
+    "TRANSFER": "Transferência",
+    "SERVICE": "serviço ou outro recebimento",
+    "saleIncome": "Venda, serviço ou outro recebimento",
+    "expense": "Conta, compra ou outro pagamento"
   },
   "entryHints": {
     "INCOME": "Venda, serviço ou outro recebimento",

@@ -55,7 +55,7 @@ export default function StockTransferForm({ initialProductId }: { initialProduct
       <label className="text-xs font-bold text-slate-700">{t("workspace.transfer.note")}<input value={notes} onChange={(event) => setNotes(event.target.value)} maxLength={1000} placeholder={t("workspace.transfer.notePlaceholder")} className={inputClass} /></label>
     </div>
     <div className="mt-5 flex items-center gap-3 rounded-2xl border border-green-200 bg-green-50 p-4"><Boxes className="size-5 text-green-700" /><div className="min-w-0 flex-1"><p className="text-xs font-black text-green-950">{t("workspace.transfer.balanceUpdated")}</p><p className="mt-0.5 text-[10px] text-green-700">{t("workspace.transfer.subtitle")}</p></div><ArrowRight className="size-4 text-green-700" /></div>
-    <button type="submit" disabled={saving || !productId || !destinationCompanyId || quantity < 1} className="mt-5 flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-orange-600 text-xs font-black text-white shadow-lg shadow-orange-200 hover:bg-orange-700 disabled:opacity-50">{saving && <LoaderCircle className="size-4 animate-spin" />}Confirmar transferência</button>
+    <button type="submit" disabled={saving || !productId || !destinationCompanyId || quantity < 1} className="mt-5 flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-orange-600 text-xs font-black text-white shadow-lg shadow-orange-200 hover:bg-orange-700 disabled:opacity-50">{saving && <LoaderCircle className="size-4 animate-spin" />}{t("stock.transferConfirm")}</button>
   </form>;
 }
 

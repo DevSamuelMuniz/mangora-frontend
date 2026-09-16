@@ -52,7 +52,10 @@
   "entryTypes": {
     "INCOME": "Revenue",
     "EXPENSE": "Expense",
-    "TRANSFER": "Transfer"
+    "TRANSFER": "Transfer",
+    "SERVICE": "service or other income",
+    "saleIncome": "Sale, service or other income",
+    "expense": "Bill, purchase or other payment"
   },
   "entryHints": {
     "INCOME": "Sale, service or another receipt",

@@ -64,5 +64,6 @@
   "averageTicket": "Average ticket",
   "exportFailed": "We could not export the report.",
   "realDataNote": "Indicators calculated with real company data.",
-  "previous30Days": "Previous 30 days"
+  "previous30Days": "Previous 30 days",
+  "export": "Export report"
 }

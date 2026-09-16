@@ -14,6 +14,7 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function FinancialPage({ searchParams }: { searchParams: Promise<{ acao?: string }> }) {
+  const { t } = await getTranslator();
   const { acao } = await searchParams;
-  return <><FinancialOverview />{acao === "novo" && <WorkspaceModal closeHref="/financeiro" label="Novo lançamento" size="medium"><NewFinancialEntryForm /></WorkspaceModal>}</>;
+  return <><FinancialOverview />{acao === "novo" && <WorkspaceModal closeHref="/financeiro" label={t("workspace.modal.newEntry")} size="medium"><NewFinancialEntryForm /></WorkspaceModal>}</>;
 }

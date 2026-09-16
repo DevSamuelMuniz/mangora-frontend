@@ -52,7 +52,10 @@
   "entryTypes": {
     "INCOME": "Ingreso",
     "EXPENSE": "Gasto",
-    "TRANSFER": "Transferencia"
+    "TRANSFER": "Transferencia",
+    "SERVICE": "servicio u otro ingreso",
+    "saleIncome": "Venta, servicio u otro ingreso",
+    "expense": "Cuenta, compra u otro pago"
   },
   "entryHints": {
     "INCOME": "Venta, servicio u otro cobro",

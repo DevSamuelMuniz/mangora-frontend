@@ -121,5 +121,10 @@
       "saveFailed": "Could not save the customer."
     },
     "loading": "Loading customer..."
+  },
+  "pagination": {
+    "previous": "Previous page",
+    "next": "Next page",
+    "page": "Page {current} of {total}"
   }
 }

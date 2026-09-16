@@ -41,7 +41,7 @@ export default function SalesChart({ charts }: { charts: DashboardData["charts"]
       </div>
 
       <div className="mt-5 flex items-end justify-between">
-        <div><p className="text-2xl font-black text-slate-950">{formatCurrency(current.revenue)}</p><div className="mt-1 flex items-center gap-1.5"><span className={`flex items-center gap-1 text-[10px] font-bold ${current.variation >= 0 ? "text-green-600" : "text-red-600"}`}><TrendingUp className="size-3.5" />{Math.abs(current.variation).toLocaleString("pt-BR")}%</span><span className="text-[10px] text-slate-400">comparado ao período anterior</span></div></div>
+        <div><p className="text-2xl font-black text-slate-950">{formatCurrency(current.revenue)}</p><div className="mt-1 flex items-center gap-1.5"><span className={`flex items-center gap-1 text-[10px] font-bold ${current.variation >= 0 ? "text-green-600" : "text-red-600"}`}><TrendingUp className="size-3.5" />{Math.abs(current.variation).toLocaleString("pt-BR")}%</span><span className="text-[10px] text-slate-400">comparado ao {t("dashboard.previousPeriod")}</span></div></div>
       </div>
 
       <div className="mt-6 flex h-52 items-end gap-2 sm:gap-3">

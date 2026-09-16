@@ -77,5 +77,6 @@
     "inProgress": "En curso",
     "awaitingDelivery": "Esperando entrega",
     "todayValue": "Valor hoy"
-  }
+  },
+  "searchPlaceholder": "Buscar por código o cliente..."
 }

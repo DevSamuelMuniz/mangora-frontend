@@ -14,6 +14,7 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function EmployeesPage({ searchParams }: { searchParams: Promise<{ acao?: string }> }) {
+  const { t } = await getTranslator();
   const { acao } = await searchParams;
-  return <><EmployeeManagement />{acao === "novo" && <WorkspaceModal closeHref="/funcionarios" label="Novo funcionário" size="medium"><NewEmployeeForm /></WorkspaceModal>}</>;
+  return <><EmployeeManagement />{acao === "novo" && <WorkspaceModal closeHref="/funcionarios" label={t("workspace.modal.newEmployee")} size="medium"><NewEmployeeForm /></WorkspaceModal>}</>;
 }

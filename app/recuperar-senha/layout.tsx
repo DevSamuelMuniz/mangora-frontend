@@ -1,10 +1,14 @@
 import type { Metadata } from "next";
+import { getTranslator } from "@/i18n/server";
 
-export const metadata: Metadata = {
-  title: "Recuperar senha",
-  description: "Solicite um link para recuperar o acesso à sua conta Mangora.",
-  robots: { index: false, follow: false },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const { t } = await getTranslator();
+  return {
+    title: t("publicPages.recoverPassword.metaTitle"),
+    description: t("publicPages.recoverPassword.metaDescription"),
+    robots: { index: false, follow: false },
+  };
+}
 
 export default function PasswordRecoveryLayout({
   children,

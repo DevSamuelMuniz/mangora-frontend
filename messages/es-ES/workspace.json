@@ -69,5 +69,9 @@
     "passwordHint": "Introduce la contraseña de tu cuenta para liberar esta acción. La confirmación dura solo unos minutos.",
     "capsLock": "Caps Lock está activado.",
     "secureNote": "Tu contraseña se valida de forma segura y no aparece en los registros de actividad."
+  },
+  "modal": {
+    "newEntry": "Nuevo asiento",
+    "newEmployee": "Nuevo empleado"
   }
 }

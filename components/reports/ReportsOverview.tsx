@@ -87,7 +87,7 @@ export default function ReportsOverview() {
         </div>
         <div className="flex flex-col gap-2 sm:flex-row">
           <label className="relative"><span className="sr-only">{t("reports.period.title")}</span><CalendarDays className="pointer-events-none absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-slate-400" /><select value={period} disabled={loading} onChange={(event) => void changePeriod(event.target.value as ReportPeriod)} className="h-11 w-full rounded-xl border border-slate-200 bg-white pl-10 pr-8 text-xs font-bold text-slate-600 outline-none transition focus:border-orange-300 focus:ring-4 focus:ring-orange-100 disabled:opacity-60 sm:w-48"><option value="7d">{t("reports.period.last7")}</option><option value="30d">{t("reports.period.last30")}</option><option value="90d">{t("reports.period.last90")}</option></select></label>
-          <button type="button" disabled={loading} onClick={requestExport} className="flex h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 text-xs font-bold text-slate-700 shadow-sm transition hover:border-orange-200 hover:bg-orange-50 hover:text-orange-700 disabled:opacity-60">{loading ? <LoaderCircle className="size-4 animate-spin" /> : <Download className="size-4" />}Exportar relatório</button>
+          <button type="button" disabled={loading} onClick={requestExport} className="flex h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 text-xs font-bold text-slate-700 shadow-sm transition hover:border-orange-200 hover:bg-orange-50 hover:text-orange-700 disabled:opacity-60">{loading ? <LoaderCircle className="size-4 animate-spin" /> : <Download className="size-4" />}{t("reports.export")}</button>
         </div>
       </div>
 

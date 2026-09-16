@@ -121,5 +121,10 @@
       "saveFailed": "Não foi possível guardar o cliente."
     },
     "loading": "A carregar cliente..."
+  },
+  "pagination": {
+    "previous": "Página anterior",
+    "next": "Página seguinte",
+    "page": "Página {current} de {total}"
   }
 }

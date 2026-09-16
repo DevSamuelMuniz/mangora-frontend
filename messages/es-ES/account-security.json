@@ -29,5 +29,12 @@
   "recoveryFileTitle": "Códigos de recuperación — Mangora",
   "recoveryFileHint": "Cada código funciona una sola vez. Guarda este archivo en un lugar seguro.",
   "recoveryFileGenerated": "Generado el {date}",
-  "error": "No se pudo completar la acción."
+  "error": "No se pudo completar la acción.",
+  "mfa": {
+    "eyebrow": "Recomendación de seguridad",
+    "title": "Recomendación de seguridad",
+    "copy": "La autenticación en dos pasos es opcional, pero ayuda a impedir accesos indebidos.",
+    "modalTitle": "Protege tu cuenta con 2FA",
+    "modalCopy": "La autenticación en dos pasos es opcional, pero ayuda a impedir accesos indebidos aunque se descubra tu contraseña."
+  }
 }

@@ -59,5 +59,7 @@
     "label": "Notifications",
     "unreadLabel": "Notifications, {count} unread"
   },
-  "essentialOnly": "Show only the essential features"
+  "essentialOnly": "Show only the essential features",
+  "previousPeriod": "previous period",
+  "saleOptionsAria": "Options for sale {code}"
 }

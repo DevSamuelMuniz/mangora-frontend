@@ -69,5 +69,9 @@
     "passwordHint": "Enter your account password to unlock this action. The confirmation lasts only a few minutes.",
     "capsLock": "Caps Lock is on.",
     "secureNote": "Your password is validated securely and never appears in activity logs."
+  },
+  "modal": {
+    "newEntry": "New entry",
+    "newEmployee": "New employee"
   }
 }
