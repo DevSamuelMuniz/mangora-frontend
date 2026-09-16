@@ -57,21 +57,21 @@ export function formatDateLong(date: Date | string, locale: FormatLocale = DEFAU
 }
 
 /** Data curta: 30/08/2026. */
-export function formatDate(date: Date | string): string {
+export function formatDate(date: Date | string, locale: FormatLocale = DEFAULT_LOCALE): string {
     const value = typeof date === "string" ? new Date(date) : date;
-    return bundle().dateShort.format(value);
+    return bundle(locale).dateShort.format(value);
 }
 
 /** Data e hora: 30/08/2026 14:05. */
-export function formatDateTime(date: Date | string): string {
+export function formatDateTime(date: Date | string, locale: FormatLocale = DEFAULT_LOCALE): string {
     const value = typeof date === "string" ? new Date(date) : date;
-    return bundle().dateTime.format(value);
+    return bundle(locale).dateTime.format(value);
 }
 
 /** Hora: 14:05. */
-export function formatTime(date: Date | string): string {
+export function formatTime(date: Date | string, locale: FormatLocale = DEFAULT_LOCALE): string {
     const value = typeof date === "string" ? new Date(date) : date;
-    return bundle().time.format(value);
+    return bundle(locale).time.format(value);
 }
 
 /** Formata CPF (11 dígitos) ou CNPJ (14 dígitos) conforme o tipo de cliente. */
