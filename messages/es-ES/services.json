@@ -1,0 +1,72 @@
+{
+  "eyebrow": "Catálogo",
+  "title": "Servicios",
+  "subtitle": "Gestiona precios, duración y disponibilidad de los servicios.",
+  "create": "Nuevo servicio",
+  "searchPlaceholder": "Buscar por nombre, código o categoría...",
+  "searchLabel": "Buscar servicios",
+  "allStatus": "Todos los estados",
+  "statusActivePlural": "Activos",
+  "statusInactivePlural": "Inactivos",
+  "notInformed": "No informada",
+  "durationMinutes": "{count} minutos",
+  "empty": "Ningún servicio encontrado",
+  "emptyAction": "Registrar el primer servicio",
+  "details": "Detalles del servicio",
+  "editShort": "Editar servicio",
+  "close": "Cerrar",
+  "table": {
+    "service": "Servicio",
+    "category": "Categoría",
+    "duration": "Duración",
+    "price": "Precio",
+    "status": "Estado",
+    "actions": "Acciones",
+    "code": "Código: {code}"
+  },
+  "row": {
+    "active": "Activo",
+    "inactive": "Inactivo"
+  },
+  "actions": {
+    "viewAria": "Ver {name}",
+    "editAria": "Editar {name}",
+    "deleteAria": "Eliminar {name}",
+    "deleteConfirm": "¿Eliminar el servicio {name}?"
+  },
+  "errors": {
+    "delete": "No se pudo eliminar el servicio."
+  },
+  "form": {
+    "eyebrow": "Catálogo",
+    "titleNew": "Nuevo servicio",
+    "titleEdit": "Editar servicio",
+    "subtitle": "Precio, duración, categoría y disponibilidad comercial.",
+    "back": "Volver a servicios",
+    "mainSection": "Información principal",
+    "executionSection": "Ejecución",
+    "imageSection": "Imagen",
+    "save": "Guardar",
+    "saving": "Guardando...",
+    "created": "Servicio registrado",
+    "updated": "Servicio actualizado",
+    "notFound": "Servicio no encontrado.",
+    "categoryRequired": "Crea una categoría de servicio antes de continuar.",
+    "manageCategories": "Gestionar categorías",
+    "fields": {
+      "name": "Nombre del servicio",
+      "code": "Código",
+      "duration": "Duración estimada en minutos",
+      "imageUrl": "URL pública de la imagen",
+      "description": "Descripción",
+      "descriptionHint": "Selecciona una categoría activa para el servicio.",
+      "category": "Categoría",
+      "categoryPlaceholder": "Selecciona una categoría",
+      "price": "Precio",
+      "active": "Servicio activo"
+    },
+    "errors": {
+      "save": "No se pudo guardar el servicio."
+    }
+  }
+}

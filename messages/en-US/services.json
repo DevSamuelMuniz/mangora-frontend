@@ -1,0 +1,72 @@
+{
+  "eyebrow": "Catalogue",
+  "title": "Services",
+  "subtitle": "Manage prices, duration and availability of your services.",
+  "create": "New service",
+  "searchPlaceholder": "Search by name, code or category...",
+  "searchLabel": "Search services",
+  "allStatus": "All statuses",
+  "statusActivePlural": "Active",
+  "statusInactivePlural": "Inactive",
+  "notInformed": "Not informed",
+  "durationMinutes": "{count} minutes",
+  "empty": "No service found",
+  "emptyAction": "Register the first service",
+  "details": "Service details",
+  "editShort": "Edit service",
+  "close": "Close",
+  "table": {
+    "service": "Service",
+    "category": "Category",
+    "duration": "Duration",
+    "price": "Price",
+    "status": "Status",
+    "actions": "Actions",
+    "code": "Code: {code}"
+  },
+  "row": {
+    "active": "Active",
+    "inactive": "Inactive"
+  },
+  "actions": {
+    "viewAria": "View {name}",
+    "editAria": "Edit {name}",
+    "deleteAria": "Delete {name}",
+    "deleteConfirm": "Delete the service {name}?"
+  },
+  "errors": {
+    "delete": "We could not delete the service."
+  },
+  "form": {
+    "eyebrow": "Catalogue",
+    "titleNew": "New service",
+    "titleEdit": "Edit service",
+    "subtitle": "Price, duration, category and commercial availability.",
+    "back": "Back to services",
+    "mainSection": "Main information",
+    "executionSection": "Execution",
+    "imageSection": "Image",
+    "save": "Save",
+    "saving": "Saving...",
+    "created": "Service registered",
+    "updated": "Service updated",
+    "notFound": "Service not found.",
+    "categoryRequired": "Create a service category before continuing.",
+    "manageCategories": "Manage categories",
+    "fields": {
+      "name": "Service name",
+      "code": "Code",
+      "duration": "Estimated duration in minutes",
+      "imageUrl": "Public image URL",
+      "description": "Description",
+      "descriptionHint": "Select an active category for the service.",
+      "category": "Category",
+      "categoryPlaceholder": "Select a category",
+      "price": "Price",
+      "active": "Active service"
+    },
+    "errors": {
+      "save": "We could not save the service."
+    }
+  }
+}
