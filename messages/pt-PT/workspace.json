@@ -1,0 +1,67 @@
+{
+  "notifications": {
+    "title": "Notificações",
+    "subtitle": "Tudo acompanhado por aqui",
+    "center": "Centro de notificações",
+    "close": "Fechar notificações",
+    "loading": "A carregar os seus avisos...",
+    "updated": "Atualizado automaticamente",
+    "updating": "A atualizar…",
+    "empty": "Nenhuma notificação por enquanto.",
+    "emptyPending": "Não tem avisos pendentes.",
+    "unread": "Não lidas",
+    "all": "Todas",
+    "configure": "Configurar alertas",
+    "kinds": {
+      "INFO": "Informação",
+      "SUMMARY": "Resumo",
+      "STOCK": "Inventário",
+      "FINANCE": "Finanças",
+      "CUSTOMERS": "Clientes",
+      "SUPPLIERS": "Fornecedores",
+      "PRODUCTS": "Produtos",
+      "SECURITY": "Segurança"
+    },
+    "relative": {
+      "now": "agora",
+      "minutes": "há {count} min",
+      "hours": "há {count} h",
+      "yesterday": "ontem",
+      "days": "há {count} dias"
+    }
+  },
+  "transfer": {
+    "title": "Transferir inventário",
+    "eyebrow": "Movimento entre unidades",
+    "subtitle": "A saída e a entrada são registadas juntas no histórico.",
+    "source": "Produto de origem",
+    "selectProduct": "Selecione o produto",
+    "destination": "Loja de destino",
+    "quantity": "Quantidade",
+    "note": "Observação",
+    "notePlaceholder": "Ex.: reposição da filial",
+    "submit": "Transferir inventário",
+    "saving": "A preparar transferência...",
+    "close": "Fechar",
+    "needTwoStores": "A transferência exige pelo menos duas unidades do mesmo grupo.",
+    "addStoreFirst": "Adicione outra loja primeiro",
+    "manageStores": "Gerir lojas",
+    "balanceUpdated": "Saldo atualizado nas duas lojas",
+    "done": "Transferência entre lojas registada",
+    "failed": "Não foi possível transferir o produto."
+  },
+  "data": {
+    "title": "Dados",
+    "eyebrow": "Carga de dados",
+    "subtitle": "Traga os seus dados para dentro ou para fora da Mangora em CSV.",
+    "importTitle": "Importar e exportar",
+    "importHint": "Cole um CSV e importe com histórico inicial.",
+    "duplicates": "Registos duplicados são ignorados com aviso por linha.",
+    "emptyCsv": "Cole o conteúdo do CSV antes de importar.",
+    "importFailed": "Não foi possível importar o ficheiro.",
+    "downloadFailed": "Não foi possível descarregar o ficheiro.",
+    "download": "Descarregar cópia",
+    "template": "Tabela completa com os campos da Mangora",
+    "csvReady": "CSV pronto para abrir no Excel ou Google Sheets."
+  }
+}

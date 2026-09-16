@@ -1,0 +1,67 @@
+{
+  "notifications": {
+    "title": "Notifications",
+    "subtitle": "Everything tracked here",
+    "center": "Notification centre",
+    "close": "Close notifications",
+    "loading": "Loading your alerts...",
+    "updated": "Updated automatically",
+    "updating": "Updating…",
+    "empty": "No notifications yet.",
+    "emptyPending": "You have no pending alerts.",
+    "unread": "Unread",
+    "all": "All",
+    "configure": "Configure alerts",
+    "kinds": {
+      "INFO": "Information",
+      "SUMMARY": "Digest",
+      "STOCK": "Stock",
+      "FINANCE": "Finance",
+      "CUSTOMERS": "Customers",
+      "SUPPLIERS": "Suppliers",
+      "PRODUCTS": "Products",
+      "SECURITY": "Security"
+    },
+    "relative": {
+      "now": "now",
+      "minutes": "{count} min ago",
+      "hours": "{count} h ago",
+      "yesterday": "yesterday",
+      "days": "{count} days ago"
+    }
+  },
+  "transfer": {
+    "title": "Transfer stock",
+    "eyebrow": "Movement between units",
+    "subtitle": "The outgoing and incoming movements are recorded together in history.",
+    "source": "Source product",
+    "selectProduct": "Select the product",
+    "destination": "Destination store",
+    "quantity": "Quantity",
+    "note": "Note",
+    "notePlaceholder": "e.g. branch restock",
+    "submit": "Transfer stock",
+    "saving": "Preparing transfer...",
+    "close": "Close",
+    "needTwoStores": "Transfers require at least two units in the same group.",
+    "addStoreFirst": "Add another store first",
+    "manageStores": "Manage stores",
+    "balanceUpdated": "Balance updated in both stores",
+    "done": "Stock transfer between stores recorded",
+    "failed": "Could not transfer the product."
+  },
+  "data": {
+    "title": "Data",
+    "eyebrow": "Data load",
+    "subtitle": "Bring your data into or out of Mangora as CSV.",
+    "importTitle": "Import & Export",
+    "importHint": "Paste a CSV and import with initial history.",
+    "duplicates": "Duplicate records are skipped with a per-line warning.",
+    "emptyCsv": "Paste the CSV content before importing.",
+    "importFailed": "Could not import the file.",
+    "downloadFailed": "Could not download the file.",
+    "download": "Download copy",
+    "template": "Full table with Mangora fields",
+    "csvReady": "CSV ready to open in Excel or Google Sheets."
+  }
+}
