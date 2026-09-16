@@ -117,14 +117,14 @@ export default function CustomerForm({ customerId }: { customerId?: string }) {
               {(["INDIVIDUAL", "COMPANY"] as CustomerType[]).map((type) => (
                 <label key={type} className={`flex h-11 cursor-pointer items-center gap-2.5 rounded-xl border px-3 text-xs font-bold transition ${customerType === type ? "border-orange-300 bg-orange-50 text-orange-700" : "border-slate-200 text-slate-600 hover:bg-slate-50"}`}>
                   <input type="radio" name="type" value={type} checked={customerType === type} onChange={() => setCustomerType(type)} className="accent-orange-600" />
-                  {type === "INDIVIDUAL" ? "Pessoa física" : "Pessoa jurídica"}
+                  {t(`customers.types.${type}`)}
                 </label>
               ))}
             </div>
           </fieldset>
 
           <div className="mt-4 grid gap-4 sm:grid-cols-2">
-            <Field label={customerType === "INDIVIDUAL" ? "Nome completo" : "Razão social"} id="name"><input id="name" name="name" type="text" required minLength={3} maxLength={160} defaultValue={customer?.name} placeholder={customerType === "INDIVIDUAL" ? "Ex.: Maria Santos" : "Ex.: Empresa Exemplo Ltda."} autoComplete="name" className={inputClassName} /></Field>
+            <Field label={customerType === "INDIVIDUAL" ? t("customers.form.fields.name") : t("customers.form.fields.legalName")} id="name"><input id="name" name="name" type="text" required minLength={3} maxLength={160} defaultValue={customer?.name} placeholder={customerType === "INDIVIDUAL" ? "Ex.: Maria Santos" : "Ex.: Empresa Exemplo Ltda."} autoComplete="name" className={inputClassName} /></Field>
             <Field label={customerType === "INDIVIDUAL" ? "CPF" : "CNPJ"} id="document"><input id="document" name="document" type="text" required inputMode="numeric" defaultValue={customer?.document} placeholder={customerType === "INDIVIDUAL" ? "000.000.000-00" : "00.000.000/0000-00"} className={inputClassName} /></Field>
             {customerType === "COMPANY" && <Field label="Nome fantasia (opcional)" id="tradeName"><input id="tradeName" name="tradeName" type="text" maxLength={160} defaultValue={customer?.tradeName ?? ""} placeholder="Nome conhecido da empresa" className={inputClassName} /></Field>}
             <Field label="E-mail" id="email"><input id="email" name="email" type="email" required maxLength={254} defaultValue={customer?.email} placeholder="cliente@email.com" autoComplete="email" className={inputClassName} /></Field>
@@ -137,8 +137,8 @@ export default function CustomerForm({ customerId }: { customerId?: string }) {
           <SectionTitle icon={MapPin} title="Endereço" description={t("customers.form.sections.addressHint")} />
           <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             <Field label="CEP" id="postalCode"><input id="postalCode" name="postalCode" type="text" inputMode="numeric" defaultValue={customer?.postalCode ?? ""} placeholder="00000-000" autoComplete="postal-code" className={inputClassName} /></Field>
-            <Field label="Endereço" id="street" className="lg:col-span-2"><input id="street" name="street" type="text" maxLength={200} defaultValue={customer?.street ?? ""} placeholder="Rua ou avenida" autoComplete="street-address" className={inputClassName} /></Field>
-            <Field label="Número" id="number"><input id="number" name="number" type="text" maxLength={30} defaultValue={customer?.number ?? ""} placeholder="123" className={inputClassName} /></Field>
+            <Field label={t("customers.form.fields.street")} id="street" className="lg:col-span-2"><input id="street" name="street" type="text" maxLength={200} defaultValue={customer?.street ?? ""} placeholder="Rua ou avenida" autoComplete="street-address" className={inputClassName} /></Field>
+            <Field label={t("customers.form.fields.number")} id="number"><input id="number" name="number" type="text" maxLength={30} defaultValue={customer?.number ?? ""} placeholder="123" className={inputClassName} /></Field>
             <Field label="Bairro" id="district"><input id="district" name="district" type="text" maxLength={100} defaultValue={customer?.district ?? ""} placeholder="Bairro" className={inputClassName} /></Field>
             <Field label="Cidade" id="city" className="lg:col-span-2"><input id="city" name="city" type="text" maxLength={100} defaultValue={customer?.city ?? ""} placeholder="Cidade" autoComplete="address-level2" className={inputClassName} /></Field>
             <Field label="UF" id="state"><select id="state" name="state" defaultValue={customer?.state ?? ""} className={inputClassName}><option value="">Selecione</option>{states.map((state) => <option key={state} value={state}>{state}</option>)}</select></Field>
@@ -146,8 +146,8 @@ export default function CustomerForm({ customerId }: { customerId?: string }) {
         </div>
 
         <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:p-5">
-          <SectionTitle icon={Building2} title="Observações" description="Anotações internas sobre preferências ou atendimento." />
-          <Field label="Observações (opcional)" id="notes" className="mt-4"><textarea id="notes" name="notes" rows={3} maxLength={2000} defaultValue={customer?.notes ?? ""} placeholder="Informações adicionais sobre o cliente..." className="w-full resize-y rounded-xl border border-slate-200 bg-white px-3.5 py-3 text-sm text-slate-950 outline-none transition placeholder:text-slate-400 focus:border-orange-400 focus:ring-4 focus:ring-orange-100" /></Field>
+          <SectionTitle icon={Building2} title={t("customers.form.sections.notes")} description={t("customers.form.sections.notesHint")} />
+          <Field label={t("customers.form.fields.notes")} id="notes" className="mt-4"><textarea id="notes" name="notes" rows={3} maxLength={2000} defaultValue={customer?.notes ?? ""} placeholder="Informações adicionais sobre o cliente..." className="w-full resize-y rounded-xl border border-slate-200 bg-white px-3.5 py-3 text-sm text-slate-950 outline-none transition placeholder:text-slate-400 focus:border-orange-400 focus:ring-4 focus:ring-orange-100" /></Field>
         </div>
 
         {errorMessage && <div role="alert" className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-xs font-semibold text-red-700">{errorMessage}</div>}

@@ -77,7 +77,9 @@
       "main": "Dados principais",
       "mainHint": "Identificação e informações de contato do cliente.",
       "address": "Endereço",
-      "addressHint": "Informações opcionais para localização e atendimento."
+      "addressHint": "Informações opcionais para localização e atendimento.",
+      "notes": "Observações",
+      "notesHint": "Anotações internas sobre preferências ou atendimento."
     },
     "fields": {
       "type": "Tipo",
@@ -92,7 +94,7 @@
       "status": "Status",
       "select": "Selecione",
       "zip": "CEP",
-      "street": "Rua",
+      "street": "Endereço",
       "number": "Número",
       "district": "Bairro",
       "city": "Cidade",

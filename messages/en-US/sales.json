@@ -60,5 +60,20 @@
     "confirm": "Cancel sale"
   },
   "cancelFailed": "Could not cancel the sale.",
-  "cancelSuccess": "Sale {code} cancelled — inventory and finance reversed."
+  "cancelSuccess": "Sale {code} cancelled — inventory and finance reversed.",
+  "returnForm": {
+    "eyebrow": "Partial return",
+    "title": "Return items",
+    "sold": "Sold {quantity}",
+    "reason": "Return reason",
+    "selected": "{count} item(s) selected",
+    "submit": "Record return",
+    "submitting": "Recording...",
+    "success": "Return recorded",
+    "errors": {
+      "reason": "Enter the return reason (at least 3 characters).",
+      "request": "We could not record the return."
+    },
+    "titleOf": "Return items from {code}"
+  }
 }

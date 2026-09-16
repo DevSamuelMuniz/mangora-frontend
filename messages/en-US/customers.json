@@ -77,7 +77,9 @@
       "main": "Main information",
       "mainHint": "Customer identification and contact details.",
       "address": "Address",
-      "addressHint": "Optional information for location and service."
+      "addressHint": "Optional information for location and service.",
+      "notes": "Notes",
+      "notesHint": "Internal notes about preferences or service."
     },
     "fields": {
       "type": "Type",
@@ -92,7 +94,7 @@
       "status": "Status",
       "select": "Select",
       "zip": "ZIP/Postal code",
-      "street": "Street",
+      "street": "Address",
       "number": "Number",
       "district": "District",
       "city": "City",

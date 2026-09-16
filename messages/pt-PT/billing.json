@@ -55,7 +55,15 @@
     "refunded": "Estornada",
     "cycleClosed": "Ciclo encerrado",
     "cancelScheduled": "Cancelamento agendado.",
-    "cancelled": "Cancelada"
+    "cancelled": "Cancelada",
+    "CREATED": "Conta criada",
+    "PLAN_CHANGE_REQUESTED": "Troca de plano solicitada",
+    "PLAN_CHANGED": "Plano ativado",
+    "PRICE_CHANGED": "Preço atualizado",
+    "DISCOUNT_UPDATED": "Desconto atualizado",
+    "CANCELLATION_REQUESTED": "Cancelamento solicitado",
+    "CANCELLED": "Subscrição cancelada",
+    "REACTIVATED": "Subscrição reativada"
   },
   "toasts": {
     "cancelled": "Assinatura cancelada",
@@ -73,5 +81,46 @@
     "BOLETO": "Referência bancária",
     "PIX": "Pix",
     "CREDIT_CARD": "Cartão de crédito"
+  },
+  "contract": {
+    "frozen": "O preço e os limites foram congelados quando o plano foi ativado.",
+    "catalog": "Catálogo v{version} · {plan} · congelado",
+    "empty": "Ainda não há movimentos registados.",
+    "PRICE_CHANGED": "Preço atualizado",
+    "PLAN_CHANGED": "Plano alterado",
+    "DISCOUNT_APPLIED": "Desconto aplicado",
+    "STATUS_CHANGED": "Estado alterado",
+    "CREATED": "Subscrição criada",
+    "RENEWED": "Subscrição renovada",
+    "CANCELLED": "Subscrição cancelada"
+  },
+  "manage": {
+    "couponApplied": "Cupão aplicado: primeira mensalidade {first} e depois {recurring}.",
+    "cancelConfirm": "Cancelar a subscrição recorrente? Mantém o acesso até ao fim do ciclo pago e pode reativar antes disso.",
+    "cancelScheduled": "Cancelamento agendado — acesso mantido até ao fim do ciclo pago.",
+    "cancelledReverted": "Cancelamento revertido — acesso garantido até ao fim do ciclo. Para continuar depois, faça um novo checkout.",
+    "availablePlans": "Planos disponíveis · {market}",
+    "choosePlan": "Escolha o plano ideal",
+    "couponAppliedLong": "Cupão aplicado: primeira mensalidade por {first}. As seguintes serão de {recurring}."
+  },
+  "trialGate": {
+    "eyebrow": "Fim do período gratuito",
+    "copy": "A sua conta continua ativa no plano Free, sem cobrança. Os seus dados e os recursos essenciais continuam disponíveis.",
+    "secureNote": "Só escolhe um plano pago se quiser recursos avançados.",
+    "daysRemaining": "{count} dias restantes",
+    "trialEnds": "O teste termina em {date}",
+    "endedTitle": "Os seus 7 dias completos terminaram.",
+    "copyFull": "A sua conta continua ativa no plano Free, sem cobrança. Os seus dados e os recursos essenciais continuam disponíveis.",
+    "upgradeHint": "Quando quiser mais capacidade, escolha um plano pago.",
+    "ownerHint": "O proprietário pode ampliar o plano quando a empresa precisar.",
+    "comparePlans": "Comparar planos",
+    "nothingDeleted": "Nenhum registo ou histórico foi apagado.",
+    "dayRemaining": "{count} dia grátis restante.",
+    "daysRemainingBanner": "{count} dias grátis restantes.",
+    "exploreHint": "Explore tudo e escolha o seu plano quando estiver pronto.",
+    "seePlans": "Conhecer os planos",
+    "freeActive": "Plano Free ativo.",
+    "freeHint": "Continue no essencial sem cobrança.",
+    "closeWarning": "Fechar aviso"
   }
 }

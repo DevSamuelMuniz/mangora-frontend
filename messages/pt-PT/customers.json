@@ -77,7 +77,9 @@
       "main": "Datos principales",
       "mainHint": "Identificación y contacto del cliente.",
       "address": "Dirección",
-      "addressHint": "Información opcional para ubicación y atención."
+      "addressHint": "Información opcional para ubicación y atención.",
+      "notes": "Observações",
+      "notesHint": "Notas internas sobre preferências ou atendimento."
     },
     "fields": {
       "type": "Tipo",
@@ -92,7 +94,7 @@
       "status": "Estado",
       "select": "Selecciona",
       "zip": "Código postal",
-      "street": "Rua",
+      "street": "Endereço",
       "number": "Número",
       "district": "Freguesia",
       "city": "Cidade",

@@ -60,5 +60,20 @@
     "confirm": "Cancelar venda"
   },
   "cancelFailed": "Não foi possível cancelar a venda.",
-  "cancelSuccess": "Venda {code} cancelada — estoque e financeiro estornados."
+  "cancelSuccess": "Venda {code} cancelada — estoque e financeiro estornados.",
+  "returnForm": {
+    "eyebrow": "Devolução parcial",
+    "title": "Devolver itens",
+    "sold": "Vendido {quantity}",
+    "reason": "Motivo da devolução",
+    "selected": "{count} item(ns) selecionado(s)",
+    "submit": "Registrar devolução",
+    "submitting": "Registrando...",
+    "success": "Devolução registrada",
+    "errors": {
+      "reason": "Informe o motivo da devolução (mínimo 3 caracteres).",
+      "request": "Não foi possível registrar a devolução."
+    },
+    "titleOf": "Devolver itens da {code}"
+  }
 }

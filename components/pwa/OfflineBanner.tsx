@@ -1,11 +1,14 @@
 "use client";
 
+import { useT } from "@/i18n/provider";
+
 import { CloudOff, RefreshCw, Wifi } from "lucide-react";
 
 import { useConnectivity } from "@/lib/offline/useConnectivity";
 
 /** Aviso de status offline + sincronização pendente (aparece no sistema). */
 export default function OfflineBanner() {
+  const t = useT();
   const { online, pending, syncing, syncNow } = useConnectivity();
   const show = !online || pending > 0;
   if (!show) return null;
@@ -15,13 +18,13 @@ export default function OfflineBanner() {
       <div className={`flex flex-wrap items-center justify-center gap-x-4 gap-y-1 px-4 py-2 text-center text-xs font-bold text-white ${!online ? "bg-amber-600" : "bg-emerald-600"}`}>
         {!online ? (
           <>
-            <span className="flex items-center gap-1.5"><CloudOff className="size-4" />Você está offline</span>
-            <span className="font-normal opacity-90">Você pode continuar vendo os dados salvos; as alterações ficam na fila e sincronizam sozinhas.</span>
+            <span className="flex items-center gap-1.5"><CloudOff className="size-4" />{t("publicUi.offline.title")}</span>
+            <span className="font-normal opacity-90">{t("publicUi.offline.copy")}</span>
           </>
         ) : (
           <>
-            <span className="flex items-center gap-1.5"><Wifi className="size-4" />Conexão restabelecida</span>
-            {pending > 0 ? <span className="font-normal opacity-90">{pending} alteração(ões) aguardando sincronização.</span> : <span className="font-normal opacity-90">Tudo sincronizado.</span>}
+            <span className="flex items-center gap-1.5"><Wifi className="size-4" />{t("publicUi.offline.restored")}</span>
+            {pending > 0 ? <span className="font-normal opacity-90">{t("publicUi.offline.pending", { count: pending })}</span> : <span className="font-normal opacity-90">{t("publicUi.offline.synced")}</span>}
           </>
         )}
         {pending > 0 && !syncing && (

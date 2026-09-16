@@ -63,5 +63,12 @@
     "install": "Install",
     "installing": "Installing...",
     "later": "Not now"
+  },
+  "offline": {
+    "title": "You are offline",
+    "copy": "You can keep viewing saved data; changes are queued and sync by themselves.",
+    "restored": "Connection restored",
+    "pending": "{count} change(s) waiting to sync.",
+    "synced": "Everything synced."
   }
 }

@@ -63,5 +63,12 @@
     "install": "Instalar",
     "installing": "A instalar...",
     "later": "Agora não"
+  },
+  "offline": {
+    "title": "Está offline",
+    "copy": "Pode continuar a ver os dados guardados; as alterações ficam em fila e sincronizam sozinhas.",
+    "restored": "Ligação restabelecida",
+    "pending": "{count} alteração(ões) à espera de sincronização.",
+    "synced": "Tudo sincronizado."
   }
 }

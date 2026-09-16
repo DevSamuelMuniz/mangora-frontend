@@ -44,16 +44,16 @@ export default function SubscriptionManagement() {
           ...(overview.provider.name === "ASAAS" ? { billingType, nextDueDate, couponCode: couponCode.trim() || undefined } : {}),
         });
         if (checkout.checkoutUrl) window.location.assign(checkout.checkoutUrl);
-        else setMessage((checkout.discount ?? 0) > 0 && checkout.firstCharge != null && checkout.recurringPrice != null ? `Cupom aplicado: primeira mensalidade por ${formatCurrency(checkout.firstCharge, locale)}. As próximas serão de ${formatCurrency(checkout.recurringPrice, locale)}.` : `Cobrança criada no ${overview.provider.name}. O plano será ativado assim que o pagamento for confirmado.`);
+        else setMessage((checkout.discount ?? 0) > 0 && checkout.firstCharge != null && checkout.recurringPrice != null ? t("billing.manage.couponAppliedLong", { first: formatCurrency(checkout.firstCharge, locale), recurring: formatCurrency(checkout.recurringPrice, locale) }) : `Cobrança criada no ${overview.provider.name}. O plano será ativado assim que o pagamento for confirmado.`);
       }
       setSelected(null);
     } catch (cause) { setActionError(cause instanceof Error ? cause.message : t("billing.errors.contact")); }
   }
   async function requestCancellation() {
     try {
-      if (!window.confirm("Cancelar a assinatura recorrente? Você mantém o acesso até o fim do ciclo pago e pode reativar antes disso.")) return;
+      if (!window.confirm(t("billing.manage.cancelConfirm"))) return;
       await cancelMutation.mutateAsync();
-      setMessage("Cancelamento agendado — acesso mantido até o fim do ciclo pago.");
+      setMessage(t("billing.manage.cancelScheduled"));
     } catch (cause) { setActionError(cause instanceof Error ? cause.message : t("billing.errors.cancel")); }
   }
   const reactivateMutation = useReactivateSubscription();
@@ -61,7 +61,7 @@ export default function SubscriptionManagement() {
     try {
       setActionError(""); setMessage("");
       await reactivateMutation.mutateAsync();
-      setMessage("Cancelamento revertido — acesso garantido até o fim do ciclo. Para continuar depois, faça um novo checkout.");
+      setMessage(t("billing.manage.cancelledReverted"));
     } catch (cause) { setActionError(cause instanceof Error ? cause.message : t("billing.errors.reactivate")); }
   }
 
@@ -86,7 +86,7 @@ export default function SubscriptionManagement() {
 {overview && <ContractAndHistory overview={overview} />}
     {errorMessage && <Notice tone="error">{errorMessage}</Notice>}{message && <Notice tone="success"><CheckCircle2 className="size-4 shrink-0" />{message}</Notice>}
     {selected && <CheckoutCard selected={selected} overview={overview} saving={saving} billingType={billingType} nextDueDate={nextDueDate} couponCode={couponCode} onBillingType={setBillingType} onDueDate={setNextDueDate} onCoupon={setCouponCode} onClose={() => setSelected(null)} onConfirm={() => void requestChange()} />}
-    <div><p className="text-[11px] font-bold uppercase tracking-wider text-orange-600">Planos disponíveis · {overview.market?.country ?? "BR"} / {overview.market?.currency ?? "BRL"}</p><h2 className="mt-1 text-lg font-black text-slate-950">Escolha o plano ideal</h2><div className="mt-4 grid gap-4 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-5">{subscriptionPlans.map((plan) => <PlanCard key={plan.id} plan={plan} displayPrice={overview.plans.find((item) => item.id.toLowerCase() === plan.id)?.regionalPrice?.formatted} current={plan.id === currentPlanId && (plan.id === "free" || (overview.status !== "CANCELLED" && overview.provider.subscriptionConnected))} onSelect={setSelected} />)}</div></div>
+    <div><p className="text-[11px] font-bold uppercase tracking-wider text-orange-600">{t("billing.manage.availablePlans", { market: `${overview.market?.country ?? "BR"} / ${overview.market?.currency ?? "BRL"}` })}</p><h2 className="mt-1 text-lg font-black text-slate-950">{t("billing.manage.choosePlan")}</h2><div className="mt-4 grid gap-4 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-5">{subscriptionPlans.map((plan) => <PlanCard key={plan.id} plan={plan} displayPrice={overview.plans.find((item) => item.id.toLowerCase() === plan.id)?.regionalPrice?.formatted} current={plan.id === currentPlanId && (plan.id === "free" || (overview.status !== "CANCELLED" && overview.provider.subscriptionConnected))} onSelect={setSelected} />)}</div></div>
     <div className="grid gap-4 xl:grid-cols-[1fr_300px]"><div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm"><div className="flex items-center justify-between border-b border-slate-200 px-5 py-3.5"><div><h2 className="text-sm font-bold text-slate-950">Cobranças</h2><p className="text-[10px] text-slate-400">Histórico recebido do Asaas</p></div><FileText className="size-4 text-slate-400" /></div>{overview.invoices.length ? <div className="divide-y divide-slate-100">{overview.invoices.map((invoice) => <div key={invoice.id} className="flex items-center justify-between gap-4 px-5 py-3.5"><div><p className="text-xs font-bold text-slate-800">{formatCurrency(invoice.amount, locale)} · {formatDate(invoice.dueDate)}</p><p className="mt-1 text-[10px] text-slate-400">{invoice.billingType ?? t("billing.provider.billing")} · {t(`billing.history.${invoiceStatus(invoice.status)}`)}</p></div>{(invoice.status === "PENDING" || invoice.status === "OVERDUE") ? (invoice.invoiceUrl || invoice.bankSlipUrl) && <a href={invoice.invoiceUrl ?? invoice.bankSlipUrl!} target="_blank" rel="noreferrer" className="flex items-center gap-1 rounded-lg bg-orange-600 px-2.5 py-1.5 text-[10px] font-black text-white hover:bg-orange-700">2ª via <ExternalLink className="size-3" /></a> : invoice.invoiceUrl && <a href={invoice.invoiceUrl} target="_blank" rel="noreferrer" className="flex items-center gap-1 text-[10px] font-bold text-orange-700">Ver fatura <ExternalLink className="size-3" /></a>}</div>)}</div> : <div className="p-8 text-center text-xs text-slate-400">Nenhuma cobrança recebida.</div>}</div><div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm"><CreditCard className="size-5 text-orange-600" /><h2 className="mt-3 text-sm font-bold text-slate-950">Asaas</h2><p className="mt-1 text-[10px] leading-4 text-slate-500">{overview.provider.configured ? `${overview.provider.environment === "sandbox" ? t("billing.provider.sandbox") : t("billing.provider.production")} configurado. Cobranças via PIX e boleto.` : "Integração não configurada. Nenhuma cobrança externa será criada."}</p><div className={`mt-3 rounded-lg px-3 py-2 text-[10px] font-bold ${overview.provider.configured ? "bg-green-50 text-green-700" : "bg-amber-50 text-amber-700"}`}>{overview.provider.configured ? "Provedor disponível" : t("billing.provider.credentialPending")}</div><button disabled={saving || !overview.provider.subscriptionConnected || overview.status === "CANCELLED"} onClick={() => void requestCancellation()} className="mt-4 h-10 w-full rounded-xl text-xs font-bold text-red-600 hover:bg-red-50 disabled:opacity-40">{t("billing.actions.cancel")}</button></div></div>
   </section>;
 }

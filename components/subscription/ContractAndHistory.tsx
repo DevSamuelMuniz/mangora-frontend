@@ -1,19 +1,21 @@
 "use client";
 
+import { useT } from "@/i18n/provider";
+
 import { ArrowDownRight, ArrowUpRight, FileClock, Minus, ScrollText } from "lucide-react";
 
 import { formatCurrency, formatDateTime } from "@/lib/format";
 import type { SubscriptionOverview } from "@/types/subscription";
 
-const historyMeta: Record<SubscriptionOverview["history"][number]["type"], { label: string; tone: string }> = {
-  CREATED: { label: "Conta criada", tone: "bg-slate-100 text-slate-600" },
-  PLAN_CHANGE_REQUESTED: { label: "Troca de plano solicitada", tone: "bg-amber-100 text-amber-800" },
-  PLAN_CHANGED: { label: "Plano ativado", tone: "bg-green-100 text-green-800" },
-  PRICE_CHANGED: { label: "Preço atualizado", tone: "bg-blue-100 text-blue-800" },
-  DISCOUNT_UPDATED: { label: "Desconto atualizado", tone: "bg-violet-100 text-violet-800" },
-  CANCELLATION_REQUESTED: { label: "Cancelamento solicitado", tone: "bg-red-100 text-red-800" },
-  CANCELLED: { label: "Assinatura cancelada", tone: "bg-red-100 text-red-800" },
-  REACTIVATED: { label: "Assinatura reativada", tone: "bg-green-100 text-green-800" },
+const historyTone: Record<SubscriptionOverview["history"][number]["type"], string> = {
+  CREATED: "bg-slate-100 text-slate-600",
+  PLAN_CHANGE_REQUESTED: "bg-amber-100 text-amber-800",
+  PLAN_CHANGED: "bg-green-100 text-green-800",
+  PRICE_CHANGED: "bg-blue-100 text-blue-800",
+  DISCOUNT_UPDATED: "bg-violet-100 text-violet-800",
+  CANCELLATION_REQUESTED: "bg-red-100 text-red-800",
+  CANCELLED: "bg-red-100 text-red-800",
+  REACTIVATED: "bg-green-100 text-green-800",
 };
 
 function planName(id: string | null, overview: SubscriptionOverview) {
@@ -24,6 +26,7 @@ function planName(id: string | null, overview: SubscriptionOverview) {
 
 /** Contrato (versão congelada do catálogo) + extrato do histórico de assinatura. */
 export default function ContractAndHistory({ overview }: { overview: SubscriptionOverview }) {
+  const t = useT();
   const snapshot = overview.contract.planSnapshot as null | { version?: number; plan?: string; name?: string } | undefined;
 
   return (
@@ -33,12 +36,12 @@ export default function ContractAndHistory({ overview }: { overview: Subscriptio
           <span className="flex size-8 items-center justify-center rounded-lg bg-orange-50 text-orange-600"><ScrollText className="size-4" /></span>
           <div>
             <h2 className="text-sm font-black text-slate-950">Seu contrato</h2>
-            <p className="mt-0.5 text-[10px] text-slate-500">Preço e limites foram congelados quando o plano foi ativado.</p>
+            <p className="mt-0.5 text-[10px] text-slate-500">{t("billing.contract.frozen")}</p>
           </div>
         </div>
         <span className="inline-flex w-fit items-center gap-1.5 rounded-full border border-[#123d2b]/15 bg-[#fff8ea] px-3 py-1.5 font-mono text-[10px] font-bold text-[#123d2b]">
           <FileClock className="size-3.5 text-[#ff6b1a]" />
-          Catálogo v{overview.contract.planCatalogVersion} · {snapshot?.name ?? planName(overview.plan, overview)} · congelado
+          {t("billing.contract.catalog", { version: overview.contract.planCatalogVersion, plan: snapshot?.name ?? planName(overview.plan, overview) ?? "" })}
         </span>
       </div>
 
@@ -46,13 +49,13 @@ export default function ContractAndHistory({ overview }: { overview: Subscriptio
         {(overview.history?.length ?? 0) > 0 ? (
           <ol className="relative space-y-1">
             {overview.history.map((entry) => {
-              const meta = historyMeta[entry.type];
+              const tone = historyTone[entry.type];
               const Delta = entry.toPrice !== null && entry.fromPrice !== null && entry.toPrice > entry.fromPrice ? ArrowUpRight : entry.toPrice !== null && entry.fromPrice !== null && entry.toPrice < entry.fromPrice ? ArrowDownRight : null;
               return (
                 <li key={entry.id} className="relative flex items-center gap-3 rounded-xl px-2 py-2.5 hover:bg-slate-50">
-                  <span className={`flex size-7 shrink-0 items-center justify-center rounded-lg text-[9px] font-black ${meta.tone}`}>{entry.type === "PLAN_CHANGED" ? "OK" : entry.type === "CANCELLED" ? "×" : "·"}</span>
+                  <span className={`flex size-7 shrink-0 items-center justify-center rounded-lg text-[9px] font-black ${tone}`}>{entry.type === "PLAN_CHANGED" ? "OK" : entry.type === "CANCELLED" ? "×" : "·"}</span>
                   <div className="min-w-0 flex-1">
-                    <p className="text-xs font-bold text-slate-800">{meta.label}
+                    <p className="text-xs font-bold text-slate-800">{t(`billing.history.${entry.type}`)}
                       {entry.fromPlan && entry.toPlan && entry.toPlan !== entry.fromPlan && <span className="font-medium text-slate-400"> · {planName(entry.fromPlan, overview)} → {planName(entry.toPlan, overview)}</span>}
                     </p>
                     <p className="mt-0.5 text-[10px] text-slate-400">{formatDateTime(new Date(entry.createdAt))} · {entry.userName}{entry.notes ? ` · ${entry.notes}` : ""}</p>
@@ -69,7 +72,7 @@ export default function ContractAndHistory({ overview }: { overview: Subscriptio
             })}
           </ol>
         ) : (
-          <p className="py-4 text-center text-xs text-slate-400">Nenhuma movimentação registrada ainda.</p>
+          <p className="py-4 text-center text-xs text-slate-400">{t("billing.contract.empty")}</p>
         )}
       </div>
     </article>

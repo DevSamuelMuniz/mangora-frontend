@@ -60,5 +60,20 @@
     "confirm": "Cancelar venda"
   },
   "cancelFailed": "Não foi possível cancelar a venda.",
-  "cancelSuccess": "Venda {code} cancelada — inventário e finanças revertidos."
+  "cancelSuccess": "Venda {code} cancelada — inventário e finanças revertidos.",
+  "returnForm": {
+    "eyebrow": "Devolução parcial",
+    "title": "Devolver artigos",
+    "sold": "Vendido {quantity}",
+    "reason": "Motivo da devolução",
+    "selected": "{count} artigo(s) selecionado(s)",
+    "submit": "Registar devolução",
+    "submitting": "A registar...",
+    "success": "Devolução registada",
+    "errors": {
+      "reason": "Indique o motivo da devolução (mínimo 3 caracteres).",
+      "request": "Não foi possível registar a devolução."
+    },
+    "titleOf": "Devolver artigos de {code}"
+  }
 }
