@@ -11,8 +11,10 @@ import {
 } from "lucide-react";
 import { apiRequest } from "@/lib/api/client";
 import BrandLogo from "@/components/brand/BrandLogo";
+import { useT } from "@/i18n/provider";
 
 export default function PasswordRecoveryPage() {
+  const t = useT();
   const [loading, setLoading] = useState(false);
   const [sentTo, setSentTo] = useState("");
   const [previewUrl, setPreviewUrl] = useState("");
@@ -27,7 +29,7 @@ export default function PasswordRecoveryPage() {
       setLoading(true); setError("");
       const result = await apiRequest<{ previewUrl?: string }>("/auth/password-reset/request", { method: "POST", body: JSON.stringify({ email }) });
       setPreviewUrl(result.previewUrl ?? ""); setSentTo(email);
-    } catch (cause) { setError(cause instanceof Error ? cause.message : "Não foi possível solicitar a recuperação."); }
+    } catch (cause) { setError(cause instanceof Error ? cause.message : t("publicPages.recoverPassword.error")); }
     finally { setLoading(false); }
   }
 
@@ -45,15 +47,15 @@ export default function PasswordRecoveryPage() {
                 <CheckCircle2 className="size-7" />
               </span>
               <h1 className="mt-5 text-2xl font-black tracking-tight text-slate-950">
-                Verifique seu e-mail
+                {t("publicPages.recoverPassword.sentTitle")}
               </h1>
               <p className="mt-3 text-sm leading-6 text-slate-500">
-                Se existir uma conta para <strong className="text-slate-700">{sentTo}</strong>, enviaremos as instruções de recuperação.
+                {t("publicPages.recoverPassword.sentPrefix")} <strong className="text-slate-700">{sentTo}</strong>, {t("publicPages.recoverPassword.sentSuffix")}
               </p>
               <Link href="/login" className="mt-6 flex h-11 items-center justify-center rounded-xl bg-orange-600 text-sm font-bold text-white transition hover:bg-orange-700">
-                Voltar para o login
+                {t("publicPages.recoverPassword.backToLogin")}
               </Link>
-              {previewUrl && <Link href={previewUrl} className="mt-3 flex h-11 items-center justify-center rounded-xl border border-amber-300 bg-amber-50 text-xs font-bold text-amber-800">Abrir link de desenvolvimento</Link>}
+              {previewUrl && <Link href={previewUrl} className="mt-3 flex h-11 items-center justify-center rounded-xl border border-amber-300 bg-amber-50 text-xs font-bold text-amber-800">{t("publicPages.recoverPassword.devLink")}</Link>}
             </div>
           ) : (
             <>
@@ -61,22 +63,22 @@ export default function PasswordRecoveryPage() {
                 <ShieldCheck className="size-6" />
               </span>
               <h1 className="mt-5 text-2xl font-black tracking-tight text-slate-950">
-                Recupere seu acesso
+                {t("publicPages.recoverPassword.requestTitle")}
               </h1>
               <p className="mt-2 text-sm leading-6 text-slate-500">
-                Informe o e-mail da sua conta para receber as instruções de redefinição de senha.
+                {t("publicPages.recoverPassword.requestCopy")}
               </p>
 
               <form onSubmit={handleSubmit} className="mt-6">
                 <label htmlFor="recovery-email" className="mb-2 block text-xs font-bold text-slate-700">
-                  E-mail
+                  {t("publicPages.recoverPassword.emailLabel")}
                 </label>
                 <div className="relative">
                   <Mail className="pointer-events-none absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-slate-400" />
-                  <input id="recovery-email" name="email" type="email" required autoComplete="email" placeholder="voce@empresa.com" className="h-12 w-full rounded-xl border border-slate-200 bg-white pl-10 pr-4 text-sm outline-none transition focus:border-orange-400 focus:ring-4 focus:ring-orange-100" />
+                  <input id="recovery-email" name="email" type="email" required autoComplete="email" placeholder={t("publicPages.recoverPassword.emailPlaceholder")} className="h-12 w-full rounded-xl border border-slate-200 bg-white pl-10 pr-4 text-sm outline-none transition focus:border-orange-400 focus:ring-4 focus:ring-orange-100" />
                 </div>
                 <button type="submit" disabled={loading} className="mt-4 flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-orange-600 to-amber-600 text-sm font-bold text-white shadow-lg shadow-orange-200 transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-70">
-                  {loading ? <><LoaderCircle className="size-4 animate-spin" /> Enviando...</> : "Enviar instruções"}
+                  {loading ? <><LoaderCircle className="size-4 animate-spin" /> {t("publicPages.recoverPassword.submitting")}</> : t("publicPages.recoverPassword.submit")}
                 </button>
               </form>
               {error && <div role="alert" className="mt-4 rounded-xl border border-red-200 bg-red-50 p-3 text-xs font-semibold text-red-700">{error}</div>}
@@ -86,7 +88,7 @@ export default function PasswordRecoveryPage() {
 
         <Link href="/login" className="mx-auto mt-6 flex w-fit items-center gap-2 text-sm font-bold text-slate-500 transition hover:text-orange-700">
           <ArrowLeft className="size-4" />
-          Voltar para o login
+          {t("publicPages.recoverPassword.backToLogin")}
         </Link>
       </div>
     </main>

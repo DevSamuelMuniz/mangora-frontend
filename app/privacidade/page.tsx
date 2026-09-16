@@ -1,19 +1,41 @@
 import type { Metadata } from "next";
 import PublicInfoPage from "@/components/public/PublicInfoPage";
+import { getTranslator } from "@/i18n/server";
 
-export const metadata: Metadata = { title: "Política de privacidade", description: "Entenda como a Mangora coleta, utiliza e protege informações pessoais.", alternates: { canonical: "/privacidade" } };
+export async function generateMetadata(): Promise<Metadata> {
+  const { t } = await getTranslator();
+  return {
+    title: t("publicPages.privacy.metaTitle"),
+    description: t("publicPages.privacy.metaDescription"),
+    alternates: { canonical: "/privacidade" },
+  };
+}
 
-export default function PrivacyPage() {
+export default async function PrivacyPage() {
+  const { t } = await getTranslator();
   return (
     <PublicInfoPage
-      eyebrow="Privacidade"
-      title="Política de privacidade"
-      description="Saiba quais dados utilizamos, por que eles são necessários e quais controles estão disponíveis para sua empresa."
-      updatedAt="17 de julho de 2026"
+      eyebrow={t("publicPages.privacy.eyebrow")}
+      title={t("publicPages.privacy.title")}
+      description={t("publicPages.privacy.description")}
+      updatedAt={t("publicPages.privacy.updatedAt")}
+      backHomeLabel={t("publicPages.support.backHome")}
+      updatedLabel={t("publicPages.support.updatedLabel")}
+      createAccountLabel={t("publicPages.common.createAccount")}
+      loginLabel={t("publicPages.common.login")}
       sections={[
-        { title: "Dados coletados", paragraphs: ["Coletamos os dados informados no cadastro e os registros necessários para oferecer os recursos contratados."], items: ["Dados de identificação e contato.", "Informações da empresa e dos usuários autorizados.", "Registros técnicos de acesso e segurança."] },
-        { title: "Como utilizamos", paragraphs: ["Os dados são utilizados para autenticar usuários, entregar funcionalidades, prestar suporte, melhorar a experiência e proteger a plataforma."], items: ["Não comercializamos dados pessoais.", "O acesso interno segue critérios de necessidade.", "Fornecedores devem cumprir requisitos de proteção."] },
-        { title: "Seus direitos", paragraphs: ["Você pode solicitar informações, correção, portabilidade ou exclusão de dados, observados os prazos legais e obrigações de retenção aplicáveis."], items: ["Confirmação e acesso aos dados.", "Correção de informações incompletas.", "Revogação de consentimento quando aplicável."] },
+        {
+          title: t("publicPages.privacy.sections.collectedTitle"),
+          paragraphs: [t("publicPages.privacy.sections.collectedBody")],
+        },
+        {
+          title: t("publicPages.privacy.sections.usageTitle"),
+          paragraphs: [t("publicPages.privacy.sections.usageBody")],
+        },
+        {
+          title: t("publicPages.privacy.sections.rightsTitle"),
+          paragraphs: [t("publicPages.privacy.sections.rightsBody")],
+        },
       ]}
     />
   );

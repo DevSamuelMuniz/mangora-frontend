@@ -4,7 +4,7 @@ import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 
 import { defaultLocale, locales, normalizeLocale, resolveLocale } from "@/i18n/config";
-import { fallbackChain, translate } from "@/i18n/runtime";
+import { fallbackChain, translate, translateList } from "@/i18n/runtime";
 import { formatCurrency, formatDate, formatNumber, formatPercent, formatPercentage } from "@/lib/format";
 
 describe("resolveLocale", () => {
@@ -50,6 +50,15 @@ describe("translate", () => {
 
   it("devolve a chave quando a tradução não existe", () => {
     expect(translate(messages, "missing.key")).toBe("missing.key");
+  });
+
+  it("resolve itens de listas por índice (ex.: páginas informativas)", () => {
+    const list = { support: { items: ["Primeiro", "Segundo"] } };
+    expect(translate(list, "support.items.0")).toBe("Primeiro");
+    expect(translate(list, "support.items.1")).toBe("Segundo");
+    expect(translate(list, "support.items.9")).toBe("support.items.9");
+    expect(translateList(list, "support.items")).toEqual(["Primeiro", "Segundo"]);
+    expect(translateList(list, "support.missing")).toEqual([]);
   });
 });
 

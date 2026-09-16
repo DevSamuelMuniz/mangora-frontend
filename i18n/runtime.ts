@@ -7,10 +7,33 @@ function lookup(messages: Messages, key: string): string | undefined {
   const segments = key.split(".");
   let current: unknown = messages;
   for (const segment of segments) {
+    if (Array.isArray(current)) {
+      const index = Number(segment);
+      if (!Number.isInteger(index) || index < 0 || index >= current.length) return undefined;
+      current = current[index];
+      continue;
+    }
     if (typeof current !== "object" || current === null) return undefined;
     current = (current as Record<string, unknown>)[segment];
   }
   return typeof current === "string" ? current : undefined;
+}
+
+/** Lista de strings de uma chave (para itens de páginas informativas). */
+export function translateList(messages: Messages, key: string): string[] {
+  const segments = key.split(".");
+  let current: unknown = messages;
+  for (const segment of segments) {
+    if (Array.isArray(current)) {
+      const index = Number(segment);
+      if (!Number.isInteger(index) || index < 0 || index >= current.length) return [];
+      current = current[index];
+      continue;
+    }
+    if (typeof current !== "object" || current === null) return [];
+    current = (current as Record<string, unknown>)[segment];
+  }
+  return Array.isArray(current) ? current.filter((item): item is string => typeof item === "string") : [];
 }
 
 function interpolate(template: string, params?: Record<string, string | number>) {
