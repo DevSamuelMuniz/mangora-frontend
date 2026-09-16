@@ -1,6 +1,7 @@
 "use client";
 
 import { FormEvent, useEffect, useState, type ReactNode } from "react";
+import { useT } from "@/i18n/provider";
 import { AlertCircle, Eye, EyeOff, KeyRound, LoaderCircle, LockKeyhole, ShieldCheck, X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { apiRequest, rememberOperationPassword } from "@/lib/api/client";
@@ -20,6 +21,7 @@ const sizes = {
 };
 
 export default function WorkspaceModal({ children, closeHref, label, size = "large" }: WorkspaceModalProps) {
+  const t = useT();
   const router = useRouter();
   const { data: settings, isLoading } = useCompanySettings();
   const policy = ["/produtos", "/clientes", "/fornecedores", "/servicos", "/funcionarios"].includes(closeHref) ? "records" : closeHref === "/estoque" ? "stock" : null;
@@ -43,7 +45,7 @@ export default function WorkspaceModal({ children, closeHref, label, size = "lar
       setPassword("");
       setUnlocked(true);
     } catch (cause) {
-      setError(cause instanceof Error ? cause.message : "Não foi possível confirmar sua senha.");
+      setError(cause instanceof Error ? cause.message : t("forms.modal.passwordFailed"));
     } finally {
       setVerifying(false);
     }
@@ -84,8 +86,8 @@ export default function WorkspaceModal({ children, closeHref, label, size = "lar
                   <LockKeyhole className="size-5" />
                 </span>
                 <div className="min-w-0">
-                  <p className="text-[10px] font-black uppercase tracking-[0.18em] text-orange-300">Confirmação de segurança</p>
-                  <h2 className="mt-0.5 truncate text-lg font-black sm:text-xl">Confirme que é você</h2>
+                  <p className="text-[10px] font-black uppercase tracking-[0.18em] text-orange-300">{t("forms.modal.securityHint")}</p>
+                  <h2 className="mt-0.5 truncate text-lg font-black sm:text-xl">{t("forms.modal.confirmWithPassword")}</h2>
                 </div>
               </div>
 
@@ -93,7 +95,7 @@ export default function WorkspaceModal({ children, closeHref, label, size = "lar
                 <div className="flex items-start gap-3 rounded-2xl border border-orange-200 bg-orange-50 px-4 py-3">
                   <span className="mt-0.5 h-8 w-1 shrink-0 rounded-full bg-orange-500" aria-hidden="true" />
                   <div>
-                    <p className="text-[10px] font-black uppercase tracking-[0.15em] text-orange-700">Ação solicitada</p>
+                    <p className="text-[10px] font-black uppercase tracking-[0.15em] text-orange-700">{t("forms.modal.actionRequested")}</p>
                     <p className="mt-0.5 text-sm font-black text-[#173d2b]">{label}</p>
                   </div>
                 </div>
@@ -124,7 +126,7 @@ export default function WorkspaceModal({ children, closeHref, label, size = "lar
                     aria-invalid={Boolean(error)}
                     aria-describedby={`operation-password-help${capsLock ? " operation-password-caps" : ""}${error ? " operation-password-error" : ""}`}
                     className="h-12 w-full rounded-xl border border-[#173d2b]/20 bg-white pl-10 pr-12 text-base font-semibold text-[#173d2b] outline-none transition placeholder:text-[#597064]/55 focus:border-orange-500 focus:ring-4 focus:ring-orange-100"
-                    placeholder="Digite sua senha"
+                    placeholder={t("forms.modal.passwordPlaceholder")}
                   />
                   <button
                     type="button"
@@ -157,7 +159,7 @@ export default function WorkspaceModal({ children, closeHref, label, size = "lar
                   </button>
                   <button disabled={verifying || !password} className="flex h-12 flex-[1.4] items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-orange-600 to-amber-500 px-5 text-sm font-black text-white shadow-[0_8px_20px_rgba(234,88,12,0.25)] transition hover:-translate-y-0.5 hover:shadow-[0_12px_24px_rgba(234,88,12,0.3)] disabled:translate-y-0 disabled:cursor-not-allowed disabled:opacity-50">
                     {verifying ? <LoaderCircle className="size-4 animate-spin" /> : <ShieldCheck className="size-4" />}
-                    {verifying ? "Confirmando..." : "Confirmar e abrir"}
+                    {verifying ? t("forms.modal.confirming") : "Confirmar e abrir"}
                   </button>
                 </div>
 

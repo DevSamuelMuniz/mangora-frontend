@@ -1,0 +1,51 @@
+{
+  "modal": {
+    "actionRequested": "Ação solicitada",
+    "confirmWithPassword": "Confirme que é você",
+    "securityHint": "Confirmação de segurança",
+    "passwordPlaceholder": "Digite sua senha",
+    "confirm": "Confirmar e abrir",
+    "confirming": "Confirmando...",
+    "showPassword": "Mostrar senha",
+    "hidePassword": "Ocultar senha",
+    "capsLock": "CapsLock",
+    "passwordFailed": "Não foi possível confirmar sua senha."
+  },
+  "sale": {
+    "title": "Nova venda",
+    "eyebrow": "Comercial",
+    "subtitle": "Selecione os itens e confira o resumo antes de finalizar.",
+    "back": "Voltar para vendas",
+    "searchLabel": "Buscar produtos para venda",
+    "searchPlaceholder": "Buscar produto por nome ou SKU...",
+    "searchHint": "Busque pelo nome ou SKU e adicione ao carrinho.",
+    "loadingProducts": "Carregando produtos...",
+    "emptyCart": "Carrinho vazio",
+    "emptyCartHint": "Adicione produtos para iniciar a venda.",
+    "noProduct": "Nenhum produto disponível para esta busca.",
+    "selectProducts": "Selecionar produtos",
+    "items": "Itens da venda",
+    "summary": "Resumo da venda",
+    "summaryHint": "Cliente, pagamento e totais.",
+    "customer": "Cliente (opcional)",
+    "finalConsumer": "Consumidor final",
+    "paymentMethod": "Forma de pagamento",
+    "select": "Selecione",
+    "dueDate": "Vencimento",
+    "discount": "Desconto",
+    "subtotal": "Subtotal",
+    "total": "Total",
+    "submit": "Finalizar venda",
+    "submitting": "Finalizando...",
+    "noStockControl": "Sem controle de estoque",
+    "created": "Venda registrada",
+    "errors": {
+      "empty": "Adicione pelo menos um item à venda.",
+      "payment": "Selecione uma forma de pagamento.",
+      "dueDate": "Informe o vencimento do pagamento.",
+      "creditCustomer": "Selecione o cliente para registrar cheque ou venda fiada.",
+      "discount": "O desconto não pode ser maior que o subtotal.",
+      "submit": "Não foi possível concluir a venda."
+    }
+  }
+}

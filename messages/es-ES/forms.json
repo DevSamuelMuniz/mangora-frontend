@@ -1,0 +1,51 @@
+{
+  "modal": {
+    "actionRequested": "Acción solicitada",
+    "confirmWithPassword": "Confirma que eres tú",
+    "securityHint": "Confirmación de seguridad",
+    "passwordPlaceholder": "Escribe tu contraseña",
+    "confirm": "Confirmar y abrir",
+    "confirming": "Confirmando...",
+    "showPassword": "Mostrar contraseña",
+    "hidePassword": "Ocultar contraseña",
+    "capsLock": "CapsLock",
+    "passwordFailed": "No se pudo confirmar tu contraseña."
+  },
+  "sale": {
+    "title": "Nueva venta",
+    "eyebrow": "Comercial",
+    "subtitle": "Selecciona los artículos y revisa el resumen antes de finalizar.",
+    "back": "Volver a ventas",
+    "searchLabel": "Buscar productos para venta",
+    "searchPlaceholder": "Buscar producto por nombre o SKU...",
+    "searchHint": "Busca por nombre o SKU y añade al carrito.",
+    "loadingProducts": "Cargando productos...",
+    "emptyCart": "Carrito vacío",
+    "emptyCartHint": "Añade productos para iniciar la venta.",
+    "noProduct": "Ningún producto disponible para esta búsqueda.",
+    "selectProducts": "Seleccionar productos",
+    "items": "Artículos de la venta",
+    "summary": "Resumen de la venta",
+    "summaryHint": "Cliente, pago y totales.",
+    "customer": "Cliente (opcional)",
+    "finalConsumer": "Consumidor final",
+    "paymentMethod": "Forma de pago",
+    "select": "Selecciona",
+    "dueDate": "Vencimiento",
+    "discount": "Descuento",
+    "subtotal": "Subtotal",
+    "total": "Total",
+    "submit": "Finalizar venta",
+    "submitting": "Finalizando...",
+    "noStockControl": "Sin control de inventario",
+    "created": "Venta registrada",
+    "errors": {
+      "empty": "Añade al menos un artículo a la venta.",
+      "payment": "Selecciona una forma de pago.",
+      "dueDate": "Indica el vencimiento del pago.",
+      "creditCustomer": "Selecciona el cliente para registrar cheque o venta a crédito.",
+      "discount": "El descuento no puede superar el subtotal.",
+      "submit": "No se pudo completar la venta."
+    }
+  }
+}

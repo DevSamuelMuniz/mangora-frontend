@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useI18n, useT } from "@/i18n/provider";
 import { useRouter } from "next/navigation";
 import { type ReactNode, useMemo, useState } from "react";
 import {
@@ -31,6 +32,8 @@ type CartItem = {
 const paymentMethods: PaymentMethod[] = ["PIX", "CREDIT_CARD", "DEBIT_CARD", "CASH", "BOLETO", "CHECK", "STORE_CREDIT"];
 
 export default function NewSaleForm() {
+  const t = useT();
+  const { locale } = useI18n();
   const router = useRouter();
   const { data: options, isLoading: loadingOptions, error: optionsError } = useSaleOptions();
   const createSale = useCreateSale();
@@ -83,24 +86,24 @@ export default function NewSaleForm() {
     setError("");
 
     if (!cart.length) {
-      setError("Adicione pelo menos um item à venda.");
+      setError(t("forms.sale.errors.empty"));
       return;
     }
     if (!paymentMethod) {
-      setError("Selecione uma forma de pagamento.");
+      setError(t("forms.sale.errors.payment"));
       return;
     }
     const deferredPayment = paymentMethod === "CHECK" || paymentMethod === "STORE_CREDIT";
     if (deferredPayment && !customerId) {
-      setError("Selecione o cliente para registrar cheque ou venda fiada.");
+      setError(t("forms.sale.errors.creditCustomer"));
       return;
     }
     if (deferredPayment && !dueDate) {
-      setError("Informe o vencimento do pagamento.");
+      setError(t("forms.sale.errors.dueDate"));
       return;
     }
     if (discountValue > subtotal) {
-      setError("O desconto não pode ser maior que o subtotal.");
+      setError(t("forms.sale.errors.discount"));
       return;
     }
 
@@ -113,9 +116,9 @@ export default function NewSaleForm() {
         items: cart.map((item) => ({ productId: item.product.id, quantity: item.quantity })),
       });
       toast.success(`Venda ${created.code} registrada.`);
-      router.push(`/vendas?selecionada=${created.id}&toast=${encodeURIComponent("Venda registrada")}`);
+      router.push(`/vendas?selecionada=${created.id}&toast=${encodeURIComponent(t("forms.sale.created"))}`);
     } catch (requestError) {
-      const message = requestError instanceof Error ? requestError.message : "Não foi possível concluir a venda.";
+      const message = requestError instanceof Error ? requestError.message : t("forms.sale.errors.submit");
       setError(message);
       toast.error(message);
     }
@@ -128,9 +131,9 @@ export default function NewSaleForm() {
           <ArrowLeft className="size-4" />
         </Link>
         <div>
-          <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-orange-600">Comercial</p>
-          <h1 className="mt-1 text-2xl font-black tracking-tight text-slate-950 sm:text-3xl">Nova venda</h1>
-          <p className="mt-1 text-xs text-slate-500">Selecione os itens e confira o resumo antes de finalizar.</p>
+          <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-orange-600">{t("forms.sale.eyebrow")}</p>
+          <h1 className="mt-1 text-2xl font-black tracking-tight text-slate-950 sm:text-3xl">{t("forms.sale.title")}</h1>
+          <p className="mt-1 text-xs text-slate-500">{t("forms.sale.subtitle")}</p>
         </div>
       </div>
 
@@ -139,18 +142,18 @@ export default function NewSaleForm() {
           <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:p-5">
             <div className="flex items-center gap-3 border-b border-slate-100 pb-4">
               <div className="flex size-9 items-center justify-center rounded-xl bg-orange-50 text-orange-600"><Package className="size-4" /></div>
-              <div><h2 className="text-sm font-bold text-slate-950">Selecionar produtos</h2><p className="mt-0.5 text-[10px] text-slate-400">Busque pelo nome ou SKU e adicione ao carrinho.</p></div>
+              <div><h2 className="text-sm font-bold text-slate-950">{t("forms.sale.selectProducts")}</h2><p className="mt-0.5 text-[10px] text-slate-400">{t("forms.sale.searchHint")}</p></div>
             </div>
 
             <label className="relative mt-4 block">
               <span className="sr-only">Buscar produtos para venda</span>
               <Search className="pointer-events-none absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-slate-400" />
-              <input type="search" value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Buscar produto por nome ou SKU..." className="h-11 w-full rounded-xl border border-slate-200 bg-slate-50 pl-10 pr-4 text-sm text-slate-950 outline-none transition placeholder:text-slate-400 focus:border-orange-300 focus:bg-white focus:ring-4 focus:ring-orange-100" />
+              <input type="search" value={search} onChange={(event) => setSearch(event.target.value)} placeholder={t("forms.sale.searchPlaceholder")} className="h-11 w-full rounded-xl border border-slate-200 bg-slate-50 pl-10 pr-4 text-sm text-slate-950 outline-none transition placeholder:text-slate-400 focus:border-orange-300 focus:bg-white focus:ring-4 focus:ring-orange-100" />
             </label>
 
             <div className="mt-4 grid gap-2 sm:grid-cols-2">
               {loadingOptions ? (
-                <div className="col-span-full flex items-center justify-center px-4 py-8 text-xs text-slate-500"><LoaderCircle className="mr-2 size-4 animate-spin text-orange-600" />Carregando produtos...</div>
+                <div className="col-span-full flex items-center justify-center px-4 py-8 text-xs text-slate-500"><LoaderCircle className="mr-2 size-4 animate-spin text-orange-600" />{t("forms.sale.loadingProducts")}</div>
               ) : availableProducts.length ? availableProducts.map((product) => {
                 const inCart = cart.find((item) => item.product.id === product.id)?.quantity ?? 0;
                 const availableStock = product.stock - product.reservedStock;
@@ -158,34 +161,34 @@ export default function NewSaleForm() {
                 return (
                   <button key={product.id} type="button" onClick={() => addProduct(product)} disabled={unavailable} className="group flex min-w-0 items-center gap-3 rounded-xl border border-slate-200 p-3 text-left transition hover:border-orange-200 hover:bg-orange-50/40 disabled:cursor-not-allowed disabled:opacity-50">
                     <div className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-slate-100 text-slate-500 group-hover:bg-orange-100 group-hover:text-orange-600"><Package className="size-4" /></div>
-                    <div className="min-w-0 flex-1"><p className="truncate text-xs font-bold text-slate-800">{product.name}</p><p className="mt-0.5 text-[9px] text-slate-400">{product.sku} · {product.trackStock ? `${availableStock} un. disponíveis` : "Sem controle de estoque"}</p></div>
-                    <div className="shrink-0 text-right"><p className="text-xs font-black text-slate-900">{formatCurrency(product.price)}</p><span className="mt-1 inline-flex size-5 items-center justify-center rounded-md bg-orange-50 text-orange-600"><Plus className="size-3" /></span></div>
+                    <div className="min-w-0 flex-1"><p className="truncate text-xs font-bold text-slate-800">{product.name}</p><p className="mt-0.5 text-[9px] text-slate-400">{product.sku} · {product.trackStock ? `${availableStock} un. disponíveis` : t("forms.sale.noStockControl")}</p></div>
+                    <div className="shrink-0 text-right"><p className="text-xs font-black text-slate-900">{formatCurrency(product.price, locale)}</p><span className="mt-1 inline-flex size-5 items-center justify-center rounded-md bg-orange-50 text-orange-600"><Plus className="size-3" /></span></div>
                   </button>
                 );
               }) : (
-                <div className="col-span-full rounded-xl border border-dashed border-slate-200 px-4 py-8 text-center text-xs text-slate-500">Nenhum produto disponível para esta busca.</div>
+                <div className="col-span-full rounded-xl border border-dashed border-slate-200 px-4 py-8 text-center text-xs text-slate-500">{t("forms.sale.noProduct")}</div>
               )}
             </div>
           </div>
 
           <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:p-5">
-            <div className="flex items-center justify-between gap-4"><div><h2 className="text-sm font-bold text-slate-950">Itens da venda</h2><p className="mt-0.5 text-[10px] text-slate-400">{itemCount} item(ns) selecionado(s)</p></div><ShoppingCart className="size-4 text-orange-600" /></div>
+            <div className="flex items-center justify-between gap-4"><div><h2 className="text-sm font-bold text-slate-950">{t("forms.sale.items")}</h2><p className="mt-0.5 text-[10px] text-slate-400">{itemCount} item(ns) selecionado(s)</p></div><ShoppingCart className="size-4 text-orange-600" /></div>
             <div className="mt-4 overflow-hidden rounded-xl border border-slate-200">
               {cart.length ? cart.map((item) => (
                 <div key={item.product.id} className="flex flex-col gap-3 border-b border-slate-100 p-3 last:border-0 sm:flex-row sm:items-center">
-                  <div className="min-w-0 flex-1"><p className="truncate text-xs font-bold text-slate-800">{item.product.name}</p><p className="mt-1 text-[10px] text-slate-400">{formatCurrency(item.product.price)} por unidade</p></div>
+                  <div className="min-w-0 flex-1"><p className="truncate text-xs font-bold text-slate-800">{item.product.name}</p><p className="mt-1 text-[10px] text-slate-400">{formatCurrency(item.product.price, locale)} por unidade</p></div>
                   <div className="flex items-center justify-between gap-4 sm:justify-end">
                     <div className="flex items-center rounded-xl border border-slate-200 bg-slate-50 p-1">
                       <button type="button" onClick={() => changeQuantity(item.product.id, -1)} aria-label={`Diminuir ${item.product.name}`} className="flex size-7 items-center justify-center rounded-lg text-slate-500 hover:bg-white"><Minus className="size-3" /></button>
                       <span className="w-8 text-center text-xs font-black text-slate-800">{item.quantity}</span>
                       <button type="button" onClick={() => changeQuantity(item.product.id, 1)} aria-label={`Aumentar ${item.product.name}`} className="flex size-7 items-center justify-center rounded-lg text-slate-500 hover:bg-white"><Plus className="size-3" /></button>
                     </div>
-                    <p className="w-24 text-right text-xs font-black text-slate-900">{formatCurrency(item.product.price * item.quantity)}</p>
+                    <p className="w-24 text-right text-xs font-black text-slate-900">{formatCurrency(item.product.price * item.quantity, locale)}</p>
                     <button type="button" onClick={() => setCart((current) => current.filter((cartItem) => cartItem.product.id !== item.product.id))} aria-label={`Remover ${item.product.name}`} className="flex size-8 items-center justify-center rounded-lg text-slate-400 hover:bg-red-50 hover:text-red-600"><Trash2 className="size-3.5" /></button>
                   </div>
                 </div>
               )) : (
-                <div className="flex min-h-36 flex-col items-center justify-center p-6 text-center"><ShoppingCart className="size-5 text-slate-300" /><p className="mt-2 text-xs font-bold text-slate-600">Carrinho vazio</p><p className="mt-1 text-[10px] text-slate-400">Adicione produtos para iniciar a venda.</p></div>
+                <div className="flex min-h-36 flex-col items-center justify-center p-6 text-center"><ShoppingCart className="size-5 text-slate-300" /><p className="mt-2 text-xs font-bold text-slate-600">{t("forms.sale.emptyCart")}</p><p className="mt-1 text-[10px] text-slate-400">{t("forms.sale.emptyCartHint")}</p></div>
               )}
             </div>
           </div>
@@ -193,37 +196,37 @@ export default function NewSaleForm() {
 
         <aside className="space-y-4 xl:sticky xl:top-20">
           <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:p-5">
-            <div className="flex items-center gap-3 border-b border-slate-100 pb-4"><div className="flex size-9 items-center justify-center rounded-xl bg-yellow-50 text-yellow-600"><WalletCards className="size-4" /></div><div><h2 className="text-sm font-bold text-slate-950">Resumo da venda</h2><p className="mt-0.5 text-[10px] text-slate-400">Cliente, pagamento e totais.</p></div></div>
+            <div className="flex items-center gap-3 border-b border-slate-100 pb-4"><div className="flex size-9 items-center justify-center rounded-xl bg-yellow-50 text-yellow-600"><WalletCards className="size-4" /></div><div><h2 className="text-sm font-bold text-slate-950">{t("forms.sale.summary")}</h2><p className="mt-0.5 text-[10px] text-slate-400">{t("forms.sale.summaryHint")}</p></div></div>
 
             <div className="mt-4 space-y-4">
-              <Field label="Cliente (opcional)" id="customerId">
+              <Field label={t("forms.sale.customer")} id="customerId">
                 <select id="customerId" value={customerId} onChange={(event) => setCustomerId(event.target.value)} className={inputClassName}>
-                  <option value="">Consumidor final</option>
+                  <option value="">{t("forms.sale.finalConsumer")}</option>
                   {customers.filter((customer) => customer.active).map((customer) => <option key={customer.id} value={customer.id}>{customer.tradeName || customer.name}</option>)}
                 </select>
               </Field>
-              <Field label="Forma de pagamento" id="paymentMethod">
+              <Field label={t("forms.sale.paymentMethod")} id="paymentMethod">
                 <select id="paymentMethod" value={paymentMethod} onChange={(event) => setPaymentMethod(event.target.value as PaymentMethod | "")} className={inputClassName}>
-                  <option value="">Selecione</option>
+                  <option value="">{t("forms.sale.select")}</option>
                   {paymentMethods.map((method) => <option key={method} value={method}>{paymentMethodLabels[method]}</option>)}
                 </select>
               </Field>
               {paymentMethod === "CASH" && <p className="rounded-xl bg-amber-50 p-3 text-[10px] leading-4 text-amber-700">Vendas em dinheiro são registradas no caixa aberto da empresa.</p>}
               {(paymentMethod === "CHECK" || paymentMethod === "STORE_CREDIT") && <>
                 <p className="rounded-xl bg-amber-50 p-3 text-[10px] leading-4 text-amber-700">O valor ficará em contas a receber e poderá ser baixado parcialmente.</p>
-                <Field label="Vencimento" id="dueDate"><input id="dueDate" type="date" required min={brazilDateKey()} value={dueDate} onChange={(event) => setDueDate(event.target.value)} className={inputClassName} /></Field>
+                <Field label={t("forms.sale.dueDate")} id="dueDate"><input id="dueDate" type="date" required min={brazilDateKey()} value={dueDate} onChange={(event) => setDueDate(event.target.value)} className={inputClassName} /></Field>
               </>}
-              <Field label="Desconto" id="discount">
+              <Field label={t("forms.sale.discount")} id="discount">
                 <div className="relative"><span className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-xs font-bold text-slate-400">R$</span><input id="discount" type="number" min="0" step="0.01" value={discount} onChange={(event) => setDiscount(event.target.value)} className={`${inputClassName} pl-10`} /></div>
               </Field>
             </div>
 
             <div className="my-5 h-px bg-slate-200" />
-            <dl className="space-y-3 text-xs"><div className="flex justify-between gap-4 text-slate-500"><dt>Subtotal</dt><dd className="font-bold text-slate-700">{formatCurrency(subtotal)}</dd></div><div className="flex justify-between gap-4 text-slate-500"><dt>Desconto</dt><dd className="font-bold text-red-600">- {formatCurrency(discountValue)}</dd></div><div className="flex items-end justify-between gap-4 border-t border-slate-100 pt-4"><dt className="font-bold text-slate-800">Total</dt><dd className="text-2xl font-black tracking-tight text-slate-950">{formatCurrency(total)}</dd></div></dl>
+            <dl className="space-y-3 text-xs"><div className="flex justify-between gap-4 text-slate-500"><dt>{t("forms.sale.subtotal")}</dt><dd className="font-bold text-slate-700">{formatCurrency(subtotal, locale)}</dd></div><div className="flex justify-between gap-4 text-slate-500"><dt>Desconto</dt><dd className="font-bold text-red-600">- {formatCurrency(discountValue, locale)}</dd></div><div className="flex items-end justify-between gap-4 border-t border-slate-100 pt-4"><dt className="font-bold text-slate-800">{t("forms.sale.total")}</dt><dd className="text-2xl font-black tracking-tight text-slate-950">{formatCurrency(total, locale)}</dd></div></dl>
 
             {errorMessage && <div role="alert" className="mt-4 rounded-xl border border-red-200 bg-red-50 px-3 py-2.5 text-xs font-semibold text-red-700">{errorMessage}</div>}
             <button type="button" disabled={createSale.isPending || loadingOptions} onClick={finishSale} className="mt-5 flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-orange-600 to-amber-600 px-4 text-sm font-bold text-white shadow-lg shadow-orange-200 transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-70 disabled:hover:translate-y-0">
-              {createSale.isPending ? <><LoaderCircle className="size-4 animate-spin" />Finalizando...</> : <><CheckCircle2 className="size-4" />Finalizar venda</>}
+              {createSale.isPending ? <><LoaderCircle className="size-4 animate-spin" />{t("forms.sale.submitting")}</> : <><CheckCircle2 className="size-4" />{t("forms.sale.submit")}</>}
             </button>
             <p className="mt-3 text-center text-[9px] leading-4 text-slate-400">Ao finalizar, a venda e a baixa de estoque são registradas juntas.</p>
           </div>

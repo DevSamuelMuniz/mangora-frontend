@@ -1,0 +1,51 @@
+{
+  "modal": {
+    "actionRequested": "Ação solicitada",
+    "confirmWithPassword": "Confirme que é você",
+    "securityHint": "Confirmação de segurança",
+    "passwordPlaceholder": "Introduza a sua palavra-passe",
+    "confirm": "Confirmar e abrir",
+    "confirming": "A confirmar...",
+    "showPassword": "Mostrar palavra-passe",
+    "hidePassword": "Ocultar palavra-passe",
+    "capsLock": "CapsLock",
+    "passwordFailed": "Não foi possível confirmar a sua palavra-passe."
+  },
+  "sale": {
+    "title": "Nova venda",
+    "eyebrow": "Comercial",
+    "subtitle": "Selecione os artigos e confira o resumo antes de finalizar.",
+    "back": "Voltar às vendas",
+    "searchLabel": "Pesquisar produtos para venda",
+    "searchPlaceholder": "Pesquisar produto por nome ou SKU...",
+    "searchHint": "Pesquise por nome ou SKU e adicione ao carrinho.",
+    "loadingProducts": "A carregar produtos...",
+    "emptyCart": "Carrinho vazio",
+    "emptyCartHint": "Adicione produtos para iniciar a venda.",
+    "noProduct": "Nenhum produto disponível para esta pesquisa.",
+    "selectProducts": "Selecionar produtos",
+    "items": "Artigos da venda",
+    "summary": "Resumo da venda",
+    "summaryHint": "Cliente, pagamento e totais.",
+    "customer": "Cliente (opcional)",
+    "finalConsumer": "Consumidor final",
+    "paymentMethod": "Forma de pagamento",
+    "select": "Selecione",
+    "dueDate": "Vencimento",
+    "discount": "Desconto",
+    "subtotal": "Subtotal",
+    "total": "Total",
+    "submit": "Finalizar venda",
+    "submitting": "A finalizar...",
+    "noStockControl": "Sem controlo de inventário",
+    "created": "Venda registada",
+    "errors": {
+      "empty": "Adicione pelo menos um artigo à venda.",
+      "payment": "Selecione uma forma de pagamento.",
+      "dueDate": "Indique o vencimento do pagamento.",
+      "creditCustomer": "Selecione o cliente para registar cheque ou venda a crédito.",
+      "discount": "O desconto não pode ser superior ao subtotal.",
+      "submit": "Não foi possível concluir a venda."
+    }
+  }
+}

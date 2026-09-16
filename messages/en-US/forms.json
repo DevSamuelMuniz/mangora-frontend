@@ -1,0 +1,51 @@
+{
+  "modal": {
+    "actionRequested": "Action requested",
+    "confirmWithPassword": "Confirm it is you",
+    "securityHint": "Security confirmation",
+    "passwordPlaceholder": "Type your password",
+    "confirm": "Confirm and open",
+    "confirming": "Confirming...",
+    "showPassword": "Show password",
+    "hidePassword": "Hide password",
+    "capsLock": "CapsLock",
+    "passwordFailed": "Could not confirm your password."
+  },
+  "sale": {
+    "title": "New sale",
+    "eyebrow": "Commercial",
+    "subtitle": "Select the items and review the summary before completing.",
+    "back": "Back to sales",
+    "searchLabel": "Search products for sale",
+    "searchPlaceholder": "Search product by name or SKU...",
+    "searchHint": "Search by name or SKU and add to the cart.",
+    "loadingProducts": "Loading products...",
+    "emptyCart": "Empty cart",
+    "emptyCartHint": "Add products to start the sale.",
+    "noProduct": "No product available for this search.",
+    "selectProducts": "Select products",
+    "items": "Sale items",
+    "summary": "Sale summary",
+    "summaryHint": "Customer, payment and totals.",
+    "customer": "Customer (optional)",
+    "finalConsumer": "Final consumer",
+    "paymentMethod": "Payment method",
+    "select": "Select",
+    "dueDate": "Due date",
+    "discount": "Discount",
+    "subtotal": "Subtotal",
+    "total": "Total",
+    "submit": "Complete sale",
+    "submitting": "Completing...",
+    "noStockControl": "No stock control",
+    "created": "Sale recorded",
+    "errors": {
+      "empty": "Add at least one item to the sale.",
+      "payment": "Select a payment method.",
+      "dueDate": "Enter the payment due date.",
+      "creditCustomer": "Select the customer to record a cheque or store credit.",
+      "discount": "The discount cannot exceed the subtotal.",
+      "submit": "Could not complete the sale."
+    }
+  }
+}
