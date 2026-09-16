@@ -132,7 +132,7 @@ export default function PaymentStep({
             <div className="grid gap-4 md:grid-cols-2">
                 <div>
                     <div className="flex items-center justify-between">
-                        <p className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-pdv-fg/70">Cliente {requireCustomer ? "(obrigatório)" : "(opcional)"}</p>
+                        <p className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-pdv-fg/70">Cliente {requireCustomer ? t("pdv.payment.required") : t("pdv.payment.optional")}</p>
                         <button type="button" onClick={onNewCustomer} className="flex h-7 items-center gap-1 rounded-lg border border-pdv-line bg-pdv-line px-2 text-[10px] font-bold text-pdv-fg transition hover:border-orange-400/50">
                             <UserPlus className="size-3" /> Novo cliente
                         </button>
@@ -205,14 +205,14 @@ export default function PaymentStep({
                 </div>
 
                 <div>
-                    <p className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-pdv-fg/70">Forma de pagamento {parts.length > 1 && "(2 métodos)"}</p>
+                    <p className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-pdv-fg/70">Forma de pagamento {parts.length > 1 && t("pdv.payment.twoMethods")}</p>
 
                     {parts.map((part, index) => (
                         <div key={index} className={`mt-2 rounded-xl border border-pdv-line bg-pdv-field p-3 ${parts.length === 1 ? "" : "border-pdv-gold/40"}`}>
                             <div className="flex items-center justify-between gap-2">
-                                <span className="font-mono text-[9px] font-bold uppercase tracking-[0.16em] text-pdv-fg/50">{index === 0 ? "1º método" : "2º método"}</span>
+                                <span className="font-mono text-[9px] font-bold uppercase tracking-[0.16em] text-pdv-fg/50">{index === 0 ? t("pdv.payment.first") : t("pdv.payment.second")}</span>
                                 {index === 1 && (
-                                    <button type="button" onClick={removeSecondMethod} aria-label="Remover 2º método" className="flex size-6 items-center justify-center rounded-md text-pdv-fg/50 transition hover:bg-red-500/10 hover:text-red-400">
+                                    <button type="button" onClick={removeSecondMethod} aria-label={t("pdv.payment.removeSecond")} className="flex size-6 items-center justify-center rounded-md text-pdv-fg/50 transition hover:bg-red-500/10 hover:text-red-400">
                                         <Trash2 className="size-3.5" />
                                     </button>
                                 )}
@@ -234,7 +234,7 @@ export default function PaymentStep({
                                         value={part.amount}
                                         onChange={(event) => updateAmount(index, event.target.value.replace(/[^\d,.]/g, "").slice(0, 10))}
                                         onFocus={(event) => event.target.select()}
-                                        aria-label={`Valor do ${index + 1}º pagamento`}
+                                        aria-label={t("pdv.payment.amountAria", { index: index + 1 })}
                                         className="h-11 w-24 shrink-0 rounded-lg border border-pdv-line bg-pdv-input px-2 text-right font-mono text-sm font-bold text-pdv-input-fg outline-none focus:border-pdv-gold"
                                     />
                                 )}
@@ -244,7 +244,7 @@ export default function PaymentStep({
 
                     {isSingle && (
                         <button type="button" onClick={addSecondMethod} className="mt-2 flex h-10 w-full items-center justify-center gap-1.5 rounded-xl border border-dashed border-pdv-line text-xs font-bold text-pdv-fg/80 transition hover:border-pdv-gold hover:text-pdv-gold">
-                            <Plus className="size-3.5" /> Dividir em 2 métodos de pagamento
+                            <Plus className="size-3.5" /> {t("pdv.payment.splitTwo")}
                         </button>
                     )}
                     {parts.length === 2 && (
@@ -294,7 +294,7 @@ export default function PaymentStep({
                                     {receivedAmount ? formatCurrency(Math.max(0, change)) : "—"}
                                 </strong>
                             </div>
-                            {insufficient && <p className="mt-1.5 text-center font-mono text-[10px] text-red-400">Dinheiro recebido menor que a parte em dinheiro — falta {formatCurrency(-change)}.</p>}
+                            {insufficient && <p className="mt-1.5 text-center font-mono text-[10px] text-red-400">{t("pdv.payment.insufficient", { missing: formatCurrency(-change) })}</p>}
                         </div>
                     )}
                 </div>
@@ -306,7 +306,7 @@ export default function PaymentStep({
                 disabled={payDisabled}
                 className="mt-1 flex h-16 w-full items-center justify-center gap-2 rounded-2xl bg-orange font-[family-name:var(--font-bricolage)] text-lg font-black text-white shadow-lg shadow-orange-950/50 transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-40"
             >
-                <ChevronRight className="size-5" />Efetuar pagamento — {formatCurrency(total)}
+                <ChevronRight className="size-5" />{t("pdv.payment.submit", { total: formatCurrency(total) })}
             </button>
 
             <p className="text-center font-mono text-[10px] text-pdv-fg/40">
@@ -315,7 +315,7 @@ export default function PaymentStep({
             </p>
             {parts.length === 2 && !splitValid && (
                 <p className="text-center font-mono text-[10px] text-red-400">
-                    <CheckCircle2 className="mr-1 inline size-3" />Os valores dos pagamentos não somam o total ({formatCurrency(total)}).
+                    <CheckCircle2 className="mr-1 inline size-3" />{t("pdv.payment.mismatch", { total: formatCurrency(total) })}
                 </p>
             )}
         </div>

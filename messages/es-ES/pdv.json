@@ -16,7 +16,8 @@
     "payment": "Pago",
     "done": "Finalizada",
     "reviewOf": "Paso 2 de 4",
-    "processing": "Confirmación"
+    "processing": "Confirmación",
+    "stepOf": "Etapa {step} de 4"
   },
   "scan": {
     "placeholder": "Escanea el código de barras — el producto se agrega automáticamente",
@@ -29,7 +30,8 @@
   "grid": {
     "empty": "No se encontraron productos",
     "hint": "Apunta el lector o escribe el código de barras.",
-    "service": "Servicio"
+    "service": "Servicio",
+    "available": "{count} disp."
   },
   "cart": {
     "title": "Artículos",
@@ -41,13 +43,15 @@
     "change": "Cambio",
     "received": "Importe recibido",
     "receipt": "recibo",
-    "items": "{count} artículo(s)"
+    "items": "{count} artículo(s)",
+    "discountMax": "Descuento (máx. {max}%)"
   },
   "review": {
     "title": "Confirma los artículos",
     "all": "Todos",
     "hint": "Después de confirmar, eliges el pago y finalizas.",
-    "confirmItems": "confirmar artículos"
+    "confirmItems": "confirmar artículos",
+    "confirmItemsTotal": "Confirmar artículos — {total}"
   },
   "payment": {
     "title": "Confirmar pago",
@@ -69,7 +73,12 @@
     "cash": "efectivo",
     "split": "Dividido en 2: {parts}",
     "nextHint": "Paga y confirma en el siguiente paso.",
-    "optionalPlaceholder": "Opcional"
+    "optionalPlaceholder": "Opcional",
+    "splitTwo": "Dividir en 2 métodos de pago",
+    "mismatch": "Los importes de los pagos no suman el total ({total}).",
+    "amountAria": "Importe del pago {index}",
+    "insufficient": "El efectivo recibido es menor que la parte en efectivo — faltan {missing}.",
+    "submit": "Realizar pago — {total}"
   },
   "newCustomer": {
     "title": "Nuevo cliente",
@@ -113,11 +122,30 @@
     "customerFailed": "No se pudo registrar el cliente.",
     "documentInvalid": "El documento debe tener 11 o 14 dígitos.",
     "nameTooShort": "Introduce un nombre con al menos 3 letras.",
-    "phoneInvalid": "Introduce un teléfono válido con prefijo."
+    "phoneInvalid": "Introduce un teléfono válido con prefijo.",
+    "emailInvalid": "Indica un correo válido."
   },
   "loading": {
     "finishing": "Finalizando venta...",
     "finishingShort": "Finalizando..."
   },
-  "keysHint": "enfocar búsqueda · confirmar lectura · confirmar artículos · cantidad · pantalla completa"
+  "keysHint": "enfocar búsqueda · confirmar lectura · confirmar artículos · cantidad · pantalla completa",
+  "preview": {
+    "title": "Vista previa"
+  },
+  "methods": {
+    "PIX": "PIX",
+    "CREDIT_CARD": "tarjeta de crédito",
+    "DEBIT_CARD": "tarjeta de débito",
+    "CASH": "efectivo",
+    "BOLETO": "recibo bancario",
+    "CHECK": "cheque",
+    "STORE_CREDIT": "crédito de tienda",
+    "BANK_TRANSFER": "transferencia",
+    "OTHER": "otro"
+  },
+  "shortcuts": "F2 o / enfocar búsqueda · Enter confirmar lectura · F4 confirmar artículos · +/− cantidad · ⛶ pantalla completa",
+  "register": {
+    "open": "Abierta · {name}"
+  }
 }

@@ -64,7 +64,7 @@ export default function PdvHeader({ session, theme, onThemeChange }: { session: 
     return (
         <header className="flex items-center justify-between gap-4 border-b border-pdv-line bg-pdv-panel px-5 py-3">
             <div className="flex min-w-0 items-center gap-4">
-                <Link href="/" aria-label="Mangora — página inicial" className="shrink-0">
+                <Link href="/" aria-label={t("landing.nav.home")} className="shrink-0">
                     <BrandLogo className="h-8" />
                 </Link>
                 <div className="min-w-0">
@@ -87,7 +87,7 @@ export default function PdvHeader({ session, theme, onThemeChange }: { session: 
                 </div>
                 <div className={`hidden rounded-xl px-4 py-2 text-right sm:block ${register?.status === "OPEN" ? "bg-pdv-ok/15 text-pdv-ok" : "bg-pdv-warn/15 text-pdv-warn"}`}>
                     <p className="font-mono text-[10px] text-pdv-fg/80">{t("pdv.cashRegister")}</p>
-                    <p className="text-sm font-black">{register?.status === "OPEN" ? `Aberto · ${register.openedByName}` : "Fechado"}</p>
+                    <p className="text-sm font-black">{register?.status === "OPEN" ? t("pdv.register.open", { name: register.openedByName }) : t("pdv.cashClosed")}</p>
                 </div>
 
                 <div className="relative" ref={themeRef}>

@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useT } from "@/i18n/provider";
+import type { Translate } from "@/i18n/runtime";
 import { ArrowLeft, LoaderCircle, ShieldCheck } from "lucide-react";
 
 import { useCreateSale, useSaleOptions } from "@/features/sales/hooks/useSales";
@@ -193,7 +194,7 @@ export default function PdvScreen({ session }: { session: AuthSession }) {
     function pay() {
         if (company?.requireCustomer && !customerId) return toast.error(t("pdv.errors.requiresCustomer"));
         if (deferred && !customerId) return toast.error(t("pdv.errors.checkOrCredit"));
-        if (deferred && !dueDate) return toast.error("Informe o vencimento do pagamento.");
+        if (deferred && !dueDate) return toast.error(t("pdv.errors.dueDateRequired"));
         if (!splitValid) return toast.error(t("pdv.errors.mismatch"));
         setStep("processing");
     }
@@ -218,7 +219,7 @@ export default function PdvScreen({ session }: { session: AuthSession }) {
                 setSaleResult(sale);
                 setStep("done");
             })
-            .catch((cause: unknown) => toast.error(cause instanceof Error ? cause.message : "Não foi possível concluir a venda."));
+            .catch((cause: unknown) => toast.error(cause instanceof Error ? cause.message : t("pdv.errors.saleFailed")));
     }
 
     /** Etapa 5 → nova venda. */
@@ -287,9 +288,9 @@ export default function PdvScreen({ session }: { session: AuthSession }) {
                                 onDiscount={setDiscount}
                             />
                             <button type="button" onClick={goToReview} disabled={!cart.length} className="flex h-14 w-full items-center justify-center gap-2 rounded-2xl bg-orange font-[family-name:var(--font-bricolage)] text-base font-black text-white shadow-lg shadow-orange-950/50 transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-40">
-                                Confirmar itens — {formatCurrency(total)}
+                                {t("pdv.review.confirmItemsTotal", { total: formatCurrency(total) })}
                             </button>
-                            <p className="text-center font-mono text-[10px] text-pdv-fg/40">Após confirmar, você escolhe o pagamento e finaliza.</p>
+                            <p className="text-center font-mono text-[10px] text-pdv-fg/40">{t("pdv.review.hint")}</p>
                         </aside>
                     </div>
                 )}
@@ -338,7 +339,7 @@ export default function PdvScreen({ session }: { session: AuthSession }) {
                                 <h2 className="mt-4 font-[family-name:var(--font-bricolage)] text-2xl font-black text-pdv-fg">Pagamento efetuado?</h2>
                                 <p className="mt-2 max-w-xs text-sm leading-6 text-pdv-fg/60">
                                     Confirme que o pagamento de <strong className="text-pdv-gold">{formatCurrency(total)}</strong> foi recebido
-                                    ({parsedParts.map((part) => `${paymentMethodLabelsSafe(part.method)}${part.amount ? ` ${formatCurrency(part.amount)}` : ""}`).join(" + ")}).
+                                    ({parsedParts.map((part) => `${paymentMethodLabelSafe(part.method, t)}${part.amount ? ` ${formatCurrency(part.amount)}` : ""}`).join(" + ")}).
                                 </p>
                                 {cashChange && (
                                     <div className="mt-4 w-full rounded-xl bg-pdv-ok/10 px-4 py-3 font-mono text-sm">
@@ -370,9 +371,9 @@ export default function PdvScreen({ session }: { session: AuthSession }) {
 
             <footer className="flex flex-wrap items-center justify-center gap-x-5 gap-y-1 border-t border-pdv-line bg-pdv-panel px-4 py-2 font-mono text-[10px] font-semibold text-pdv-fg/60">
                 {step === "items" ? (
-                    <><Kbd>F2</Kbd> ou <Kbd>/</Kbd> focar busca · <Kbd>Enter</Kbd> confirmar leitura · <Kbd>F4</Kbd> confirmar itens · <Kbd>+</Kbd>/<Kbd>−</Kbd> quantidade · <Kbd>⛶</Kbd> tela cheia</>
+                    t("pdv.shortcuts")
                 ) : (
-                    <><Kbd>Etapa {stepIndex(step)} de 4</Kbd> · {stepLabel(step, t)}</>
+                    <><Kbd>{t("pdv.steps.stepOf", { step: stepIndex(step) })}</Kbd> · {stepLabel(step, t)}</>
                 )}
             </footer>
 
@@ -387,8 +388,10 @@ function Kbd({ children }: { children: import("react").ReactNode }) {
     return <kbd className="rounded-md border border-pdv-line bg-pdv-line px-1.5 py-0.5 text-[10px] text-pdv-fg">{children}</kbd>;
 }
 
-function paymentMethodLabelsSafe(method: PaymentMethod): string {
-    return ({ PIX: "PIX", CREDIT_CARD: "cartão de crédito", DEBIT_CARD: "cartão de débito", CASH: "dinheiro", BOLETO: "boleto", CHECK: "cheque", STORE_CREDIT: "fiado" })[method] ?? method;
+function paymentMethodLabelSafe(method: PaymentMethod, t: Translate): string {
+    const key = `pdv.methods.${method}`;
+    const translated = t(key);
+    return translated === key ? method : translated;
 }
 
 function stepIndex(step: Step): number {

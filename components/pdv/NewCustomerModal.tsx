@@ -29,7 +29,7 @@ export default function NewCustomerModal({ onCreated, onClose }: NewCustomerModa
         const digits = document.replace(/\D/g, "");
         if (name.trim().length < 3) return setError(t("pdv.errors.nameTooShort"));
         if (!/^\d{11}$|^\d{14}$/.test(digits)) return setError(t("pdv.errors.documentInvalid"));
-        if (!email.includes("@")) return setError("Informe um e-mail válido.");
+        if (!email.includes("@")) return setError(t("pdv.errors.emailInvalid"));
         if (!/^\d{10,15}$/.test(phone.replace(/\D/g, ""))) return setError(t("pdv.errors.phoneInvalid"));
         setError("");
 
@@ -64,16 +64,16 @@ export default function NewCustomerModal({ onCreated, onClose }: NewCustomerModa
                         <span className="flex size-9 items-center justify-center rounded-xl bg-orange-500/15 text-orange-400"><UserPlus className="size-4" /></span>
                         <div>
                             <p className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-orange-400">Novo cliente</p>
-                            <h2 className="font-[family-name:var(--font-bricolage)] text-lg font-black text-pdv-fg">Cadastro rápido</h2>
+                            <h2 className="font-[family-name:var(--font-bricolage)] text-lg font-black text-pdv-fg">{t("pdv.newCustomer.subtitle")}</h2>
                         </div>
                     </div>
                     <button type="button" onClick={onClose} aria-label="Fechar" className="flex size-9 items-center justify-center rounded-xl text-pdv-fg/50 hover:bg-pdv-line hover:text-pdv-fg"><X className="size-4" /></button>
                 </div>
 
                 <div className="mt-4 grid gap-3">
-                    <label className="block"><span className={labelClass}>Nome / razão social *</span><input value={name} onChange={(event) => setName(event.target.value)} placeholder="Ex.: Maria Silva" className={inputClass} /></label>
+                    <label className="block"><span className={labelClass}>{t("pdv.newCustomer.name")}</span><input value={name} onChange={(event) => setName(event.target.value)} placeholder="Ex.: Maria Silva" className={inputClass} /></label>
                     <div className="grid grid-cols-2 gap-3">
-                        <label className="block"><span className={labelClass}>CPF / CNPJ *</span><input value={document} onChange={(event) => setDocument(event.target.value.replace(/\D/g, "").slice(0, 14))} inputMode="numeric" placeholder="Somente números" className={inputClass} /></label>
+                        <label className="block"><span className={labelClass}>{t("pdv.newCustomer.document")}</span><input value={document} onChange={(event) => setDocument(event.target.value.replace(/\D/g, "").slice(0, 14))} inputMode="numeric" placeholder="Somente números" className={inputClass} /></label>
                         <label className="block"><span className={labelClass}>Telefone *</span><input value={phone} onChange={(event) => setPhone(event.target.value.replace(/\D/g, "").slice(0, 11))} inputMode="numeric" placeholder="Com DDD" className={inputClass} /></label>
                     </div>
                     <label className="block"><span className={labelClass}>E-mail *</span><input type="email" value={email} onChange={(event) => setEmail(event.target.value)} placeholder="cliente@email.com" className={inputClass} /></label>

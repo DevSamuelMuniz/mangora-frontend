@@ -65,7 +65,7 @@ export default function CartPanel({ cart, subtotal, discountValue, maxDiscount, 
                     <span>{t("pdv.cart.subtotal")}</span><span>{formatCurrency(subtotal)}</span>
                 </div>
                 <div className="mt-1 flex items-center justify-between gap-3 font-mono text-xs text-ink/70">
-                    <span>Desconto (máx. {maxDiscount}%)</span>
+                    <span>{t("pdv.cart.discountMax", { max: maxDiscount })}</span>
                     <input
                         type="number"
                         min={0}

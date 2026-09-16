@@ -16,7 +16,8 @@
     "payment": "Pagamento",
     "done": "Concluída",
     "reviewOf": "Etapa 2 de 4",
-    "processing": "Confirmação"
+    "processing": "Confirmação",
+    "stepOf": "Etapa {step} de 4"
   },
   "scan": {
     "placeholder": "Leia o código de barras — o produto é adicionado automaticamente",
@@ -29,7 +30,8 @@
   "grid": {
     "empty": "Nenhum produto encontrado",
     "hint": "Aponte o leitor ou escreva o código de barras.",
-    "service": "Serviço"
+    "service": "Serviço",
+    "available": "{count} disp."
   },
   "cart": {
     "title": "Artigos",
@@ -41,13 +43,15 @@
     "change": "Troco",
     "received": "Valor recebido",
     "receipt": "recibo",
-    "items": "{count} artigo(s)"
+    "items": "{count} artigo(s)",
+    "discountMax": "Desconto (máx. {max}%)"
   },
   "review": {
     "title": "Confirme os artigos",
     "all": "Todos",
     "hint": "Após confirmar, escolhe o pagamento e finaliza.",
-    "confirmItems": "confirmar artigos"
+    "confirmItems": "confirmar artigos",
+    "confirmItemsTotal": "Confirmar artigos — {total}"
   },
   "payment": {
     "title": "Confirmar pagamento",
@@ -69,7 +73,12 @@
     "cash": "numerário",
     "split": "Dividido em 2: {parts}",
     "nextHint": "Pague e confirme na etapa seguinte.",
-    "optionalPlaceholder": "Opcional"
+    "optionalPlaceholder": "Opcional",
+    "splitTwo": "Dividir em 2 métodos de pagamento",
+    "mismatch": "Os valores dos pagamentos não somam o total ({total}).",
+    "amountAria": "Valor do {index}.º pagamento",
+    "insufficient": "Dinheiro recebido inferior à parte em dinheiro — faltam {missing}.",
+    "submit": "Efetuar pagamento — {total}"
   },
   "newCustomer": {
     "title": "Novo cliente",
@@ -113,11 +122,30 @@
     "customerFailed": "Não foi possível registar o cliente.",
     "documentInvalid": "O NIF deve ter 11 ou 14 dígitos.",
     "nameTooShort": "Indique um nome com pelo menos 3 letras.",
-    "phoneInvalid": "Indique um telefone válido com indicativo."
+    "phoneInvalid": "Indique um telefone válido com indicativo.",
+    "emailInvalid": "Indique um e-mail válido."
   },
   "loading": {
     "finishing": "A finalizar venda...",
     "finishingShort": "A finalizar..."
   },
-  "keysHint": "focar pesquisa · confirmar leitura · confirmar artigos · quantidade · ecrã inteiro"
+  "keysHint": "focar pesquisa · confirmar leitura · confirmar artigos · quantidade · ecrã inteiro",
+  "preview": {
+    "title": "Pré-visualização"
+  },
+  "methods": {
+    "PIX": "PIX",
+    "CREDIT_CARD": "cartão de crédito",
+    "DEBIT_CARD": "cartão de débito",
+    "CASH": "dinheiro",
+    "BOLETO": "referência multibanco",
+    "CHECK": "cheque",
+    "STORE_CREDIT": "conta corrente",
+    "BANK_TRANSFER": "transferência",
+    "OTHER": "outro"
+  },
+  "shortcuts": "F2 ou / focar pesquisa · Enter confirmar leitura · F4 confirmar artigos · +/− quantidade · ⛶ ecrã inteiro",
+  "register": {
+    "open": "Aberto · {name}"
+  }
 }

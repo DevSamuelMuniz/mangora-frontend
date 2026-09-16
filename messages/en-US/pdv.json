@@ -16,7 +16,8 @@
     "payment": "Payment",
     "done": "Completed",
     "reviewOf": "Step 2 of 4",
-    "processing": "Confirmation"
+    "processing": "Confirmation",
+    "stepOf": "Step {step} of 4"
   },
   "scan": {
     "placeholder": "Scan the barcode — the product is added automatically",
@@ -29,7 +30,8 @@
   "grid": {
     "empty": "No products found",
     "hint": "Point the scanner or type the barcode.",
-    "service": "Service"
+    "service": "Service",
+    "available": "{count} avail."
   },
   "cart": {
     "title": "Items",
@@ -41,13 +43,15 @@
     "change": "Change",
     "received": "Amount received",
     "receipt": "receipt",
-    "items": "{count} item(s)"
+    "items": "{count} item(s)",
+    "discountMax": "Discount (max. {max}%)"
   },
   "review": {
     "title": "Confirm the items",
     "all": "All",
     "hint": "After confirming, you choose the payment and finish.",
-    "confirmItems": "confirm items"
+    "confirmItems": "confirm items",
+    "confirmItemsTotal": "Confirm items — {total}"
   },
   "payment": {
     "title": "Confirm payment",
@@ -69,7 +73,12 @@
     "cash": "cash",
     "split": "Split in 2: {parts}",
     "nextHint": "Pay and confirm in the next step.",
-    "optionalPlaceholder": "Optional"
+    "optionalPlaceholder": "Optional",
+    "splitTwo": "Split into 2 payment methods",
+    "mismatch": "The payment amounts do not add up to the total ({total}).",
+    "amountAria": "Amount of payment {index}",
+    "insufficient": "Cash received is less than the cash part — {missing} short.",
+    "submit": "Take payment — {total}"
   },
   "newCustomer": {
     "title": "New customer",
@@ -113,11 +122,30 @@
     "customerFailed": "Could not register the customer.",
     "documentInvalid": "Tax ID must have 11 or 14 digits.",
     "nameTooShort": "Enter a name with at least 3 letters.",
-    "phoneInvalid": "Enter a valid phone number with area code."
+    "phoneInvalid": "Enter a valid phone number with area code.",
+    "emailInvalid": "Enter a valid e-mail."
   },
   "loading": {
     "finishing": "Finishing sale...",
     "finishingShort": "Finishing..."
   },
-  "keysHint": "focus search · confirm scan · confirm items · quantity · fullscreen"
+  "keysHint": "focus search · confirm scan · confirm items · quantity · fullscreen",
+  "preview": {
+    "title": "Preview"
+  },
+  "methods": {
+    "PIX": "PIX",
+    "CREDIT_CARD": "credit card",
+    "DEBIT_CARD": "debit card",
+    "CASH": "cash",
+    "BOLETO": "bank slip",
+    "CHECK": "cheque",
+    "STORE_CREDIT": "store credit",
+    "BANK_TRANSFER": "bank transfer",
+    "OTHER": "other"
+  },
+  "shortcuts": "F2 or / focus search · Enter confirm scan · F4 confirm items · +/− quantity · ⛶ fullscreen",
+  "register": {
+    "open": "Open · {name}"
+  }
 }

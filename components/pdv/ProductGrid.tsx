@@ -70,7 +70,7 @@ export default function ProductGrid({ products, loading, cartCounts, onAdd, onCh
                                         {formatCurrency(product.price)}
                                     </strong>
                                     <span className={`rounded-full px-2 py-0.5 font-mono text-[10px] font-bold ${product.trackStock ? (available <= product.minimumStock ? "bg-pdv-warn/15 text-pdv-warn" : "bg-pdv-line text-pdv-fg/50") : "bg-pdv-line text-pdv-fg/50"}`}>
-                                        {product.trackStock ? `${available} disp.` : "Serviço"}
+                                        {product.trackStock ? t("pdv.grid.available", { count: available }) : t("pdv.grid.service")}
                                     </span>
                                 </div>
                             </div>

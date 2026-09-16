@@ -26,7 +26,7 @@ export default function SalePreview({ cart, subtotal, discount, total, customerN
         <div className="sticky top-4 flex flex-col overflow-hidden rounded-2xl bg-cream text-ink shadow-2xl shadow-black/30">
             <div className="flex items-center justify-between border-b-2 border-dashed border-ink/15 px-4 py-3">
                 <h3 className="flex items-center gap-2 font-[family-name:var(--font-bricolage)] text-xs font-black uppercase tracking-wide">
-                    <ReceiptText className="size-4 text-orange" /> Pré-visualização
+                    <ReceiptText className="size-4 text-orange" /> {t("pdv.preview.title")}
                 </h3>
                 <span className="font-mono text-[10px] text-ink/50">{cart.reduce((sum, item) => sum + item.quantity, 0)} item(ns)</span>
             </div>

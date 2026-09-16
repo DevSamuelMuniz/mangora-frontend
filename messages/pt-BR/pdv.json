@@ -16,7 +16,8 @@
     "payment": "Pagamento",
     "done": "Finalizada",
     "reviewOf": "Etapa 2 de 4",
-    "processing": "Confirmação"
+    "processing": "Confirmação",
+    "stepOf": "Etapa {step} de 4"
   },
   "scan": {
     "placeholder": "Leia o código de barras — o produto é adicionado automaticamente",
@@ -29,7 +30,8 @@
   "grid": {
     "empty": "Nenhum produto encontrado",
     "hint": "Aponte o leitor ou digite o código de barras.",
-    "service": "Serviço"
+    "service": "Serviço",
+    "available": "{count} disp."
   },
   "cart": {
     "title": "Itens",
@@ -41,13 +43,15 @@
     "change": "Troco",
     "received": "Valor recebido",
     "receipt": "recibo",
-    "items": "{count} item(ns)"
+    "items": "{count} item(ns)",
+    "discountMax": "Desconto (máx. {max}%)"
   },
   "review": {
     "title": "Confirme os itens",
     "all": "Todos",
     "hint": "Após confirmar, você escolhe o pagamento e finaliza.",
-    "confirmItems": "confirmar itens"
+    "confirmItems": "confirmar itens",
+    "confirmItemsTotal": "Confirmar itens — {total}"
   },
   "payment": {
     "title": "Confirmar pagamento",
@@ -69,7 +73,12 @@
     "cash": "dinheiro",
     "split": "Dividido em 2: {parts}",
     "nextHint": "Pague e confirme na próxima etapa.",
-    "optionalPlaceholder": "Opcional"
+    "optionalPlaceholder": "Opcional",
+    "splitTwo": "Dividir em 2 métodos de pagamento",
+    "mismatch": "Os valores dos pagamentos não somam o total ({total}).",
+    "amountAria": "Valor do {index}º pagamento",
+    "insufficient": "Dinheiro recebido menor que a parte em dinheiro — falta {missing}.",
+    "submit": "Efetuar pagamento — {total}"
   },
   "newCustomer": {
     "title": "Novo cliente",
@@ -113,11 +122,30 @@
     "customerFailed": "Não foi possível cadastrar o cliente.",
     "documentInvalid": "CPF/CNPJ deve ter 11 ou 14 dígitos.",
     "nameTooShort": "Informe um nome com ao menos 3 letras.",
-    "phoneInvalid": "Informe um telefone válido com DDD."
+    "phoneInvalid": "Informe um telefone válido com DDD.",
+    "emailInvalid": "Informe um e-mail válido."
   },
   "loading": {
     "finishing": "Finalizando venda...",
     "finishingShort": "Finalizando..."
   },
-  "keysHint": "focar busca · confirmar leitura · confirmar itens · quantidade · tela cheia"
+  "keysHint": "focar busca · confirmar leitura · confirmar itens · quantidade · tela cheia",
+  "preview": {
+    "title": "Pré-visualização"
+  },
+  "methods": {
+    "PIX": "PIX",
+    "CREDIT_CARD": "cartão de crédito",
+    "DEBIT_CARD": "cartão de débito",
+    "CASH": "dinheiro",
+    "BOLETO": "boleto",
+    "CHECK": "cheque",
+    "STORE_CREDIT": "fiado",
+    "BANK_TRANSFER": "transferência",
+    "OTHER": "outro"
+  },
+  "shortcuts": "F2 ou / focar busca · Enter confirmar leitura · F4 confirmar itens · +/− quantidade · ⛶ tela cheia",
+  "register": {
+    "open": "Aberto · {name}"
+  }
 }
