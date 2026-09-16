@@ -1,0 +1,58 @@
+{
+  "title": "Accounts & reconciliation",
+  "subtitle": "Every line must match an entry to close the month.",
+  "eyebrow": "Financial management",
+  "actions": {
+    "create": "New account",
+    "createFirst": "Create first account",
+    "import": "Import statement",
+    "match": "Match",
+    "ignore": "Ignore",
+    "cancel": "Cancel",
+    "close": "Close",
+    "retry": "Try again"
+  },
+  "accounts": {
+    "title": "Accounts",
+    "loading": "Loading accounts...",
+    "name": "Account name",
+    "institution": "Institution",
+    "branch": "Branch",
+    "accountNumber": "Account",
+    "pixKey": "Pix key",
+    "empty": "No accounts yet",
+    "createFailed": "Could not create the account.",
+    "subtitle": "Separate cash, bank, Pix and card — and reconcile the statement against the entries."
+  },
+  "statement": {
+    "title": "Paste the bank statement",
+    "hint": "Paste an OFX or CSV statement to start the reconciliation.",
+    "dedupe": "We only import new lines (no duplicates by identifier).",
+    "imported": "Statement imported",
+    "importFailed": "Could not import the statement.",
+    "empty": "No transactions imported.",
+    "provider": "Supplier"
+  },
+  "match": {
+    "placeholder": "Match with an entry...",
+    "matched": "Transaction reconciled.",
+    "matchedLabel": "Matched",
+    "failed": "Could not match the transaction.",
+    "auto": "Reconcile automatically",
+    "autoFailed": "Could not reconcile automatically.",
+    "autoDone": "{matched} transaction(s) automatically reconciled. {pending} still pending review."
+  },
+  "ignore": {
+    "done": "Transaction ignored.",
+    "failed": "Could not ignore the transaction."
+  },
+  "statuses": {
+    "UNMATCHED": "Open",
+    "MATCHED": "Matched",
+    "IGNORED": "Ignored"
+  },
+  "kinds": {
+    "CREDIT": "Credit",
+    "DEBIT": "Debit"
+  }
+}
