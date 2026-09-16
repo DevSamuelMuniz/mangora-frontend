@@ -17,17 +17,20 @@
       "description": "Follow products and stock movements."
     },
     "estoqueInventario": {
-      "title": "Physical inventory"
+      "title": "Physical inventory",
+      "description": "Count the physical items and adjust the differences."
     },
     "estoqueTransferencias": {
-      "title": "Transfers"
+      "title": "Transfers",
+      "description": "Move products between stores of the same company."
     },
     "financeiro": {
       "title": "Finance",
       "description": "Follow revenue, expenses and cash flow."
     },
     "financeiroContas": {
-      "title": "Bills & Reconciliation"
+      "title": "Bills & Reconciliation",
+      "description": "Reconcile bills, statements and payments."
     },
     "funcionarios": {
       "title": "Employees",

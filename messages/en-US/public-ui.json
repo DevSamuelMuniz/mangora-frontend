@@ -23,7 +23,7 @@
   "walkthrough": {
     "title": "Explore before creating your account",
     "subtitle": "Pick a routine to explore a simplified demo.",
-    "disclaimer": "Illustrative example · not real customer data",
+    "disclaimer": "The presentation was simplified for this demo. Feature availability varies by plan.",
     "rotations": "Demonstrated routines",
     "home": "Go to the home page",
     "withMyData": "Try with my data",
@@ -57,7 +57,8 @@
       "payment": "Payment",
       "cash": "Cash",
       "card": "Card"
-    }
+    },
+    "closingTitle": "The answers your business needs, without digging through several spreadsheets."
   },
   "pwa": {
     "title": "Install Mangora",

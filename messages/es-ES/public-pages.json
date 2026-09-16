@@ -262,5 +262,14 @@
       "Registro de decisiones y operaciones.",
       "Formación y concienciación."
     ]
+  },
+  "publicPages": {
+    "support": {
+      "metaTitle": "Soporte",
+      "metaDescription": "Encuentra ayuda para usar Mangora y organizar la operación de tu empresa.",
+      "eyebrow": "Ayuda",
+      "title": "¿Cómo podemos ayudar?",
+      "description": "Encuentra los canales e información esencial para resolver dudas sobre Mangora."
+    }
   }
 }

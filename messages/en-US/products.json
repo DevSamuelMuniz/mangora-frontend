@@ -8,7 +8,8 @@
     "delete": "Delete product",
     "cancel": "Cancel",
     "close": "Close",
-    "retry": "Try again"
+    "retry": "Try again",
+    "clearFilters": "Clear filters"
   },
   "search": {
     "label": "Search products",
@@ -133,5 +134,6 @@
   "page": "Page {current} of {total}",
   "notFound": "Product not found.",
   "imageHint": "Provide a public image over HTTP or HTTPS.",
-  "publicImage": "Public image"
+  "publicImage": "Public image",
+  "loadFailed": "We could not load the products."
 }

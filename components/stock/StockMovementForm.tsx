@@ -99,7 +99,7 @@ export default function StockMovementForm({ initialProductId = "" }: { initialPr
 
     try {
       await createMovement.mutateAsync(payload);
-      router.push(`/estoque?toast=${encodeURIComponent(t("stock.toast"))}`);
+      router.push(`/estoque?toast=${encodeURIComponent(t("stock.movementToast"))}`);
       router.refresh();
     } catch (requestError) {
       setError(requestError instanceof Error ? requestError.message : t("stock.form.errors.failed"));

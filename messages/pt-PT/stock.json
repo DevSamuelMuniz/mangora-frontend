@@ -264,5 +264,6 @@
       "activateFailed": "Não foi possível ativar o custo FIFO."
     },
     "toast": "Lote recebido — inventário atualizado com entrada justificada."
-  }
+  },
+  "movementToast": "Movimentação registada"
 }

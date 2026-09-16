@@ -58,5 +58,6 @@
   "notifications": {
     "label": "Notificações",
     "unreadLabel": "Notificações, {count} não lidas"
-  }
+  },
+  "essentialOnly": "Mostrar apenas as funções essenciais"
 }

@@ -262,5 +262,14 @@
       "Record of decisions and operations.",
       "Training and awareness."
     ]
+  },
+  "publicPages": {
+    "support": {
+      "metaTitle": "Support",
+      "metaDescription": "Find help to use Mangora and organise your company operation.",
+      "eyebrow": "Help",
+      "title": "How can we help?",
+      "description": "Find the channels and key information to answer questions about Mangora."
+    }
   }
 }

@@ -264,5 +264,6 @@
       "activateFailed": "Could not enable FIFO cost."
     },
     "toast": "Batch received — stock updated with a justified entry."
-  }
+  },
+  "movementToast": "Movement recorded"
 }

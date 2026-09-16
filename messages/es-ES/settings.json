@@ -169,7 +169,9 @@
       "save": "No se pudo guardar la configuración.",
       "saveRegional": "No se pudieron guardar las preferencias regionales.",
       "run": "No se pudo ejecutar el procesamiento."
-    }
+    },
+    "eyebrow": "Configuración",
+    "savedRegional": "Preferencias regionales guardadas."
   },
   "planHint": "Consulta el plan, el uso y las solicitudes de atención."
 }

@@ -17,17 +17,20 @@
       "description": "Sigue productos y movimientos de inventario."
     },
     "estoqueInventario": {
-      "title": "Inventario físico"
+      "title": "Inventario físico",
+      "description": "Cuenta los artículos físicos y ajusta las diferencias."
     },
     "estoqueTransferencias": {
-      "title": "Transferencias"
+      "title": "Transferencias",
+      "description": "Mueve productos entre tiendas de la misma empresa."
     },
     "financeiro": {
       "title": "Finanzas",
       "description": "Sigue ingresos, gastos y flujo de caja."
     },
     "financeiroContas": {
-      "title": "Cuentas y conciliación"
+      "title": "Cuentas y conciliación",
+      "description": "Concilia cuentas, extractos y pagos."
     },
     "funcionarios": {
       "title": "Empleados",

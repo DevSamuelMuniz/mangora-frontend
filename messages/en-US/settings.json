@@ -169,7 +169,9 @@
       "save": "Could not save the settings.",
       "saveRegional": "Could not save the regional preferences.",
       "run": "Could not run the processing."
-    }
+    },
+    "eyebrow": "Settings",
+    "savedRegional": "Regional preferences saved."
   },
   "planHint": "Check the plan, usage and support requests."
 }

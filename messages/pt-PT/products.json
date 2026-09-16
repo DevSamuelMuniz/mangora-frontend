@@ -8,7 +8,8 @@
     "delete": "Eliminar produto",
     "cancel": "Cancelar",
     "close": "Fechar",
-    "retry": "Tentar novamente"
+    "retry": "Tentar novamente",
+    "clearFilters": "Limpar filtros"
   },
   "search": {
     "label": "Pesquisar produtos",
@@ -133,5 +134,6 @@
   "page": "Página {current} de {total}",
   "notFound": "Produto não encontrado.",
   "imageHint": "Indique uma imagem pública em HTTP ou HTTPS.",
-  "publicImage": "Imagem pública"
+  "publicImage": "Imagem pública",
+  "loadFailed": "Não foi possível carregar os produtos."
 }
