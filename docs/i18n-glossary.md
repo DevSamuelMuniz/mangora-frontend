@@ -47,6 +47,7 @@ Sempre traduzir por este glossário — nunca palavra por palavra.
 | E-mails | apenas os **essenciais** (redefinição de senha, alerta de segurança, confirmação de e-mail) seguem `user.locale`; resumo, aniversário e tempo de casa ficam em pt-BR |
 | URLs públicas | `pt-BR` na raiz; `/en`, `/es`, `/pt` para os demais, via `middleware.ts`; rotas do app sem prefixo |
 | Fallback | `pt-PT` herda de `pt-BR`; falta de chave nunca quebra a tela (retorna a própria chave) |
+| Detecção automática | país por IP (Vercel/Cloudflare) define o idioma **apenas** quando o navegador não indica idioma suportado; preferência salva, caminho com prefixo e cookie sempre vencem |
 
 ## Como adicionar ou alterar um texto
 

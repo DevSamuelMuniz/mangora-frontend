@@ -31,15 +31,27 @@ Optamos por um núcleo próprio em vez de `next-intl` porque o store do pnpm no 
 
 ## 3. Resolução de idioma e cadeia de fallback
 
-Ordem efetiva (documentada e testada em `test/i18n.test.ts`):
+Ordem efetiva (documentada e testada em `test/i18n.test.ts` e `test/i18n-geo.test.ts`):
 
 1. **Preferência do perfil** (`user.locale` / `company.locale` via sessão) — sempre vence
 2. **Idioma do caminho** (`/en`, `/es`, `/pt`, injetado pelo middleware como `x-mangora-locale`)
 3. **Cookie** `MANGORA_LOCALE`
 4. **`Accept-Language`** (respeitando a ordem de prioridade declarada)
-5. **`pt-BR`** (padrão)
+5. **País detectado por IP** (`x-vercel-ip-country` / `cf-ipcountry`, normalizado pelo middleware) — sugestão
+6. **`pt-BR`** (padrão)
 
 Sem repetir consulta ao banco: a leitura da sessão é memoizada com `cache()` do React.
+
+**Detecção automática de país** (`lib/regional/geo.ts` + `GET /api/geo`): sem API externa e sem permissão do navegador — a localização vem dos cabeçalhos da plataforma de hospedagem e é validada (ISO-2, descartando `XX`/`T1`; fuso apenas IANA conferido pelo `Intl`). Ela define (a) o idioma sugerido quando o navegador não indica nenhum idioma suportado e (b) a sugestão de país/moeda/fuso para **Configurações → Preferências regionais** — sempre sem sobrescrever escolha explícita. Comportamento confirmado em runtime:
+
+| País detectado | Navegador | Idioma resultante |
+|---|---|---|
+| Portugal | `de-DE` | `pt-PT` |
+| Portugal | `en-US` | `en-US` (navegador vence) |
+| Estados Unidos | `es-MX` | `es-ES` |
+| Estados Unidos | `de-DE` | `en-US` |
+| Brasil | `ja-JP` | `pt-BR` |
+| Alemanha (sem idioma mapeado) | `ja-JP` | `pt-BR` (padrão) |
 
 ## 4. Catálogos e paridade
 
@@ -170,23 +182,25 @@ Migrados de ponta a ponta nos módulos do item 14:
 ## 16. Verificação, ferramentas e pendências
 
 **Ferramentas duráveis**
-- `frontend/scripts/i18n-inventory.mjs` → `frontend/docs/i18n-inventory.md`: heurística de textos hardcoded (**82 → 21 candidatos**, sendo os 21 restantes majoritariamente `×`, comentários, exemplos de CSV/OFX e defaults intencionais)
+- `frontend/scripts/i18n-inventory.mjs` → `frontend/docs/i18n-inventory.md`: heurística de textos hardcoded (**82 → 13 candidatos**, sendo os 13 restantes `×`, comentários, exemplos de CSV/OFX e defaults intencionais)
 - `frontend/docs/i18n-glossary.md`: fonte única de termos (inclui decisões de mercado como *Boleto* × *Multibanco*)
-- `frontend/test/i18n*.test.ts`: paridade, resolução, formatação, URLs e integridade de chaves
+- `frontend/test/i18n*.test.ts`: paridade, resolução (inclui país detectado por IP em `test/i18n-geo.test.ts`), formatação, URLs e integridade de chaves
 
 **Verificação final**
 | Gate | Resultado |
 |---|---|
 | `npx tsc --noEmit` (frontend) | limpo |
-| `npm test` (frontend) | 15 arquivos / 75 testes |
+| `npm test` (frontend) | 15 arquivos / 103 testes |
 | `npx next build` (frontend) | compilado com sucesso |
 | `npx tsc --noEmit -p tsconfig.build.json` (backend) | limpo |
 | `npm test` (backend) | 30 suites / 139 testes |
 | `hreflang`/`canonical`/`lang` em execução real | conferidos em `/en`, `/es`, `/pt` |
+| Escolha automática por país em execução real | 6 cenários país × navegador conferidos (item 3) |
 
 **Pendências e recomendações**
 1. **Revisão nativa** dos textos `en-US`, `es-ES` e `pt-PT` por revisor humano antes de divulgar nesses mercados (os catálogos estão prontos para revisão em `messages/<locale>/`).
-2. **21 candidatos** do inventário merecem uma passada manual (nenhum é bloqueante; ver `docs/i18n-inventory.md`).
+2. **13 candidatos** do inventário merecem uma passada manual (nenhum é bloqueante; ver `docs/i18n-inventory.md`).
 3. **Fiscal**: se um dia houver operação fora do Brasil, reavaliar documentos fiscais país por país — hoje, por decisão, permanecem pt-BR.
 4. **E-mails não essenciais** (resumo, aniversário, tempo de casa) ficam em pt-BR; promover quando houver demanda de mercado.
-5. **`push`**: todos os commits de i18n estão locais; a publicação é decisão do responsável pelo produto.
+5. **Sugestão regional**: `GET /api/geo` já entrega país/moeda/fuso detectados; falta apenas usar esse valor para pré-preencher o formulário de preferências regionais (hoje a tela mostra o que está salvo).
+6. **`push`**: todos os commits de i18n estão locais; a publicação é decisão do responsável pelo produto.
