@@ -68,7 +68,8 @@
     "checking": "Checking operation protection...",
     "passwordHint": "Enter your account password to unlock this action. The confirmation lasts only a few minutes.",
     "capsLock": "Caps Lock is on.",
-    "secureNote": "Your password is validated securely and never appears in activity logs."
+    "secureNote": "Your password is validated securely and never appears in activity logs.",
+    "close": "Close {label}"
   },
   "modal": {
     "newEntry": "New entry",

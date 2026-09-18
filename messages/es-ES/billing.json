@@ -91,6 +91,7 @@
     "couponApplied": "Cupón aplicado: primera mensualidad {first} y después {recurring}.",
     "cancelConfirm": "¿Cancelar la suscripción recurrente? Mantienes el acceso hasta el final del ciclo pagado y puedes reactivar antes.",
     "cancelScheduled": "Cancelación programada — acceso mantenido hasta el final del ciclo pagado.",
+    "cancelNote": "La suscripción sigue activa hasta el final del ciclo pagado. Puedes reactivarla antes.",
     "cancelledReverted": "Cancelación revertida — acceso garantizado hasta el final del ciclo. Para continuar después, haz un nuevo checkout.",
     "availablePlans": "Planes disponibles · {market}",
     "choosePlan": "Elige el plan ideal",

@@ -68,7 +68,8 @@
     "checking": "Verificando proteção da operação...",
     "passwordHint": "Digite a senha da sua conta para liberar esta ação. A confirmação vale apenas por alguns minutos.",
     "capsLock": "Caps Lock está ativado.",
-    "secureNote": "Sua senha é validada com segurança e não aparece nos registros de atividade."
+    "secureNote": "Sua senha é validada com segurança e não aparece nos registros de atividade.",
+    "close": "Fechar {label}"
   },
   "modal": {
     "newEntry": "Novo lançamento",

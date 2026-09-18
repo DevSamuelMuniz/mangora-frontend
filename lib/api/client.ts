@@ -4,6 +4,9 @@ const API_URL = "/api/backend";
 import { isSensitivePath } from "@/lib/offline/security-policy";
 
 const OFFLINE_MESSAGE = "Sem conexão. Registramos a alteração e vamos sincronizá-la quando a conexão voltar.";
+const CANCELLED_BY_USER = "Operação cancelada: a senha não foi informada.";
+/** Tentativas de senha antes de desistir (senha errada volta a abrir o modal). */
+const MAXIMUM_PASSWORD_ATTEMPTS = 3;
 
 type ApiErrorPayload = {
   message?: string | string[];
@@ -63,23 +66,31 @@ export async function apiRequest<T>(path: string, init?: RequestInit): Promise<T
   if (!response.ok) {
     let payload = (await response.json().catch(() => ({}))) as ApiErrorPayload;
     if (response.status === 428 && payload.code === "OPERATION_PASSWORD_REQUIRED" && typeof window !== "undefined") {
-      const passwordPrompt = Array.isArray(payload.message) ? payload.message.join(" ") : payload.message;
-      const password = window.prompt(passwordPrompt || "Confirme sua senha para continuar:");
-      if (password === null) throw new ApiError("Operação cancelada: a senha não foi informada.", 428);
-      response = await fetch(`${API_URL}${path}`, {
-        ...init,
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-          ...init?.headers,
-          "x-operation-password": password,
-        },
-      });
-      if (response.ok) {
-        if (response.status === 204) return undefined as T;
-        return await response.json() as T;
+      // Modal controlado (nunca `window.prompt`): abre com a mensagem do servidor
+      // e, se a senha estiver errada, volta a abrir mostrando o motivo.
+      const { requestOperationPassword } = await import("@/lib/security/operation-password");
+      let previousError: string | null = null;
+      for (let attempt = 0; attempt < MAXIMUM_PASSWORD_ATTEMPTS; attempt++) {
+        const message = Array.isArray(payload.message) ? payload.message.join(" ") : payload.message;
+        const password = await requestOperationPassword({ message: message || "", action: null, error: previousError });
+        if (password === null) throw new ApiError(CANCELLED_BY_USER, 428);
+        response = await fetch(`${API_URL}${path}`, {
+          ...init,
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+            ...init?.headers,
+            "x-operation-password": password,
+          },
+        });
+        if (response.ok) {
+          if (response.status === 204) return undefined as T;
+          return await response.json() as T;
+        }
+        payload = (await response.json().catch(() => ({}))) as ApiErrorPayload;
+        if (response.status !== 428 || payload.code !== "OPERATION_PASSWORD_REQUIRED") break;
+        previousError = (Array.isArray(payload.message) ? payload.message.join(" ") : payload.message) ?? null;
       }
-      payload = (await response.json().catch(() => ({}))) as ApiErrorPayload;
     }
     const raw = Array.isArray(payload.message) ? payload.message.join(" ") : payload.message;
     throw new ApiError(describeError(response.status, raw), response.status);

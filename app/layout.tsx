@@ -10,6 +10,7 @@ import I18nProvider from "@/i18n/provider";
 import { getLocale, getTranslator, loadMessages, getRegionalPreferences } from "@/i18n/server";
 import { alternateLanguages } from "@/i18n/urls";
 import QueryProvider from "@/components/providers/QueryProvider";
+import { OperationPasswordProvider } from "@/components/ui/OperationPasswordProvider";
 import { ToastProvider } from "@/components/ui/toast";
 import "./globals.css";
 
@@ -128,7 +129,9 @@ export default async function RootLayout({
 
         <I18nProvider locale={locale} messages={messages} {...regional}>
           <QueryProvider>
-            <ToastProvider>{children}</ToastProvider>
+            <ToastProvider>
+              <OperationPasswordProvider>{children}</OperationPasswordProvider>
+            </ToastProvider>
           </QueryProvider>
         </I18nProvider>
       </body>

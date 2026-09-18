@@ -91,6 +91,7 @@
     "couponApplied": "Coupon applied: first monthly payment {first}, then {recurring}.",
     "cancelConfirm": "Cancel the recurring subscription? You keep access until the end of the paid cycle and can reactivate before that.",
     "cancelScheduled": "Cancellation scheduled — access kept until the end of the paid cycle.",
+    "cancelNote": "The subscription stays active until the end of the paid cycle. You can reactivate before that.",
     "cancelledReverted": "Cancellation reverted — access guaranteed until the end of the cycle. To continue later, start a new checkout.",
     "availablePlans": "Available plans · {market}",
     "choosePlan": "Choose the ideal plan",

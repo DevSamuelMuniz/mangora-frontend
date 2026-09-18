@@ -66,10 +66,10 @@ export default function WorkspaceModal({ children, closeHref, label, size = "lar
 
   return (
     <div className="fixed inset-0 z-[80] flex items-end justify-center bg-[#123d2b]/45 p-0 backdrop-blur-sm sm:items-center sm:p-5">
-      <button type="button" aria-label={`Fechar ${label}`} onClick={close} className="absolute inset-0 cursor-default" />
+      <button type="button" aria-label={t("workspace.confirm.close", { label })} onClick={close} className="absolute inset-0 cursor-default" />
       <div role="dialog" aria-modal="true" aria-label={label} className={`relative max-h-[96vh] w-full overflow-y-auto rounded-t-[1.75rem] border border-[#123d2b]/20 bg-[#e9dfd2] p-4 shadow-[0_28px_90px_rgba(18,61,43,0.32)] sm:max-h-[92vh] sm:rounded-[1.75rem] sm:p-6 ${sizes[size]}`}>
         <div className="sticky top-0 z-20 -mx-1 mb-4 flex justify-end bg-gradient-to-b from-[#e9dfd2] via-[#e9dfd2] to-transparent px-1 pb-3">
-          <button type="button" onClick={close} className="flex size-10 items-center justify-center rounded-xl border border-[#123d2b]/10 bg-white text-[#597064] shadow-sm transition hover:border-orange-200 hover:text-orange-700" aria-label={`Fechar ${label}`}>
+          <button type="button" onClick={close} className="flex size-10 items-center justify-center rounded-xl border border-[#123d2b]/10 bg-white text-[#597064] shadow-sm transition hover:border-orange-200 hover:text-orange-700" aria-label={t("workspace.confirm.close", { label })}>
             <X className="size-4" />
           </button>
         </div>
@@ -105,7 +105,7 @@ export default function WorkspaceModal({ children, closeHref, label, size = "lar
                 </p>
 
                 <label htmlFor="operation-password" className="mt-5 block text-xs font-black text-[#173d2b]">
-                  Senha da sua conta
+                  {t("forms.modal.passwordLabel")}
                 </label>
                 <div className="relative mt-2">
                   <KeyRound className="pointer-events-none absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-orange-600" />
@@ -132,7 +132,7 @@ export default function WorkspaceModal({ children, closeHref, label, size = "lar
                     type="button"
                     onClick={() => setShowPassword((visible) => !visible)}
                     className="absolute right-1.5 top-1/2 grid size-9 -translate-y-1/2 place-items-center rounded-lg text-[#597064] transition hover:bg-orange-50 hover:text-orange-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500"
-                    aria-label={showPassword ? "Ocultar senha" : "Mostrar senha"}
+                    aria-label={showPassword ? t("forms.modal.hidePassword") : t("forms.modal.showPassword")}
                     aria-pressed={showPassword}
                   >
                     {showPassword ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
@@ -149,17 +149,17 @@ export default function WorkspaceModal({ children, closeHref, label, size = "lar
                 {error && (
                   <p id="operation-password-error" role="alert" className="mt-3 flex items-start gap-2 rounded-xl border border-red-200 bg-red-50 p-3 text-left text-xs font-bold leading-5 text-red-700">
                     <AlertCircle className="mt-0.5 size-4 shrink-0" />
-                    <span>{error} Confira a senha e tente novamente.</span>
+                    <span>{error} {t("forms.modal.retryHint")}</span>
                   </p>
                 )}
 
                 <div className="mt-5 flex flex-col-reverse gap-2.5 sm:flex-row">
                   <button type="button" onClick={close} disabled={verifying} className="h-12 flex-1 rounded-xl border border-[#173d2b]/15 bg-white text-sm font-black text-[#173d2b] transition hover:border-[#173d2b]/30 hover:bg-[#f8f3ea] disabled:opacity-50">
-                    Cancelar
+                    {t("common.actions.cancel")}
                   </button>
                   <button disabled={verifying || !password} className="flex h-12 flex-[1.4] items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-orange-600 to-amber-500 px-5 text-sm font-black text-white shadow-[0_8px_20px_rgba(234,88,12,0.25)] transition hover:-translate-y-0.5 hover:shadow-[0_12px_24px_rgba(234,88,12,0.3)] disabled:translate-y-0 disabled:cursor-not-allowed disabled:opacity-50">
                     {verifying ? <LoaderCircle className="size-4 animate-spin" /> : <ShieldCheck className="size-4" />}
-                    {verifying ? t("forms.modal.confirming") : "Confirmar e abrir"}
+                    {verifying ? t("forms.modal.confirming") : t("forms.modal.confirm")}
                   </button>
                 </div>
 

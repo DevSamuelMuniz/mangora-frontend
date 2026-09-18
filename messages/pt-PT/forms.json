@@ -4,6 +4,8 @@
     "confirmWithPassword": "Confirme que é você",
     "securityHint": "Confirmação de segurança",
     "passwordPlaceholder": "Introduza a sua palavra-passe",
+    "passwordLabel": "Palavra-passe da conta",
+    "retryHint": "Verifique a palavra-passe e tente novamente.",
     "confirm": "Confirmar e abrir",
     "confirming": "A confirmar...",
     "showPassword": "Mostrar palavra-passe",
