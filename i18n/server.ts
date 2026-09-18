@@ -3,6 +3,7 @@ import { cookies, headers } from "next/headers";
 
 import { getCurrentSession } from "@/lib/auth/server";
 import { createFormatters } from "@/lib/format";
+import { geoFromHeaders } from "@/lib/regional/geo";
 
 import { LOCALE_COOKIE, resolveLocale, type Locale } from "./config";
 import { createTranslator, fallbackChain, mergeMessages, type Messages } from "./runtime";
@@ -191,19 +192,29 @@ const cachedSession = cache(async () => {
 });
 
 /**
- * Locale do usuário: preferência salva → cookie → Accept-Language → pt-BR.
- * A preferência do perfil (independente do país/moeda) sempre vence.
+ * Locale do usuário: preferência salva → caminho com prefixo → cookie →
+ * Accept-Language → país detectado por IP → pt-BR.
+ * A preferência do perfil (independente do país/moeda) sempre vence, e o país
+ * detectado é apenas sugestão: nunca sobrepõe escolha explícita do usuário.
  */
 export async function getLocale(): Promise<Locale> {
   const [cookieStore, headerStore] = await Promise.all([cookies(), headers()]);
   const cookieLocale = cookieStore.get(LOCALE_COOKIE)?.value ?? null;
   const session = await cachedSession();
+  const geo = geoFromHeaders((name) => headerStore.get(name));
   return resolveLocale({
     preference: session?.user?.locale ?? session?.company?.locale ?? null,
     path: headerStore.get("x-mangora-locale"),
     cookie: cookieLocale,
     acceptLanguage: headerStore.get("accept-language"),
+    countryLocale: geo.locale,
   });
+}
+
+/** Sugestão regional detectada por IP (idioma, moeda e fuso) — usada nas preferências. */
+export async function getGeoLocation() {
+  const headerStore = await headers();
+  return geoFromHeaders((name) => headerStore.get(name));
 }
 
 export async function getTranslator() {

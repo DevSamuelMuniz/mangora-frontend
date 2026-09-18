@@ -34,8 +34,15 @@ export function normalizeLocale(value: string | null | undefined): Locale | null
   return byPrefix ?? null;
 }
 
-/** Cadeia: preferência salva → caminho → cookie → Accept-Language → fallback pt-BR. */
-export function resolveLocale(input: { preference?: string | null; path?: string | null; cookie?: string | null; acceptLanguage?: string | null }): Locale {
+/**
+ * Ordem oficial dos sinais, do mais forte ao mais fraco:
+ * preferência do perfil → caminho com prefixo → cookie → Accept-Language →
+ * país detectado por IP → pt-BR. Usada em documentação e testes.
+ */
+export const localeResolutionOrder = ["preference", "path", "cookie", "acceptLanguage", "country"] as const;
+
+/** Cadeia: preferência salva → caminho → cookie → Accept-Language → país detectado → fallback pt-BR. */
+export function resolveLocale(input: { preference?: string | null; path?: string | null; cookie?: string | null; acceptLanguage?: string | null; countryLocale?: string | null }): Locale {
   const fromPreference = normalizeLocale(input.preference);
   if (fromPreference) return fromPreference;
   const fromPath = normalizeLocale(input.path);
@@ -55,5 +62,8 @@ export function resolveLocale(input: { preference?: string | null; path?: string
       if (resolved) return resolved;
     }
   }
+  // Último sinal antes do padrão: país detectado por IP (sugestão — nunca sobrepõe escolha explícita).
+  const fromCountry = normalizeLocale(input.countryLocale);
+  if (fromCountry) return fromCountry;
   return defaultLocale;
 }
