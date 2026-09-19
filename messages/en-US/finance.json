@@ -177,5 +177,44 @@
   },
   "recurrences": "Recurrences",
   "upcoming": "Upcoming commitments",
-  "upcomingHint": "Pending and overdue bills"
+  "upcomingHint": "Pending and overdue bills",
+  "report": {
+    "button": "Monthly report",
+    "eyebrow": "Closing",
+    "title": "Financial report",
+    "subtitle": "Download the closing as CSV (Excel) or PDF, by month or custom range.",
+    "modes": {
+      "month": "Closed month",
+      "range": "Custom range"
+    },
+    "fields": {
+      "month": "Month",
+      "year": "Year",
+      "from": "Start date",
+      "to": "End date"
+    },
+    "hint": "The report includes sales, payment methods, entries by category, best-selling products and amounts to receive/pay for the period.",
+    "actions": {
+      "csv": "Download CSV",
+      "pdf": "Download PDF"
+    },
+    "footer": "The same report is emailed to the owner at the end of every month.",
+    "errors": {
+      "download": "We could not generate the report now. Please try again."
+    },
+    "months": {
+      "1": "January",
+      "2": "February",
+      "3": "March",
+      "4": "April",
+      "5": "May",
+      "6": "June",
+      "7": "July",
+      "8": "August",
+      "9": "September",
+      "10": "October",
+      "11": "November",
+      "12": "December"
+    }
+  }
 }

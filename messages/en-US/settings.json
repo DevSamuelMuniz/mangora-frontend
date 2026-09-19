@@ -95,7 +95,13 @@
       "overdueTitle": "Overdue bills",
       "newSalesTitle": "New sales",
       "summaryEmail": "E-mail for summaries",
-      "frequencyTitle": "Frequency"
+      "frequencyTitle": "Frequency",
+      "monthlyTitle": "Monthly financial report",
+      "monthlyToggle": "Email the month closing",
+      "monthlyHint": "On the last day of the month we send the full report (CSV and PDF) to the owners.",
+      "monthlyEmail": "Additional e-mail (optional)",
+      "monthlyEmailPlaceholder": "accountant@office.com",
+      "notes": "Summaries are processed automatically, without duplicates, and failed e-mails are retried gradually."
     },
     "security": {
       "sessions": "Sessions and devices",

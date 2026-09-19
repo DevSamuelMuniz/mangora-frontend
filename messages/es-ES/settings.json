@@ -95,7 +95,13 @@
       "overdueTitle": "Cuentas vencidas",
       "newSalesTitle": "Nuevas ventas",
       "summaryEmail": "Correo para resúmenes",
-      "frequencyTitle": "Frecuencia"
+      "frequencyTitle": "Frecuencia",
+      "monthlyTitle": "Informe financiero mensual",
+      "monthlyToggle": "Enviar el cierre del mes por correo",
+      "monthlyHint": "El último día del mes enviamos el informe completo (CSV y PDF) a los propietarios.",
+      "monthlyEmail": "Correo adicional (opcional)",
+      "monthlyEmailPlaceholder": "contador@oficina.com",
+      "notes": "Los resúmenes se procesan automáticamente, sin duplicados, y los correos con fallo se reintentan gradualmente."
     },
     "security": {
       "sessions": "Sesiones y dispositivos",

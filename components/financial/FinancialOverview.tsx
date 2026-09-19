@@ -5,6 +5,7 @@ import { useFormatters } from "@/i18n/provider";
 import Link from "next/link";
 import { useI18n, useT } from "@/i18n/provider";
 import { useMemo, useState } from "react";
+import FinancialReportExport from "./FinancialReportExport";
 import {
   AlertTriangle,
   ArrowDownRight,
@@ -16,6 +17,7 @@ import {
   CircleDollarSign,
   Clock3,
   Eye,
+  FileSpreadsheet,
   Landmark,
   Layers3,
   LoaderCircle,
@@ -87,6 +89,7 @@ export default function FinancialOverview() {
   const [entryToPay, setEntryToPay] = useState<FinancialEntry | null>(null);
   const [entryToReverse, setEntryToReverse] = useState<FinancialEntry | null>(null);
   const [showStructure, setShowStructure] = useState(false);
+  const [showReport, setShowReport] = useState(false);
 
   const errorMessage = actionError || (error instanceof Error ? error.message : "");
 
@@ -161,6 +164,9 @@ export default function FinancialOverview() {
             <button type="button" onClick={() => setShowStructure(true)} className="inline-flex h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 text-sm font-bold text-slate-700 transition hover:bg-slate-50">
               <Layers3 className="size-4" />Estrutura
             </button>
+            <button type="button" onClick={() => setShowReport(true)} className="inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-orange-600 to-amber-500 px-4 text-sm font-bold text-white shadow-lg shadow-orange-200 transition hover:-translate-y-0.5">
+              <FileSpreadsheet className="size-4" />{t("finance.report.button")}
+            </button>
             <Link href="/financeiro/contas" className="inline-flex h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 text-sm font-bold text-slate-700 transition hover:bg-slate-50">
               <Landmark className="size-4" />{t("finance.tabs.reconciliation")}
             </Link>
@@ -213,6 +219,7 @@ export default function FinancialOverview() {
       {entryToPay && <ConfirmPayment entry={entryToPay} loading={payEntry.isPending} onCancel={() => setEntryToPay(null)} onConfirm={(input) => void confirmPayment(input)} />}
       {entryToReverse && <ReverseEntry entry={entryToReverse} loading={reverseEntry.isPending} onCancel={() => setEntryToReverse(null)} onConfirm={(reason) => void confirmReverse(reason)} />}
       {showStructure && <FinancialStructure onClose={() => setShowStructure(false)} />}
+      {showReport && <FinancialReportExport onClose={() => setShowReport(false)} />}
     </>
   );
 }

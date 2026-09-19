@@ -177,5 +177,44 @@
   },
   "recurrences": "Recurrencias",
   "upcoming": "Próximos compromisos",
-  "upcomingHint": "Cuentas pendientes y vencidas"
+  "upcomingHint": "Cuentas pendientes y vencidas",
+  "report": {
+    "button": "Informe mensual",
+    "eyebrow": "Cierre",
+    "title": "Informe financiero",
+    "subtitle": "Descarga el cierre en CSV (Excel) o PDF, por mes o periodo libre.",
+    "modes": {
+      "month": "Mes cerrado",
+      "range": "Periodo libre"
+    },
+    "fields": {
+      "month": "Mes",
+      "year": "Año",
+      "from": "Fecha inicial",
+      "to": "Fecha final"
+    },
+    "hint": "El informe incluye ventas, formas de pago, asientos por categoría, productos más vendidos y cuentas por cobrar/pagar del periodo.",
+    "actions": {
+      "csv": "Descargar CSV",
+      "pdf": "Descargar PDF"
+    },
+    "footer": "El mismo informe se envía por correo al dueño al final de cada mes.",
+    "errors": {
+      "download": "No pudimos generar el informe ahora. Inténtalo de nuevo."
+    },
+    "months": {
+      "1": "Enero",
+      "2": "Febrero",
+      "3": "Marzo",
+      "4": "Abril",
+      "5": "Mayo",
+      "6": "Junio",
+      "7": "Julio",
+      "8": "Agosto",
+      "9": "Septiembre",
+      "10": "Octubre",
+      "11": "Noviembre",
+      "12": "Diciembre"
+    }
+  }
 }

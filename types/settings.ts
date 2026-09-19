@@ -8,6 +8,8 @@ export type CompanySettings = {
   maximumDiscount: number; requireCustomer: boolean; allowPendingSales: boolean; allowNegativeStock: boolean;
   lowStockNotification: boolean; overdueAccountNotification: boolean; saleNotification: boolean;
   summaryEmail: string | null; summaryFrequency: "daily" | "weekly" | "disabled";
+  /** Relatório financeiro do mês fechado enviado por e-mail no fim do mês. */
+  monthlyReportEnabled: boolean; monthlyReportEmail: string | null;
   requirePasswordForRecords: boolean; requirePasswordForStock: boolean; requirePasswordForSaleReturns: boolean;
   sessionTimeout: number; loginAttempts: number; status: "ACTIVE" | "SUSPENDED";
 };

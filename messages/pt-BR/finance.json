@@ -2,6 +2,45 @@
   "title": "Financeiro",
   "subtitle": "Acompanhe receitas, despesas e compromissos.",
   "eyebrow": "Gestão financeira",
+  "report": {
+    "button": "Relatório mensal",
+    "eyebrow": "Fechamento",
+    "title": "Relatório financeiro",
+    "subtitle": "Baixe o fechamento em CSV (Excel) ou PDF, por mês ou período livre.",
+    "modes": {
+      "month": "Mês fechado",
+      "range": "Período livre"
+    },
+    "fields": {
+      "month": "Mês",
+      "year": "Ano",
+      "from": "Data inicial",
+      "to": "Data final"
+    },
+    "hint": "O relatório traz vendas, formas de pagamento, lançamentos por categoria, produtos mais vendidos e contas a receber/pagar do período.",
+    "actions": {
+      "csv": "Baixar CSV",
+      "pdf": "Baixar PDF"
+    },
+    "footer": "O mesmo relatório é enviado por e-mail ao dono no fim de cada mês.",
+    "errors": {
+      "download": "Não foi possível gerar o relatório agora. Tente novamente."
+    },
+    "months": {
+      "1": "Janeiro",
+      "2": "Fevereiro",
+      "3": "Março",
+      "4": "Abril",
+      "5": "Maio",
+      "6": "Junho",
+      "7": "Julho",
+      "8": "Agosto",
+      "9": "Setembro",
+      "10": "Outubro",
+      "11": "Novembro",
+      "12": "Dezembro"
+    }
+  },
   "tabs": {
     "flow": "Fluxo de caixa",
     "structure": "Estrutura financeira",

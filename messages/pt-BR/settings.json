@@ -95,7 +95,13 @@
       "overdueTitle": "Contas vencidas",
       "newSalesTitle": "Novas vendas",
       "summaryEmail": "E-mail para resumos",
-      "frequencyTitle": "Frequência"
+      "frequencyTitle": "Frequência",
+      "monthlyTitle": "Relatório financeiro mensal",
+      "monthlyToggle": "Enviar o fechamento do mês por e-mail",
+      "monthlyHint": "No último dia do mês enviamos o relatório completo (CSV e PDF) para os proprietários.",
+      "monthlyEmail": "E-mail adicional (opcional)",
+      "monthlyEmailPlaceholder": "contador@escritorio.com.br",
+      "notes": "Os resumos são processados automaticamente, sem duplicação, e os e-mails com falha entram em reenvio gradual."
     },
     "security": {
       "sessions": "Sessões e dispositivos",
