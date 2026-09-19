@@ -6,6 +6,7 @@
     "create": "New employee",
     "createAccess": "Create access",
     "manage": "Manage",
+    "viewSales": "View sales",
     "close": "Close",
     "back": "Back",
     "cancel": "Cancel",
@@ -140,5 +141,45 @@
   "confirm": "Confirm",
   "deactivate": "Deactivate access",
   "activate": "Activate access",
-  "roleAccess": "Role and access level"
+  "roleAccess": "Role and access level",
+  "sales": {
+    "eyebrow": "Employee sales",
+    "subtitle": "Every sale in the period, with items, payments and cancellations.",
+    "loading": "Loading sales...",
+    "empty": "No sale recorded in this period.",
+    "cancelled": "Cancelled",
+    "periods": {
+      "today": "Today",
+      "week": "Last 7 days",
+      "month": "Current month",
+      "previousMonth": "Last month",
+      "custom": "Period"
+    },
+    "fields": {
+      "from": "Start date",
+      "to": "End date"
+    },
+    "metrics": {
+      "totalSold": "Total sold",
+      "salesCount": "Completed sales",
+      "averageTicket": "Average ticket",
+      "discountGiven": "Discounts given",
+      "itemsSold": "Items sold",
+      "cancelledCount": "Cancelled sales",
+      "cancelledAmount": "Cancelled amount"
+    },
+    "byMethod": "How the customer paid",
+    "noPayments": "No payments in the period.",
+    "salesInMethod": "{count} sale(s)",
+    "listTitle": "Sales in the period ({count})",
+    "page": "Page {page} of {total}",
+    "previousPage": "Previous page",
+    "nextPage": "Next page",
+    "discountShort": "Discount {value}",
+    "itemsTitle": "Sale items",
+    "subtotal": "Subtotal",
+    "discount": "Discount",
+    "method": "Payment",
+    "cancelInfo": "Cancelled on {date} by {name}"
+  }
 }

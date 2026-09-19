@@ -6,6 +6,7 @@
     "create": "Novo funcionário",
     "createAccess": "Criar acesso",
     "manage": "Gerir",
+    "viewSales": "Ver vendas",
     "close": "Fechar",
     "back": "Voltar",
     "cancel": "Cancelar",
@@ -140,5 +141,45 @@
   "confirm": "Confirmar",
   "deactivate": "Inativar acesso",
   "activate": "Ativar acesso",
-  "roleAccess": "Função e nível de acesso"
+  "roleAccess": "Função e nível de acesso",
+  "sales": {
+    "eyebrow": "Vendas do funcionário",
+    "subtitle": "Todas as vendas do período, com artigos, pagamentos e cancelamentos.",
+    "loading": "A carregar vendas...",
+    "empty": "Nenhuma venda registada neste período.",
+    "cancelled": "Cancelada",
+    "periods": {
+      "today": "Hoje",
+      "week": "Últimos 7 dias",
+      "month": "Mês atual",
+      "previousMonth": "Mês passado",
+      "custom": "Período"
+    },
+    "fields": {
+      "from": "Data inicial",
+      "to": "Data final"
+    },
+    "metrics": {
+      "totalSold": "Total vendido",
+      "salesCount": "Vendas concluídas",
+      "averageTicket": "Ticket médio",
+      "discountGiven": "Descontos concedidos",
+      "itemsSold": "Artigos vendidos",
+      "cancelledCount": "Vendas canceladas",
+      "cancelledAmount": "Valor cancelado"
+    },
+    "byMethod": "Como o cliente pagou",
+    "noPayments": "Sem pagamentos no período.",
+    "salesInMethod": "{count} venda(s)",
+    "listTitle": "Vendas do período ({count})",
+    "page": "Página {page} de {total}",
+    "previousPage": "Página anterior",
+    "nextPage": "Página seguinte",
+    "discountShort": "Desconto {value}",
+    "itemsTitle": "Artigos da venda",
+    "subtotal": "Subtotal",
+    "discount": "Desconto",
+    "method": "Pagamento",
+    "cancelInfo": "Cancelada em {date} por {name}"
+  }
 }

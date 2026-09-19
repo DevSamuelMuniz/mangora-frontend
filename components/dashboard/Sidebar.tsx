@@ -95,7 +95,7 @@ const secondaryNavigation: NavigationItem[] = [
     key: "employees",
     href: "/funcionarios",
     icon: Building2,
-    roles: ["OWNER", "ADMIN"],
+    roles: ["OWNER", "ADMIN", "MANAGER"],
   },
   {
     key: "subscription",

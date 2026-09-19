@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { apiRequest } from "@/lib/api/client";
 import type { Employee, EmployeeRole } from "@/types/employee";
+import type { EmployeeSalesRange, EmployeeSalesReport } from "@/types/employee-sales";
 
 /**
  * Domínio de funcionários — hooks de estado de servidor.
@@ -54,5 +55,23 @@ export function useUpdateEmployeeProfile() {
     return useMutation<Employee, Error, { id: string; payload: Record<string, unknown> }>({
         mutationFn: ({ id, payload }) => apiRequest<Employee>(`/employees/${id}/profile`, { method: "PATCH", body: JSON.stringify(payload) }),
         onSuccess: () => { void queryClient.invalidateQueries({ queryKey: employeesQueryKey }); },
+    });
+}
+
+/**
+ * Vendas detalhadas de um funcionário (leitura — dono, administrador e gerente).
+ * Sem `from`/`to` o backend devolve o mês corrente.
+ */
+export function useEmployeeSales(employeeId: string | null, range: EmployeeSalesRange = {}) {
+    const search = new URLSearchParams();
+    if (range.from) search.set("from", range.from);
+    if (range.to) search.set("to", range.to);
+    if (range.page && range.page > 1) search.set("page", String(range.page));
+    const query = search.toString();
+
+    return useQuery<EmployeeSalesReport, Error>({
+        queryKey: ["employee-sales", employeeId, query],
+        enabled: Boolean(employeeId),
+        queryFn: () => apiRequest<EmployeeSalesReport>(`/employees/${employeeId}/sales${query ? `?${query}` : ""}`),
     });
 }
