@@ -10,13 +10,15 @@ const nextConfig: NextConfig = {
   },
   async headers() {
     const isDevelopment = process.env.NODE_ENV !== "production";
+    // Vercel Toolbar resources: https://vercel.com/docs/vercel-toolbar/managing-toolbar#using-a-content-security-policy
     const contentSecurityPolicy = [
       "default-src 'self'",
-      `script-src 'self' 'unsafe-inline' https://www.googletagmanager.com${isDevelopment ? " 'unsafe-eval'" : ""}`,
-      "style-src 'self' 'unsafe-inline'",
+      `script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://vercel.live${isDevelopment ? " 'unsafe-eval'" : ""}`,
+      "style-src 'self' 'unsafe-inline' https://vercel.live",
       "img-src 'self' data: blob: https:",
-      "font-src 'self' data:",
-      "connect-src 'self' https://api.mangora.com.br https://www.google-analytics.com https://region1.google-analytics.com",
+      "font-src 'self' data: https://vercel.live https://assets.vercel.com",
+      "connect-src 'self' https://api.mangora.com.br https://www.google-analytics.com https://region1.google-analytics.com https://vercel.live wss://ws-us3.pusher.com",
+      "frame-src 'self' https://vercel.live",
       "frame-ancestors 'none'",
       "base-uri 'self'",
       "form-action 'self'",
