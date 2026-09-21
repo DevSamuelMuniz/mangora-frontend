@@ -7,7 +7,7 @@ import labels from "@/messages/pt-BR/labels.json";
 import { printLabels } from "@/lib/labels";
 
 vi.mock("@/features/products/hooks/useProducts", () => ({ useProducts: () => ({
-  data: [{ id: "coffee", name: "Café especial", barcode: "0012345678905", sku: "CAFE" }, { id: "tea", name: "Chá", barcode: null, sku: "CHA" }],
+  data: [{ id: "coffee", name: "Café especial", barcode: "0012345678905", sku: "CAFE", price: 19.9 }, { id: "tea", name: "Chá", barcode: null, sku: "CHA", price: 0 }],
   isLoading: false, error: null,
 }) }));
 vi.mock("@/lib/labels", async (original) => ({ ...await original<typeof import("@/lib/labels")>(), printLabels: vi.fn().mockResolvedValue(undefined) }));
@@ -27,6 +27,9 @@ describe("página Etiquetas", () => {
     await waitFor(() => expect(printLabels).toHaveBeenCalledOnce());
     const html = vi.mocked(printLabels).mock.calls[0][0];
     expect(html).toContain("size:50mm 40mm");
+    const prices = new DOMParser().parseFromString(html, "text/html").querySelectorAll(".product-label-price");
+    expect([...prices].map((node) => node.textContent?.replace(/\s/g, " "))).toEqual(["R$ 19,90", "R$ 19,90", "R$ 19,90"]);
+    expect(screen.getByText(/R\$\s19,90/)).toBeTruthy();
     expect(new DOMParser().parseFromString(html, "text/html").querySelectorAll(".product-label")).toHaveLength(3);
   });
 

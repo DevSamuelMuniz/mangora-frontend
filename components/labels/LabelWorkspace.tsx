@@ -4,7 +4,7 @@ import { useState, type CSSProperties } from "react";
 import Link from "next/link";
 import { Barcode, Check, LoaderCircle, Printer, Ruler, Search, Trash2 } from "lucide-react";
 import { useProducts } from "@/features/products/hooks/useProducts";
-import { useT } from "@/i18n/provider";
+import { useFormatters, useT } from "@/i18n/provider";
 import { barcodeFits, buildLabelDocument, LABEL_CSS, LABEL_SIZES, labelCode, labelMarkup, MAX_LABELS, printLabels, validLabelSize, type LabelItem, type LabelPaper } from "@/lib/labels";
 
 const inputClass = "h-11 w-full rounded-xl border border-slate-200 bg-white px-3 text-sm outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-100";
@@ -12,6 +12,7 @@ const panelClass = "rounded-2xl border border-slate-200 bg-white p-4 sm:p-5";
 
 export default function LabelWorkspace() {
   const t = useT();
+  const { formatCurrency } = useFormatters();
   const { data: products = [], isLoading, error, refetch } = useProducts();
   const [search, setSearch] = useState("");
   const [quantities, setQuantities] = useState<Record<string, number>>({});
@@ -25,7 +26,7 @@ export default function LabelWorkspace() {
   const validSize = validLabelSize(size);
   const selected: LabelItem[] = products.flatMap((product) => {
     const code = labelCode(product);
-    return quantities[product.id] !== undefined && code ? [{ id: product.id, name: product.name, code, quantity: quantities[product.id] }] : [];
+    return quantities[product.id] !== undefined && code ? [{ id: product.id, name: product.name, code, price: formatCurrency(product.price), quantity: quantities[product.id] }] : [];
   });
   const total = selected.reduce((sum, item) => sum + item.quantity, 0);
   const invalidQuantity = selected.some((item) => !Number.isInteger(item.quantity) || item.quantity < 1);

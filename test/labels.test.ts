@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { barcodeData, barcodeFits, buildLabelDocument, labelCode, labelMarkup, validLabelSize } from "@/lib/labels";
 
-const product = { id: "p1", name: 'Café <Especial> & "Premium"', code: "0012345678905", quantity: 2 };
+const product = { id: "p1", name: 'Café <Especial> & "Premium"', code: "0012345678905", price: "R$ 19,90", quantity: 2 };
 
 describe("etiquetas", () => {
   it("preserva zeros e só usa SKU numérico quando não existe código de barras", () => {
@@ -24,6 +24,7 @@ describe("etiquetas", () => {
     root.innerHTML = labelMarkup(product);
     expect(root.querySelector(".product-label-name")?.textContent).toBe(product.name);
     expect(root.querySelector("svg")?.nextElementSibling?.textContent).toBe(product.code);
+    expect(root.querySelector(".product-label-price")?.textContent).toBe(product.price);
     expect(root.querySelector("especial")).toBeNull();
     expect(root.querySelectorAll("svg rect").length).toBeGreaterThan(20);
   });
