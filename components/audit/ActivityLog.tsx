@@ -45,7 +45,13 @@ export default function ActivityLog() {
   const { locale } = useI18n();
   const [search, setSearch] = useState("");
   const [action, setAction] = useState("all");
-  const { data = [], isLoading, error, refetch, isFetching } = useQuery<LogEntry[]>({ queryKey: ["activity-log"], queryFn: () => apiRequest<LogEntry[]>("/audit"), refetchInterval: 5000 });
+  const { data = [], isLoading, error, refetch, isFetching } = useQuery<LogEntry[]>({
+    queryKey: ["activity-log"],
+    queryFn: () => apiRequest<LogEntry[]>("/audit"),
+    refetchInterval: 60_000,
+    refetchIntervalInBackground: false,
+    refetchOnWindowFocus: true,
+  });
   const actions = [...new Set(data.map((entry) => entry.action))].sort();
   const visible = useMemo(() => {
     const query = search.trim().toLocaleLowerCase(locale);
