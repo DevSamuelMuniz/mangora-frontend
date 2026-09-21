@@ -6,6 +6,7 @@ import { useState } from "react";
 import {
   ArrowRightLeft,
   BarChart3,
+  Barcode,
   Bot,
   ClipboardCheck,
   Database,
@@ -67,6 +68,7 @@ const navigationGroups: NavigationGroup[] = [
     { key: "categories", href: "/categorias", icon: FolderTree, roles: ["OWNER", "ADMIN", "MANAGER"] },
   ] },
   { key: "supplies", icon: Boxes, items: [
+    { key: "labels", href: "/etiquetas", icon: Barcode, simple: true },
     { key: "stock", href: "/estoque", icon: Boxes, simple: true },
     { key: "transfers", href: "/estoque/transferencias", icon: ArrowRightLeft, roles: ["OWNER", "ADMIN", "MANAGER"] },
     { key: "inventory", href: "/estoque/inventario", icon: ClipboardCheck, roles: ["OWNER", "ADMIN", "MANAGER"] },

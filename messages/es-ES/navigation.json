@@ -29,7 +29,8 @@
     "stores": "Tiendas",
     "employees": "Empleados",
     "subscription": "Suscripción",
-    "settings": "Configuración"
+    "settings": "Configuración",
+    "labels": "Etiquetas"
   },
   "admin": "Administración"
 }

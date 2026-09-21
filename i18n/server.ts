@@ -8,7 +8,7 @@ import { geoFromHeaders } from "@/lib/regional/geo";
 import { LOCALE_COOKIE, resolveLocale, type Locale } from "./config";
 import { createTranslator, fallbackChain, mergeMessages, type Messages } from "./runtime";
 
-const NAMESPACES = ["common", "navigation", "validations", "statuses", "paymentMethods", "errors", "settings", "dashboard", "sales", "pdv", "products", "stock", "customers", "suppliers", "finance", "reports", "employees", "units", "bank", "operations", "workspace", "forms", "orders", "billing", "publicUi", "landing", "site", "publicPages", "systemAdmin", "aiManager", "pageMeta", "accountSecurity", "modules", "categories", "services", "purchases"] as const;
+const NAMESPACES = ["common", "navigation", "validations", "statuses", "paymentMethods", "errors", "settings", "dashboard", "sales", "pdv", "products", "stock", "customers", "suppliers", "finance", "reports", "employees", "units", "bank", "operations", "workspace", "forms", "orders", "billing", "publicUi", "landing", "site", "publicPages", "systemAdmin", "aiManager", "pageMeta", "accountSecurity", "modules", "categories", "services", "purchases", "labels"] as const;
 type Namespace = (typeof NAMESPACES)[number];
 
 const localeLoaders: Record<Locale, Record<Namespace, () => Promise<{ default: Messages }>>> = {
@@ -49,6 +49,7 @@ const localeLoaders: Record<Locale, Record<Namespace, () => Promise<{ default: M
     categories: () => import("../messages/pt-BR/categories.json") as Promise<{ default: Messages }>,
     services: () => import("../messages/pt-BR/services.json") as Promise<{ default: Messages }>,
     purchases: () => import("../messages/pt-BR/purchases.json") as Promise<{ default: Messages }>,
+    labels: () => import("../messages/pt-BR/labels.json") as Promise<{ default: Messages }>,
   },
   "en-US": {
     common: () => import("../messages/en-US/common.json") as Promise<{ default: Messages }>,
@@ -87,6 +88,7 @@ const localeLoaders: Record<Locale, Record<Namespace, () => Promise<{ default: M
     categories: () => import("../messages/en-US/categories.json") as Promise<{ default: Messages }>,
     services: () => import("../messages/en-US/services.json") as Promise<{ default: Messages }>,
     purchases: () => import("../messages/en-US/purchases.json") as Promise<{ default: Messages }>,
+    labels: () => import("../messages/en-US/labels.json") as Promise<{ default: Messages }>,
   },
   "es-ES": {
     common: () => import("../messages/es-ES/common.json") as Promise<{ default: Messages }>,
@@ -125,6 +127,7 @@ const localeLoaders: Record<Locale, Record<Namespace, () => Promise<{ default: M
     categories: () => import("../messages/es-ES/categories.json") as Promise<{ default: Messages }>,
     services: () => import("../messages/es-ES/services.json") as Promise<{ default: Messages }>,
     purchases: () => import("../messages/es-ES/purchases.json") as Promise<{ default: Messages }>,
+    labels: () => import("../messages/es-ES/labels.json") as Promise<{ default: Messages }>,
   },
   "pt-PT": {
     common: () => import("../messages/pt-PT/common.json") as Promise<{ default: Messages }>,
@@ -163,6 +166,7 @@ const localeLoaders: Record<Locale, Record<Namespace, () => Promise<{ default: M
     categories: () => import("../messages/pt-PT/categories.json") as Promise<{ default: Messages }>,
     services: () => import("../messages/pt-PT/services.json") as Promise<{ default: Messages }>,
     purchases: () => import("../messages/pt-PT/purchases.json") as Promise<{ default: Messages }>,
+    labels: () => import("../messages/pt-PT/labels.json") as Promise<{ default: Messages }>,
   },
 };
 

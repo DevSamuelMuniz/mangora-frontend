@@ -29,7 +29,8 @@
     "stores": "Stores",
     "employees": "Employees",
     "subscription": "Subscription",
-    "settings": "Settings"
+    "settings": "Settings",
+    "labels": "Labels"
   },
   "admin": "Administration"
 }

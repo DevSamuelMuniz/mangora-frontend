@@ -55,10 +55,10 @@ Sem repetir consulta ao banco: a leitura da sessão é memoizada com `cache()` d
 
 ## 4. Catálogos e paridade
 
-- **36 namespaces × 4 idiomas = 2.492 chaves por locale** (`frontend/messages/<locale>/*.json`)
+- **37 namespaces × 4 idiomas = 2.642 chaves finais por locale (incluindo índices de listas)** (`frontend/messages/<locale>/*.json`)
 - Namespaces cobrem domínio (`sales`, `pdv`, `products`, `stock`, `customers`, `suppliers`, `finance`, `reports`, `employees`, `units`, `bank`, `operations`, `cashRegister`-keys em `modules`…), superfícies (`navigation`, `dashboard`, `settings`, `forms`, `orders`, `billing`, `publicUi`, `publicPages`, `landing`, `site`, `systemAdmin`, `accountSecurity`, `aiManager`, `purchases`, `categories`, `services`, `pageMeta`) e base (`common`, `validations`, `statuses`, `paymentMethods`, `errors`)
 - **Paridade por teste**: `test/i18n.test.ts` compara a lista de chaves de cada namespace com o `pt-BR` e falha se faltar ou sobrar chave
-- Carregamento **só do idioma ativo** via `import()` dinâmico por namespace
+- Carregamento do **idioma ativo e do fallback pt-BR** via `import()` dinâmico por namespace. Não carrega os demais idiomas. Arrays são substituídos integralmente durante a mesclagem.
 
 ## 5. Chaves semânticas e APIs de tradução
 
@@ -89,11 +89,11 @@ Helper específico para códigos com fallback ao valor cru: `codeLabel(prefix, v
 
 ## 7. Datas, horas, moedas, números e percentuais
 
-`frontend/lib/format.ts` expõe tudo com o locale ativo (e permite forçar outro para exportações):
+`frontend/lib/format.ts` oferece formatadores puros com idioma, moeda e fuso independentes. As telas usam `useFormatters()` do provider; o servidor usa `getFormatters()`. As preferências vêm da sessão (usuário → empresa → padrão BRL/America/Sao_Paulo), sem inferir a moeda pelo idioma:
 
 | Função | Exemplo `pt-BR` × `en-US` |
 |---|---|
-| `formatCurrency` | `R$ 1.249,90` × `$1,249.90` |
+| `formatCurrency` | `R$ 1.249,90` × `R$1,249.90` (mesma moeda BRL) |
 | `formatNumber` | `1.500,5` × `1,500.5` |
 | `formatPercent` / `formatPercentage` | `12,5%` × `12.5%` |
 | `formatDate` / `formatDateLong` / `formatDateTime` / `formatTime` | `15/09/2026` × `Sep 15, 2026` |
@@ -190,7 +190,7 @@ Migrados de ponta a ponta nos módulos do item 14:
 | Gate | Resultado |
 |---|---|
 | `npx tsc --noEmit` (frontend) | limpo |
-| `npm test` (frontend) | 15 arquivos / 103 testes |
+| `npm test` (frontend) | 21 arquivos / 123 testes |
 | `npx next build` (frontend) | compilado com sucesso |
 | `npx tsc --noEmit -p tsconfig.build.json` (backend) | limpo |
 | `npm test` (backend) | 30 suites / 139 testes |
