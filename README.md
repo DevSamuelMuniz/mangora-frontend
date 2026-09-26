@@ -4,11 +4,10 @@ Interface web da Mangora, construída com Next.js App Router, React, TypeScript 
 
 ## Configuração
 
-Copie `.env.example` para `.env.local` e mantenha a URL da API alinhada ao backend:
+Na Vercel, configure a URL HTTPS da API hospedada no Render. Para executar o frontend nesta cópia, use o mesmo valor em `.env.local`:
 
 ```env
-NEXT_PUBLIC_API_URL="http://localhost:3001/api"
-API_URL="http://localhost:3001/api"
+API_URL="https://api.mangora.com.br/api"
 ```
 
 Comandos disponíveis:
@@ -21,3 +20,5 @@ npm.cmd run build
 ```
 
 As rotas internas validam a sessão no backend antes da renderização. Login, cadastro e logout utilizam cookies `HttpOnly`; tokens não são armazenados no `localStorage`.
+
+O frontend não possui fallback para API local. A Vercel usa o framework Next.js e o comando `npm run build`. As credenciais do Neon ficam somente no Render; não devem ser copiadas para o frontend.

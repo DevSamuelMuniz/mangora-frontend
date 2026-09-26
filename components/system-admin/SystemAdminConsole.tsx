@@ -9,9 +9,10 @@ import BrandLogo from "@/components/brand/BrandLogo";
 import { useT } from "@/i18n/provider";
 import type { Translate } from "@/i18n/runtime";
 import { ApiError, apiRequest } from "@/lib/api/client";
+import BillingConfigPanel from "./BillingConfigPanel";
 
 
-type Tab = "overview" | "companies" | "users" | "plans" | "prices" | "coupons";
+type Tab = "overview" | "companies" | "users" | "plans" | "prices" | "coupons" | "config";
 type Overview = { metrics: { users: number; activeUsers: number; companies: number; activeCompanies: number; newCompanies: number; monthlyRecurringRevenue: number }; plans: Plan[]; recentCompanies: Company[] };
 type Plan = { id: string; name: string; price: number | null; ownerLimit: number | null; employeeLimit: number | null; unitLimit: number | null; companies: number };
 type User = { id: string; name: string; email: string; phone: string | null; status: string; isSystemAdmin: boolean; failedLoginAttempts: number; lockedUntil: string | null; createdAt: string; _count: { memberships: number; sessions: number } };
@@ -23,6 +24,7 @@ type PlanPricing = { id: string; code: string; name: string; active: boolean; pr
 
 function buildNav(t: Translate) {
   return [
+    { id: "config" as const, label: "Sys Config", icon: ShieldCheck },
     { id: "overview" as const, label: t("systemAdmin.nav.overview"), icon: LayoutDashboard },
     { id: "companies" as const, label: t("systemAdmin.nav.companies"), icon: Building2 },
     { id: "users" as const, label: t("systemAdmin.nav.users"), icon: Users },
@@ -118,6 +120,7 @@ export default function SystemAdminConsole({ operatorName }: { operatorName: str
           {loading ? <Loading /> : error ? <Denied message={error} /> : overview && <>
             {(tab === "companies" || tab === "users") && <SearchBar value={search} onChange={setSearch} placeholder={tab === "companies" ? t("systemAdmin.search.companies") : t("systemAdmin.search.users")} />}
             {tab === "overview" && <OverviewPanel data={overview} onCompanies={() => setTab("companies")} />}
+            {tab === "config" && <BillingConfigPanel />}
             {tab === "companies" && <CompaniesPanel items={visibleCompanies} onEdit={setEditingCompany} />}
             {tab === "users" && <UsersPanel items={visibleUsers} onEdit={setEditingUser} onSupport={setSupportingUser} />}
             {tab === "plans" && <PlansPanel plans={overview.plans} />}
