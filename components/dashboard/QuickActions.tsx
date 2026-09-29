@@ -1,11 +1,7 @@
-<<<<<<< HEAD
-import Link from "next/link";
-=======
 "use client";
 
 import Link from "next/link";
 import { useT } from "@/i18n/provider";
->>>>>>> 0e59a660a5acf0b652a188ddf2e8ccc96de79e4d
 import {
   ArrowUpRight,
   CircleDollarSign,
@@ -16,13 +12,8 @@ import {
 } from "lucide-react";
 
 type QuickAction = {
-<<<<<<< HEAD
-  title: string;
-  description: string;
-=======
   titleKey: string;
   descriptionKey: string;
->>>>>>> 0e59a660a5acf0b652a188ddf2e8ccc96de79e4d
   href: string;
   icon: LucideIcon;
   className: string;
@@ -30,71 +21,36 @@ type QuickAction = {
 
 const actions: QuickAction[] = [
   {
-<<<<<<< HEAD
-    title: "Nova venda",
-    description: "Registrar uma venda",
-    href: "/vendas/nova",
-=======
     titleKey: "newSale",
     descriptionKey: "newSaleHint",
     href: "/vendas?acao=novo",
->>>>>>> 0e59a660a5acf0b652a188ddf2e8ccc96de79e4d
     icon: ShoppingCart,
     className: "bg-orange-50 text-orange-600",
   },
   {
-<<<<<<< HEAD
-    title: "Novo produto",
-    description: "Adicionar ao catálogo",
-    href: "/produtos/novo",
-=======
     titleKey: "newProduct",
     descriptionKey: "newProductHint",
     href: "/produtos?acao=novo",
->>>>>>> 0e59a660a5acf0b652a188ddf2e8ccc96de79e4d
     icon: PackagePlus,
     className: "bg-yellow-50 text-yellow-600",
   },
   {
-<<<<<<< HEAD
-    title: "Novo cliente",
-    description: "Cadastrar cliente",
-    href: "/clientes/novo",
-=======
     titleKey: "newCustomer",
     descriptionKey: "newCustomerHint",
     href: "/clientes?acao=novo",
->>>>>>> 0e59a660a5acf0b652a188ddf2e8ccc96de79e4d
     icon: UserPlus,
     className: "bg-green-50 text-green-600",
   },
   {
-<<<<<<< HEAD
-    title: "Lançamento",
-    description: "Registrar movimentação",
-    href: "/financeiro/novo",
-=======
     titleKey: "entry",
     descriptionKey: "movementHint",
     href: "/financeiro?acao=novo",
->>>>>>> 0e59a660a5acf0b652a188ddf2e8ccc96de79e4d
     icon: CircleDollarSign,
     className: "bg-amber-50 text-amber-600",
   },
 ];
 
 export default function QuickActions() {
-<<<<<<< HEAD
-  return (
-    <article className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:p-5">
-      <div>
-        <h2 className="text-sm font-bold text-slate-950">
-          Ações rápidas
-        </h2>
-
-        <p className="mt-0.5 text-[10px] text-slate-400">
-          Acesse as principais funções
-=======
   const t = useT();
   return (
     <article className="mangora-quick-actions rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:p-5">
@@ -105,7 +61,6 @@ export default function QuickActions() {
 
         <p className="mt-0.5 text-[10px] text-slate-400">
           {t("dashboard.quickActions.subtitle")}
->>>>>>> 0e59a660a5acf0b652a188ddf2e8ccc96de79e4d
         </p>
       </div>
 
@@ -115,11 +70,7 @@ export default function QuickActions() {
 
           return (
             <Link
-<<<<<<< HEAD
-              key={action.title}
-=======
               key={t(`dashboard.quickActions.${action.titleKey}`)}
->>>>>>> 0e59a660a5acf0b652a188ddf2e8ccc96de79e4d
               href={action.href}
               className="group flex items-center gap-3 rounded-xl border border-slate-200 p-3 transition hover:-translate-y-0.5 hover:border-orange-200 hover:bg-orange-50/40 hover:shadow-sm"
             >
@@ -131,19 +82,11 @@ export default function QuickActions() {
 
               <div className="min-w-0 flex-1">
                 <p className="truncate text-xs font-bold text-slate-800">
-<<<<<<< HEAD
-                  {action.title}
-                </p>
-
-                <p className="mt-0.5 truncate text-[9px] text-slate-400">
-                  {action.description}
-=======
                   {t(`dashboard.quickActions.${action.titleKey}`)}
                 </p>
 
                 <p className="mt-0.5 truncate text-[9px] text-slate-400">
                   {t(`dashboard.quickActions.${action.descriptionKey}`)}
->>>>>>> 0e59a660a5acf0b652a188ddf2e8ccc96de79e4d
                 </p>
               </div>
 

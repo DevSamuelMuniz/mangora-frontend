@@ -94,30 +94,18 @@ export default function CustomerForm({ customerId }: { customerId?: string }) {
   }
 
   if (loadingCustomer) {
-<<<<<<< HEAD
-    return <div className="flex min-h-72 items-center justify-center rounded-2xl border border-slate-200 bg-white"><LoaderCircle className="size-6 animate-spin text-orange-600" /><span className="ml-2 text-sm font-semibold text-slate-500">Carregando cliente...</span></div>;
-  }
-
-  if (editing && !customer) {
-    return <div className="rounded-2xl border border-red-200 bg-red-50 p-6 text-center"><p className="text-sm font-bold text-red-700">{error || "Cliente não encontrado."}</p><Link href="/clientes" className="mt-4 inline-flex h-10 items-center rounded-xl bg-white px-4 text-xs font-bold text-orange-600 shadow-sm">Voltar para clientes</Link></div>;
-=======
     return <div className="flex min-h-72 items-center justify-center rounded-2xl border border-slate-200 bg-white"><LoaderCircle className="size-6 animate-spin text-orange-600" /><span className="ml-2 text-sm font-semibold text-slate-500">{t("customers.form.loading")}</span></div>;
   }
 
   if (editing && !customer) {
     return <div className="rounded-2xl border border-red-200 bg-red-50 p-6 text-center"><p className="text-sm font-bold text-red-700">{error || "Cliente não encontrado."}</p><Link href="/clientes" className="mt-4 inline-flex h-10 items-center rounded-xl bg-white px-4 text-xs font-bold text-orange-600 shadow-sm">{t("customers.form.back")}</Link></div>;
->>>>>>> 0e59a660a5acf0b652a188ddf2e8ccc96de79e4d
   }
 
   return (
     <section className="mx-auto max-w-5xl">
       <div className="flex items-start gap-3">
         <Link href="/clientes" aria-label="Voltar para clientes" className="flex size-10 shrink-0 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-500 shadow-sm transition hover:bg-slate-50 hover:text-orange-600"><ArrowLeft className="size-4" /></Link>
-<<<<<<< HEAD
-        <div><p className="text-[11px] font-bold uppercase tracking-[0.14em] text-orange-600">Relacionamento</p><h1 className="mt-1 text-2xl font-black tracking-tight text-slate-950 sm:text-3xl">{editing ? "Editar cliente" : "Novo cliente"}</h1><p className="mt-1 text-xs text-slate-500">{editing ? "Atualize os dados do cliente selecionado." : "Preencha os dados para cadastrar o cliente."}</p></div>
-=======
         <div><p className="text-[11px] font-bold uppercase tracking-[0.14em] text-orange-600">Relacionamento</p><h1 className="mt-1 text-2xl font-black tracking-tight text-slate-950 sm:text-3xl">{editing ? t("customers.form.titleEdit") : t("customers.form.titleNew")}</h1><p className="mt-1 text-xs text-slate-500">{editing ? t("customers.form.subtitleEdit") : t("customers.form.subtitleNew")}</p></div>
->>>>>>> 0e59a660a5acf0b652a188ddf2e8ccc96de79e4d
       </div>
 
       <form key={customer?.id ?? "new"} onSubmit={handleSubmit} className="mt-5 space-y-4">
@@ -129,11 +117,7 @@ export default function CustomerForm({ customerId }: { customerId?: string }) {
               {(["INDIVIDUAL", "COMPANY"] as CustomerType[]).map((type) => (
                 <label key={type} className={`flex h-11 cursor-pointer items-center gap-2.5 rounded-xl border px-3 text-xs font-bold transition ${customerType === type ? "border-orange-300 bg-orange-50 text-orange-700" : "border-slate-200 text-slate-600 hover:bg-slate-50"}`}>
                   <input type="radio" name="type" value={type} checked={customerType === type} onChange={() => setCustomerType(type)} className="accent-orange-600" />
-<<<<<<< HEAD
-                  {type === "INDIVIDUAL" ? "Pessoa física" : "Pessoa jurídica"}
-=======
                   {t(`customers.types.${type}`)}
->>>>>>> 0e59a660a5acf0b652a188ddf2e8ccc96de79e4d
                 </label>
               ))}
             </div>
@@ -162,21 +146,12 @@ export default function CustomerForm({ customerId }: { customerId?: string }) {
         </div>
 
         <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:p-5">
-<<<<<<< HEAD
-          <SectionTitle icon={Building2} title="Observações" description="Anotações internas sobre preferências ou atendimento." />
-          <Field label="Observações (opcional)" id="notes" className="mt-4"><textarea id="notes" name="notes" rows={3} maxLength={2000} defaultValue={customer?.notes ?? ""} placeholder="Informações adicionais sobre o cliente..." className="w-full resize-y rounded-xl border border-slate-200 bg-white px-3.5 py-3 text-sm text-slate-950 outline-none transition placeholder:text-slate-400 focus:border-orange-400 focus:ring-4 focus:ring-orange-100" /></Field>
-        </div>
-
-        {error && <div role="alert" className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-xs font-semibold text-red-700">{error}</div>}
-        <div className="flex flex-col-reverse gap-3 sm:flex-row sm:justify-end"><Link href="/clientes" className="flex h-11 items-center justify-center rounded-xl border border-slate-200 bg-white px-5 text-sm font-bold text-slate-600 transition hover:bg-slate-50">Cancelar</Link><button type="submit" disabled={loading} className="flex h-11 items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-orange-600 to-amber-600 px-5 text-sm font-bold text-white shadow-lg shadow-orange-200 transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-70 disabled:hover:translate-y-0">{loading ? <><LoaderCircle className="size-4 animate-spin" />Salvando...</> : <><Save className="size-4" />{editing ? "Salvar alterações" : "Salvar cliente"}</>}</button></div>
-=======
           <SectionTitle icon={Building2} title={t("customers.form.sections.notes")} description={t("customers.form.sections.notesHint")} />
           <Field label={t("customers.form.fields.notes")} id="notes" className="mt-4"><textarea id="notes" name="notes" rows={3} maxLength={2000} defaultValue={customer?.notes ?? ""} placeholder={t("customers.form.fields.notesPlaceholder")} className="w-full resize-y rounded-xl border border-slate-200 bg-white px-3.5 py-3 text-sm text-slate-950 outline-none transition placeholder:text-slate-400 focus:border-orange-400 focus:ring-4 focus:ring-orange-100" /></Field>
         </div>
 
         {errorMessage && <div role="alert" className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-xs font-semibold text-red-700">{errorMessage}</div>}
         <div className="flex flex-col-reverse gap-3 sm:flex-row sm:justify-end"><Link href="/clientes" className="flex h-11 items-center justify-center rounded-xl border border-slate-200 bg-white px-5 text-sm font-bold text-slate-600 transition hover:bg-slate-50">{t("customers.form.actions.cancel")}</Link><button type="submit" disabled={loading} className="flex h-11 items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-orange-600 to-amber-600 px-5 text-sm font-bold text-white shadow-lg shadow-orange-200 transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-70 disabled:hover:translate-y-0">{loading ? <><LoaderCircle className="size-4 animate-spin" />{t("customers.form.actions.saving")}</> : <><Save className="size-4" />{editing ? t("customers.form.actions.saveChanges") : t("customers.form.actions.save")}</>}</button></div>
->>>>>>> 0e59a660a5acf0b652a188ddf2e8ccc96de79e4d
       </form>
     </section>
   );

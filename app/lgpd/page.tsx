@@ -1,9 +1,5 @@
 import type { Metadata } from "next";
 import PublicInfoPage from "@/components/public/PublicInfoPage";
-<<<<<<< HEAD
-export const metadata: Metadata = { title: "LGPD | Mangora" };
-export default function LgpdPage() { return <PublicInfoPage eyebrow="Proteção de dados" title="Compromisso com a LGPD" description="Tratamos dados pessoais com transparência, finalidade definida e medidas compatíveis com a Lei Geral de Proteção de Dados." sections={[{ title: "Papéis e finalidades", paragraphs: ["Dependendo do tratamento, o Mangora pode atuar como controlador ou operador. As responsabilidades são definidas conforme a relação com o cliente."], items: ["Finalidades informadas e legítimas.", "Coleta limitada ao necessário.", "Retenção conforme obrigações aplicáveis."] }, { title: "Atendimento aos titulares", paragraphs: ["Solicitações relacionadas a dados pessoais podem ser encaminhadas para privacidade@mangora.com.br."], items: ["Identificamos e validamos o solicitante.", "Avaliamos obrigações legais de retenção.", "Respondemos dentro dos prazos aplicáveis."] }, { title: "Governança", paragraphs: ["Mantemos processos para avaliar riscos, fornecedores, incidentes e mudanças relevantes no tratamento de dados."], items: ["Revisão periódica de controles.", "Registro de decisões e operações.", "Treinamento e conscientização."] }]} />; }
-=======
 import { getTranslator } from "@/i18n/server";
 import { alternateLanguages, localePath } from "@/i18n/urls";
 import { translatedItems } from "@/i18n/items";
@@ -48,4 +44,3 @@ export default async function LgpdPage() {
     />
   );
 }
->>>>>>> 0e59a660a5acf0b652a188ddf2e8ccc96de79e4d

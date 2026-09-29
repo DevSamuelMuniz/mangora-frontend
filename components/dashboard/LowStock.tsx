@@ -1,11 +1,7 @@
-<<<<<<< HEAD
-import Link from "next/link";
-=======
 "use client";
 
 import Link from "next/link";
 import { useT } from "@/i18n/provider";
->>>>>>> 0e59a660a5acf0b652a188ddf2e8ccc96de79e4d
 import {
   AlertTriangle,
   ArrowRight,
@@ -14,10 +10,7 @@ import {
 import type { DashboardData } from "@/types/analytics";
 
 export default function LowStock({ products }: { products: DashboardData["lowStock"] }) {
-<<<<<<< HEAD
-=======
   const t = useT();
->>>>>>> 0e59a660a5acf0b652a188ddf2e8ccc96de79e4d
   return (
     <article className="rounded-2xl border border-slate-200 bg-white shadow-sm">
       <div className="flex items-center justify-between border-b border-slate-200 px-4 py-4 sm:px-5">
@@ -32,11 +25,7 @@ export default function LowStock({ products }: { products: DashboardData["lowSto
             </h2>
 
             <p className="mt-0.5 text-[10px] text-slate-400">
-<<<<<<< HEAD
-              Produtos que precisam de reposição
-=======
               {t("dashboard.lowStock.title")}
->>>>>>> 0e59a660a5acf0b652a188ddf2e8ccc96de79e4d
             </p>
           </div>
         </div>
@@ -85,11 +74,7 @@ export default function LowStock({ products }: { products: DashboardData["lowSto
                       </p>
 
                       <p className="text-[9px] text-slate-400">
-<<<<<<< HEAD
-                        Mín. {product.minimumStock}
-=======
                         {t("dashboard.lowStock.minimum", { count: product.minimumStock })}
->>>>>>> 0e59a660a5acf0b652a188ddf2e8ccc96de79e4d
                       </p>
                     </div>
                   </div>
@@ -105,11 +90,7 @@ export default function LowStock({ products }: { products: DashboardData["lowSto
             </div>
           );
         })}
-<<<<<<< HEAD
-        {products.length === 0 && <p className="px-5 py-10 text-center text-xs text-slate-400">Nenhum produto com estoque baixo.</p>}
-=======
         {products.length === 0 && <p className="px-5 py-10 text-center text-xs text-slate-400">{t("dashboard.lowStock.empty")}</p>}
->>>>>>> 0e59a660a5acf0b652a188ddf2e8ccc96de79e4d
       </div>
     </article>
   );

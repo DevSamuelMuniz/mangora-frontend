@@ -1,9 +1,5 @@
 import type { Metadata } from "next";
 import PublicInfoPage from "@/components/public/PublicInfoPage";
-<<<<<<< HEAD
-export const metadata: Metadata = { title: "Sobre nós | Mangora" };
-export default function AboutPage() { return <PublicInfoPage eyebrow="Empresa" title="Gestão simples para negócios reais" description="O Mangora nasceu para reunir as rotinas essenciais de pequenas e médias empresas em uma experiência clara, rápida e acessível." sections={[{ title: "Nossa missão", paragraphs: ["Reduzir a complexidade da gestão para que empreendedores dediquem mais tempo aos clientes e ao crescimento do negócio."], items: ["Informação centralizada.", "Decisões apoiadas por indicadores.", "Operação simples em qualquer dispositivo."] }, { title: "Como trabalhamos", paragraphs: ["Construímos a plataforma a partir de fluxos cotidianos de vendas, estoque, clientes e financeiro."], items: ["Evolução contínua do produto.", "Segurança desde a concepção.", "Suporte próximo ao cliente."] }]} />; }
-=======
 import { getTranslator } from "@/i18n/server";
 import { alternateLanguages, localePath } from "@/i18n/urls";
 import { translatedItems } from "@/i18n/items";
@@ -43,4 +39,3 @@ export default async function AboutPage() {
     />
   );
 }
->>>>>>> 0e59a660a5acf0b652a188ddf2e8ccc96de79e4d

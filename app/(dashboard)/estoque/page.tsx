@@ -6,12 +6,6 @@ import StockMovementForm from "@/components/stock/StockMovementForm";
 import WorkspaceModal from "@/components/ui/WorkspaceModal";
 import StockTransferForm from "@/components/stock/StockTransferForm";
 
-<<<<<<< HEAD
-export const metadata: Metadata = {
-  title: "Estoque | Mangora",
-  description: "Acompanhe produtos e movimentações de estoque.",
-};
-=======
 export async function generateMetadata(): Promise<Metadata> {
   const { t } = await getTranslator();
   return {
@@ -19,7 +13,6 @@ export async function generateMetadata(): Promise<Metadata> {
     description: t("pageMeta.estoque.description"),
   };
 }
->>>>>>> 0e59a660a5acf0b652a188ddf2e8ccc96de79e4d
 
 export default async function StockPage({ searchParams }: { searchParams: Promise<{ acao?: string; productId?: string }> }) {
   const { t } = await getTranslator();

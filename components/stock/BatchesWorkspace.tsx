@@ -121,6 +121,7 @@ export default function BatchesWorkspace() {
             )}
 
             {batchesLoading ? <div className="mt-3 flex items-center justify-center py-8 text-xs text-slate-400"><LoaderCircle className="mr-2 size-4 animate-spin text-orange-600" />{t("stock.batches.loading")}</div> : !batches.length ? <p className="mt-3 rounded-xl bg-slate-50 p-4 text-center text-xs text-slate-400">{costMethod === "FIFO" ? t("stock.batches.empty") : t("stock.batches.emptyAverage")}</p> : (
+              <>
               <div className="mt-3 space-y-2 sm:hidden">
                 {batches.map((batch) => <article key={batch.id} className="rounded-xl border border-slate-200 bg-white p-3">
                   <div className="flex items-start justify-between gap-3"><div className="min-w-0"><p className="truncate text-sm font-black text-slate-900">{batch.code}</p><p className="mt-0.5 text-[10px] text-slate-500">{batch.quantity} un. · {batch.receivedByName}</p></div><span className="shrink-0 rounded-lg bg-green-50 px-2 py-1 text-[10px] font-bold text-green-700">{formatCurrency(batch.unitCost, locale)} / un.</span></div>
@@ -130,6 +131,7 @@ export default function BatchesWorkspace() {
               <div className="mt-3 hidden overflow-x-auto rounded-xl border border-slate-200 sm:block">
                 <table className="w-full text-left"><thead className="bg-slate-50 text-[10px] uppercase tracking-wide text-slate-400"><tr><th className="px-4 py-2.5">{t("stock.batches.fields.batch")}</th><th className="px-4 py-2.5">{t("stock.batches.fields.quantity")}</th><th className="px-4 py-2.5">{t("stock.batches.fields.costShort")}</th><th className="px-4 py-2.5">{t("stock.batches.fields.validity")}</th><th className="px-4 py-2.5">{t("stock.batches.fields.receivedBy")}</th></tr></thead><tbody className="divide-y divide-slate-100">{batches.map((batch) => <tr key={batch.id} className="text-xs"><td className="px-4 py-3 font-black text-slate-800">{batch.code}</td><td className="px-4 py-3 tabular-nums">{batch.quantity} un.</td><td className="px-4 py-3 tabular-nums text-slate-700">{formatCurrency(batch.unitCost, locale)}</td><td className="px-4 py-3">{batch.expiresAt ? <span className={new Date(batch.expiresAt).getTime() - now < 90 * 86_400_000 ? "font-bold text-red-600" : ""}>{formatDate(batch.expiresAt)}</span> : <span className="text-slate-400">{t("stock.batches.fields.noExpiry")}</span>}</td><td className="px-4 py-3 text-slate-500">{batch.receivedByName}</td></tr>)}</tbody></table>
               </div>
+              </>
             )}
           </div>
         )}

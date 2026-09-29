@@ -116,32 +116,6 @@ export default function DashboardHeader({ onOpenSidebar, session, simpleMode, on
         </div>
 
         <div className="flex shrink-0 items-center gap-1.5 sm:gap-2">
-<<<<<<< HEAD
-          <div className="relative">
-            <button type="button" onClick={toggleNotifications} aria-label="Notificações" aria-expanded={notificationOpen} className="relative flex size-10 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-500 transition hover:bg-slate-50 hover:text-orange-600">
-              <Bell className="size-4.5" />
-              {unread > 0 && <span className="absolute right-2.5 top-2.5 size-2 rounded-full border-2 border-white bg-red-500" />}
-            </button>
-
-            {notificationOpen && (
-              <div role="dialog" aria-label="Central de notificações" className="absolute right-0 mt-2 w-[min(22rem,calc(100vw-2rem))] overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl shadow-slate-300/50">
-                <div className="flex items-center justify-between border-b border-slate-100 px-4 py-3">
-                  <div><p className="text-sm font-black text-slate-900">Notificações</p><p className="text-[10px] text-slate-400">{unread} não lidas</p></div>
-                  <button type="button" disabled={!unread} onClick={() => void markAllRead()} className="flex items-center gap-1.5 text-[10px] font-bold text-orange-600 hover:text-orange-800 disabled:text-slate-300"><CheckCheck className="size-3.5" /> Marcar como lidas</button>
-                </div>
-                <div className="divide-y divide-slate-100">
-                  {notifications.map((notification) => (
-                    <div key={notification.id} className="flex gap-3 px-4 py-3">
-                      <span className={`mt-1 size-2 shrink-0 rounded-full ${notification.readAt ? "bg-slate-200" : "bg-orange-500"}`} />
-                      <div><p className="text-xs font-bold text-slate-800">{notification.title}</p><p className="mt-1 text-[11px] leading-4 text-slate-500">{notification.description}</p></div>
-                    </div>
-                  ))}
-                  {!notifications.length && <p className="px-4 py-6 text-center text-[11px] text-slate-400">Nenhuma notificação por enquanto.</p>}
-                </div>
-              </div>
-            )}
-          </div>
-=======
           <label className="flex h-10 cursor-pointer items-center gap-2 rounded-xl border border-slate-200 bg-white px-2.5 transition hover:border-orange-200 hover:bg-orange-50" title={t("dashboard.essentialOnly")}>
             <WandSparkles className={`size-4 ${simpleMode ? "text-orange-600" : "text-slate-400"}`} />
             <span className="hidden text-[10px] font-black text-slate-700 xl:inline">Modo simples</span>
@@ -151,7 +125,6 @@ export default function DashboardHeader({ onOpenSidebar, session, simpleMode, on
           <Link href="/gerente-ia" className="hidden h-10 items-center gap-1.5 rounded-xl bg-[#123d2b] px-3 text-[11px] font-black text-white transition hover:bg-[#147a45] md:flex"><Bot className="size-4" />Gerente de IA</Link>
           <LocaleSwitcher className="hidden sm:inline-flex" />
           <NotificationCenter onOpen={() => setProfileOpen(false)} />
->>>>>>> 0e59a660a5acf0b652a188ddf2e8ccc96de79e4d
 
           <div ref={profileMenuRef} className="relative">
             <button type="button" onClick={toggleProfile} aria-label={`${session.user.name} ${roleLabel}`} aria-expanded={profileOpen} className="flex h-10 items-center gap-2 rounded-xl border border-slate-200 bg-white px-2 transition hover:bg-slate-50 sm:pr-3">
@@ -163,15 +136,9 @@ export default function DashboardHeader({ onOpenSidebar, session, simpleMode, on
             {profileOpen && (
               <div role="menu" aria-label="Menu do perfil" className="absolute right-0 mt-2 w-56 rounded-2xl border border-slate-200 bg-white p-2 shadow-2xl shadow-slate-300/50">
                 <div className="border-b border-slate-100 px-3 py-2"><p className="text-xs font-black text-slate-900">{session.user.name}</p><p className="mt-0.5 truncate text-[10px] text-slate-400">{session.user.email}</p></div>
-<<<<<<< HEAD
-  { (session.membership.role === "OWNER" || session.membership.role === "ADMIN") && <Link href="/configuracoes" role="menuitem" className="mt-1 flex items-center gap-2 rounded-xl px-3 py-2.5 text-xs font-semibold text-slate-600 hover:bg-slate-50 hover:text-orange-700"><UserRound className="size-4" /> Dados da empresa</Link> }
-  { (session.membership.role === "OWNER" || session.membership.role === "ADMIN") && <Link href="/configuracoes" role="menuitem" className="flex items-center gap-2 rounded-xl px-3 py-2.5 text-xs font-semibold text-slate-600 hover:bg-slate-50 hover:text-orange-700"><Settings className="size-4" /> Configurações</Link> }
-  { session.membership.role === "OWNER" && <Link href="/assinatura" role="menuitem" className="flex items-center gap-2 rounded-xl px-3 py-2.5 text-xs font-semibold text-slate-600 hover:bg-slate-50 hover:text-orange-700"><CreditCard className="size-4" /> Assinatura</Link> }
-=======
                 {can(session.membership.role, "company:configure") && <Link href="/configuracoes?secao=company" role="menuitem" className="mt-1 flex items-center gap-2 rounded-xl px-3 py-2.5 text-xs font-semibold text-slate-600 hover:bg-slate-50 hover:text-orange-700"><UserRound className="size-4" /> Dados da empresa</Link>}
                 {can(session.membership.role, "company:configure") && <Link href="/configuracoes?secao=preferences" role="menuitem" className="flex items-center gap-2 rounded-xl px-3 py-2.5 text-xs font-semibold text-slate-600 hover:bg-slate-50 hover:text-orange-700"><Settings className="size-4" /> {t("settings.panel.tabs.preferences")}</Link>}
                 {can(session.membership.role, "subscription:manage") && <Link href="/assinatura" role="menuitem" className="flex items-center gap-2 rounded-xl px-3 py-2.5 text-xs font-semibold text-slate-600 hover:bg-slate-50 hover:text-orange-700"><CreditCard className="size-4" /> Assinatura</Link>}
->>>>>>> 0e59a660a5acf0b652a188ddf2e8ccc96de79e4d
   <button type="button" role="menuitem" disabled={logoutLoading} onClick={() => void handleLogout()} className="mt-1 flex w-full items-center gap-2 border-t border-slate-100 px-3 py-2.5 text-xs font-semibold text-red-600 hover:bg-red-50 disabled:cursor-wait disabled:opacity-60"><LogOut className="size-4" /> {logoutLoading ? "Saindo..." : "Sair"}</button>
               </div >
             )

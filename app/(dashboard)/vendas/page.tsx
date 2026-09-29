@@ -6,11 +6,7 @@ import NewSaleForm from "@/components/sales/NewSaleForm";
 import WorkspaceModal from "@/components/ui/WorkspaceModal";
 
 export const metadata: Metadata = {
-<<<<<<< HEAD
-  title: "Vendas | Mangora",
-=======
   title: "Vendas",
->>>>>>> 0e59a660a5acf0b652a188ddf2e8ccc96de79e4d
   description: "Acompanhe as vendas da sua empresa.",
 };
 

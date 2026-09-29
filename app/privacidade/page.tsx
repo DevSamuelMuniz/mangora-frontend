@@ -3,9 +3,6 @@ import PublicInfoPage from "@/components/public/PublicInfoPage";
 import { getTranslator } from "@/i18n/server";
 import { alternateLanguages, localePath } from "@/i18n/urls";
 
-<<<<<<< HEAD
-export const metadata: Metadata = { title: "Privacidade | Mangora" };
-=======
 export async function generateMetadata(): Promise<Metadata> {
   const { t, locale } = await getTranslator();
   return {
@@ -14,7 +11,6 @@ export async function generateMetadata(): Promise<Metadata> {
     alternates: { canonical: localePath("/privacidade", locale), languages: alternateLanguages("/privacidade") },
   };
 }
->>>>>>> 0e59a660a5acf0b652a188ddf2e8ccc96de79e4d
 
 export default async function PrivacyPage() {
   const { t } = await getTranslator();

@@ -26,23 +26,10 @@ const geistMono = Geist_Mono({
   preload: false,
 });
 
-<<<<<<< HEAD
-export const metadata: Metadata = {
-  title: "Mangora | Gestão inteligente",
-  description:
-    "Gestão completa para vendas, estoque, clientes e financeiro da sua empresa.",
-  icons: {
-    icon: "/mangora-logo.png",
-    shortcut: "/mangora-logo.png",
-    apple: "/mangora-logo.png",
-  },
-};
-=======
 const bricolage = Bricolage_Grotesque({
   variable: "--font-bricolage",
   subsets: ["latin"],
 });
->>>>>>> 0e59a660a5acf0b652a188ddf2e8ccc96de79e4d
 
 const manrope = Manrope({
   variable: "--font-manrope",

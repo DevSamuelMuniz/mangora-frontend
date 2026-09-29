@@ -96,11 +96,7 @@ export default function NewFinancialEntryForm() {
     <section className="mx-auto max-w-5xl">
       <div className="flex items-start gap-3">
         <Link href="/financeiro" aria-label="Voltar para financeiro" className="flex size-10 shrink-0 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-500 shadow-sm transition hover:bg-slate-50 hover:text-orange-600"><ArrowLeft className="size-4" /></Link>
-<<<<<<< HEAD
-        <div><p className="text-[11px] font-bold uppercase tracking-[0.14em] text-orange-600">Gestão financeira</p><h1 className="mt-1 text-2xl font-black tracking-tight text-slate-950 sm:text-3xl">Novo lançamento</h1><p className="mt-1 text-xs text-slate-500">Registre uma receita ou despesa para controle interno.</p></div>
-=======
         <div><p className="text-[11px] font-bold uppercase tracking-[0.14em] text-orange-600">Gestão financeira</p><h1 className="mt-1 text-2xl font-black tracking-tight text-slate-950 sm:text-3xl">{t("finance.form.title")}</h1><p className="mt-1 text-xs text-slate-500">{t("finance.form.subtitle")}</p></div>
->>>>>>> 0e59a660a5acf0b652a188ddf2e8ccc96de79e4d
       </div>
 
       <form onSubmit={handleSubmit} className="mt-5 space-y-4">
@@ -111,11 +107,7 @@ export default function NewFinancialEntryForm() {
             {(["INCOME", "EXPENSE"] as FinancialEntryType[]).map((type) => {
               const selected = entryType === type;
               const Icon = type === "INCOME" ? ArrowUpRight : ArrowDownRight;
-<<<<<<< HEAD
-              return <label key={type} className={`flex cursor-pointer items-center gap-3 rounded-xl border p-3 transition ${selected ? type === "INCOME" ? "border-green-300 bg-green-50" : "border-red-300 bg-red-50" : "border-slate-200 hover:bg-slate-50"}`}><input type="radio" name="type" value={type} checked={selected} onChange={() => { setEntryType(type); setError(""); }} className="sr-only" /><div className={`flex size-9 items-center justify-center rounded-xl ${selected ? type === "INCOME" ? "bg-green-600 text-white" : "bg-red-600 text-white" : "bg-slate-100 text-slate-500"}`}><Icon className="size-4" /></div><div><p className="text-xs font-bold text-slate-800">{financialTypeLabels[type]}</p><p className="mt-0.5 text-[9px] text-slate-400">{type === "INCOME" ? "Venda, serviço ou outro recebimento" : "Conta, compra ou outro pagamento"}</p></div></label>;
-=======
               return <label key={type} className={`flex cursor-pointer items-center gap-3 rounded-xl border p-3 transition ${selected ? type === "INCOME" ? "border-green-300 bg-green-50" : "border-red-300 bg-red-50" : "border-slate-200 hover:bg-slate-50"}`}><input type="radio" name="type" value={type} checked={selected} onChange={() => { setEntryType(type); setError(""); }} className="sr-only" /><div className={`flex size-9 items-center justify-center rounded-xl ${selected ? type === "INCOME" ? "bg-green-600 text-white" : "bg-red-600 text-white" : "bg-slate-100 text-slate-500"}`}><Icon className="size-4" /></div><div><p className="text-xs font-bold text-slate-800">{financialTypeLabels[type]}</p><p className="mt-0.5 text-[9px] text-slate-400">{type === "INCOME" ? t("finance.entryTypes.saleIncome") : t("finance.entryTypes.expense")}</p></div></label>;
->>>>>>> 0e59a660a5acf0b652a188ddf2e8ccc96de79e4d
             })}
           </fieldset>
         </div>
@@ -151,17 +143,10 @@ export default function NewFinancialEntryForm() {
           </aside>
         </div>
 
-<<<<<<< HEAD
-        <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:p-5"><Field label="Observações (opcional)" id="notes"><textarea id="notes" name="notes" rows={3} placeholder="Informações adicionais sobre o lançamento..." className="w-full resize-y rounded-xl border border-slate-200 bg-white px-3.5 py-3 text-sm text-slate-950 outline-none transition placeholder:text-slate-400 focus:border-orange-400 focus:ring-4 focus:ring-orange-100" /></Field></div>
-
-        {error && <div role="alert" className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-xs font-semibold text-red-700">{error}</div>}
-        <div className="flex flex-col-reverse gap-3 sm:flex-row sm:justify-end"><Link href="/financeiro" className="flex h-11 items-center justify-center rounded-xl border border-slate-200 bg-white px-5 text-sm font-bold text-slate-600 hover:bg-slate-50">Cancelar</Link><button type="submit" disabled={loading} className="flex h-11 items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-orange-600 to-amber-600 px-5 text-sm font-bold text-white shadow-lg shadow-orange-200 transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-70 disabled:hover:translate-y-0">{loading ? <><LoaderCircle className="size-4 animate-spin" />Salvando...</> : <><Save className="size-4" />Salvar lançamento</>}</button></div>
-=======
         <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:p-5"><Field label={t("finance.form.fields.notes")} id="notes"><textarea id="notes" name="notes" rows={3} placeholder={t("finance.form.fields.notesPlaceholder")} className="w-full resize-y rounded-xl border border-slate-200 bg-white px-3.5 py-3 text-sm text-slate-950 outline-none transition placeholder:text-slate-400 focus:border-orange-400 focus:ring-4 focus:ring-orange-100" /></Field></div>
 
         {error && <div role="alert" className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-xs font-semibold text-red-700">{error}</div>}
         <div className="flex flex-col-reverse gap-3 sm:flex-row sm:justify-end"><Link href="/financeiro" className="flex h-11 items-center justify-center rounded-xl border border-slate-200 bg-white px-5 text-sm font-bold text-slate-600 hover:bg-slate-50">{t("finance.actions.cancel")}</Link><button type="submit" disabled={loading} className="flex h-11 items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-orange-600 to-amber-600 px-5 text-sm font-bold text-white shadow-lg shadow-orange-200 transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-70 disabled:hover:translate-y-0">{loading ? <><LoaderCircle className="size-4 animate-spin" />{t("finance.actions.saving")}</> : <><Save className="size-4" />{t("finance.actions.save")}</>}</button></div>
->>>>>>> 0e59a660a5acf0b652a188ddf2e8ccc96de79e4d
       </form>
     </section>
   );

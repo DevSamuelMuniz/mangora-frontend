@@ -11,10 +11,7 @@ import {
 } from "lucide-react";
 import { apiRequest } from "@/lib/api/client";
 import BrandLogo from "@/components/brand/BrandLogo";
-<<<<<<< HEAD
-=======
 import { useT } from "@/i18n/provider";
->>>>>>> 0e59a660a5acf0b652a188ddf2e8ccc96de79e4d
 
 export default function PasswordRecoveryPage() {
   const t = useT();
@@ -56,11 +53,7 @@ export default function PasswordRecoveryPage() {
                 {t("publicPages.recoverPassword.sentPrefix")} <strong className="text-slate-700">{sentTo}</strong>, {t("publicPages.recoverPassword.sentSuffix")}
               </p>
               <Link href="/login" className="mt-6 flex h-11 items-center justify-center rounded-xl bg-orange-600 text-sm font-bold text-white transition hover:bg-orange-700">
-<<<<<<< HEAD
-                Voltar para o login
-=======
                 {t("publicPages.recoverPassword.backToLogin")}
->>>>>>> 0e59a660a5acf0b652a188ddf2e8ccc96de79e4d
               </Link>
               {previewUrl && <Link href={previewUrl} className="mt-3 flex h-11 items-center justify-center rounded-xl border border-amber-300 bg-amber-50 text-xs font-bold text-amber-800">{t("publicPages.recoverPassword.devLink")}</Link>}
             </div>
@@ -82,17 +75,10 @@ export default function PasswordRecoveryPage() {
                 </label>
                 <div className="relative">
                   <Mail className="pointer-events-none absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-slate-400" />
-<<<<<<< HEAD
-                  <input id="recovery-email" name="email" type="email" required autoComplete="email" placeholder="voce@empresa.com" className="h-12 w-full rounded-xl border border-slate-200 bg-white pl-10 pr-4 text-sm outline-none transition focus:border-orange-400 focus:ring-4 focus:ring-orange-100" />
-                </div>
-                <button type="submit" disabled={loading} className="mt-4 flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-orange-600 to-amber-600 text-sm font-bold text-white shadow-lg shadow-orange-200 transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-70">
-                  {loading ? <><LoaderCircle className="size-4 animate-spin" /> Enviando...</> : "Enviar instruções"}
-=======
                   <input id="recovery-email" name="email" type="email" required autoComplete="email" placeholder={t("publicPages.recoverPassword.emailPlaceholder")} className="h-12 w-full rounded-xl border border-slate-200 bg-white pl-10 pr-4 text-sm outline-none transition focus:border-orange-400 focus:ring-4 focus:ring-orange-100" />
                 </div>
                 <button type="submit" disabled={loading} className="mt-4 flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-orange-600 to-amber-600 text-sm font-bold text-white shadow-lg shadow-orange-200 transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-70">
                   {loading ? <><LoaderCircle className="size-4 animate-spin" /> {t("publicPages.recoverPassword.submitting")}</> : t("publicPages.recoverPassword.submit")}
->>>>>>> 0e59a660a5acf0b652a188ddf2e8ccc96de79e4d
                 </button>
               </form>
               {error && <div role="alert" className="mt-4 rounded-xl border border-red-200 bg-red-50 p-3 text-xs font-semibold text-red-700">{error}</div>}

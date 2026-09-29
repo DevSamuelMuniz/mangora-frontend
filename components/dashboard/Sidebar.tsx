@@ -22,10 +22,7 @@ import {
   ClipboardList,
   LayoutDashboard,
   Package,
-<<<<<<< HEAD
-=======
   ScrollText,
->>>>>>> 0e59a660a5acf0b652a188ddf2e8ccc96de79e4d
   Settings,
   ShoppingBag,
   Store,
@@ -38,12 +35,9 @@ import {
 } from "lucide-react";
 import { roleLabels, type AuthSession, type MembershipRole } from "@/lib/auth/types";
 import BrandLogo from "@/components/brand/BrandLogo";
-<<<<<<< HEAD
-=======
 import { useT } from "@/i18n/provider";
 import { can } from "@/lib/permissions";
 import { useSwitchCompany, useUnitGroup } from "@/features/units/hooks/useUnits";
->>>>>>> 0e59a660a5acf0b652a188ddf2e8ccc96de79e4d
 
 type SidebarProps = {
   open: boolean;
@@ -53,98 +47,6 @@ type SidebarProps = {
 };
 
 type NavigationItem = {
-<<<<<<< HEAD
-  label: string;
-  href: string;
-  icon: LucideIcon;
-  roles?: MembershipRole[];
-};
-
-const navigation: NavigationItem[] = [
-  {
-    label: "Dashboard",
-    href: "/dashboard",
-    icon: LayoutDashboard,
-  },
-  {
-    label: "Vendas",
-    href: "/vendas",
-    icon: ShoppingBag,
-  },
-  {
-    label: "Caixa",
-    href: "/caixa",
-    icon: Banknote,
-    roles: ["OWNER", "ADMIN", "MANAGER", "CASHIER"],
-  },
-  {
-    label: "Pedidos",
-    href: "/pedidos",
-    icon: FileText,
-  },
-  {
-    label: "Produtos",
-    href: "/produtos",
-    icon: Package,
-  },
-  {
-    label: "Estoque",
-    href: "/estoque",
-    icon: Boxes,
-  },
-  {
-    label: "Serviços",
-    href: "/servicos",
-    icon: Wrench,
-    roles: ["OWNER", "ADMIN", "MANAGER"],
-  },
-  {
-    label: "Categorias",
-    href: "/categorias",
-    icon: FolderTree,
-    roles: ["OWNER", "ADMIN", "MANAGER"],
-  },
-  {
-    label: "Compras",
-    href: "/compras",
-    icon: ClipboardList,
-    roles: ["OWNER", "ADMIN", "MANAGER"],
-  },
-  {
-    label: "Fornecedores",
-    href: "/fornecedores",
-    icon: Truck,
-    roles: ["OWNER", "ADMIN", "MANAGER"],
-  },
-  {
-    label: "Clientes",
-    href: "/clientes",
-    icon: Users,
-  },
-  {
-    label: "Financeiro",
-    href: "/financeiro",
-    icon: CircleDollarSign,
-    roles: ["OWNER", "ADMIN", "MANAGER"],
-  },
-  {
-    label: "Relatórios",
-    href: "/relatorios",
-    icon: BarChart3,
-    roles: ["OWNER", "ADMIN", "MANAGER"],
-  },
-];
-
-const secondaryNavigation: NavigationItem[] = [
-  {
-    label: "Funcionários",
-    href: "/funcionarios",
-    icon: Building2,
-    roles: ["OWNER", "ADMIN"],
-  },
-  {
-    label: "Assinatura",
-=======
   key: string;
   href: string;
   icon: LucideIcon;
@@ -199,24 +101,16 @@ const secondaryNavigation: NavigationItem[] = [
   },
   {
     key: "subscription",
->>>>>>> 0e59a660a5acf0b652a188ddf2e8ccc96de79e4d
     href: "/assinatura",
     icon: CreditCard,
     roles: ["OWNER"],
   },
   {
-<<<<<<< HEAD
-    label: "Configurações",
-    href: "/configuracoes",
-    icon: Settings,
-    roles: ["OWNER", "ADMIN"],
-=======
     key: "settings",
     href: "/configuracoes",
     icon: Settings,
     roles: ["OWNER", "ADMIN"],
     simple: true,
->>>>>>> 0e59a660a5acf0b652a188ddf2e8ccc96de79e4d
   },
 ];
 
@@ -232,10 +126,6 @@ export default function Sidebar({
   const { data: group } = useUnitGroup();
   const switchCompany = useSwitchCompany();
   const [companyOpen, setCompanyOpen] = useState(false);
-<<<<<<< HEAD
-  const visibleNavigation = navigation.filter((item) => !item.roles || item.roles.includes(session.membership.role));
-  const visibleSecondaryNavigation = secondaryNavigation.filter((item) => !item.roles || item.roles.includes(session.membership.role));
-=======
   const units = group?.units ?? [];
   const [switching, setSwitching] = useState("");
   const [openGroups, setOpenGroups] = useState<Record<string, boolean>>(() => Object.fromEntries(navigationGroups.map((group) => [group.key, group.items.some((item) => pathname === item.href || pathname.startsWith(item.href + "/"))])));
@@ -253,19 +143,14 @@ export default function Sidebar({
       setSwitching("");
     }
   }
->>>>>>> 0e59a660a5acf0b652a188ddf2e8ccc96de79e4d
 
   function isActive(href: string) {
     if (href === "/dashboard") {
       return pathname === href;
     }
 
-<<<<<<< HEAD
-    return pathname.startsWith(href);
-=======
     // Casa por segmento: /configuracoes não ativa /configuracoes-fiscais
     return pathname === href || pathname.startsWith(href + "/");
->>>>>>> 0e59a660a5acf0b652a188ddf2e8ccc96de79e4d
   }
 
   return (
@@ -273,22 +158,14 @@ export default function Sidebar({
       {open && (
         <button
           type="button"
-<<<<<<< HEAD
-          aria-label="Fechar menu"
-=======
           aria-label={t("common.closeMenu")}
->>>>>>> 0e59a660a5acf0b652a188ddf2e8ccc96de79e4d
           onClick={onClose}
           className="fixed inset-0 z-40 bg-slate-950/30 backdrop-blur-sm lg:hidden"
         />
       )}
 
       <aside
-<<<<<<< HEAD
-        className={`fixed inset-y-0 left-0 z-50 flex w-64 flex-col border-r border-slate-200 bg-white transition-transform duration-300 lg:translate-x-0 ${
-=======
         className={`mangora-sidebar fixed inset-y-0 left-0 z-50 flex w-64 flex-col border-r border-slate-200 bg-white transition-transform duration-300 lg:translate-x-0 ${
->>>>>>> 0e59a660a5acf0b652a188ddf2e8ccc96de79e4d
           open ? "translate-x-0" : "-translate-x-full"
         }`}
       >
@@ -304,11 +181,7 @@ export default function Sidebar({
           <button
             type="button"
             onClick={onClose}
-<<<<<<< HEAD
-            aria-label="Fechar menu"
-=======
             aria-label={t("common.closeMenu")}
->>>>>>> 0e59a660a5acf0b652a188ddf2e8ccc96de79e4d
             className="flex size-9 items-center justify-center rounded-lg text-slate-500 hover:bg-slate-100 lg:hidden"
           >
             <X className="size-4" />
@@ -320,11 +193,7 @@ export default function Sidebar({
             type="button"
             onClick={() => setCompanyOpen((current) => !current)}
             aria-expanded={companyOpen}
-<<<<<<< HEAD
-            className="flex w-full items-center gap-3 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-left transition hover:border-orange-200 hover:bg-orange-50"
-=======
             className="mangora-company-switcher flex w-full items-center gap-3 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-left transition hover:border-orange-200 hover:bg-orange-50"
->>>>>>> 0e59a660a5acf0b652a188ddf2e8ccc96de79e4d
           >
             <div className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-orange-100 text-orange-700">
               <Store className="size-4" />
@@ -387,38 +256,6 @@ export default function Sidebar({
 
         <nav className="flex-1 overflow-y-auto px-3 pb-4">
           <p className="mb-2 px-3 text-[10px] font-bold uppercase tracking-[0.14em] text-slate-400">
-<<<<<<< HEAD
-            Principal
-          </p>
-
-          <div className="space-y-1">
-            {visibleNavigation.map((item) => {
-              const Icon = item.icon;
-              const active = isActive(item.href);
-
-              return (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  onClick={onClose}
-                  className={`flex h-10 items-center gap-3 rounded-xl px-3 text-sm font-semibold transition ${
-                    active
-                      ? "bg-orange-50 text-orange-700"
-                      : "text-slate-600 hover:bg-slate-100 hover:text-slate-950"
-                  }`}
-                >
-                  <Icon
-                    className={`size-4.5 ${
-                      active
-                        ? "text-orange-600"
-                        : "text-slate-400"
-                    }`}
-                  />
-
-                  {item.label}
-                </Link>
-              );
-=======
             {simpleMode ? "Essenciais" : "Principal"}
           </p>
 
@@ -447,18 +284,13 @@ export default function Sidebar({
                   {group.items.map((item) => { const ItemIcon = item.icon; const itemActive = isActive(item.href); return <Link key={item.href} href={item.href} data-active={itemActive} onClick={onClose} className="mangora-nav-child flex h-9 items-center gap-2.5 rounded-lg px-2.5 text-xs font-semibold transition"><ItemIcon className="size-3.5" />{t(`navigation.items.${item.key}`)}</Link>; })}
                 </div>}
               </div>;
->>>>>>> 0e59a660a5acf0b652a188ddf2e8ccc96de79e4d
             })}
           </div>
 
           <div className="my-4 h-px bg-slate-200" />
 
           <p className="mb-2 px-3 text-[10px] font-bold uppercase tracking-[0.14em] text-slate-400">
-<<<<<<< HEAD
-            Administração
-=======
             {t("navigation.admin")}
->>>>>>> 0e59a660a5acf0b652a188ddf2e8ccc96de79e4d
           </p>
 
           <div className="space-y-1">
@@ -485,22 +317,14 @@ export default function Sidebar({
                     }`}
                   />
 
-<<<<<<< HEAD
-                  {item.label}
-=======
                   {t(`navigation.items.${item.key}`)}
->>>>>>> 0e59a660a5acf0b652a188ddf2e8ccc96de79e4d
                 </Link>
               );
             })}
           </div>
         </nav>
 
-<<<<<<< HEAD
-        {session.membership.role === "OWNER" && <div className="border-t border-slate-200 p-3">
-=======
         {can(session.membership.role, "subscription:manage") && <div className="border-t border-slate-200 p-3">
->>>>>>> 0e59a660a5acf0b652a188ddf2e8ccc96de79e4d
           <div className="rounded-xl bg-gradient-to-br from-orange-600 to-amber-600 p-3 text-white">
             <div className="flex items-center gap-2">
               <WalletCards className="size-4 text-orange-100" />
@@ -511,11 +335,7 @@ export default function Sidebar({
             </div>
 
             <p className="mt-2 text-[10px] leading-4 text-white/70">
-<<<<<<< HEAD
-              Consulte o plano, o uso e as solicitações de atendimento.
-=======
               {t("settings.planHint")}
->>>>>>> 0e59a660a5acf0b652a188ddf2e8ccc96de79e4d
             </p>
 
             <Link

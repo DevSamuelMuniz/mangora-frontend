@@ -1,9 +1,5 @@
 import type { Metadata } from "next";
 import PublicInfoPage from "@/components/public/PublicInfoPage";
-<<<<<<< HEAD
-export const metadata: Metadata = { title: "Parceiros | Mangora" };
-export default function PartnersPage() { return <PublicInfoPage eyebrow="Ecossistema" title="Cresça junto com o Mangora" description="Criamos parcerias com profissionais e empresas que ajudam negócios a vender, organizar e crescer." sections={[{ title: "Quem pode participar", paragraphs: ["Contadores, consultores, integradores, agências e fornecedores de tecnologia podem fazer parte do ecossistema."], items: ["Indicação de novos clientes.", "Implantação e treinamento.", "Integrações e soluções complementares."] }, { title: "Próximos passos", paragraphs: ["Envie uma apresentação para parceiros@mangora.com.br com sua região, experiência e modelo de parceria desejado."], items: ["Analisamos aderência e cobertura.", "Definimos responsabilidades e benefícios.", "Acompanhamos os resultados da parceria."] }]} />; }
-=======
 import { getTranslator } from "@/i18n/server";
 import { alternateLanguages, localePath } from "@/i18n/urls";
 import { translatedItems } from "@/i18n/items";
@@ -43,4 +39,3 @@ export default async function PartnersPage() {
     />
   );
 }
->>>>>>> 0e59a660a5acf0b652a188ddf2e8ccc96de79e4d
