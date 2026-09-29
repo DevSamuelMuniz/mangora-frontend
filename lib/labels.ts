@@ -8,7 +8,7 @@ export const LABEL_SIZES = [
   { width: 50, height: 50 }, { width: 50, height: 40 },
   { width: 50, height: 30 }, { width: 40, height: 30 },
   { width: 30, height: 20 }, { width: 60, height: 40 },
-  { width: 100, height: 50 },
+  { width: 100, height: 50 }, { width: 50, height: 100 },
 ] satisfies LabelSize[];
 
 /** Keep leading zeroes. Never invent a different product identifier. */
