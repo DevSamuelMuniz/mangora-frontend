@@ -1,10 +1,16 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
 import {
+  ArrowRightLeft,
   BarChart3,
+  Barcode,
+  Bot,
+  ClipboardCheck,
+  Database,
+  Layers3,
   Banknote,
   Boxes,
   Building2,
@@ -16,6 +22,10 @@ import {
   ClipboardList,
   LayoutDashboard,
   Package,
+<<<<<<< HEAD
+=======
+  ScrollText,
+>>>>>>> 0e59a660a5acf0b652a188ddf2e8ccc96de79e4d
   Settings,
   ShoppingBag,
   Store,
@@ -28,14 +38,22 @@ import {
 } from "lucide-react";
 import { roleLabels, type AuthSession, type MembershipRole } from "@/lib/auth/types";
 import BrandLogo from "@/components/brand/BrandLogo";
+<<<<<<< HEAD
+=======
+import { useT } from "@/i18n/provider";
+import { can } from "@/lib/permissions";
+import { useSwitchCompany, useUnitGroup } from "@/features/units/hooks/useUnits";
+>>>>>>> 0e59a660a5acf0b652a188ddf2e8ccc96de79e4d
 
 type SidebarProps = {
   open: boolean;
   onClose: () => void;
   session: AuthSession;
+  simpleMode: boolean;
 };
 
 type NavigationItem = {
+<<<<<<< HEAD
   label: string;
   href: string;
   icon: LucideIcon;
@@ -126,15 +144,79 @@ const secondaryNavigation: NavigationItem[] = [
   },
   {
     label: "Assinatura",
+=======
+  key: string;
+  href: string;
+  icon: LucideIcon;
+  roles?: MembershipRole[];
+  simple?: boolean;
+};
+
+type NavigationGroup = { key: string; icon: LucideIcon; items: NavigationItem[] };
+
+const navigationGroups: NavigationGroup[] = [
+  { key: "operation", icon: ShoppingBag, items: [
+    { key: "sales", href: "/vendas", icon: ShoppingBag, simple: true },
+    { key: "cash", href: "/caixa", icon: Banknote, roles: ["OWNER", "ADMIN", "MANAGER", "CASHIER"], simple: true },
+    { key: "orders", href: "/pedidos", icon: FileText },
+  ] },
+  { key: "catalog", icon: Package, items: [
+    { key: "products", href: "/produtos", icon: Package, simple: true },
+    { key: "services", href: "/servicos", icon: Wrench, roles: ["OWNER", "ADMIN", "MANAGER"] },
+    { key: "categories", href: "/categorias", icon: FolderTree, roles: ["OWNER", "ADMIN", "MANAGER"] },
+  ] },
+  { key: "supplies", icon: Boxes, items: [
+    { key: "labels", href: "/etiquetas", icon: Barcode, simple: true },
+    { key: "stock", href: "/estoque", icon: Boxes, simple: true },
+    { key: "transfers", href: "/estoque/transferencias", icon: ArrowRightLeft, roles: ["OWNER", "ADMIN", "MANAGER"] },
+    { key: "inventory", href: "/estoque/inventario", icon: ClipboardCheck, roles: ["OWNER", "ADMIN", "MANAGER"] },
+    { key: "batches", href: "/estoque/lotes", icon: Layers3, roles: ["OWNER", "ADMIN", "MANAGER"] },
+    { key: "purchases", href: "/compras", icon: ClipboardList, roles: ["OWNER", "ADMIN", "MANAGER"] },
+    { key: "suppliers", href: "/fornecedores", icon: Truck, roles: ["OWNER", "ADMIN", "MANAGER"] },
+  ] },
+  { key: "management", icon: CircleDollarSign, items: [
+    { key: "customers", href: "/clientes", icon: Users, simple: true },
+    { key: "finance", href: "/financeiro", icon: CircleDollarSign, roles: ["OWNER", "ADMIN", "MANAGER"], simple: true },
+    { key: "reports", href: "/relatorios", icon: BarChart3, roles: ["OWNER", "ADMIN", "MANAGER"] },
+    { key: "data", href: "/dados", icon: Database, roles: ["OWNER", "ADMIN", "MANAGER"] },
+    { key: "ai", href: "/gerente-ia", icon: Bot, roles: ["OWNER", "ADMIN", "MANAGER"] },
+    { key: "log", href: "/logs", icon: ScrollText, roles: ["OWNER"] },
+  ] },
+];
+
+const secondaryNavigation: NavigationItem[] = [
+  {
+    key: "stores",
+    href: "/unidades",
+    icon: Store,
+    roles: ["OWNER", "ADMIN", "MANAGER"],
+  },
+  {
+    key: "employees",
+    href: "/funcionarios",
+    icon: Building2,
+    roles: ["OWNER", "ADMIN", "MANAGER"],
+  },
+  {
+    key: "subscription",
+>>>>>>> 0e59a660a5acf0b652a188ddf2e8ccc96de79e4d
     href: "/assinatura",
     icon: CreditCard,
     roles: ["OWNER"],
   },
   {
+<<<<<<< HEAD
     label: "Configurações",
     href: "/configuracoes",
     icon: Settings,
     roles: ["OWNER", "ADMIN"],
+=======
+    key: "settings",
+    href: "/configuracoes",
+    icon: Settings,
+    roles: ["OWNER", "ADMIN"],
+    simple: true,
+>>>>>>> 0e59a660a5acf0b652a188ddf2e8ccc96de79e4d
   },
 ];
 
@@ -142,18 +224,48 @@ export default function Sidebar({
   open,
   onClose,
   session,
+  simpleMode,
 }: SidebarProps) {
   const pathname = usePathname();
+  const t = useT();
+  const router = useRouter();
+  const { data: group } = useUnitGroup();
+  const switchCompany = useSwitchCompany();
   const [companyOpen, setCompanyOpen] = useState(false);
+<<<<<<< HEAD
   const visibleNavigation = navigation.filter((item) => !item.roles || item.roles.includes(session.membership.role));
   const visibleSecondaryNavigation = secondaryNavigation.filter((item) => !item.roles || item.roles.includes(session.membership.role));
+=======
+  const units = group?.units ?? [];
+  const [switching, setSwitching] = useState("");
+  const [openGroups, setOpenGroups] = useState<Record<string, boolean>>(() => Object.fromEntries(navigationGroups.map((group) => [group.key, group.items.some((item) => pathname === item.href || pathname.startsWith(item.href + "/"))])));
+  const visibleNavigationGroups = navigationGroups.map((group) => ({ ...group, items: group.items.filter((item) => (!item.roles || item.roles.includes(session.membership.role)) && (!simpleMode || item.simple)) })).filter((group) => group.items.length > 0);
+  const visibleSecondaryNavigation = secondaryNavigation.filter((item) => (!item.roles || item.roles.includes(session.membership.role)) && (!simpleMode || item.simple));
+
+  async function switchUnit(membershipId: string) {
+    if (membershipId === session.membership.id) return setCompanyOpen(false);
+    try {
+      setSwitching(membershipId);
+      await switchCompany.mutateAsync({ membershipId });
+      router.push("/dashboard?toast=Unidade%20alterada");
+      router.refresh();
+    } finally {
+      setSwitching("");
+    }
+  }
+>>>>>>> 0e59a660a5acf0b652a188ddf2e8ccc96de79e4d
 
   function isActive(href: string) {
     if (href === "/dashboard") {
       return pathname === href;
     }
 
+<<<<<<< HEAD
     return pathname.startsWith(href);
+=======
+    // Casa por segmento: /configuracoes não ativa /configuracoes-fiscais
+    return pathname === href || pathname.startsWith(href + "/");
+>>>>>>> 0e59a660a5acf0b652a188ddf2e8ccc96de79e4d
   }
 
   return (
@@ -161,14 +273,22 @@ export default function Sidebar({
       {open && (
         <button
           type="button"
+<<<<<<< HEAD
           aria-label="Fechar menu"
+=======
+          aria-label={t("common.closeMenu")}
+>>>>>>> 0e59a660a5acf0b652a188ddf2e8ccc96de79e4d
           onClick={onClose}
           className="fixed inset-0 z-40 bg-slate-950/30 backdrop-blur-sm lg:hidden"
         />
       )}
 
       <aside
+<<<<<<< HEAD
         className={`fixed inset-y-0 left-0 z-50 flex w-64 flex-col border-r border-slate-200 bg-white transition-transform duration-300 lg:translate-x-0 ${
+=======
+        className={`mangora-sidebar fixed inset-y-0 left-0 z-50 flex w-64 flex-col border-r border-slate-200 bg-white transition-transform duration-300 lg:translate-x-0 ${
+>>>>>>> 0e59a660a5acf0b652a188ddf2e8ccc96de79e4d
           open ? "translate-x-0" : "-translate-x-full"
         }`}
       >
@@ -184,7 +304,11 @@ export default function Sidebar({
           <button
             type="button"
             onClick={onClose}
+<<<<<<< HEAD
             aria-label="Fechar menu"
+=======
+            aria-label={t("common.closeMenu")}
+>>>>>>> 0e59a660a5acf0b652a188ddf2e8ccc96de79e4d
             className="flex size-9 items-center justify-center rounded-lg text-slate-500 hover:bg-slate-100 lg:hidden"
           >
             <X className="size-4" />
@@ -196,7 +320,11 @@ export default function Sidebar({
             type="button"
             onClick={() => setCompanyOpen((current) => !current)}
             aria-expanded={companyOpen}
+<<<<<<< HEAD
             className="flex w-full items-center gap-3 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-left transition hover:border-orange-200 hover:bg-orange-50"
+=======
+            className="mangora-company-switcher flex w-full items-center gap-3 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-left transition hover:border-orange-200 hover:bg-orange-50"
+>>>>>>> 0e59a660a5acf0b652a188ddf2e8ccc96de79e4d
           >
             <div className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-orange-100 text-orange-700">
               <Store className="size-4" />
@@ -215,7 +343,7 @@ export default function Sidebar({
           </button>
 
           {companyOpen && (
-            <div
+            <><button type="button" aria-label={t("common.closeStoreSelector")} onClick={() => setCompanyOpen(false)} className="fixed inset-0 z-10 cursor-default" /><div
               role="menu"
               aria-label="Menu da empresa"
               className="absolute inset-x-3 top-[4.5rem] z-20 rounded-xl border border-slate-200 bg-white p-1.5 shadow-xl"
@@ -228,7 +356,10 @@ export default function Sidebar({
                   {session.company.tradeName}
                 </p>
               </div>
-              {(session.membership.role === "OWNER" || session.membership.role === "ADMIN") && <Link
+              {units.map((unit) => <button key={unit.membershipId} type="button" role="menuitem" disabled={Boolean(switching)} onClick={() => void switchUnit(unit.membershipId)} className={`flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-[11px] font-semibold transition ${unit.current ? "bg-orange-50 text-orange-700" : "text-slate-600 hover:bg-slate-50"}`}><span className={`size-2 rounded-full ${unit.current ? "bg-orange-500" : "bg-slate-300"}`} /><span className="min-w-0 flex-1 truncate">{unit.company.unitCode ? `${unit.company.unitCode} · ` : ""}{unit.company.tradeName}</span>{switching === unit.membershipId && <span className="text-[9px]">Trocando...</span>}</button>)}
+              <div className="my-1 h-px bg-slate-100" />
+              <Link href="/unidades" role="menuitem" onClick={() => { setCompanyOpen(false); onClose(); }} className="flex rounded-lg px-3 py-2 text-[11px] font-bold text-orange-700 hover:bg-orange-50">Gerenciar lojas e consolidado</Link>
+              {can(session.membership.role, "company:configure") && <Link
                 href="/configuracoes"
                 role="menuitem"
                 onClick={() => {
@@ -239,7 +370,7 @@ export default function Sidebar({
               >
                 Editar dados da empresa
               </Link>}
-              {session.membership.role === "OWNER" && <Link
+              {can(session.membership.role, "subscription:manage") && <Link
                 href="/assinatura"
                 role="menuitem"
                 onClick={() => {
@@ -250,12 +381,13 @@ export default function Sidebar({
               >
                 Gerenciar assinatura
               </Link>}
-            </div>
+            </div></>
           )}
         </div>
 
         <nav className="flex-1 overflow-y-auto px-3 pb-4">
           <p className="mb-2 px-3 text-[10px] font-bold uppercase tracking-[0.14em] text-slate-400">
+<<<<<<< HEAD
             Principal
           </p>
 
@@ -286,13 +418,47 @@ export default function Sidebar({
                   {item.label}
                 </Link>
               );
+=======
+            {simpleMode ? "Essenciais" : "Principal"}
+          </p>
+
+          <div className="space-y-1">
+            <Link href="/dashboard" onClick={onClose} className={`flex h-10 items-center gap-3 rounded-xl px-3 text-sm font-semibold transition ${pathname === "/dashboard" ? "bg-orange-50 text-orange-700" : "text-slate-600 hover:bg-slate-100 hover:text-slate-950"}`}>
+              <LayoutDashboard className={`size-4.5 ${pathname === "/dashboard" ? "text-orange-600" : "text-slate-400"}`} />Dashboard
+            </Link>
+            {simpleMode ? visibleNavigationGroups.flatMap((group) => group.items).map((item) => {
+              const ItemIcon = item.icon;
+              const active = isActive(item.href);
+              return <Link key={item.href} href={item.href} onClick={onClose} className={`flex h-10 items-center gap-3 rounded-xl px-3 text-sm font-semibold transition ${active ? "bg-orange-50 text-orange-700" : "text-slate-600 hover:bg-slate-100 hover:text-slate-950"}`}>
+                <ItemIcon className={`size-4.5 ${active ? "text-orange-600" : "text-slate-400"}`} />
+                {t(`navigation.items.${item.key}`)}
+              </Link>;
+            }) : visibleNavigationGroups.map((group) => {
+              const GroupIcon = group.icon;
+              const active = group.items.some((item) => isActive(item.href));
+              const expanded = Boolean(openGroups[group.key]);
+              return <div key={group.key} className="rounded-xl">
+                <button type="button" data-active={active} onClick={() => setOpenGroups((current) => ({ ...current, [group.key]: !expanded }))} aria-expanded={expanded} className="mangora-nav-group flex h-10 w-full items-center gap-3 rounded-xl px-3 text-sm font-semibold transition">
+                  <GroupIcon className={`size-4.5 ${active ? "text-orange-600" : "text-slate-400"}`} />
+                  <span className="flex-1 text-left">{t(`navigation.groups.${group.key}`)}</span>
+                  <ChevronDown className={`size-3.5 text-slate-400 transition-transform ${expanded ? "rotate-180" : ""}`} />
+                </button>
+                {expanded && <div className="mb-1 ml-5 space-y-0.5 border-l border-white/15 pl-2">
+                  {group.items.map((item) => { const ItemIcon = item.icon; const itemActive = isActive(item.href); return <Link key={item.href} href={item.href} data-active={itemActive} onClick={onClose} className="mangora-nav-child flex h-9 items-center gap-2.5 rounded-lg px-2.5 text-xs font-semibold transition"><ItemIcon className="size-3.5" />{t(`navigation.items.${item.key}`)}</Link>; })}
+                </div>}
+              </div>;
+>>>>>>> 0e59a660a5acf0b652a188ddf2e8ccc96de79e4d
             })}
           </div>
 
           <div className="my-4 h-px bg-slate-200" />
 
           <p className="mb-2 px-3 text-[10px] font-bold uppercase tracking-[0.14em] text-slate-400">
+<<<<<<< HEAD
             Administração
+=======
+            {t("navigation.admin")}
+>>>>>>> 0e59a660a5acf0b652a188ddf2e8ccc96de79e4d
           </p>
 
           <div className="space-y-1">
@@ -319,14 +485,22 @@ export default function Sidebar({
                     }`}
                   />
 
+<<<<<<< HEAD
                   {item.label}
+=======
+                  {t(`navigation.items.${item.key}`)}
+>>>>>>> 0e59a660a5acf0b652a188ddf2e8ccc96de79e4d
                 </Link>
               );
             })}
           </div>
         </nav>
 
+<<<<<<< HEAD
         {session.membership.role === "OWNER" && <div className="border-t border-slate-200 p-3">
+=======
+        {can(session.membership.role, "subscription:manage") && <div className="border-t border-slate-200 p-3">
+>>>>>>> 0e59a660a5acf0b652a188ddf2e8ccc96de79e4d
           <div className="rounded-xl bg-gradient-to-br from-orange-600 to-amber-600 p-3 text-white">
             <div className="flex items-center gap-2">
               <WalletCards className="size-4 text-orange-100" />
@@ -337,7 +511,11 @@ export default function Sidebar({
             </div>
 
             <p className="mt-2 text-[10px] leading-4 text-white/70">
+<<<<<<< HEAD
               Consulte o plano, o uso e as solicitações de atendimento.
+=======
+              {t("settings.planHint")}
+>>>>>>> 0e59a660a5acf0b652a188ddf2e8ccc96de79e4d
             </p>
 
             <Link

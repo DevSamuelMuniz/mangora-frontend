@@ -1,0 +1,120 @@
+{
+  "title": "Subscription and plans",
+  "subtitle": "Track the real state, usage and charges of your subscription.",
+  "eyebrow": "Administration",
+  "loading": "Loading subscription...",
+  "loadFailed": "Could not load the subscription.",
+  "actions": {
+    "checkout": "Continue to checkout",
+    "createCharge": "Create charge",
+    "cancel": "Cancel subscription",
+    "reactivate": "Reactivate subscription",
+    "contactSales": "Request contact",
+    "contactSalesQuestion": "Request contact about Enterprise?"
+  },
+  "status": {
+    "ACTIVE": "Active subscription",
+    "TRIAL": "Free trial",
+    "PAST_DUE": "Payment overdue",
+    "CANCELLED": "Subscription cancelled",
+    "PENDING": "Awaiting payment",
+    "CONTACT": "On request",
+    "FREE": "Free plan",
+    "ENTERPRISE": "Enterprise"
+  },
+  "plan": {
+    "free": "Free",
+    "freeHint": "Essential access with no charge and no card.",
+    "upgrade": "When you need more capacity, choose a paid plan.",
+    "included": "Included by default",
+    "pricePending": "Price to be confirmed",
+    "priceUpdated": "Price updated",
+    "priceCurrent": "Calculated on the current company",
+    "noCharge": "No charge",
+    "toDefine": "To be defined"
+  },
+  "provider": {
+    "title": "Available provider",
+    "asaas": "Asaas",
+    "paddle": "Paddle",
+    "sandbox": "Sandbox",
+    "production": "Production",
+    "notIntegrated": "Not integrated",
+    "accountCreated": "Account created",
+    "credentialPending": "Credential pending",
+    "billing": "Payment"
+  },
+  "history": {
+    "title": "History",
+    "planChanged": "Plan change requested",
+    "activated": "Plan activated",
+    "discountUpdated": "Discount updated",
+    "received": "Received",
+    "confirmed": "Confirmed",
+    "overdue": "Overdue",
+    "refunded": "Refunded",
+    "cycleClosed": "Cycle closed",
+    "cancelScheduled": "Cancellation scheduled.",
+    "cancelled": "Cancelled",
+    "CREATED": "Account created",
+    "PLAN_CHANGE_REQUESTED": "Plan change requested",
+    "PLAN_CHANGED": "Plan activated",
+    "PRICE_CHANGED": "Price updated",
+    "DISCOUNT_UPDATED": "Discount updated",
+    "CANCELLATION_REQUESTED": "Cancellation requested",
+    "CANCELLED": "Subscription cancelled",
+    "REACTIVATED": "Subscription reactivated"
+  },
+  "toasts": {
+    "cancelled": "Subscription cancelled",
+    "reactivated": "Subscription reactivated",
+    "contactRequested": "Commercial contact request recorded.",
+    "contactNote": "Commercial contact request from the dashboard.",
+    "contactHint": "Our commercial team will get in touch."
+  },
+  "errors": {
+    "cancel": "Could not cancel the subscription.",
+    "reactivate": "Could not reactivate the subscription.",
+    "contact": "Could not record the request."
+  },
+  "billingTypes": {
+    "BOLETO": "Bank slip",
+    "PIX": "Pix",
+    "CREDIT_CARD": "Credit card"
+  },
+  "contract": {
+    "frozen": "Price and limits were frozen when the plan was activated.",
+    "catalog": "Catalogue v{version} · {plan} · frozen",
+    "empty": "No movement recorded yet."
+  },
+  "manage": {
+    "couponApplied": "Coupon applied: first monthly payment {first}, then {recurring}.",
+    "cancelConfirm": "Cancel the recurring subscription? You keep access until the end of the paid cycle and can reactivate before that.",
+    "cancelScheduled": "Cancellation scheduled — access kept until the end of the paid cycle.",
+    "cancelNote": "The subscription stays active until the end of the paid cycle. You can reactivate before that.",
+    "cancelledReverted": "Cancellation reverted — access guaranteed until the end of the cycle. To continue later, start a new checkout.",
+    "availablePlans": "Available plans · {market}",
+    "choosePlan": "Choose the ideal plan",
+    "couponAppliedLong": "Coupon applied: first monthly payment of {first}. The following ones will be {recurring}."
+  },
+  "trialGate": {
+    "eyebrow": "End of the free period",
+    "copy": "Your account stays active on the Free plan, with no charge. Your data and the essential features remain available.",
+    "secureNote": "You only choose a paid plan if you want advanced features.",
+    "daysRemaining": "{count} days remaining",
+    "trialEnds": "Trial ends on {date}",
+    "endedTitle": "Your full 7 days are over.",
+    "copyFull": "Your account stays active on the Free plan, with no charge. Your data and the essential features remain available.",
+    "upgradeHint": "Whenever you want more capacity, choose a paid plan.",
+    "ownerHint": "The owner can upgrade the plan when the company needs it.",
+    "comparePlans": "Compare plans",
+    "nothingDeleted": "No record or history was deleted.",
+    "dayRemaining": "{count} free day remaining.",
+    "daysRemainingBanner": "{count} free days remaining.",
+    "exploreHint": "Explore everything and choose your plan when you are ready.",
+    "seePlans": "See the plans",
+    "freeActive": "Free plan active.",
+    "freeHint": "Stay on the essentials with no charge.",
+    "closeWarning": "Close notice"
+  }
+}

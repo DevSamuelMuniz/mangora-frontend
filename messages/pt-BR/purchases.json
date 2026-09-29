@@ -1,0 +1,70 @@
+{
+  "eyebrow": "Suprimentos",
+  "title": "Compras",
+  "subtitle": "Pedidos de compra, recebimentos e contas a pagar.",
+  "create": "Nova compra",
+  "searchLabel": "Buscar compras",
+  "searchPlaceholder": "Buscar por número ou fornecedor...",
+  "allStatus": "Todos os status",
+  "loading": "Carregando...",
+  "notFound": "Nenhuma compra encontrada",
+  "itemsCount": "{count} produto(s)",
+  "close": "Fechar",
+  "details": "Detalhes",
+  "detailsTitle": "Detalhes da compra",
+  "createdBy": "Criada por {name}",
+  "receive": "Confirmar recebimento",
+  "cancel": "Cancelar compra",
+  "cancelReasonPlaceholder": "Motivo do cancelamento",
+  "cancelPrefix": "Cancelamento: {reason}",
+  "receivedNote": "Estoque recebido e conta a pagar gerada.",
+  "metrics": {
+    "pending": "Pendentes",
+    "received": "Recebidas",
+    "cancelled": "Canceladas"
+  },
+  "table": {
+    "purchase": "Compra",
+    "supplier": "Fornecedor",
+    "issueDate": "Emissão",
+    "dueDate": "Vencimento",
+    "total": "Total",
+    "status": "Status",
+    "actions": "Ações"
+  },
+  "form": {
+    "eyebrow": "Suprimentos",
+    "title": "Nova compra",
+    "subtitle": "Registre produtos, quantidades, custos e vencimento.",
+    "back": "Voltar para compras",
+    "supplierSection": "Fornecedor e datas",
+    "itemsSection": "Produtos",
+    "summarySection": "Resumo da compra",
+    "paymentsSection": "Formas de pagamento",
+    "addItem": "Adicionar",
+    "itemsEmpty": "Nenhum produto adicionado.",
+    "removePayment": "Remover forma de pagamento",
+    "stockNote": "O estoque e a conta a pagar serão gerados somente no recebimento.",
+    "submit": "Registrar compra",
+    "submitting": "Registrando...",
+    "created": "Compra registrada",
+    "fields": {
+      "supplier": "Fornecedor",
+      "issueDate": "Emissão",
+      "dueDate": "Vencimento",
+      "notes": "Observações",
+      "items": "Itens",
+      "total": "Total"
+    },
+    "errors": {
+      "supplier": "Selecione um fornecedor ativo.",
+      "noSupplier": "Cadastre um fornecedor ativo antes de criar a compra.",
+      "items": "Adicione ao menos um produto.",
+      "dueDate": "O vencimento não pode ser anterior à emissão.",
+      "paymentTotal": "A soma das formas de pagamento precisa ser igual ao total da compra.",
+      "paymentMethods": "Escolha formas de pagamento diferentes.",
+      "create": "Não foi possível criar a compra.",
+      "action": "Não foi possível concluir a operação."
+    }
+  }
+}

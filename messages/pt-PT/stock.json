@@ -1,0 +1,272 @@
+{
+  "title": "Inventário",
+  "subtitle": "Controle saldos, níveis mínimos e movimentos.",
+  "actions": {
+    "newMovement": "Novo movimento",
+    "move": "Movimentar",
+    "transfer": "Transferir entre lojas",
+    "viewTransfers": "Ver transferências",
+    "registerProduct": "Registar produto",
+    "retry": "Tentar novamente",
+    "clearFilters": "Limpar filtros"
+  },
+  "search": {
+    "label": "Pesquisar no inventário",
+    "placeholder": "Pesquisar por nome ou SKU..."
+  },
+  "filters": {
+    "category": "Categoria",
+    "categoryAll": "Categoria: todas",
+    "situation": "Situação",
+    "situationAll": "Situação: todas",
+    "low": "Inventário baixo",
+    "normal": "Inventário normal",
+    "out": "Sem inventário"
+  },
+  "metrics": {
+    "units": "Unidades em inventário",
+    "value": "Valor estimado"
+  },
+  "table": {
+    "product": "Produto",
+    "category": "Categoria",
+    "level": "Nível",
+    "situation": "Situação",
+    "price": "Preço",
+    "value": "Valor",
+    "action": "Ação",
+    "availableShort": "disp.",
+    "physicalShort": "físico",
+    "reservedShort": "reserv."
+  },
+  "movements": {
+    "title": "Movimentos recentes",
+    "subtitle": "Últimas entradas, saídas e ajustes",
+    "empty": "Nenhum movimento registado."
+  },
+  "movementTypes": {
+    "ENTRY": "Entrada",
+    "EXIT": "Saída",
+    "ADJUSTMENT": "Ajuste",
+    "TRANSFER_IN": "Transferência recebida",
+    "TRANSFER_OUT": "Transferência enviada"
+  },
+  "empty": {
+    "title": "Nenhum produto encontrado",
+    "hint": "Ajuste os filtros para consultar outros saldos.",
+    "hintFirst": "Registe um produto com controlo de inventário para começar."
+  },
+  "loading": "A carregar inventário...",
+  "loadFailed": "Não foi possível carregar o inventário",
+  "form": {
+    "eyebrow": "Operação",
+    "title": "Novo movimento",
+    "subtitle": "Registe uma entrada, saída ou ajuste de saldo.",
+    "back": "Voltar ao inventário",
+    "sections": {
+      "type": "Tipo de movimento",
+      "typeHint": "Escolha como o saldo deve ser atualizado.",
+      "data": "Dados do movimento",
+      "dataHint": "Indique produto, quantidade e motivo.",
+      "projection": "Projeção do saldo",
+      "projectionHint": "Confirme o impacto antes de registar."
+    },
+    "types": {
+      "ENTRY": {
+        "label": "Entrada",
+        "description": "Compra, devolução ou reposição"
+      },
+      "EXIT": {
+        "label": "Saída",
+        "description": "Perda, consumo ou retirada"
+      },
+      "ADJUSTMENT": {
+        "label": "Ajuste",
+        "description": "Correção após contagem física"
+      }
+    },
+    "reasons": {
+      "ENTRY": {
+        "0": "Compra a fornecedor",
+        "1": "Devolução de cliente",
+        "2": "Reposição",
+        "3": "Outro"
+      },
+      "EXIT": {
+        "0": "Perda ou avaria",
+        "1": "Consumo interno",
+        "2": "Retirada",
+        "3": "Outro"
+      },
+      "ADJUSTMENT": {
+        "0": "Contagem física",
+        "1": "Correção de registo",
+        "2": "Avaria identificada",
+        "3": "Outro"
+      }
+    },
+    "fields": {
+      "product": "Produto",
+      "costOptional": "Custo unitário (opcional)",
+      "reason": "Motivo",
+      "reasonPlaceholder": "Selecione um motivo",
+      "notes": "Observações (opcional)",
+      "notesPlaceholder": "Detalhes adicionais...",
+      "currentStock": "Saldo atual",
+      "projectedStock": "Saldo projetado",
+      "units": "unidades"
+    },
+    "errors": {
+      "product": "Selecione um produto.",
+      "quantity": "Indique uma quantidade inteira superior a zero.",
+      "counted": "Indique um saldo contado válido.",
+      "projected": "Saldo projetado inválido. Reduza a quantidade.",
+      "aboveStock": "A saída não pode exceder o saldo atual de {available} unidade(s).",
+      "failed": "Não foi possível registar o movimento."
+    },
+    "save": "Registar movimento",
+    "saving": "A registar...",
+    "cancel": "Cancelar",
+    "toast": "Movimento registado"
+  },
+  "transfers": {
+    "eyebrow": "Inventário · Entre lojas",
+    "title": "Transferências",
+    "subtitle": "Envie, receba e confirme remessas entre unidades do grupo.",
+    "loading": "A carregar transferências...",
+    "loadFailed": "Não foi possível carregar.",
+    "retry": "Tentar novamente",
+    "close": "Fechar",
+    "unitShort": "un.",
+    "empty": {
+      "title": "Sem transferências",
+      "hint": "Envie produtos para outra loja do grupo em Inventário → Transferir entre lojas."
+    },
+    "fields": {
+      "origin": "Origem",
+      "destination": "Destino",
+      "receivedQuantity": "Quantidade recebida"
+    },
+    "stamps": {
+      "SENT": "ENVIADA",
+      "RECEIVED": "RECEBIDA",
+      "CONFIRMED": "CONFIRMADA",
+      "CANCELLED": "CANCELADA"
+    },
+    "receive": {
+      "action": "Receber",
+      "success": "Transferência recebida. Confirme quando a conferência terminar.",
+      "failed": "Não foi possível receber a transferência.",
+      "invalid": "A quantidade recebida deve estar entre 0 e {max}."
+    },
+    "confirm": {
+      "action": "Confirmar receção",
+      "success": "Transferência confirmada.",
+      "failed": "Não foi possível confirmar a transferência."
+    },
+    "cancel": {
+      "action": "Cancelar envio",
+      "success": "Transferência cancelada e inventário da origem reposto.",
+      "failed": "Não foi possível cancelar a transferência."
+    },
+    "receivedLine": "Recebido {received} de {sent}",
+    "noDivergence": "· sem divergência",
+    "divergence": "· divergência de {count} un.",
+    "hints": {
+      "sent": "A aguardar que a loja de destino receba.",
+      "received": "Recebida — confirme para fechar a remessa.",
+      "confirmedWith": "Fechada por {name}.",
+      "confirmed": "Fechada."
+    }
+  },
+  "inventory": {
+    "eyebrow": "Inventário · Precisão",
+    "title": "Contagem física",
+    "subtitle": "Conte o que existe na prateleira e ajuste o sistema com justificação.",
+    "new": "Nova contagem",
+    "loading": "A carregar contagens...",
+    "loadFailed": "Não foi possível carregar.",
+    "retry": "Tentar novamente",
+    "close": "Fechar",
+    "started": "Contagem criada em rascunho (INV-{code}). Abra-a para contar os produtos.",
+    "completed": "Contagem concluída — as divergências ajustaram o inventário com movimento justificado.",
+    "cancelled": "Contagem cancelada.",
+    "editorHint": "Conte cada produto e registe o valor encontrado. A diferença torna-se um ajuste com justificação.",
+    "searchPlaceholder": "Pesquisar produto para contar...",
+    "searchLabel": "Pesquisar produto",
+    "counted": "Contado",
+    "system": "sistema",
+    "countedDiff": "contado",
+    "complete": "Concluir contagem ({count})",
+    "cancelCount": "Cancelar contagem",
+    "errors": {
+      "empty": "Indique a contagem de pelo menos um produto.",
+      "create": "Não foi possível criar a contagem.",
+      "complete": "Não foi possível concluir a contagem.",
+      "generic": "Erro"
+    },
+    "emptyState": {
+      "title": "Ainda não há contagens",
+      "hint": "Crie uma contagem para conferir o inventário físico e ajustar diferenças com justificação."
+    },
+    "summary": {
+      "completedBy": "Concluída por {name}",
+      "completed": "Concluída",
+      "on": "em",
+      "differences": "{count} artigo(s) com diferença — ajustados com movimento justificado no histórico.",
+      "ok": "OK"
+    },
+    "newDialog": {
+      "title": "Nova contagem",
+      "name": "Nome (opcional)",
+      "namePlaceholder": "Ex.: Contagem mensal de setembro",
+      "notes": "Observações (opcional)",
+      "notesPlaceholder": "Ex.: inclui armazém interno",
+      "cancel": "Cancelar",
+      "create": "Criar contagem"
+    },
+    "countFallback": "Contagem INV-{code}"
+  },
+  "batches": {
+    "eyebrow": "Inventário · Custo e validade",
+    "title": "Lotes e custo FIFO",
+    "subtitle": "Registe lotes com custo e validade; os produtos FIFO consomem lotes na venda.",
+    "product": "Produto com controlo de inventário",
+    "selectProduct": "Selecione um produto...",
+    "fifoActive": "Custo FIFO ativo",
+    "averageActive": "A usar custo médio",
+    "fifoHint": "As vendas consomem os lotes por validade e o custo é registado por lote.",
+    "averageHint": "Ative o FIFO para controlar validade e custo por lote nas vendas.",
+    "activateFifo": "Ativar custo FIFO",
+    "batchesOf": "Lotes de {name}",
+    "receive": "Receber lote",
+    "nearExpiry": "Validade próxima:",
+    "loading": "A carregar lotes...",
+    "empty": "Nenhum lote registado — receba o primeiro acima.",
+    "emptyAverage": "Ative o custo FIFO para receber lotes.",
+    "fields": {
+      "code": "Código do lote",
+      "codePlaceholder": "Ex.: L2509-01",
+      "quantity": "Qtd.",
+      "cost": "Custo unitário",
+      "costShort": "Custo unitário",
+      "expires": "Validade (opcional)",
+      "batch": "Lote",
+      "validity": "Validade",
+      "receivedBy": "Recebido por",
+      "noExpiry": "Sem validade",
+      "submit": "Receber"
+    },
+    "errors": {
+      "invalid": "Indique quantidade superior a zero e um custo unitário válido.",
+      "receiveFailed": "Não foi possível receber o lote.",
+      "loadFailed": "Não foi possível carregar.",
+      "activateFailed": "Não foi possível ativar o custo FIFO."
+    },
+    "toast": "Lote recebido — inventário atualizado com entrada justificada."
+  },
+  "movementToast": "Movimentação registada",
+  "transferSubmit": "Registar transferência",
+  "transferConfirm": "Confirmar transferência",
+  "outOfStock": "Sem inventário"
+}

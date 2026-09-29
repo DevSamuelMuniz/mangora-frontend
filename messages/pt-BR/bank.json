@@ -1,0 +1,58 @@
+{
+  "title": "Contas & Conciliação",
+  "subtitle": "Cada linha precisa bater com um lançamento para fechar o mês.",
+  "eyebrow": "Gestão financeira",
+  "actions": {
+    "create": "Nova conta",
+    "createFirst": "Criar primeira conta",
+    "import": "Importar extrato",
+    "match": "Casar",
+    "ignore": "Ignorar",
+    "cancel": "Cancelar",
+    "close": "Fechar",
+    "retry": "Tentar novamente"
+  },
+  "accounts": {
+    "title": "Contas",
+    "loading": "Carregando contas...",
+    "name": "Nome da conta",
+    "institution": "Instituição",
+    "branch": "Agência",
+    "accountNumber": "Conta",
+    "pixKey": "Chave Pix",
+    "empty": "Nenhuma conta cadastrada",
+    "createFailed": "Não foi possível criar a conta.",
+    "subtitle": "Separe caixa, banco, Pix e cartão — e confira o extrato contra os lançamentos."
+  },
+  "statement": {
+    "title": "Cole o extrato do banco",
+    "hint": "Cole um extrato OFX ou CSV para começar a conferência.",
+    "dedupe": "Importamos só linhas novas (não duplicamos pelo identificador).",
+    "imported": "Extrato importado",
+    "importFailed": "Não foi possível importar o extrato.",
+    "empty": "Nenhuma transação importada.",
+    "provider": "Fornecedor"
+  },
+  "match": {
+    "placeholder": "Casar com um lançamento...",
+    "matched": "Transação conferida.",
+    "matchedLabel": "Conferido",
+    "failed": "Não foi possível casar a transação.",
+    "auto": "Conferir automaticamente",
+    "autoFailed": "Não foi possível conferir automaticamente.",
+    "autoDone": "{matched} transação(ões) conferida(s) automaticamente. {pending} ainda aguardam conferência."
+  },
+  "ignore": {
+    "done": "Transação ignorada.",
+    "failed": "Não foi possível ignorar a transação."
+  },
+  "statuses": {
+    "UNMATCHED": "Em aberto",
+    "MATCHED": "Conferido",
+    "IGNORED": "Ignorado"
+  },
+  "kinds": {
+    "CREDIT": "Crédito",
+    "DEBIT": "Débito"
+  }
+}

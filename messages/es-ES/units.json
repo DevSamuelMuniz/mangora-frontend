@@ -1,0 +1,62 @@
+{
+  "title": "Tiendas y visión consolidada",
+  "subtitle": "Datos separados por unidad",
+  "eyebrow": "Operación multiunidad",
+  "actions": {
+    "access": "Acceder a esta tienda",
+    "addToGroup": "Añadir tienda al grupo",
+    "add": "Añadir tienda",
+    "remove": "Eliminar tienda",
+    "cancel": "Cancelar",
+    "closeForm": "Cerrar formulario",
+    "retry": "Intentar de nuevo"
+  },
+  "filters": {
+    "store": "Filtrar por tienda",
+    "all": "Todas"
+  },
+  "period": {
+    "last7": "Últimos 7 días",
+    "last30": "Últimos 30 días",
+    "last90": "Últimos 90 días"
+  },
+  "metrics": {
+    "revenue": "Facturación consolidada",
+    "sales": "Ventas del grupo",
+    "averageTicket": "Ticket medio",
+    "stock": "Inventario total",
+    "receivable": "Por cobrar",
+    "storeRevenue": "Facturación",
+    "storeSales": "Ventas",
+    "storeStock": "Inventario"
+  },
+  "current": {
+    "label": "Entorno actual",
+    "independent": "Entorno independiente"
+  },
+  "activate": {
+    "title": "Listo para expandir",
+    "hint": "Convierte tu empresa actual en la Tienda 1.",
+    "button": "Añadir tienda al grupo",
+    "confirm": "Confirmo el cargo mensual adicional",
+    "notice": "Grupo de tiendas activado. Ya puedes añadir hasta dos unidades.",
+    "failed": "No se pudo activar el grupo."
+  },
+  "newStore": {
+    "title": "Nueva unidad",
+    "groupName": "Nombre del grupo",
+    "groupNamePlaceholder": "Ej.: Grupo Mangora",
+    "legalName": "Razón social",
+    "tradeName": "Nombre de la tienda *",
+    "document": "Documento fiscal (opcional)",
+    "email": "Correo",
+    "copyCatalog": "Copiar catálogo de la tienda actual",
+    "copyCatalogHint": "Se copian productos y precios; el saldo de inventario empieza en cero.",
+    "submit": "Añadir tienda",
+    "created": "Nueva tienda creada con inventario independiente.",
+    "failed": "No se pudo crear la tienda."
+  },
+  "removeFailed": "No se pudo eliminar la tienda.",
+  "switchFailed": "No se pudo cambiar de tienda.",
+  "loading": "Consolidando las tiendas..."
+}

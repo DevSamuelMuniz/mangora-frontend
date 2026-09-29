@@ -1,0 +1,48 @@
+{
+  "eyebrow": "Catalogue",
+  "title": "Categories",
+  "subtitle": "Organise product and service categories separately.",
+  "create": "New category",
+  "searchPlaceholder": "Search category...",
+  "searchLabel": "Search categories",
+  "allTypes": "All types",
+  "products": "Products",
+  "services": "Services",
+  "noDescription": "No description",
+  "close": "Close",
+  "save": "Save category",
+  "table": {
+    "category": "Category",
+    "type": "Type",
+    "items": "Items",
+    "status": "Status",
+    "actions": "Actions"
+  },
+  "empty": "No category found",
+  "dialog": {
+    "create": "New category",
+    "edit": "Edit category"
+  },
+  "fields": {
+    "name": "Name",
+    "type": "Type",
+    "description": "Description",
+    "active": "Active category"
+  },
+  "itemTypes": {
+    "PRODUCT": "Product",
+    "SERVICE": "Service"
+  },
+  "status": {
+    "active": "Active",
+    "inactive": "Inactive"
+  },
+  "actions": {
+    "editAria": "Edit {name}",
+    "deleteAria": "Delete {name}"
+  },
+  "errors": {
+    "save": "We could not save the category.",
+    "delete": "We could not delete the category."
+  }
+}

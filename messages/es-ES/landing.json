@@ -1,0 +1,173 @@
+{
+  "nav": {
+    "label": "Navegación principal",
+    "home": "Página inicial de Mangora",
+    "features": "Recursos",
+    "howItWorks": "Cómo funciona",
+    "plans": "Planes",
+    "segments": "Segmentos",
+    "beforeStart": "Antes de empezar",
+    "login": "Entrar",
+    "startFree": "Empezar en Free",
+    "startTrial": "Probar 7 días gratis",
+    "test": "Probar",
+    "trialChip": "7 días gratis"
+  },
+  "hero": {
+    "title": "Gestión ligera para negocios que no paran.",
+    "noCard": "Sin tarjeta de crédito",
+    "noAutoCharge": "Sin cobro automático",
+    "previewTag": "Vista ilustrativa · datos de ejemplo",
+    "todayMovement": "Movimiento de hoy",
+    "weekSales": "Ventas de la semana",
+    "eyebrow": "Gestión online para pequeños negocios",
+    "titleLine1": "Ventas, inventario y finanzas.",
+    "titleLine2": "Todo bajo control.",
+    "copy": "Sabe cuánto vendiste, qué queda por cobrar y qué productos se están agotando. Organiza la rutina de tu negocio con Mangora.",
+    "ctaTrial": "Probar gratis 7 días",
+    "ctaDemo": "Explorar la demostración"
+  },
+  "features": {
+    "tag": "Una operación conectada",
+    "title": "Cuando ocurre una venta, el resto acompaña.",
+    "copy": "Mangora reduce el trabajo repetido porque cada parte de la gestión actualiza la siguiente.",
+    "tabs": {
+      "sales": "Ventas",
+      "stock": "Inventario",
+      "finance": "Finanzas",
+      "customers": "Clientes",
+      "reports": "Informes"
+    },
+    "items": {
+      "sales": {
+        "label": "Venta registrada",
+        "title": "Vende sin perder el ritmo",
+        "copy": "Registra pedidos, pagos y ventas en el mostrador en pocos pasos.",
+        "imageLabel": "Mascota Mangora trabajando en el ordenador"
+      },
+      "stock": {
+        "label": "Inventario sincronizado",
+        "title": "Cada salida ya descuenta",
+        "copy": "Entradas, salidas y alertas de stock mínimo acompañan tu operación."
+      },
+      "finance": {
+        "label": "Caja actualizada",
+        "title": "Dinero sin misterio",
+        "copy": "Ingresos, gastos, cuentas y flujo de caja juntos para decidir mejor."
+      },
+      "relationship": {
+        "label": "Relación organizada",
+        "title": "Clientes y equipo cerca",
+        "copy": "Historial de clientes, empleados y permisos en su sitio."
+      }
+    },
+    "systemLine": "Un solo sistema, del primer pedido al cierre del mes.",
+    "syncTitle": "Una acción actualiza toda la gestión"
+  },
+  "steps": {
+    "tag": "Del registro al control",
+    "title": "Tu empresa organizada en tres movimientos.",
+    "copy": "Empiezas pequeño, configuras lo que realmente usas y amplías cuando lo necesites.",
+    "imageLabel": "Mascota Mangora señalando las etapas",
+    "setup": {
+      "title": "Cuenta cómo funciona tu empresa",
+      "copy": "Crea la cuenta y registra productos, servicios y formas de pago."
+    },
+    "register": {
+      "title": "Registra el movimiento del día",
+      "copy": "Haz ventas, recibe pedidos y sigue entradas y salidas."
+    },
+    "decide": {
+      "title": "Decide con los números sobre la mesa",
+      "copy": "Ve caja, inventario y desempeño sin armar informes manuales."
+    },
+    "badge": "¡Así de fácil!"
+  },
+  "plans": {
+    "tag": "Planes sin laberinto",
+    "title": "Empieza del tamaño correcto.",
+    "imageLabel": "Mascota Mangora haciendo un gesto positivo",
+    "freePrice": "Gratis",
+    "featured": "Para crecer",
+    "billingNote": "No se hace ningún cobro durante la prueba. El día 8 tu cuenta continúa en Free; solo pagas si eliges otro plan. Las integraciones externas pueden tener costes propios.",
+    "copy": "Prueba los recursos de Start gratis 7 días. Después, continúa en Free o elige el plan que encaje con tu operación.",
+    "perMonth": "/mes"
+  },
+  "faq": {
+    "card": {
+      "question": "¿Tengo que indicar mi tarjeta?",
+      "answer": "No. Creas tu cuenta y empiezas los 7 días de experiencia Start sin indicar tarjeta de crédito."
+    },
+    "afterTrial": {
+      "question": "¿Qué pasa después de los 7 días?",
+      "answer": "Tu cuenta continúa en el plan Free, con los recursos y límites de ese plan. Para seguir usando recursos de pago, elige un plan cuando quieras."
+    },
+    "install": {
+      "question": "¿Tengo que instalar algún programa?",
+      "answer": "Mangora funciona en el navegador, con acceso a internet. Puedes acceder desde el ordenador o el móvil."
+    },
+    "firstSteps": {
+      "question": "¿Por dónde empiezo tras el registro?",
+      "answer": "Registra tu empresa y los productos o servicios que vendes. Después, registra una venta y sigue los datos en el sistema."
+    },
+    "doubt": {
+      "question": "¿Puedo resolver una duda antes de registrarme?",
+      "answer": "Sí. Usa el botón Hablar con Mangora abajo para contactar por WhatsApp."
+    },
+    "title": "Antes de empezar"
+  },
+  "cta": {
+    "eyebrow": "La próxima venta puede ser más simple",
+    "imageLabel": "Mascota Mangora invitándote a empezar",
+    "title": "Empieza por la próxima venta.",
+    "copy": "Son 7 días para vender, organizar y sentir la diferencia en la rutina. Empiezas sin tarjeta y decides después.",
+    "button": "Empezar 7 días gratis",
+    "whatsapp": "Hablar con Mangora"
+  },
+  "preview": {
+    "imageLabel": "Mascota Mangora dando la bienvenida",
+    "revenue": "Facturación",
+    "sales": "Ventas",
+    "customers": "Clientes",
+    "order": "Pedido #1024",
+    "stockMoved": "Inventario descontado",
+    "stockItems": "3 artículos",
+    "cashUpdated": "Caja actualizada",
+    "received": "Recibido",
+    "demo": "Demostración"
+  },
+  "segments": {
+    "stores": "Tiendas y comercios",
+    "restaurants": "Restaurantes",
+    "salons": "Salones y barberías",
+    "technical": "Asistencias técnicas",
+    "services": "Prestadores de servicios",
+    "eyebrow": "Hecha para negocios reales",
+    "title": "La rutina cambia. Mangora se adapta.",
+    "copy": "Elige los módulos que tienen sentido para tu operación, sin cargar funciones que nunca usas."
+  },
+  "footer": {
+    "platform": "Plataforma",
+    "company": "Mangora",
+    "trust": "Confianza",
+    "about": "Sobre nosotros",
+    "support": "Soporte",
+    "partners": "Socios",
+    "contact": "Contacto",
+    "terms": "Términos de uso",
+    "privacy": "Privacidad",
+    "security": "Seguridad",
+    "lgpd": "LGPD",
+    "rights": "Todos los derechos reservados.",
+    "availability": "Gestión disponible cuando tu negocio lo necesite."
+  },
+  "meta": {
+    "title": "Mangora — sistema de gestión online",
+    "description": "Gestión ligera para tiendas, restaurantes, salones y prestadores de servicios: ventas, inventario, finanzas y clientes en un solo lugar."
+  },
+  "benefits": {
+    "autoUpdate": "Actualización automática",
+    "title": "Menos teclear. Más visión del negocio.",
+    "copy": "La venta descuenta el inventario, mueve la caja y aparece en tu panel. Así la rutina gana tiempo."
+  }
+}

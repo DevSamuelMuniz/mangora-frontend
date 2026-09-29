@@ -1,0 +1,25 @@
+{
+  "audit": {
+    "searchAria": "Search the LOG",
+    "searchPlaceholder": "Search person, action or area...",
+    "filterAria": "Filter action type",
+    "allActions": "All actions",
+    "viewChanges": "View change data"
+  },
+  "cash": {
+    "expected": "Expected balance",
+    "cashSales": "Cash sales",
+    "supplies": "Cash-ins",
+    "withdrawals": "Withdrawals and refunds",
+    "movements": "Shift movements",
+    "openedBy": "Opened by {name} on {date}"
+  },
+  "dataTransfer": {
+    "products": "Products",
+    "customers": "Customers",
+    "suppliers": "Suppliers",
+    "productsHint": "Columns: nome, preco (required) · sku, codigo_barras, categoria, estoque, estoque_minimo, custo",
+    "customersHint": "Columns: nome (required) · email, telefone, documento, nome_fantasia",
+    "suppliersHint": "Columns: nome (required) · email, telefone, documento, nome_fantasia"
+  }
+}

@@ -1,0 +1,173 @@
+{
+  "nav": {
+    "label": "Main navigation",
+    "home": "Mangora home page",
+    "features": "Features",
+    "howItWorks": "How it works",
+    "plans": "Plans",
+    "segments": "Segments",
+    "beforeStart": "Before you start",
+    "login": "Sign in",
+    "startFree": "Start on Free",
+    "startTrial": "Try 7 days free",
+    "test": "Try it",
+    "trialChip": "7 days free"
+  },
+  "hero": {
+    "title": "Lightweight management for businesses that never stop.",
+    "noCard": "No credit card",
+    "noAutoCharge": "No automatic charges",
+    "previewTag": "Illustrative preview · sample data",
+    "todayMovement": "Today's movement",
+    "weekSales": "Sales of the week",
+    "eyebrow": "Online management for small businesses",
+    "titleLine1": "Sales, stock and finance.",
+    "titleLine2": "Everything under control.",
+    "copy": "Know how much you sold, what is still to be received and which products are running out. Organise your business routine with Mangora.",
+    "ctaTrial": "Try free for 7 days",
+    "ctaDemo": "Explore the demo"
+  },
+  "features": {
+    "tag": "One connected operation",
+    "title": "When a sale happens, everything else follows.",
+    "copy": "Mangora cuts repeated work because each part of the management updates the next.",
+    "tabs": {
+      "sales": "Sales",
+      "stock": "Stock",
+      "finance": "Finance",
+      "customers": "Customers",
+      "reports": "Reports"
+    },
+    "items": {
+      "sales": {
+        "label": "Sale recorded",
+        "title": "Sell without losing the pace",
+        "copy": "Record orders, payments and counter sales in a few steps.",
+        "imageLabel": "Mangora mascot working on the computer"
+      },
+      "stock": {
+        "label": "Stock in sync",
+        "title": "Every sale decreases stock",
+        "copy": "Inflows, outflows and minimum stock alerts follow your operation."
+      },
+      "finance": {
+        "label": "Cash up to date",
+        "title": "Money without mystery",
+        "copy": "Revenue, expenses, bills and cash flow together so you decide better."
+      },
+      "relationship": {
+        "label": "Organised relationships",
+        "title": "Customers and team close by",
+        "copy": "Customer, employee and permission history in the right place."
+      }
+    },
+    "systemLine": "One system, from the first order to month-end closing.",
+    "syncTitle": "One action updates the whole management"
+  },
+  "steps": {
+    "tag": "From sign up to control",
+    "title": "Your business organised in three moves.",
+    "copy": "You start small, configure what you really use and expand when needed.",
+    "imageLabel": "Mangora mascot pointing at the steps",
+    "setup": {
+      "title": "Tell us how your business works",
+      "copy": "Create the account and register products, services and payment methods."
+    },
+    "register": {
+      "title": "Record the day's movement",
+      "copy": "Make sales, take orders and follow inflows and outflows."
+    },
+    "decide": {
+      "title": "Decide with the numbers on the table",
+      "copy": "See cash, stock and performance without building a report by hand."
+    },
+    "badge": "That easy!"
+  },
+  "plans": {
+    "tag": "Plans without a maze",
+    "title": "Start at the right size.",
+    "imageLabel": "Mangora mascot giving a thumbs up",
+    "freePrice": "Free",
+    "featured": "To grow",
+    "billingNote": "No charge is made during the trial. On day 8 your account continues on Free; you only pay if you choose another plan. External integrations may have their own costs.",
+    "copy": "Try the Start features free for 7 days. Then continue on Free or choose the plan that fits your operation.",
+    "perMonth": "/month"
+  },
+  "faq": {
+    "card": {
+      "question": "Do I need to enter my card?",
+      "answer": "No. You create your account and start the 7-day Start trial without entering a credit card."
+    },
+    "afterTrial": {
+      "question": "What happens after the 7 days?",
+      "answer": "Your account continues on the Free plan, with that plan's features and limits. To keep using paid features, choose a plan whenever you want."
+    },
+    "install": {
+      "question": "Do I need to install any software?",
+      "answer": "Mangora runs in the browser with internet access. You can use it on a computer or phone."
+    },
+    "firstSteps": {
+      "question": "Where do I start after signing up?",
+      "answer": "Register your company and the products or services you sell. Then record a sale and follow the data in the system."
+    },
+    "doubt": {
+      "question": "Can I ask a question before signing up?",
+      "answer": "Yes. Use the Talk to Mangora button below to get in touch on WhatsApp."
+    },
+    "title": "Before you start"
+  },
+  "cta": {
+    "eyebrow": "The next sale can be simpler",
+    "imageLabel": "Mangora mascot inviting you to start",
+    "title": "Start with the next sale.",
+    "copy": "You get 7 days to sell, organise and feel the difference in the routine. You start without a card and decide later.",
+    "button": "Start 7 days free",
+    "whatsapp": "Talk to Mangora"
+  },
+  "preview": {
+    "imageLabel": "Mangora mascot welcoming",
+    "revenue": "Revenue",
+    "sales": "Sales",
+    "customers": "Customers",
+    "order": "Order #1024",
+    "stockMoved": "Stock decreased",
+    "stockItems": "3 items",
+    "cashUpdated": "Cash updated",
+    "received": "Received",
+    "demo": "Demo"
+  },
+  "segments": {
+    "stores": "Stores and retail",
+    "restaurants": "Restaurants",
+    "salons": "Salons and barbershops",
+    "technical": "Technical support shops",
+    "services": "Service providers",
+    "eyebrow": "Made for real businesses",
+    "title": "The routine changes. Mangora adapts.",
+    "copy": "Choose the modules that make sense for your operation, without carrying features you never use."
+  },
+  "footer": {
+    "platform": "Platform",
+    "company": "Mangora",
+    "trust": "Trust",
+    "about": "About us",
+    "support": "Support",
+    "partners": "Partners",
+    "contact": "Contact",
+    "terms": "Terms of use",
+    "privacy": "Privacy",
+    "security": "Security",
+    "lgpd": "LGPD",
+    "rights": "All rights reserved.",
+    "availability": "Management available whenever your business needs it."
+  },
+  "meta": {
+    "title": "Mangora — online business management",
+    "description": "Lightweight management for stores, restaurants, salons and service providers: sales, stock, finance and customers in one place."
+  },
+  "benefits": {
+    "autoUpdate": "Automatic update",
+    "title": "Less typing. More business insight.",
+    "copy": "The sale decreases stock, moves the cash and appears on your dashboard. That is how the routine gains time."
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "eyebrow": "Catálogo",
+  "title": "Serviços",
+  "subtitle": "Gerencie preços, duração e disponibilidade dos serviços.",
+  "create": "Novo serviço",
+  "searchPlaceholder": "Buscar por nome, código ou categoria...",
+  "searchLabel": "Buscar serviços",
+  "allStatus": "Todos os status",
+  "statusActivePlural": "Ativos",
+  "statusInactivePlural": "Inativos",
+  "notInformed": "Não informada",
+  "durationMinutes": "{count} minutos",
+  "empty": "Nenhum serviço encontrado",
+  "emptyAction": "Cadastrar primeiro serviço",
+  "details": "Detalhes do serviço",
+  "editShort": "Editar serviço",
+  "close": "Fechar",
+  "table": {
+    "service": "Serviço",
+    "category": "Categoria",
+    "duration": "Duração",
+    "price": "Preço",
+    "status": "Status",
+    "actions": "Ações",
+    "code": "Código: {code}"
+  },
+  "row": {
+    "active": "Ativo",
+    "inactive": "Inativo"
+  },
+  "actions": {
+    "viewAria": "Visualizar {name}",
+    "editAria": "Editar {name}",
+    "deleteAria": "Excluir {name}",
+    "deleteConfirm": "Excluir o serviço {name}?"
+  },
+  "errors": {
+    "delete": "Não foi possível excluir o serviço."
+  },
+  "form": {
+    "eyebrow": "Catálogo",
+    "titleNew": "Novo serviço",
+    "titleEdit": "Editar serviço",
+    "subtitle": "Preço, duração, categoria e disponibilidade comercial.",
+    "back": "Voltar para serviços",
+    "mainSection": "Informações principais",
+    "executionSection": "Execução",
+    "imageSection": "Imagem",
+    "save": "Salvar",
+    "saving": "Salvando...",
+    "created": "Serviço cadastrado",
+    "updated": "Serviço atualizado",
+    "notFound": "Serviço não encontrado.",
+    "categoryRequired": "Crie uma categoria de serviço antes de continuar.",
+    "manageCategories": "Gerenciar categorias",
+    "fields": {
+      "name": "Nome do serviço",
+      "code": "Código",
+      "duration": "Duração estimada em minutos",
+      "imageUrl": "URL pública da imagem",
+      "description": "Descrição",
+      "descriptionHint": "Selecione uma categoria ativa para o serviço.",
+      "category": "Categoria",
+      "categoryPlaceholder": "Selecione uma categoria",
+      "price": "Preço",
+      "active": "Serviço ativo"
+    },
+    "errors": {
+      "save": "Não foi possível salvar o serviço."
+    }
+  }
+}

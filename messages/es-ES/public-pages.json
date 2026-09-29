@@ -1,0 +1,275 @@
+{
+  "common": {
+    "createAccount": "Crear una cuenta",
+    "login": "Entrar en la plataforma"
+  },
+  "login": {
+    "metaTitle": "Entrar",
+    "metaDescription": "Accede a tu cuenta de Mangora y continúa donde lo dejaste.",
+    "eyebrow": "Área de cliente",
+    "title": "Entra y sigue el ritmo.",
+    "subtitle": "Tu panel está listo para otro día de trabajo.",
+    "emailLabel": "Correo electrónico",
+    "emailPlaceholder": "tu@empresa.com",
+    "passwordLabel": "Contraseña",
+    "passwordPlaceholder": "Escribe tu contraseña",
+    "forgot": "Olvidé mi contraseña",
+    "showPassword": "Mostrar contraseña",
+    "hidePassword": "Ocultar contraseña",
+    "remember": "Mantener la sesión en este dispositivo",
+    "submit": "Entrar en Mangora",
+    "submitting": "Entrando...",
+    "newHere": "¿Nuevo por aquí?",
+    "createAccount": "Crear mi cuenta",
+    "legalPrefix": "Al entrar aceptas nuestros",
+    "terms": "Términos",
+    "privacy": "Política de Privacidad",
+    "error": "No se pudo iniciar sesión."
+  },
+  "register": {
+    "metaTitle": "Crear cuenta",
+    "metaDescription": "Crea tu cuenta de Mangora y prueba todos los recursos 7 días, sin tarjeta.",
+    "trialChip": "Start 7 días · sin tarjeta",
+    "title": "Vamos a preparar tu Mangora.",
+    "subtitle": "Completa los datos esenciales y usa la experiencia completa 7 días. El día 8, continúa en Free o elige un plan de pago.",
+    "hasAccount": "¿Ya tienes una cuenta?",
+    "loginLink": "Entrar",
+    "mobileHasAccount": "¿Ya estás registrado?",
+    "mobileLoginLink": "Entrar en mi cuenta",
+    "backHome": "Volver al inicio",
+    "nameLabel": "Tu nombre",
+    "namePlaceholder": "Nombre completo",
+    "companyLabel": "Nombre de la empresa",
+    "companyPlaceholder": "Nombre del establecimiento",
+    "segmentLabel": "Segmento de la empresa",
+    "segmentPlaceholder": "Selecciona",
+    "countryLabel": "País o región",
+    "countryHint": "Define el mercado inicial; idioma y moneda siguen siendo preferencias separadas.",
+    "phoneLabel": "Teléfono o WhatsApp",
+    "phonePlaceholder": "+34 600 000 000",
+    "emailLabel": "Correo electrónico",
+    "emailPlaceholder": "tu@empresa.com",
+    "couponLabel": "Cupón de descuento (opcional)",
+    "couponPlaceholder": "Ej.: BIENVENIDO20",
+    "couponHint": "El beneficio se aplicará a la primera mensualidad cuando contrates un plan.",
+    "passwordLabel": "Crea una contraseña",
+    "passwordPlaceholder": "Mayúscula, minúscula y número",
+    "passwordConfirmationLabel": "Confirma la contraseña",
+    "passwordConfirmationPlaceholder": "Escríbela de nuevo",
+    "passwordRule": "Usa de 8 a 128 caracteres, con letra mayúscula, minúscula y número.",
+    "passwordMismatch": "Las contraseñas no coinciden.",
+    "acceptTermsRequired": "Debes aceptar los Términos de Uso.",
+    "acceptPrefix": "He leído y acepto los",
+    "terms": "Términos de Uso",
+    "privacy": "Política de Privacidad",
+    "submit": "Probar Start 7 días",
+    "submitting": "Preparando tu cuenta...",
+    "success": "Cuenta creada. Abriendo tu panel...",
+    "noCardNote": "No indicas tarjeta ahora. Tras el periodo completo, tu cuenta sigue activa en el plan Free, sin cobro.",
+    "error": "No se pudo crear tu cuenta.",
+    "segments": {
+      "RETAIL": "Tienda o comercio",
+      "RESTAURANT": "Restaurante",
+      "SNACK_BAR": "Cafetería",
+      "MARKET": "Supermercado o minimercado",
+      "BAKERY": "Panadería",
+      "SALON": "Salón de belleza",
+      "BARBERSHOP": "Barbería",
+      "TECHNICAL_ASSISTANCE": "Asistencia técnica",
+      "SERVICE_PROVIDER": "Prestador de servicios",
+      "OTHER": "Otro segmento"
+    }
+  },
+  "resetPassword": {
+    "metaTitle": "Restablecer contraseña",
+    "metaDescription": "Crea una nueva contraseña para acceder a tu cuenta de Mangora.",
+    "title": "Crea una nueva contraseña",
+    "newPasswordLabel": "Nueva contraseña",
+    "newPasswordPlaceholder": "Mayúscula, minúscula y número",
+    "confirmLabel": "Confirmar nueva contraseña",
+    "confirmPlaceholder": "Escríbela de nuevo",
+    "submit": "Restablecer contraseña",
+    "submitting": "Restableciendo...",
+    "successTitle": "Contraseña restablecida",
+    "successCopy": "Todas las sesiones anteriores se cerraron.",
+    "goToLogin": "Entrar con la nueva contraseña",
+    "invalidLink": "Enlace de restablecimiento no válido.",
+    "error": "No se pudo restablecer la contraseña.",
+    "mismatch": "La confirmación de la contraseña no coincide.",
+    "passwordRule": "Usa de 8 a 128 caracteres, con letra mayúscula, minúscula y número.",
+    "subtitle": "El enlace es personal, de un solo uso y caduca en 30 minutos. Usa mayúscula, minúscula y número."
+  },
+  "support": {
+    "beforeTitle": "Antes de pedir ayuda",
+    "beforeCopy": "Comprueba tu conexión, actualiza la página y confirma que los datos obligatorios están completos.",
+    "beforeItems": [
+      "No envíes contraseñas ni códigos de acceso.",
+      "Incluye una captura de pantalla cuando sea posible.",
+      "Indica los pasos para reproducir el problema."
+    ],
+    "channelsTitle": "Atención",
+    "channelsHours": "Nuestra atención está disponible de lunes a viernes, de 8h a 18h, en horario de Brasilia.",
+    "channelsItems": [
+      "WhatsApp: +55 81 98463-9299.",
+      "Correo: contato.unityinnovation@gmail.com",
+      "Ten a mano el nombre de la empresa y una descripción del problema."
+    ],
+    "updatedLabel": "Última actualización:",
+    "backHome": "Volver al inicio"
+  },
+  "privacy": {
+    "metaTitle": "Política de privacidad",
+    "metaDescription": "Entiende cómo Mangora recopila, utiliza y protege los datos de tu empresa.",
+    "eyebrow": "Privacidad",
+    "title": "Política de privacidad",
+    "description": "Sabe qué datos utilizamos, por qué son necesarios y qué controles están disponibles para tu empresa.",
+    "updatedAt": "17 de julio de 2026",
+    "sections": {
+      "collectedTitle": "Datos recopilados",
+      "collectedBody": "Recopilamos los datos indicados en el registro y los registros necesarios para ofrecer los recursos contratados.",
+      "usageTitle": "Cómo los utilizamos",
+      "usageBody": "Los datos se utilizan para autenticar usuarios, entregar funcionalidades, prestar soporte, mejorar la experiencia y proteger la plataforma.",
+      "rightsTitle": "Tus derechos",
+      "rightsBody": "Puedes solicitar información, corrección, portabilidad o eliminación de datos, respetando los plazos legales y las obligaciones de conservación aplicables."
+    }
+  },
+  "terms": {
+    "metaTitle": "Términos de uso",
+    "metaDescription": "Consulta los términos y condiciones para utilizar la plataforma Mangora.",
+    "eyebrow": "Legal",
+    "title": "Términos de uso",
+    "description": "Estas condiciones explican las reglas básicas para usar la plataforma Mangora de forma segura y responsable.",
+    "updatedAt": "17 de julio de 2026",
+    "sections": {
+      "useTitle": "1. Uso de la plataforma",
+      "useBody": "Al crear una cuenta declaras que la información facilitada es veraz y que tienes autorización para administrar los datos de la empresa registrada.",
+      "availabilityTitle": "2. Disponibilidad y datos",
+      "availabilityBody": "Buscamos mantener el servicio disponible y fiable. Los recursos de demostración pueden no conservar información mientras la integración con la API no esté activa.",
+      "responsibilitiesTitle": "3. Responsabilidades",
+      "responsibilitiesBody": "Mangora ayuda a la operación empresarial, pero no sustituye asesoramiento contable, fiscal, jurídico o financiero especializado."
+    }
+  },
+  "recoverPassword": {
+    "metaTitle": "Recuperar acceso",
+    "metaDescription": "Recibe las instrucciones para restablecer la contraseña de tu cuenta Mangora.",
+    "requestTitle": "Recupera tu acceso",
+    "requestCopy": "Indica el correo de tu cuenta para recibir las instrucciones de restablecimiento de contraseña.",
+    "emailLabel": "Correo electrónico",
+    "emailPlaceholder": "tu@empresa.com",
+    "submit": "Enviar instrucciones",
+    "submitting": "Enviando...",
+    "error": "No se pudo solicitar la recuperación.",
+    "sentTitle": "Revisa tu correo",
+    "sentPrefix": "Si existe una cuenta para",
+    "sentSuffix": "enviaremos las instrucciones de recuperación.",
+    "backToLogin": "Volver al inicio de sesión",
+    "devLink": "Abrir enlace de desarrollo"
+  },
+  "about": {
+    "metaTitle": "Sobre Mangora",
+    "metaDescription": "Conoce Mangora y nuestra misión de simplificar la gestión empresarial para negocios reales.",
+    "eyebrow": "Empresa",
+    "title": "Gestión simple para negocios reales",
+    "description": "Mangora nació para reunir las rutinas esenciales de pequeñas y medianas empresas en una experiencia clara, rápida y accesible.",
+    "missionTitle": "Nuestra misión",
+    "missionBody": "Reducir la complejidad de la gestión para que los emprendedores dediquen más tiempo a los clientes y al crecimiento del negocio.",
+    "missionItems": [
+      "Información centralizada.",
+      "Decisiones apoyadas en indicadores.",
+      "Operación simple en cualquier dispositivo."
+    ],
+    "howTitle": "Cómo trabajamos",
+    "howBody": "Construimos la plataforma a partir de flujos cotidianos de ventas, inventario, clientes y finanzas.",
+    "howItems": [
+      "Evolución continua del producto.",
+      "Seguridad desde el diseño.",
+      "Soporte cercano al cliente."
+    ]
+  },
+  "partners": {
+    "metaTitle": "Socios",
+    "metaDescription": "Conoce el programa de socios de Mangora para contadores, consultores, integradores y agencias.",
+    "eyebrow": "Ecosistema",
+    "title": "Crece junto a Mangora",
+    "description": "Creamos alianzas con profesionales y empresas que ayudan a los negocios a vender, organizarse y crecer.",
+    "whoTitle": "Quién puede participar",
+    "whoBody": "Contadores, consultores, integradores, agencias y proveedores de tecnología pueden formar parte del ecosistema.",
+    "whoItems": [
+      "Recomendación de nuevos clientes.",
+      "Implantación y formación.",
+      "Integraciones y soluciones complementarias."
+    ],
+    "nextTitle": "Próximos pasos",
+    "nextBody": "Envía una presentación a parceiros@mangora.com.br con tu región, experiencia y modelo de colaboración deseado.",
+    "nextItems": [
+      "Analizamos encaje y cobertura.",
+      "Definimos responsabilidades y beneficios.",
+      "Seguimos los resultados de la alianza."
+    ]
+  },
+  "security": {
+    "metaTitle": "Seguridad",
+    "metaDescription": "Conoce las prácticas de seguridad y protección de datos adoptadas por Mangora.",
+    "eyebrow": "Confianza",
+    "title": "Seguridad en todas las etapas",
+    "description": "Aplicamos controles técnicos y operativos para proteger cuentas, información empresarial y la disponibilidad de la plataforma.",
+    "accountTitle": "Protección de la cuenta",
+    "accountBody": "El acceso es individual y debe usar credenciales fuertes y exclusivas.",
+    "accountItems": [
+      "Control de acceso por perfil.",
+      "Monitorización de actividad sospechosa.",
+      "Prácticas seguras de autenticación."
+    ],
+    "dataTitle": "Protección de los datos",
+    "dataBody": "Adoptamos medidas proporcionales al riesgo y revisamos continuamente nuestra arquitectura.",
+    "dataItems": [
+      "Comunicación protegida en tránsito.",
+      "Separación lógica de la información.",
+      "Rutinas de continuidad y recuperación."
+    ],
+    "reportTitle": "Reporta una vulnerabilidad",
+    "reportBody": "Envía detalles de forma responsable a seguranca@mangora.com.br. No explotes ni expongas datos de terceros.",
+    "reportItems": [
+      "Describe el impacto potencial.",
+      "Incluye pasos mínimos de reproducción.",
+      "Espera nuestro análisis antes de divulgar."
+    ]
+  },
+  "lgpd": {
+    "metaTitle": "LGPD (protección de datos)",
+    "metaDescription": "Sabe cómo Mangora trata los datos personales y cumple los principios de la Ley General de Protección de Datos de Brasil.",
+    "eyebrow": "Protección de datos",
+    "title": "Compromiso con la protección de datos",
+    "description": "Tratamos datos personales con transparencia, finalidad definida y medidas compatibles con la Ley General de Protección de Datos de Brasil.",
+    "rolesTitle": "Roles y finalidades",
+    "rolesBody": "Según el tratamiento, Mangora puede actuar como responsable o encargado. Las responsabilidades se definen según la relación con el cliente.",
+    "rolesItems": [
+      "Finalidades informadas y legítimas.",
+      "Recogida limitada a lo necesario.",
+      "Conservación según obligaciones aplicables."
+    ],
+    "holdersTitle": "Atención a los titulares",
+    "holdersBody": "Las solicitudes relacionadas con datos personales pueden enviarse a privacidade@mangora.com.br.",
+    "holdersItems": [
+      "Identificamos y validamos al solicitante.",
+      "Evaluamos obligaciones legales de conservación.",
+      "Respondemos dentro de los plazos aplicables."
+    ],
+    "governanceTitle": "Gobernanza",
+    "governanceBody": "Mantenemos procesos para evaluar riesgos, proveedores, incidentes y cambios relevantes en el tratamiento de datos.",
+    "governanceItems": [
+      "Revisión periódica de controles.",
+      "Registro de decisiones y operaciones.",
+      "Formación y concienciación."
+    ]
+  },
+  "publicPages": {
+    "support": {
+      "metaTitle": "Soporte",
+      "metaDescription": "Encuentra ayuda para usar Mangora y organizar la operación de tu empresa.",
+      "eyebrow": "Ayuda",
+      "title": "¿Cómo podemos ayudar?",
+      "description": "Encuentra los canales e información esencial para resolver dudas sobre Mangora."
+    }
+  }
+}

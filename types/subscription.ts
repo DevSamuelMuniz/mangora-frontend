@@ -1,4 +1,4 @@
-export type PlanId = "start" | "business" | "premium" | "enterprise";
+export type PlanId = "free" | "start" | "business" | "premium" | "enterprise";
 
 export type SubscriptionPlan = {
   id: PlanId;
@@ -28,16 +28,54 @@ export type SubscriptionInvoice = {
 };
 
 export type SubscriptionOverview = {
-  plan: "START" | "BUSINESS" | "PREMIUM" | "ENTERPRISE";
+  plan: "FREE" | "START" | "BUSINESS" | "PREMIUM" | "ENTERPRISE";
   planName: string;
-  status: "PENDING" | "ACTIVE" | "PAST_DUE" | "CANCELLED";
+  status: "TRIAL" | "PENDING" | "ACTIVE" | "PAST_DUE" | "CANCELLED";
+  trialEndsAt: string | null;
+  trialDaysRemaining: number;
+  trialExpired: boolean;
+  accessBlocked: boolean;
   price: number;
   nextBillingAt: string | null;
   paymentMethod: string | null;
   pendingPlan: "START" | "BUSINESS" | "PREMIUM" | null;
-  provider: { name: "ASAAS"; configured: boolean; environment: "sandbox" | "production"; customerConnected: boolean; subscriptionConnected: boolean };
+  cancellation: {
+    requested: boolean;
+    cancelled: boolean;
+    active: boolean;
+    effectiveAt: string | null;
+    daysLeft: number | null;
+  };
+  contract: {
+    planCatalogVersion: number;
+    planSnapshot: unknown | null;
+    notes: string;
+  };
+  history: Array<{
+    id: string;
+    type: "CREATED" | "PLAN_CHANGE_REQUESTED" | "PLAN_CHANGED" | "PRICE_CHANGED" | "DISCOUNT_UPDATED" | "CANCELLATION_REQUESTED" | "CANCELLED" | "REACTIVATED";
+    userName: string;
+    fromPlan: string | null;
+    toPlan: string | null;
+    fromPrice: number | null;
+    toPrice: number | null;
+    discount: number | null;
+    coupon: string | null;
+    notes: string | null;
+    createdAt: string;
+  }>;
+  billingBreakdown: null | {
+    planName: string;
+    unitPrice: number;
+    unitCount: number;
+    total: number;
+    calculationText: string;
+    hasOverride: boolean;
+  };
+  market: null | { country: string; market: string; currency: string; locale: string; timezone: string };
+  provider: { name: "ASAAS" | "PADDLE"; configured: boolean; environment: "sandbox" | "production" | "international"; customerConnected: boolean; subscriptionConnected: boolean };
   usage: Array<{ key: string; label: string; current: number; limit: number | null }>;
-  plans: Array<{ id: string; name: string; price: number | null; employeeLimit: number | null; unitLimit: number | null }>;
+  plans: Array<{ id: string; name: string; price: number | null; ownerLimit: number | null; employeeLimit: number | null; unitLimit: number | null; regionalPrice: null | { formatted: string; currency: string; amount: number; provider: "ASAAS" | "PADDLE"; checkoutAvailable: boolean } }>;
   requests: Array<{ id: string; type: "PLAN_CHANGE" | "CANCELLATION" | "CONTACT"; targetPlan: string | null; status: string; requestedByName: string; createdAt: string }>;
   invoices: SubscriptionInvoice[];
 };

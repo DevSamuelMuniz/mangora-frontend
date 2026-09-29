@@ -13,6 +13,10 @@ type PublicInfoPageProps = {
   title: string;
   description: string;
   updatedAt?: string;
+  backHomeLabel?: string;
+  updatedLabel?: string;
+  createAccountLabel?: string;
+  loginLabel?: string;
   sections: PublicInfoSection[];
 };
 
@@ -21,10 +25,14 @@ export default function PublicInfoPage({
   title,
   description,
   updatedAt,
+  backHomeLabel = "Voltar ao início",
+  updatedLabel = "Última atualização:",
+  createAccountLabel = "Criar uma conta",
+  loginLabel = "Entrar na plataforma",
   sections,
 }: PublicInfoPageProps) {
   return (
-    <main className="min-h-screen bg-slate-50 text-slate-950">
+    <main className="mangora-public min-h-screen bg-slate-50 text-slate-950">
       <header className="border-b border-slate-200 bg-white">
         <div className="mx-auto flex h-16 max-w-5xl items-center justify-between px-5 sm:px-8">
           <Link href="/" className="flex items-center gap-3">
@@ -36,7 +44,7 @@ export default function PublicInfoPage({
             className="flex items-center gap-2 text-sm font-bold text-slate-600 transition hover:text-orange-700"
           >
             <ArrowLeft className="size-4" />
-            Voltar ao início
+            {backHomeLabel}
           </Link>
         </div>
       </header>
@@ -54,7 +62,7 @@ export default function PublicInfoPage({
           </p>
           {updatedAt && (
             <p className="mt-3 text-xs font-semibold text-slate-400">
-              Última atualização: {updatedAt}
+              {updatedLabel} {updatedAt}
             </p>
           )}
         </div>
@@ -92,13 +100,13 @@ export default function PublicInfoPage({
             href="/cadastro"
             className="rounded-xl bg-orange-600 px-5 py-3 text-sm font-bold text-white transition hover:bg-orange-700"
           >
-            Criar uma conta
+            {createAccountLabel}
           </Link>
           <Link
             href="/login"
             className="rounded-xl border border-slate-200 bg-white px-5 py-3 text-sm font-bold text-slate-700 transition hover:border-orange-200 hover:text-orange-700"
           >
-            Entrar na plataforma
+            {loginLabel}
           </Link>
         </div>
       </div>

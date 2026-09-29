@@ -1,0 +1,95 @@
+{
+  "cash": {
+    "title": "Control de caja",
+    "subtitle": "Apertura, movimientos en efectivo y arqueo del turno.",
+    "open": "Abrir caja",
+    "opened": "Caja abierta",
+    "closed": "Caja cerrada",
+    "loading": "Cargando caja...",
+    "expected": "Esperado",
+    "counted": "Contado",
+    "difference": "Diferencia",
+    "close": "Arqueo y cierre",
+    "approveDifference": "Aprobar diferencia",
+    "cancel": "Cancelar",
+    "confirm": "Confirmar",
+    "actions": {
+      "supply": "Añadir entrada",
+      "withdrawal": "Nueva salida"
+    },
+    "notice": {
+      "movementLinked": "El movimiento se vinculará a la caja actual.",
+      "opened": "Caja abierta correctamente.",
+      "closed": "Caja cerrada y verificada.",
+      "differenceApproved": "Diferencia aprobada y registrada en el historial.",
+      "movementDone": "Movimiento registrado."
+    },
+    "types": {
+      "OPENING": "Apertura",
+      "SUPPLY": "Entrada",
+      "WITHDRAWAL": "Salida",
+      "SALE": "Venta en efectivo",
+      "SALE_REVERSAL": "Reversión de venta"
+    },
+    "errors": {
+      "closeFailed": "No se pudo completar la operación.",
+      "approveFailed": "No se pudo aprobar la diferencia."
+    }
+  },
+  "audit": {
+    "title": "Auditoría",
+    "subtitle": "Solo el propietario",
+    "autoRefresh": "Actualización automática",
+    "loading": "Cargando registro...",
+    "loadFailed": "No se pudo cargar el registro.",
+    "empty": "Ningún evento encontrado.",
+    "search": "Buscar evento",
+    "actions": {
+      "all": "Todos"
+    },
+    "metrics": {
+      "visible": "Eventos mostrados"
+    },
+    "table": {
+      "when": "Fecha",
+      "user": "Usuario",
+      "action": "Acción",
+      "details": "Detalles"
+    },
+    "labels": {
+      "LOGIN_SUCCESS": "Inicio de sesión",
+      "LOGIN_FAILURE": "Fallo de inicio de sesión",
+      "PASSWORD_CHANGED": "Contraseña cambiada",
+      "ROLE_CHANGED": "Permiso cambiado",
+      "EMPLOYEE_UPDATED": "Acceso del empleado cambiado",
+      "EMPLOYEE_CREATED": "Empleado registrado",
+      "COMPANY_UPDATED": "Empresa actualizada",
+      "CATEGORY_CREATED": "Categoría registrada",
+      "CATEGORY_UPDATED": "Categoría actualizada",
+      "SUPPLIER_CREATED": "Proveedor registrado",
+      "SUPPLIER_UPDATED": "Proveedor actualizado",
+      "PURCHASE_CREATED": "Compra registrada",
+      "PURCHASE_CANCELLED": "Compra cancelada",
+      "PURCHASE_RECEIVED": "Compra recibida",
+      "SERVICE_CREATED": "Servicio registrado",
+      "SERVICE_UPDATED": "Servicio actualizado",
+      "PAYMENT_REGISTERED": "Pago registrado",
+      "SESSION_REVOKED": "Sesión cerrada",
+      "CASH_OPENED": "Caja abierta",
+      "CASH_CLOSED": "Caja cerrada",
+      "STOCK_TRANSFERRED": "Inventario transferido",
+      "CREATED": "Creación",
+      "DATA_CHANGED": "Cambio realizado",
+      "SUCCESS": "Correcto",
+      "FAILURE": "Fallo",
+      "PASSWORD": "Contraseña",
+      "CANCELLED": "Cancelado",
+      "EMPLOYEE_ROLE_CHANGED": "Permiso cambiado",
+      "EMPLOYEE_STATUS_CHANGED": "Acceso del empleado cambiado",
+      "CASH_REGISTER_OPENED": "Caja abierta",
+      "CASH_REGISTER_CLOSED": "Caja cerrada",
+      "CASH_MOVEMENT_RECORDED": "Movimiento de caja",
+      "FINANCIAL_PAYMENT_RECORDED": "Pago registrado"
+    }
+  }
+}

@@ -1,12 +1,22 @@
+import { getTranslator } from "@/i18n/server";
 import type { Metadata } from "next";
 
 import CustomerCatalog from "@/components/customers/CustomerCatalog";
+import CustomerForm from "@/components/customers/CustomerForm";
+import WorkspaceModal from "@/components/ui/WorkspaceModal";
 
 export const metadata: Metadata = {
+<<<<<<< HEAD
   title: "Clientes | Mangora",
+=======
+  title: "Clientes",
+>>>>>>> 0e59a660a5acf0b652a188ddf2e8ccc96de79e4d
   description: "Gerencie os clientes da sua empresa.",
 };
 
-export default function CustomersPage() {
-  return <CustomerCatalog />;
+export default async function CustomersPage({ searchParams }: { searchParams: Promise<{ acao?: string; id?: string }> }) {
+  const { t } = await getTranslator();
+  const { acao, id } = await searchParams;
+  const editing = acao === "editar" && Boolean(id);
+  return <><CustomerCatalog />{(acao === "novo" || editing) && <WorkspaceModal closeHref="/clientes" label={editing ? t("workspace.modal.editCustomer") : t("workspace.modal.newCustomer")}><CustomerForm customerId={editing ? id : undefined} /></WorkspaceModal>}</>;
 }

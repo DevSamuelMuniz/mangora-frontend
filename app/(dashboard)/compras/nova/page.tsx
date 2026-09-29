@@ -1,2 +1,2 @@
-import NewPurchaseForm from "@/components/purchases/NewPurchaseForm";
-export default function NewPurchasePage() { return <NewPurchaseForm />; }
+import { redirect } from "next/navigation";
+export default function NewPurchasePage() { redirect("/compras?acao=novo"); }

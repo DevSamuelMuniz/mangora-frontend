@@ -1,0 +1,95 @@
+{
+  "cash": {
+    "title": "Cash control",
+    "subtitle": "Opening, cash movements and shift reconciliation.",
+    "open": "Open register",
+    "opened": "Register open",
+    "closed": "Register closed",
+    "loading": "Loading register...",
+    "expected": "Expected",
+    "counted": "Counted",
+    "difference": "Difference",
+    "close": "Reconciliation and closing",
+    "approveDifference": "Approve difference",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "actions": {
+      "supply": "Add cash-in",
+      "withdrawal": "New cash-out"
+    },
+    "notice": {
+      "movementLinked": "The movement will be linked to the current register.",
+      "opened": "Register opened successfully.",
+      "closed": "Register closed and reconciled.",
+      "differenceApproved": "Difference approved and recorded in history.",
+      "movementDone": "Movement recorded."
+    },
+    "types": {
+      "OPENING": "Opening",
+      "SUPPLY": "Cash-in",
+      "WITHDRAWAL": "Cash-out",
+      "SALE": "Cash sale",
+      "SALE_REVERSAL": "Sale reversal"
+    },
+    "errors": {
+      "closeFailed": "Could not complete the operation.",
+      "approveFailed": "Could not approve the difference."
+    }
+  },
+  "audit": {
+    "title": "Audit",
+    "subtitle": "Owner only",
+    "autoRefresh": "Auto refresh",
+    "loading": "Loading log...",
+    "loadFailed": "Could not load the log.",
+    "empty": "No event found.",
+    "search": "Search event",
+    "actions": {
+      "all": "All"
+    },
+    "metrics": {
+      "visible": "Events shown"
+    },
+    "table": {
+      "when": "Date",
+      "user": "User",
+      "action": "Action",
+      "details": "Details"
+    },
+    "labels": {
+      "LOGIN_SUCCESS": "Login performed",
+      "LOGIN_FAILURE": "Login failure",
+      "PASSWORD_CHANGED": "Password changed",
+      "ROLE_CHANGED": "Permission changed",
+      "EMPLOYEE_UPDATED": "Employee access changed",
+      "EMPLOYEE_CREATED": "Employee created",
+      "COMPANY_UPDATED": "Company updated",
+      "CATEGORY_CREATED": "Category created",
+      "CATEGORY_UPDATED": "Category updated",
+      "SUPPLIER_CREATED": "Supplier created",
+      "SUPPLIER_UPDATED": "Supplier updated",
+      "PURCHASE_CREATED": "Purchase created",
+      "PURCHASE_CANCELLED": "Purchase cancelled",
+      "PURCHASE_RECEIVED": "Purchase received",
+      "SERVICE_CREATED": "Service created",
+      "SERVICE_UPDATED": "Service updated",
+      "PAYMENT_REGISTERED": "Payment recorded",
+      "SESSION_REVOKED": "Session ended",
+      "CASH_OPENED": "Register opened",
+      "CASH_CLOSED": "Register closed",
+      "STOCK_TRANSFERRED": "Stock transferred",
+      "CREATED": "Created",
+      "DATA_CHANGED": "Change performed",
+      "SUCCESS": "Success",
+      "FAILURE": "Failure",
+      "PASSWORD": "Password",
+      "CANCELLED": "Cancelled",
+      "EMPLOYEE_ROLE_CHANGED": "Permission changed",
+      "EMPLOYEE_STATUS_CHANGED": "Employee access changed",
+      "CASH_REGISTER_OPENED": "Register opened",
+      "CASH_REGISTER_CLOSED": "Register closed",
+      "CASH_MOVEMENT_RECORDED": "Cash movement",
+      "FINANCIAL_PAYMENT_RECORDED": "Payment recorded"
+    }
+  }
+}

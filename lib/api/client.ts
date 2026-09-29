@@ -1,8 +1,23 @@
-const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3001/api";
+// Browser requests stay on the frontend origin. The server-side proxy forwards
+// them to the API and makes the HttpOnly session cookie visible to Next.js.
+const API_URL = "/api/backend";
+import { isSensitivePath } from "@/lib/offline/security-policy";
+
+const OFFLINE_MESSAGE = "Sem conexão. Registramos a alteração e vamos sincronizá-la quando a conexão voltar.";
+const CANCELLED_BY_USER = "Operação cancelada: a senha não foi informada.";
+/** Tentativas de senha antes de desistir (senha errada volta a abrir o modal). */
+const MAXIMUM_PASSWORD_ATTEMPTS = 3;
 
 type ApiErrorPayload = {
   message?: string | string[];
+  code?: string;
 };
+
+let pendingOperationPassword: string | null = null;
+
+export function rememberOperationPassword(password: string) {
+  pendingOperationPassword = password;
+}
 
 export class ApiError extends Error {
   constructor(
@@ -15,6 +30,10 @@ export class ApiError extends Error {
 }
 
 export async function apiRequest<T>(path: string, init?: RequestInit): Promise<T> {
+  const method = (init?.method ?? "GET").toUpperCase();
+  const isRead = method === "GET" || method === "HEAD";
+  const operationPassword = !isRead ? pendingOperationPassword : null;
+
   let response: Response;
   try {
     response = await fetch(`${API_URL}${path}`, {
@@ -22,21 +41,93 @@ export async function apiRequest<T>(path: string, init?: RequestInit): Promise<T
       credentials: "include",
       headers: {
         "Content-Type": "application/json",
+        ...(operationPassword ? { "x-operation-password": operationPassword } : {}),
         ...init?.headers,
       },
     });
+    if (operationPassword) pendingOperationPassword = null;
   } catch {
-    throw new ApiError("Não foi possível conectar ao servidor.", 0);
+    // Sem conexão: leituras usam o cache offline; mutações entram na fila de sync.
+    if (isSensitivePath(path) || typeof window === "undefined" || typeof indexedDB === "undefined") {
+      throw new ApiError("Não foi possível conectar ao servidor. Verifique sua conexão e tente novamente.", 0);
+    }
+    if (isRead) {
+      const { cacheRead } = await import("@/lib/offline/engine");
+      const cached = await cacheRead(path);
+      if (cached !== undefined) return cached as T;
+    } else {
+      const { enqueueMutation } = await import("@/lib/offline/engine");
+      await enqueueMutation(method, path, typeof init?.body === "string" ? init.body : undefined);
+      throw new ApiError(OFFLINE_MESSAGE, 0);
+    }
+    throw new ApiError("Não foi possível conectar ao servidor. Verifique sua conexão e tente novamente.", 0);
   }
 
   if (!response.ok) {
-    const payload = (await response.json().catch(() => ({}))) as ApiErrorPayload;
-    const message = Array.isArray(payload.message)
-      ? payload.message.join(" ")
-      : payload.message;
-    throw new ApiError(message || "Não foi possível concluir a operação.", response.status);
+    let payload = (await response.json().catch(() => ({}))) as ApiErrorPayload;
+    if (response.status === 428 && payload.code === "OPERATION_PASSWORD_REQUIRED" && typeof window !== "undefined") {
+      // Modal controlado (nunca `window.prompt`): abre com a mensagem do servidor
+      // e, se a senha estiver errada, volta a abrir mostrando o motivo.
+      const { requestOperationPassword } = await import("@/lib/security/operation-password");
+      let previousError: string | null = null;
+      for (let attempt = 0; attempt < MAXIMUM_PASSWORD_ATTEMPTS; attempt++) {
+        const message = Array.isArray(payload.message) ? payload.message.join(" ") : payload.message;
+        const password = await requestOperationPassword({ message: message || "", action: null, error: previousError });
+        if (password === null) throw new ApiError(CANCELLED_BY_USER, 428);
+        response = await fetch(`${API_URL}${path}`, {
+          ...init,
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+            ...init?.headers,
+            "x-operation-password": password,
+          },
+        });
+        if (response.ok) {
+          if (response.status === 204) return undefined as T;
+          return await response.json() as T;
+        }
+        payload = (await response.json().catch(() => ({}))) as ApiErrorPayload;
+        if (response.status !== 428 || payload.code !== "OPERATION_PASSWORD_REQUIRED") break;
+        previousError = (Array.isArray(payload.message) ? payload.message.join(" ") : payload.message) ?? null;
+      }
+    }
+    const raw = Array.isArray(payload.message) ? payload.message.join(" ") : payload.message;
+    throw new ApiError(describeError(response.status, raw), response.status);
   }
 
   if (response.status === 204) return undefined as T;
-  return response.json() as Promise<T>;
+  const data = (await response.json()) as T;
+  if (typeof window !== "undefined" && isRead && !isSensitivePath(path)) {
+    const { cacheWrite } = await import("@/lib/offline/engine");
+    void cacheWrite(path, data);
+  }
+  return data;
+}
+
+/** Converte status HTTP + mensagem crua em uma mensagem amigável e acionável. */
+function describeError(status: number, raw?: string): string {
+  if (raw) return raw;
+  switch (status) {
+    case 400:
+      return "Os dados enviados são inválidos. Confira os campos e tente novamente.";
+    case 401:
+      return "Sua sessão expirou ou você não tem permissão. Faça login novamente.";
+    case 402:
+      return "Seu período gratuito terminou. Assine um plano para continuar usando a Mangora.";
+    case 403:
+      return "Você não tem permissão para realizar esta ação.";
+    case 404:
+      return "O recurso solicitado não foi encontrado.";
+    case 409:
+      return "Esta operação conflita com o estado atual dos dados.";
+    case 422:
+      return "Não foi possível processar os dados enviados.";
+    case 429:
+      return "Muitas tentativas. Aguarde alguns instantes e tente novamente.";
+    default:
+      return status >= 500
+        ? "Erro interno do servidor. Tente novamente em instantes."
+        : `Não foi possível concluir a operação (HTTP ${status}).`;
+  }
 }

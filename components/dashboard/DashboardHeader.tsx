@@ -1,11 +1,12 @@
 "use client";
 
+import { useT } from "@/i18n/provider";
+
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import {
-  Bell,
-  CheckCheck,
+  Bot,
   ChevronDown,
   CreditCard,
   LogOut,
@@ -13,33 +14,28 @@ import {
   Search,
   Settings,
   UserRound,
+  WandSparkles,
 } from "lucide-react";
 import { apiRequest } from "@/lib/api/client";
+import { setUserProperties, track } from "@/lib/analytics";
 import { roleLabels, type AuthSession } from "@/lib/auth/types";
+import { can } from "@/lib/permissions";
+import NotificationCenter from "./NotificationCenter";
+import LocaleSwitcher from "@/components/i18n/LocaleSwitcher";
 
 type DashboardHeaderProps = {
   onOpenSidebar: () => void;
   session: AuthSession;
+  simpleMode: boolean;
+  onSimpleModeChange: (enabled: boolean) => void;
 };
 
-type NotificationItem = {
-  id: string;
-  title: string;
-  description: string;
-  type: string;
-  readAt: string | null;
-  createdAt: string;
-};
-
-export default function DashboardHeader({ onOpenSidebar, session }: DashboardHeaderProps) {
+export default function DashboardHeader({ onOpenSidebar, session, simpleMode, onSimpleModeChange }: DashboardHeaderProps) {
+  const t = useT();
   const router = useRouter();
-  const [notificationOpen, setNotificationOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
-  const [notifications, setNotifications] = useState<NotificationItem[]>([]);
   const [logoutLoading, setLogoutLoading] = useState(false);
-  const notificationMenuRef = useRef<HTMLDivElement>(null);
   const profileMenuRef = useRef<HTMLDivElement>(null);
-  const unread = notifications.filter((notification) => !notification.readAt).length;
   const roleLabel = roleLabels[session.membership.role];
   const initials = session.user.name
     .split(" ")
@@ -47,14 +43,6 @@ export default function DashboardHeader({ onOpenSidebar, session }: DashboardHea
     .slice(0, 2)
     .map((name) => name[0]?.toUpperCase())
     .join("");
-
-  useEffect(() => {
-    let active = true;
-    void apiRequest<{ items: NotificationItem[] }>("/notifications")
-      .then((response) => { if (active) setNotifications(response.items); })
-      .catch(() => { /* A ausência temporária da API não bloqueia o dashboard. */ });
-    return () => { active = false; };
-  }, []);
 
   useEffect(() => {
     if (!profileOpen) return;
@@ -83,42 +71,17 @@ export default function DashboardHeader({ onOpenSidebar, session }: DashboardHea
     };
   }, [profileOpen]);
 
-  useEffect(() => {
-    if (!notificationOpen) return;
-    function closeNotifications(event: PointerEvent) {
-      if (notificationMenuRef.current && !notificationMenuRef.current.contains(event.target as Node)) setNotificationOpen(false);
-    }
-    function closeNotificationsWithKeyboard(event: KeyboardEvent) {
-      if (event.key === "Escape") setNotificationOpen(false);
-    }
-    document.addEventListener("pointerdown", closeNotifications);
-    document.addEventListener("keydown", closeNotificationsWithKeyboard);
-    return () => {
-      document.removeEventListener("pointerdown", closeNotifications);
-      document.removeEventListener("keydown", closeNotificationsWithKeyboard);
-    };
-  }, [notificationOpen]);
-
-  function toggleNotifications() {
-    setProfileOpen(false);
-    setNotificationOpen((current) => !current);
-  }
-
   function toggleProfile() {
-    setNotificationOpen(false);
+    window.dispatchEvent(new Event("mangora-close-notifications"));
     setProfileOpen((current) => !current);
-  }
-
-  async function markAllRead() {
-    await apiRequest<{ updated: number }>("/notifications/read-all", { method: "POST" });
-    const readAt = new Date().toISOString();
-    setNotifications((current) => current.map((notification) => ({ ...notification, readAt: notification.readAt ?? readAt })));
   }
 
   async function handleLogout() {
     setLogoutLoading(true);
     try {
       await apiRequest<void>("/auth/logout", { method: "POST" });
+      track("logout");
+      setUserProperties({ logged_in: "false" });
     } catch {
       // A sessão local ainda deve ser encerrada quando a API já a invalidou.
     } finally {
@@ -129,7 +92,7 @@ export default function DashboardHeader({ onOpenSidebar, session }: DashboardHea
   }
 
   return (
-    <header className="sticky top-0 z-30 flex h-16 items-center border-b border-slate-200 bg-white/90 px-4 backdrop-blur-xl sm:px-6 lg:px-8">
+    <header className="mangora-header sticky top-0 z-30 flex h-16 items-center border-b border-slate-200 bg-white/90 px-4 backdrop-blur-xl sm:px-6 lg:px-8">
       <div className="flex w-full items-center justify-between gap-4">
         <div className="flex min-w-0 items-center gap-3">
           <button type="button" onClick={onOpenSidebar} aria-label="Abrir menu" className="flex size-10 shrink-0 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-600 hover:bg-slate-50 lg:hidden">
@@ -142,13 +105,14 @@ export default function DashboardHeader({ onOpenSidebar, session }: DashboardHea
         </div>
 
         <div className="hidden max-w-sm flex-1 md:block">
-          <div ref={notificationMenuRef} className="relative">
+          <div className="relative">
             <Search className="pointer-events-none absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-slate-400" />
             <input type="search" placeholder="Buscar no sistema..." className="h-10 w-full rounded-xl border border-slate-200 bg-slate-50 pl-10 pr-4 text-xs text-slate-800 outline-none transition placeholder:text-slate-400 focus:border-orange-300 focus:bg-white focus:ring-4 focus:ring-orange-100" />
           </div>
         </div>
 
         <div className="flex items-center gap-2">
+<<<<<<< HEAD
           <div className="relative">
             <button type="button" onClick={toggleNotifications} aria-label="Notificações" aria-expanded={notificationOpen} className="relative flex size-10 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-500 transition hover:bg-slate-50 hover:text-orange-600">
               <Bell className="size-4.5" />
@@ -173,6 +137,17 @@ export default function DashboardHeader({ onOpenSidebar, session }: DashboardHea
               </div>
             )}
           </div>
+=======
+          <label className="flex h-10 cursor-pointer items-center gap-2 rounded-xl border border-slate-200 bg-white px-2.5 transition hover:border-orange-200 hover:bg-orange-50" title={t("dashboard.essentialOnly")}>
+            <WandSparkles className={`size-4 ${simpleMode ? "text-orange-600" : "text-slate-400"}`} />
+            <span className="hidden text-[10px] font-black text-slate-700 xl:inline">Modo simples</span>
+            <input type="checkbox" aria-label="Ativar modo simples" checked={simpleMode} onChange={(event) => onSimpleModeChange(event.target.checked)} className="peer sr-only" />
+            <span aria-hidden="true" className="relative h-5 w-9 rounded-full bg-slate-200 transition peer-checked:bg-orange-500 after:absolute after:left-0.5 after:top-0.5 after:size-4 after:rounded-full after:bg-white after:shadow-sm after:transition-transform peer-checked:after:translate-x-4" />
+          </label>
+          <Link href="/gerente-ia" className="hidden h-10 items-center gap-1.5 rounded-xl bg-[#123d2b] px-3 text-[11px] font-black text-white transition hover:bg-[#147a45] md:flex"><Bot className="size-4" />Gerente de IA</Link>
+          <LocaleSwitcher className="hidden sm:inline-flex" />
+          <NotificationCenter onOpen={() => setProfileOpen(false)} />
+>>>>>>> 0e59a660a5acf0b652a188ddf2e8ccc96de79e4d
 
           <div ref={profileMenuRef} className="relative">
             <button type="button" onClick={toggleProfile} aria-label={`${session.user.name} ${roleLabel}`} aria-expanded={profileOpen} className="flex h-10 items-center gap-2 rounded-xl border border-slate-200 bg-white px-2 transition hover:bg-slate-50 sm:pr-3">
@@ -184,9 +159,15 @@ export default function DashboardHeader({ onOpenSidebar, session }: DashboardHea
             {profileOpen && (
               <div role="menu" aria-label="Menu do perfil" className="absolute right-0 mt-2 w-56 rounded-2xl border border-slate-200 bg-white p-2 shadow-2xl shadow-slate-300/50">
                 <div className="border-b border-slate-100 px-3 py-2"><p className="text-xs font-black text-slate-900">{session.user.name}</p><p className="mt-0.5 truncate text-[10px] text-slate-400">{session.user.email}</p></div>
+<<<<<<< HEAD
                 {(session.membership.role === "OWNER" || session.membership.role === "ADMIN") && <Link href="/configuracoes" role="menuitem" className="mt-1 flex items-center gap-2 rounded-xl px-3 py-2.5 text-xs font-semibold text-slate-600 hover:bg-slate-50 hover:text-orange-700"><UserRound className="size-4" /> Dados da empresa</Link>}
                 {(session.membership.role === "OWNER" || session.membership.role === "ADMIN") && <Link href="/configuracoes" role="menuitem" className="flex items-center gap-2 rounded-xl px-3 py-2.5 text-xs font-semibold text-slate-600 hover:bg-slate-50 hover:text-orange-700"><Settings className="size-4" /> Configurações</Link>}
                 {session.membership.role === "OWNER" && <Link href="/assinatura" role="menuitem" className="flex items-center gap-2 rounded-xl px-3 py-2.5 text-xs font-semibold text-slate-600 hover:bg-slate-50 hover:text-orange-700"><CreditCard className="size-4" /> Assinatura</Link>}
+=======
+                {can(session.membership.role, "company:configure") && <Link href="/configuracoes?secao=company" role="menuitem" className="mt-1 flex items-center gap-2 rounded-xl px-3 py-2.5 text-xs font-semibold text-slate-600 hover:bg-slate-50 hover:text-orange-700"><UserRound className="size-4" /> Dados da empresa</Link>}
+                {can(session.membership.role, "company:configure") && <Link href="/configuracoes?secao=preferences" role="menuitem" className="flex items-center gap-2 rounded-xl px-3 py-2.5 text-xs font-semibold text-slate-600 hover:bg-slate-50 hover:text-orange-700"><Settings className="size-4" /> {t("settings.panel.tabs.preferences")}</Link>}
+                {can(session.membership.role, "subscription:manage") && <Link href="/assinatura" role="menuitem" className="flex items-center gap-2 rounded-xl px-3 py-2.5 text-xs font-semibold text-slate-600 hover:bg-slate-50 hover:text-orange-700"><CreditCard className="size-4" /> Assinatura</Link>}
+>>>>>>> 0e59a660a5acf0b652a188ddf2e8ccc96de79e4d
                 <button type="button" role="menuitem" disabled={logoutLoading} onClick={() => void handleLogout()} className="mt-1 flex w-full items-center gap-2 border-t border-slate-100 px-3 py-2.5 text-xs font-semibold text-red-600 hover:bg-red-50 disabled:cursor-wait disabled:opacity-60"><LogOut className="size-4" /> {logoutLoading ? "Saindo..." : "Sair"}</button>
               </div>
             )}

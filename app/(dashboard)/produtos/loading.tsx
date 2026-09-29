@@ -1,6 +1,9 @@
-export default function ProductsLoading() {
+import { getTranslator } from "@/i18n/server";
+
+export default async function ProductsLoading() {
+  const { t } = await getTranslator();
   return (
-    <div role="status" aria-label="Carregando produtos" className="animate-pulse">
+    <div role="status" aria-label={t("pageMeta.loading.produtos")} className="animate-pulse">
       <div className="flex items-end justify-between gap-4">
         <div>
           <div className="h-3 w-20 rounded-full bg-orange-100" />

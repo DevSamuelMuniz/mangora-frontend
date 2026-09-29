@@ -17,7 +17,6 @@ export type Product = {
   trackStock: boolean;
   active: boolean;
   imageUrl: string | null;
-  publicVisible: boolean;
   createdAt: string;
   updatedAt: string;
 };
@@ -35,5 +34,10 @@ export type ProductInput = {
   trackStock: boolean;
   active: boolean;
   imageUrl: string | null;
-  publicVisible: boolean;
+};
+
+export type ProductCost = {
+  costMethod?: "AVERAGE" | "FIFO";
+  unitCost?: number | null;
+  marginPercent?: number | null;
 };

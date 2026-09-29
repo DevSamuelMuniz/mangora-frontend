@@ -1,0 +1,109 @@
+"use client";
+
+import { useFormatters } from "@/i18n/provider";
+
+import { useState } from "react";
+import { useI18n, useT } from "@/i18n/provider";
+import { useRouter } from "next/navigation";
+import { ArrowRightLeft, Boxes, Building2, CircleDollarSign, LoaderCircle, Plus, ReceiptText, Store, Trash2, TrendingUp, X } from "lucide-react";
+
+
+import { useConsolidated, useCreateGroup, useCreateUnit, useRemoveUnit, useSwitchCompany, useUnitGroup } from "@/features/units/hooks/useUnits";
+import { useToast } from "@/components/ui/toast";
+
+type Period = "7d" | "30d" | "90d";
+
+export default function UnitsOverview() {
+  const { formatCurrency, formatNumber } = useFormatters();
+  const t = useT();
+  const { locale } = useI18n();
+  const router = useRouter();
+  const [period, setPeriod] = useState<Period>("30d");
+  const { data: group = null, isLoading: groupLoading, error: groupError } = useUnitGroup();
+  const [unitIds, setUnitIds] = useState<string[]>([]);
+  const { data: consolidated = null, isLoading: consolidatedLoading, error: consolidatedError } = useConsolidated(period, unitIds);
+  const createGroupMutation = useCreateGroup();
+  const createUnitMutation = useCreateUnit();
+  const switchMutation = useSwitchCompany();
+  const removeUnitMutation = useRemoveUnit();
+  const [unitToRemove, setUnitToRemove] = useState<{ membershipId: string; companyId: string; tradeName: string } | null>(null);
+  const loading = groupLoading || consolidatedLoading;
+  const saving = createGroupMutation.isPending || createUnitMutation.isPending || switchMutation.isPending;
+  const [actionError, setActionError] = useState("");
+  const [modalOpen, setModalOpen] = useState(false);
+  const [groupName, setGroupName] = useState("");
+  const [unit, setUnit] = useState({ tradeName: "", legalName: "", document: "", email: "", copyCatalog: true, confirmAdditionalCharge: false });
+  const toast = useToast();
+
+  const errorMessage = actionError
+    || (groupError instanceof Error ? groupError.message : "")
+    || (consolidatedError instanceof Error ? consolidatedError.message : "");
+  const effectiveGroupName = groupName || (group?.units[0]?.company.tradeName ?? "");
+
+  async function createGroup() {
+    setActionError("");
+    try {
+      await createGroupMutation.mutateAsync({ name: effectiveGroupName });
+      toast.success(t("units.activate.notice"));
+    } catch (requestError) { toast.error(requestError instanceof Error ? requestError.message : t("units.activate.failed")); }
+  }
+
+  async function createUnit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault(); setActionError("");
+    try {
+      await createUnitMutation.mutateAsync({ ...unit, confirmAdditionalCharge: true, document: unit.document || null });
+      setUnit({ tradeName: "", legalName: "", document: "", email: "", copyCatalog: true, confirmAdditionalCharge: false });
+      setModalOpen(false); toast.success(t("units.newStore.created"));
+    } catch (requestError) { toast.error(requestError instanceof Error ? requestError.message : t("units.newStore.failed")); }
+  }
+
+  async function switchUnit(membershipId: string) {
+    setActionError("");
+    try {
+      await switchMutation.mutateAsync({ membershipId });
+      router.push("/dashboard?toast=Unidade%20alterada");
+      router.refresh();
+    } catch (requestError) { toast.error(requestError instanceof Error ? requestError.message : t("units.switchFailed")); }
+  }
+
+  async function confirmRemoveUnit() {
+    if (!unitToRemove) return;
+    setActionError("");
+    try {
+      await removeUnitMutation.mutateAsync(unitToRemove.companyId);
+      setUnitToRemove(null);
+      toast.success(`${unitToRemove.tradeName} removida. O valor mensal foi recalculado.`);
+    } catch (requestError) {
+      setActionError(requestError instanceof Error ? requestError.message : t("units.removeFailed"));
+    }
+  }
+
+  const summary = consolidated?.summary;
+  const visibleUnits = group?.units
+    ? unitIds.length ? group.units.filter((item) => unitIds.includes(item.company.id)) : group.units
+    : [];
+  return <section className="space-y-5">
+    <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+      <div><p className="text-[11px] font-bold uppercase tracking-[0.14em] text-orange-600">{t("units.eyebrow")}</p><h1 className="mt-1 text-2xl font-black tracking-tight text-slate-950 sm:text-3xl">{t("units.title")}</h1><p className="mt-1 text-xs text-slate-500">A primeira loja está incluída. Cada loja adicional acrescenta uma mensalidade do plano atual à mesma assinatura.</p></div>
+      <div className="flex gap-2"><select value={period} onChange={(event) => setPeriod(event.target.value as Period)} className="h-11 rounded-xl border border-slate-300 bg-white px-3 text-xs font-bold text-slate-700 outline-none focus:border-orange-400 focus:ring-4 focus:ring-orange-100"><option value="7d">{t("units.period.last7")}</option><option value="30d">{t("units.period.last30")}</option><option value="90d">{t("units.period.last90")}</option></select>{group?.canCreateUnit && <button type="button" onClick={() => setModalOpen(true)} className="inline-flex h-11 items-center gap-2 rounded-xl bg-orange-600 px-4 text-xs font-black text-white shadow-lg shadow-orange-200 transition hover:bg-orange-700"><Plus className="size-4" />{t("units.actions.add")}</button>}</div>
+    </div>
+
+    {errorMessage && <div role="alert" className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-xs font-semibold text-red-800">{errorMessage}</div>}
+
+    {!loading && group && !group.group && <article className="overflow-hidden rounded-[1.75rem] border border-[#174c36]/20 bg-[#174c36] p-6 text-white shadow-xl shadow-green-950/10 sm:p-8"><div className="grid gap-6 lg:grid-cols-[1fr_420px] lg:items-center"><div><span className="inline-flex rounded-full bg-yellow-300 px-3 py-1 text-[10px] font-black uppercase tracking-wider text-green-950">{t("units.activate.title")}</span><h2 className="mt-4 max-w-xl text-2xl font-black sm:text-3xl">{t("units.activate.hint")}</h2><p className="mt-2 max-w-xl text-sm leading-6 text-green-50/80">Cada loja terá caixa, vendas e estoque próprios. A visão consolidada reunirá os indicadores sem misturar a operação.</p></div><div className="rounded-2xl border border-white/15 bg-white/10 p-4"><label className="text-[10px] font-bold uppercase tracking-wider text-yellow-200">Nome do grupo</label><input value={effectiveGroupName} onChange={(event) => setGroupName(event.target.value)} className="mt-2 h-11 w-full rounded-xl border border-white/20 bg-white px-3 text-sm font-bold text-slate-950 outline-none focus:border-yellow-300" placeholder={t("units.newStore.groupNamePlaceholder")} /><button type="button" disabled={saving || effectiveGroupName.trim().length < 2} onClick={() => void createGroup()} className="mt-3 flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-yellow-300 text-xs font-black text-green-950 transition hover:bg-yellow-200 disabled:opacity-50">{saving && <LoaderCircle className="size-4 animate-spin" />}Ativar gestão de lojas</button></div></div></article>}
+
+    {group?.group && <>
+      <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4"><Metric icon={CircleDollarSign} label={t("units.metrics.revenue")} value={formatCurrency(summary?.revenue ?? 0, locale)} tone="green" /><Metric icon={ReceiptText} label={t("units.metrics.sales")} value={formatNumber(summary?.sales ?? 0)} tone="orange" /><Metric icon={TrendingUp} label={t("units.metrics.averageTicket")} value={formatCurrency(summary?.averageTicket ?? 0, locale)} tone="yellow" /><Metric icon={Boxes} label={t("units.metrics.stock")} value={`${formatNumber(summary?.inventoryUnits ?? 0)} un.`} tone="amber" /></div>
+      <article className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm"><div className="flex flex-wrap items-center justify-between gap-3"><div><h2 className="text-sm font-black text-slate-950">{group.group.name}</h2><p className="mt-1 text-[10px] text-slate-500">{group.units.length} de {group.limit ?? "quantidade combinada"} lojas configuradas · {consolidated?.label}</p></div><span className="rounded-full bg-green-100 px-3 py-1 text-[10px] font-black text-green-800">{t("units.subtitle")}</span></div><div className="mt-4 flex flex-wrap items-center gap-2 border-t border-slate-100 pt-4"><span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Filtrar por loja</span><button type="button" onClick={() => setUnitIds([])} className={`rounded-full px-3 py-1.5 text-[11px] font-bold transition ${!unitIds.length ? "bg-slate-900 text-white" : "border border-slate-200 text-slate-600 hover:bg-slate-50"}`}>{t("units.filters.all")}</button>{group.units.map((item) => { const active = unitIds.includes(item.company.id); return <button key={item.company.id} type="button" onClick={() => setUnitIds((current) => active ? current.filter((value) => value !== item.company.id) : [...current, item.company.id])} className={`rounded-full px-3 py-1.5 text-[11px] font-bold transition ${active ? "bg-orange-600 text-white" : "border border-slate-200 text-slate-600 hover:bg-slate-50"}`}>{item.company.tradeName}</button>; })}</div>{unitIds.length > 0 && <p className="mt-3 text-[10px] font-semibold text-orange-700">Resumo e cartões consideram apenas as {unitIds.length} loja(s) selecionada(s).</p>}<div className="mt-4 grid gap-3 lg:grid-cols-3">{visibleUnits.map((item) => { const metrics = consolidated?.units.find((entry) => entry.id === item.company.id); return <div key={item.company.id} className={`rounded-2xl border p-4 ${item.current ? "border-orange-300 bg-orange-50" : "border-slate-200 bg-slate-50"}`}><div className="flex items-start justify-between gap-3"><div className={`flex size-10 items-center justify-center rounded-xl ${item.current ? "bg-orange-600 text-white" : "bg-white text-green-700"}`}><Store className="size-4" /></div><span className="rounded-full bg-white px-2 py-1 text-[9px] font-black text-slate-600">{item.company.unitCode ?? "UNIDADE"}</span></div><h3 className="mt-4 text-sm font-black text-slate-950">{item.company.tradeName}</h3><p className="mt-1 text-[10px] text-slate-500">{item.current ? "Ambiente atual" : "Ambiente independente"}</p><div className="mt-4 grid grid-cols-2 gap-2"><Small label={t("units.metrics.storeRevenue")} value={formatCurrency(metrics?.revenue ?? 0, locale)} /><Small label={t("units.metrics.storeSales")} value={formatNumber(metrics?.sales ?? 0)} /><Small label={t("units.metrics.receivable")} value={formatCurrency(metrics?.receivable ?? 0, locale)} /><Small label={t("units.metrics.storeStock")} value={`${formatNumber(metrics?.inventoryUnits ?? 0)} un.`} /></div>{!item.current && <button type="button" disabled={saving} onClick={() => void switchUnit(item.membershipId)} className="mt-4 flex h-9 w-full items-center justify-center gap-2 rounded-xl border border-orange-300 bg-white text-[10px] font-black text-orange-700 hover:bg-orange-100"><ArrowRightLeft className="size-3.5" />{t("units.actions.access")}</button>}{!item.current && item.company.unitCode !== "LOJA-1" && <button type="button" disabled={saving || removeUnitMutation.isPending} onClick={() => setUnitToRemove({ membershipId: item.membershipId, companyId: item.company.id, tradeName: item.company.tradeName })} className="mt-2 flex h-8 w-full items-center justify-center gap-1.5 rounded-lg border border-red-100 bg-white text-[10px] font-bold text-red-500 hover:bg-red-50"><Trash2 className="size-3" />{t("units.actions.remove")}</button>}</div>; })}</div></article>
+      {unitToRemove && <div className="fixed inset-0 z-[70] flex items-center justify-center bg-slate-950/40 p-4 backdrop-blur-sm"><div role="alertdialog" aria-modal="true" className="w-full max-w-sm rounded-2xl border border-slate-200 bg-white p-5 shadow-2xl"><div className="flex size-10 items-center justify-center rounded-xl bg-red-50 text-red-600"><Trash2 className="size-4" /></div><h2 className="mt-4 text-base font-black text-slate-950">Remover {unitToRemove.tradeName}?</h2><p className="mt-2 text-xs leading-5 text-slate-500">A loja deixa de contar para a cobrança e seus vínculos de acesso são desativados. O histórico é preservado.</p><div className="mt-5 flex justify-end gap-2"><button type="button" disabled={removeUnitMutation.isPending} onClick={() => setUnitToRemove(null)} className="h-10 rounded-xl border border-slate-200 px-4 text-xs font-bold text-slate-600 hover:bg-slate-50 disabled:opacity-50">{t("units.actions.cancel")}</button><button type="button" disabled={removeUnitMutation.isPending} onClick={() => void confirmRemoveUnit()} className="inline-flex h-10 items-center gap-2 rounded-xl bg-red-600 px-4 text-xs font-bold text-white hover:bg-red-700 disabled:opacity-50">{removeUnitMutation.isPending && <LoaderCircle className="size-3.5 animate-spin" />}Remover loja</button></div></div></div>}
+    </>}
+
+    {loading && <div className="flex min-h-64 items-center justify-center rounded-2xl border border-slate-200 bg-white"><LoaderCircle className="size-5 animate-spin text-orange-600" /><span className="ml-2 text-xs font-bold text-slate-600">{t("units.loading")}</span></div>}
+
+    {modalOpen && <div className="fixed inset-0 z-[90] flex items-end justify-center bg-green-950/50 p-0 backdrop-blur-sm sm:items-center sm:p-5"><button type="button" aria-label={t("units.actions.closeForm")} onClick={() => setModalOpen(false)} className="absolute inset-0" /><form onSubmit={(event) => void createUnit(event)} className="relative w-full max-w-xl rounded-t-[1.75rem] border border-green-900/20 bg-[#fff8eb] p-6 shadow-2xl sm:rounded-[1.75rem]"><div className="flex items-start justify-between"><div><p className="text-[10px] font-black uppercase tracking-wider text-orange-600">{t("units.newStore.title")}</p><h2 className="mt-1 text-xl font-black text-slate-950">{t("units.actions.addToGroup")}</h2></div><button type="button" onClick={() => setModalOpen(false)} className="flex size-9 items-center justify-center rounded-xl border border-slate-300 bg-white text-slate-600"><X className="size-4" /></button></div><div className="mt-5 grid gap-3 sm:grid-cols-2"><Field label={t("units.newStore.tradeName")} value={unit.tradeName} onChange={(value) => setUnit((current) => ({ ...current, tradeName: value }))} /><Field label={t("units.newStore.legalName")} value={unit.legalName} onChange={(value) => setUnit((current) => ({ ...current, legalName: value }))} /><Field label={t("units.newStore.document")} value={unit.document} onChange={(value) => setUnit((current) => ({ ...current, document: value.replace(/\D/g, "").slice(0, 14) }))} /><Field label={t("units.newStore.email")} type="email" value={unit.email} onChange={(value) => setUnit((current) => ({ ...current, email: value }))} /></div><label className="mt-4 flex items-start gap-3 rounded-xl border border-green-200 bg-green-50 p-3"><input type="checkbox" checked={unit.copyCatalog} onChange={(event) => setUnit((current) => ({ ...current, copyCatalog: event.target.checked }))} className="mt-0.5 size-4 accent-orange-600" /><span><strong className="block text-xs text-green-950">{t("units.newStore.copyCatalog")}</strong><span className="mt-0.5 block text-[10px] text-green-700">{t("units.newStore.copyCatalogHint")}</span></span></label><label className="mt-4 flex items-start gap-3 rounded-xl border border-orange-200 bg-orange-50 p-3"><input type="checkbox" checked={unit.confirmAdditionalCharge} onChange={(event) => setUnit((current) => ({ ...current, confirmAdditionalCharge: event.target.checked }))} className="mt-0.5 size-4 accent-orange-600" /><span><strong className="block text-xs text-orange-950">{t("units.activate.confirm")}</strong><span className="mt-0.5 block text-[10px] text-orange-800">A assinatura passará de {group?.currentMonthlyPrice === null ? "valor combinado" : formatCurrency(group?.currentMonthlyPrice ?? 0, locale)} para {group?.nextMonthlyPrice === null ? "valor combinado" : formatCurrency(group?.nextMonthlyPrice ?? 0, locale)} por mês.</span></span></label><button type="submit" disabled={saving || unit.tradeName.trim().length < 2 || !unit.confirmAdditionalCharge} className="mt-5 flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-orange-600 text-xs font-black text-white shadow-lg shadow-orange-200 hover:bg-orange-700 disabled:opacity-50">{saving && <LoaderCircle className="size-4 animate-spin" />}Adicionar loja à assinatura</button></form></div>}
+  </section>;
+}
+
+function Metric({ icon: Icon, label, value, tone }: { icon: typeof Building2; label: string; value: string; tone: "green" | "orange" | "yellow" | "amber" }) { const colors = { green: "bg-green-100 text-green-700", orange: "bg-orange-100 text-orange-700", yellow: "bg-yellow-100 text-yellow-700", amber: "bg-amber-100 text-amber-700" }; return <article className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm"><div className={`flex size-9 items-center justify-center rounded-xl ${colors[tone]}`}><Icon className="size-4" /></div><p className="mt-4 text-[10px] font-semibold text-slate-500">{label}</p><p className="mt-1 truncate text-xl font-black text-slate-950">{value}</p></article>; }
+function Small({ label, value }: { label: string; value: string }) { return <div className="rounded-xl border border-slate-200 bg-white p-2.5"><p className="text-[9px] font-semibold text-slate-500">{label}</p><p className="mt-1 truncate text-xs font-black text-slate-900">{value}</p></div>; }
+function Field({ label, value, onChange, type = "text" }: { label: string; value: string; onChange: (value: string) => void; type?: string }) { return <label className="text-[10px] font-bold text-slate-700">{label}<input type={type} value={value} onChange={(event) => onChange(event.target.value)} className="mt-1.5 h-11 w-full rounded-xl border border-slate-300 bg-white px-3 text-sm text-slate-950 outline-none focus:border-orange-400 focus:ring-4 focus:ring-orange-100" /></label>; }

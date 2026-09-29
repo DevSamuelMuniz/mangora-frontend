@@ -20,6 +20,9 @@ export type CashRegister = {
   difference: number | null;
   openingNotes: string | null;
   closingNotes: string | null;
+  discrepancyApprovedAt: string | null;
+  discrepancyApprovedByName: string | null;
+  discrepancyResolution: string | null;
   openedAt: string;
   closedAt: string | null;
   movements: CashMovement[];

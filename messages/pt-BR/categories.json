@@ -1,0 +1,48 @@
+{
+  "eyebrow": "Catálogo",
+  "title": "Categorias",
+  "subtitle": "Organize separadamente as categorias de produtos e serviços.",
+  "create": "Nova categoria",
+  "searchPlaceholder": "Buscar categoria...",
+  "searchLabel": "Buscar categorias",
+  "allTypes": "Todos os tipos",
+  "products": "Produtos",
+  "services": "Serviços",
+  "noDescription": "Sem descrição",
+  "close": "Fechar",
+  "save": "Salvar categoria",
+  "table": {
+    "category": "Categoria",
+    "type": "Tipo",
+    "items": "Itens",
+    "status": "Status",
+    "actions": "Ações"
+  },
+  "empty": "Nenhuma categoria encontrada",
+  "dialog": {
+    "create": "Nova categoria",
+    "edit": "Editar categoria"
+  },
+  "fields": {
+    "name": "Nome",
+    "type": "Tipo",
+    "description": "Descrição",
+    "active": "Categoria ativa"
+  },
+  "itemTypes": {
+    "PRODUCT": "Produto",
+    "SERVICE": "Serviço"
+  },
+  "status": {
+    "active": "Ativa",
+    "inactive": "Inativa"
+  },
+  "actions": {
+    "editAria": "Editar {name}",
+    "deleteAria": "Excluir {name}"
+  },
+  "errors": {
+    "save": "Não foi possível salvar a categoria.",
+    "delete": "Não foi possível excluir a categoria."
+  }
+}

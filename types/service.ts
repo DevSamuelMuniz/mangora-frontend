@@ -15,7 +15,6 @@ export type Service = {
   durationMinutes: number | null;
   active: boolean;
   imageUrl: string | null;
-  publicVisible: boolean;
   createdAt: string;
   updatedAt: string;
 };

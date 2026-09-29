@@ -1,0 +1,95 @@
+{
+  "cash": {
+    "title": "Controlo de caixa",
+    "subtitle": "Abertura, movimentos em dinheiro e conferência do turno.",
+    "open": "Abrir caixa",
+    "opened": "Caixa aberta",
+    "closed": "Caixa fechada",
+    "loading": "A carregar caixa...",
+    "expected": "Esperado",
+    "counted": "Contado",
+    "difference": "Diferença",
+    "close": "Conferência e fecho",
+    "approveDifference": "Aprovar divergência",
+    "cancel": "Cancelar",
+    "confirm": "Confirmar",
+    "actions": {
+      "supply": "Adicionar suprimento",
+      "withdrawal": "Nova sangria"
+    },
+    "notice": {
+      "movementLinked": "O movimento será associado ao caixa atual.",
+      "opened": "Caixa aberta com sucesso.",
+      "closed": "Caixa fechada e conferida.",
+      "differenceApproved": "Divergência aprovada e registada no histórico.",
+      "movementDone": "Movimento registado."
+    },
+    "types": {
+      "OPENING": "Abertura",
+      "SUPPLY": "Suprimento",
+      "WITHDRAWAL": "Sangria",
+      "SALE": "Venda em dinheiro",
+      "SALE_REVERSAL": "Estorno de venda"
+    },
+    "errors": {
+      "closeFailed": "Não foi possível concluir a operação.",
+      "approveFailed": "Não foi possível aprovar a divergência."
+    }
+  },
+  "audit": {
+    "title": "Auditoria",
+    "subtitle": "Exclusivo do proprietário",
+    "autoRefresh": "Atualização automática",
+    "loading": "A carregar registo...",
+    "loadFailed": "Não foi possível carregar o registo.",
+    "empty": "Nenhum evento encontrado.",
+    "search": "Pesquisar evento",
+    "actions": {
+      "all": "Todos"
+    },
+    "metrics": {
+      "visible": "Eventos apresentados"
+    },
+    "table": {
+      "when": "Data",
+      "user": "Utilizador",
+      "action": "Ação",
+      "details": "Detalhes"
+    },
+    "labels": {
+      "LOGIN_SUCCESS": "Início de sessão",
+      "LOGIN_FAILURE": "Falha no início de sessão",
+      "PASSWORD_CHANGED": "Palavra-passe alterada",
+      "ROLE_CHANGED": "Permissão alterada",
+      "EMPLOYEE_UPDATED": "Acesso do funcionário alterado",
+      "EMPLOYEE_CREATED": "Funcionário registado",
+      "COMPANY_UPDATED": "Empresa atualizada",
+      "CATEGORY_CREATED": "Categoria registada",
+      "CATEGORY_UPDATED": "Categoria atualizada",
+      "SUPPLIER_CREATED": "Fornecedor registado",
+      "SUPPLIER_UPDATED": "Fornecedor atualizado",
+      "PURCHASE_CREATED": "Compra registada",
+      "PURCHASE_CANCELLED": "Compra cancelada",
+      "PURCHASE_RECEIVED": "Compra recebida",
+      "SERVICE_CREATED": "Serviço registado",
+      "SERVICE_UPDATED": "Serviço atualizado",
+      "PAYMENT_REGISTERED": "Pagamento registado",
+      "SESSION_REVOKED": "Sessão encerrada",
+      "CASH_OPENED": "Caixa aberta",
+      "CASH_CLOSED": "Caixa fechada",
+      "STOCK_TRANSFERRED": "Inventário transferido",
+      "CREATED": "Criação",
+      "DATA_CHANGED": "Alteração realizada",
+      "SUCCESS": "Sucesso",
+      "FAILURE": "Falha",
+      "PASSWORD": "Palavra-passe",
+      "CANCELLED": "Cancelado",
+      "EMPLOYEE_ROLE_CHANGED": "Permissão alterada",
+      "EMPLOYEE_STATUS_CHANGED": "Acesso do funcionário alterado",
+      "CASH_REGISTER_OPENED": "Caixa aberta",
+      "CASH_REGISTER_CLOSED": "Caixa fechada",
+      "CASH_MOVEMENT_RECORDED": "Movimento de caixa",
+      "FINANCIAL_PAYMENT_RECORDED": "Pagamento registado"
+    }
+  }
+}

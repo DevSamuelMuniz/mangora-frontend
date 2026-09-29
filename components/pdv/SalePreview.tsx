@@ -1,0 +1,80 @@
+"use client";
+
+import { useFormatters } from "@/i18n/provider";
+
+import { ReceiptText, UserRound } from "lucide-react";
+import { useT } from "@/i18n/provider";
+
+
+import { paymentMethodLabels, type PaymentMethod } from "@/types/sale";
+import type { CartItem } from "./CartPanel";
+
+type SalePreviewProps = {
+    cart: CartItem[];
+    subtotal: number;
+    discount: number;
+    total: number;
+    customerName: string;
+    payments?: { method: PaymentMethod; amount: number }[];
+    customerDocument?: string;
+    received?: number;
+    change?: number;
+};
+
+/** Pré-visualização da venda (mini recibo) — persistente nas etapas 2–4. */
+export default function SalePreview({ cart, subtotal, discount, total, customerName, payments, customerDocument, received, change }: SalePreviewProps) {
+  const { formatCurrency } = useFormatters();
+    const t = useT();
+    return (
+        <div className="sticky top-4 flex flex-col overflow-hidden rounded-2xl bg-cream text-ink shadow-2xl shadow-black/30">
+            <div className="flex items-center justify-between border-b-2 border-dashed border-ink/15 px-4 py-3">
+                <h3 className="flex items-center gap-2 font-[family-name:var(--font-bricolage)] text-xs font-black uppercase tracking-wide">
+                    <ReceiptText className="size-4 text-orange" /> {t("pdv.preview.title")}
+                </h3>
+                <span className="font-mono text-[10px] text-ink/50">{cart.reduce((sum, item) => sum + item.quantity, 0)} item(ns)</span>
+            </div>
+
+            <div className="max-h-56 space-y-1.5 overflow-y-auto px-4 py-3">
+                {cart.length ? (
+                    cart.map(({ product, quantity }) => (
+                        <div key={product.id} className="flex items-center justify-between gap-2 text-xs">
+                            <p className="min-w-0 truncate font-bold">
+                                {product.name} <span className="font-mono text-ink/50">× {quantity}</span>
+                            </p>
+                            <strong className="shrink-0 font-mono">{formatCurrency(product.price * quantity)}</strong>
+                        </div>
+                    ))
+                ) : (
+                    <p className="py-4 text-center font-mono text-[10px] text-ink/50">{t("pdv.cart.emptyShort")}</p>
+                )}
+            </div>
+
+            <div className="space-y-1 border-t-2 border-dashed border-ink/15 px-4 py-3 font-mono text-[11px] text-ink/70">
+                <div className="flex justify-between"><span>{t("pdv.cart.subtotal")}</span><span>{formatCurrency(subtotal)}</span></div>
+                {discount > 0 && <div className="flex justify-between text-red-600"><span>{t("pdv.cart.discount")}</span><span>- {formatCurrency(discount)}</span></div>}
+                <div className="flex items-end justify-between border-t border-ink/10 pt-1.5">
+                    <span className="font-[family-name:var(--font-bricolage)] text-xs font-black uppercase">{t("pdv.cart.total")}</span>
+                    <strong className="font-[family-name:var(--font-bricolage)] text-2xl font-black leading-none text-orange">{formatCurrency(total)}</strong>
+                </div>
+                {received !== undefined && change !== undefined && (
+                    <>
+                        <div className="flex justify-between pt-1"><span>{t("pdv.cart.received")}</span><span>{formatCurrency(received)}</span></div>
+                        <div className="flex justify-between font-bold text-green-700"><span>{t("pdv.cart.change")}</span><span>{formatCurrency(change)}</span></div>
+                    </>
+                )}
+            </div>
+
+            <div className="space-y-1 border-t-2 border-dashed border-ink/15 px-4 py-3 font-mono text-[10px] text-ink/60">
+                <div className="flex items-center gap-1.5"><UserRound className="size-3" /><span>{customerName}</span></div>
+                {payments?.length ? (
+                    <div className="space-y-0.5 pt-1">
+                        {payments.filter((payment) => payment.amount > 0).map((payment, index) => (
+                            <div key={index} className="flex justify-between"><span>{paymentMethodLabels[payment.method]}</span><span>{formatCurrency(payment.amount)}</span></div>
+                        ))}
+                    </div>
+                ) : null}
+                {customerDocument && <div className="flex justify-between"><span>CPF/CNPJ</span><span>{customerDocument}</span></div>}
+            </div>
+        </div>
+    );
+}

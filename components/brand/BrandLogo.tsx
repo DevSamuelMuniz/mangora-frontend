@@ -19,6 +19,7 @@ export default function BrandLogo({
           : "inline-flex shrink-0 items-center"
       }
     >
+<<<<<<< HEAD
       <Image
         src="/mangora-logo.png"
         alt="Mangora"
@@ -27,6 +28,21 @@ export default function BrandLogo({
         priority={priority}
         className={`${className} w-auto object-contain`}
       />
+=======
+      <span
+        className={`relative block aspect-[2.525/1] shrink-0 overflow-hidden ${className}`}
+      >
+        <Image
+          src="/mangora-logo.png"
+          alt="Mangora"
+          width={1448}
+          height={1086}
+          priority={priority}
+          className="absolute left-1/2 top-1/2 h-auto w-[128.5%] max-w-none"
+          style={{ transform: "translate(-53.2%, -51.3%)" }}
+        />
+      </span>
+>>>>>>> 0e59a660a5acf0b652a188ddf2e8ccc96de79e4d
     </span>
   );
 }

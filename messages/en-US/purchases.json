@@ -1,0 +1,70 @@
+{
+  "eyebrow": "Supplies",
+  "title": "Purchases",
+  "subtitle": "Purchase orders, receipts and bills to pay.",
+  "create": "New purchase",
+  "searchLabel": "Search purchases",
+  "searchPlaceholder": "Search by number or supplier...",
+  "allStatus": "All statuses",
+  "loading": "Loading...",
+  "notFound": "No purchase found",
+  "itemsCount": "{count} product(s)",
+  "close": "Close",
+  "details": "Details",
+  "detailsTitle": "Purchase details",
+  "createdBy": "Created by {name}",
+  "receive": "Confirm receipt",
+  "cancel": "Cancel purchase",
+  "cancelReasonPlaceholder": "Cancellation reason",
+  "cancelPrefix": "Cancellation: {reason}",
+  "receivedNote": "Stock received and bill to pay created.",
+  "metrics": {
+    "pending": "Pending",
+    "received": "Received",
+    "cancelled": "Cancelled"
+  },
+  "table": {
+    "purchase": "Purchase",
+    "supplier": "Supplier",
+    "issueDate": "Issue date",
+    "dueDate": "Due date",
+    "total": "Total",
+    "status": "Status",
+    "actions": "Actions"
+  },
+  "form": {
+    "eyebrow": "Supplies",
+    "title": "New purchase",
+    "subtitle": "Record products, quantities, costs and due date.",
+    "back": "Back to purchases",
+    "supplierSection": "Supplier and dates",
+    "itemsSection": "Products",
+    "summarySection": "Purchase summary",
+    "paymentsSection": "Payment methods",
+    "addItem": "Add",
+    "itemsEmpty": "No product added.",
+    "removePayment": "Remove payment method",
+    "stockNote": "Stock and the bill to pay are created only on receipt.",
+    "submit": "Record purchase",
+    "submitting": "Recording...",
+    "created": "Purchase recorded",
+    "fields": {
+      "supplier": "Supplier",
+      "issueDate": "Issue date",
+      "dueDate": "Due date",
+      "notes": "Notes",
+      "items": "Items",
+      "total": "Total"
+    },
+    "errors": {
+      "supplier": "Select an active supplier.",
+      "noSupplier": "Register an active supplier before creating the purchase.",
+      "items": "Add at least one product.",
+      "dueDate": "The due date cannot be earlier than the issue date.",
+      "paymentTotal": "The payment methods must add up to the purchase total.",
+      "paymentMethods": "Choose different payment methods.",
+      "create": "We could not create the purchase.",
+      "action": "We could not complete the action."
+    }
+  }
+}

@@ -1,0 +1,120 @@
+{
+  "title": "Assinatura e planos",
+  "subtitle": "Acompanhe o estado real, o uso e as cobranças da assinatura.",
+  "eyebrow": "Administração",
+  "loading": "Carregando assinatura...",
+  "loadFailed": "Não foi possível carregar a assinatura.",
+  "actions": {
+    "checkout": "Continuar para o checkout",
+    "createCharge": "Criar cobrança",
+    "cancel": "Cancelar assinatura",
+    "reactivate": "Reativar assinatura",
+    "contactSales": "Solicitar contato",
+    "contactSalesQuestion": "Solicitar contato sobre Enterprise?"
+  },
+  "status": {
+    "ACTIVE": "Assinatura ativa",
+    "TRIAL": "Teste grátis",
+    "PAST_DUE": "Pagamento atrasado",
+    "CANCELLED": "Assinatura cancelada",
+    "PENDING": "Aguardando pagamento",
+    "CONTACT": "Sob consulta",
+    "FREE": "Plano Free",
+    "ENTERPRISE": "Enterprise"
+  },
+  "plan": {
+    "free": "Grátis",
+    "freeHint": "Acesso essencial contínuo, sem cobrança e sem cartão.",
+    "upgrade": "Quando quiser mais capacidade, escolha um plano pago.",
+    "included": "Incluído por padrão",
+    "pricePending": "Preço a confirmar",
+    "priceUpdated": "Preço atualizado",
+    "priceCurrent": "Calculado na empresa atual",
+    "noCharge": "Sem cobrança",
+    "toDefine": "A definir"
+  },
+  "provider": {
+    "title": "Provedor disponível",
+    "asaas": "Asaas",
+    "paddle": "Paddle",
+    "sandbox": "Sandbox",
+    "production": "Produção",
+    "notIntegrated": "Não integrado",
+    "accountCreated": "Conta criada",
+    "credentialPending": "Credencial pendente",
+    "billing": "Pagamento"
+  },
+  "history": {
+    "title": "Histórico",
+    "planChanged": "Troca de plano solicitada",
+    "activated": "Plano ativado",
+    "discountUpdated": "Desconto atualizado",
+    "received": "Recebida",
+    "confirmed": "Confirmada",
+    "overdue": "Atrasada",
+    "refunded": "Estornada",
+    "cycleClosed": "Ciclo encerrado",
+    "cancelScheduled": "Cancelamento agendado.",
+    "cancelled": "Cancelada",
+    "CREATED": "Conta criada",
+    "PLAN_CHANGE_REQUESTED": "Troca de plano solicitada",
+    "PLAN_CHANGED": "Plano ativado",
+    "PRICE_CHANGED": "Preço atualizado",
+    "DISCOUNT_UPDATED": "Desconto atualizado",
+    "CANCELLATION_REQUESTED": "Cancelamento solicitado",
+    "CANCELLED": "Assinatura cancelada",
+    "REACTIVATED": "Assinatura reativada"
+  },
+  "toasts": {
+    "cancelled": "Assinatura cancelada",
+    "reactivated": "Assinatura reativada",
+    "contactRequested": "Solicitação de contato comercial registrada.",
+    "contactNote": "Solicitação de contato comercial pelo painel.",
+    "contactHint": "Nossa equipe comercial entrará em contato."
+  },
+  "errors": {
+    "cancel": "Não foi possível cancelar a assinatura.",
+    "reactivate": "Não foi possível reativar a assinatura.",
+    "contact": "Não foi possível registrar a solicitação."
+  },
+  "billingTypes": {
+    "BOLETO": "Boleto",
+    "PIX": "Pix",
+    "CREDIT_CARD": "Cartão de crédito"
+  },
+  "contract": {
+    "frozen": "Preço e limites foram congelados quando o plano foi ativado.",
+    "catalog": "Catálogo v{version} · {plan} · congelado",
+    "empty": "Nenhuma movimentação registrada ainda."
+  },
+  "manage": {
+    "couponApplied": "Cupom aplicado: primeira mensalidade {first} e depois {recurring}.",
+    "cancelConfirm": "Cancelar a assinatura recorrente? Você mantém o acesso até o fim do ciclo pago e pode reativar antes disso.",
+    "cancelScheduled": "Cancelamento agendado — acesso mantido até o fim do ciclo pago.",
+    "cancelNote": "A assinatura continua ativa até o fim do ciclo já pago. Você pode reativar antes disso.",
+    "cancelledReverted": "Cancelamento revertido — acesso garantido até o fim do ciclo. Para continuar depois, faça um novo checkout.",
+    "availablePlans": "Planos disponíveis · {market}",
+    "choosePlan": "Escolha o plano ideal",
+    "couponAppliedLong": "Cupom aplicado: primeira mensalidade por {first}. As próximas serão de {recurring}."
+  },
+  "trialGate": {
+    "eyebrow": "Fim do período gratuito",
+    "copy": "Sua conta continua ativa no plano Free, sem cobrança. Seus dados e os recursos essenciais seguem disponíveis.",
+    "secureNote": "Você escolhe um plano pago somente se quiser recursos avançados.",
+    "daysRemaining": "{count} dias restantes",
+    "trialEnds": "Teste termina em {date}",
+    "endedTitle": "Seus 7 dias completos terminaram.",
+    "copyFull": "Sua conta continua ativa no plano Free, sem cobrança. Seus dados e os recursos essenciais permanecem disponíveis.",
+    "upgradeHint": "Quando quiser mais capacidade, escolha um plano pago.",
+    "ownerHint": "O proprietário pode ampliar o plano quando a empresa precisar.",
+    "comparePlans": "Comparar planos",
+    "nothingDeleted": "Nenhum cadastro ou histórico foi apagado.",
+    "dayRemaining": "{count} dia grátis restante.",
+    "daysRemainingBanner": "{count} dias grátis restantes.",
+    "exploreHint": "Explore tudo e escolha seu plano quando estiver pronto.",
+    "seePlans": "Conhecer os planos",
+    "freeActive": "Plano Free ativo.",
+    "freeHint": "Continue no essencial sem cobrança.",
+    "closeWarning": "Fechar aviso"
+  }
+}

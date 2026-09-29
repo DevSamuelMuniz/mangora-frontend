@@ -1,0 +1,62 @@
+{
+  "title": "Lojas e visão consolidada",
+  "subtitle": "Dados separados por unidade",
+  "eyebrow": "Operação multiunidade",
+  "actions": {
+    "access": "Acessar esta loja",
+    "addToGroup": "Adicionar loja ao grupo",
+    "add": "Adicionar loja",
+    "remove": "Remover loja",
+    "cancel": "Cancelar",
+    "closeForm": "Fechar formulário",
+    "retry": "Tentar novamente"
+  },
+  "filters": {
+    "store": "Filtrar por loja",
+    "all": "Todas"
+  },
+  "period": {
+    "last7": "Últimos 7 dias",
+    "last30": "Últimos 30 dias",
+    "last90": "Últimos 90 dias"
+  },
+  "metrics": {
+    "revenue": "Faturamento consolidado",
+    "sales": "Vendas do grupo",
+    "averageTicket": "Ticket médio",
+    "stock": "Estoque total",
+    "receivable": "A receber",
+    "storeRevenue": "Faturamento",
+    "storeSales": "Vendas",
+    "storeStock": "Estoque"
+  },
+  "current": {
+    "label": "Ambiente atual",
+    "independent": "Ambiente independente"
+  },
+  "activate": {
+    "title": "Pronto para expandir",
+    "hint": "Transforme sua empresa atual na Loja 1.",
+    "button": "Adicionar loja ao grupo",
+    "confirm": "Confirmo o acréscimo mensal",
+    "notice": "Grupo de lojas ativado. Agora você pode adicionar até duas unidades.",
+    "failed": "Não foi possível ativar o grupo."
+  },
+  "newStore": {
+    "title": "Nova unidade",
+    "groupName": "Nome do grupo",
+    "groupNamePlaceholder": "Ex.: Grupo Mangora",
+    "legalName": "Razão social",
+    "tradeName": "Nome da loja *",
+    "document": "CNPJ (opcional)",
+    "email": "E-mail",
+    "copyCatalog": "Copiar catálogo da loja atual",
+    "copyCatalogHint": "Produtos e preços são copiados; o saldo de estoque começa zerado.",
+    "submit": "Adicionar loja",
+    "created": "Nova loja criada com estoque independente.",
+    "failed": "Não foi possível criar a loja."
+  },
+  "removeFailed": "Não foi possível remover a loja.",
+  "switchFailed": "Não foi possível trocar de loja.",
+  "loading": "Consolidando as lojas..."
+}

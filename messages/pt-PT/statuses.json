@@ -1,0 +1,16 @@
+{
+  "ACTIVE": "Ativo",
+  "INACTIVE": "Inativo",
+  "PENDING": "Pendente",
+  "PAID": "Pago",
+  "PARTIALLY_PAID": "Pago parcialmente",
+  "OVERDUE": "Vencido",
+  "CANCELLED": "Cancelado",
+  "CLOSED": "Fechado",
+  "OPEN": "Aberto",
+  "PROCESSING": "Em processamento",
+  "COMPLETED": "Concluído",
+  "FAILED": "Falhou",
+  "AUTHORIZED": "Autorizado",
+  "REJECTED": "Rejeitado"
+}

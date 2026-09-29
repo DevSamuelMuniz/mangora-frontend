@@ -1,0 +1,58 @@
+{
+  "title": "Cuentas y conciliación",
+  "subtitle": "Cada línea debe cuadrar con un asiento para cerrar el mes.",
+  "eyebrow": "Gestión financiera",
+  "actions": {
+    "create": "Nueva cuenta",
+    "createFirst": "Crear primera cuenta",
+    "import": "Importar extracto",
+    "match": "Conciliar",
+    "ignore": "Ignorar",
+    "cancel": "Cancelar",
+    "close": "Cerrar",
+    "retry": "Intentar de nuevo"
+  },
+  "accounts": {
+    "title": "Cuentas",
+    "loading": "Cargando cuentas...",
+    "name": "Nombre de la cuenta",
+    "institution": "Entidad",
+    "branch": "Sucursal",
+    "accountNumber": "Cuenta",
+    "pixKey": "Clave Pix",
+    "empty": "Sin cuentas registradas",
+    "createFailed": "No se pudo crear la cuenta.",
+    "subtitle": "Separa caja, banco, Pix y tarjeta — y concilia el extracto con los asientos."
+  },
+  "statement": {
+    "title": "Pega el extracto del banco",
+    "hint": "Pega un extracto OFX o CSV para empezar la conciliación.",
+    "dedupe": "Solo importamos líneas nuevas (sin duplicar por identificador).",
+    "imported": "Extracto importado",
+    "importFailed": "No se pudo importar el extracto.",
+    "empty": "Sin transacciones importadas.",
+    "provider": "Proveedor"
+  },
+  "match": {
+    "placeholder": "Conciliar con un asiento...",
+    "matched": "Transacción conciliada.",
+    "matchedLabel": "Conciliado",
+    "failed": "No se pudo conciliar la transacción.",
+    "auto": "Conciliar automáticamente",
+    "autoFailed": "No se pudo conciliar automáticamente.",
+    "autoDone": "{matched} transacción(es) conciliada(s) automáticamente. {pending} aún pendientes."
+  },
+  "ignore": {
+    "done": "Transacción ignorada.",
+    "failed": "No se pudo ignorar la transacción."
+  },
+  "statuses": {
+    "UNMATCHED": "Abierta",
+    "MATCHED": "Conciliada",
+    "IGNORED": "Ignorada"
+  },
+  "kinds": {
+    "CREDIT": "Crédito",
+    "DEBIT": "Débito"
+  }
+}

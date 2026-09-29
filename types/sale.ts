@@ -1,5 +1,5 @@
 export type SaleStatus = "COMPLETED" | "CANCELLED";
-export type PaymentMethod = "PIX" | "CREDIT_CARD" | "DEBIT_CARD" | "CASH" | "BOLETO";
+export type PaymentMethod = "PIX" | "CREDIT_CARD" | "DEBIT_CARD" | "CASH" | "BOLETO" | "CHECK" | "STORE_CREDIT";
 
 export type SaleItem = {
   id: string;
@@ -8,9 +8,16 @@ export type SaleItem = {
   productName: string;
   sku: string;
   quantity: number;
+  returnedQuantity: number;
   unitPrice: number;
   subtotal: number;
   trackStock: boolean;
+};
+
+export type SalePayment = {
+  id: string;
+  method: PaymentMethod;
+  amount: number;
 };
 
 export type Sale = {
@@ -20,12 +27,14 @@ export type Sale = {
   number: number;
   code: string;
   customerName: string;
+  customerDocument: string | null;
   createdByName: string;
   status: SaleStatus;
   subtotal: number;
   discount: number;
   total: number;
   paymentMethod: PaymentMethod;
+  payments?: SalePayment[];
   notes: string | null;
   cancelledAt: string | null;
   cancelledByName: string | null;
@@ -33,6 +42,13 @@ export type Sale = {
   createdAt: string;
   updatedAt: string;
   items: SaleItem[];
+  receivable: {
+    id: string;
+    status: "PENDING" | "PARTIALLY_PAID" | "PAID" | "CANCELLED";
+    dueDate: string;
+    paidAmount: number;
+    outstandingAmount: number;
+  } | null;
   customer: { id: string; name: string; tradeName: string | null } | null;
 };
 
@@ -42,6 +58,8 @@ export const paymentMethodLabels: Record<PaymentMethod, string> = {
   DEBIT_CARD: "Cartão de débito",
   CASH: "Dinheiro",
   BOLETO: "Boleto",
+  CHECK: "Cheque",
+  STORE_CREDIT: "Fiado",
 };
 
 export const saleStatusLabels: Record<SaleStatus, string> = {

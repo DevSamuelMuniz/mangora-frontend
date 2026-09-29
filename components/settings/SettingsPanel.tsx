@@ -1,42 +1,55 @@
 "use client";
 
-import Link from "next/link";
-import { FormEvent, useEffect, useState, type ReactNode } from "react";
-import { Activity, Bell, Building2, CheckCircle2, ExternalLink, Globe2, KeyRound, LoaderCircle, Monitor, RefreshCw, Save, ShieldCheck, ShoppingCart, SlidersHorizontal, type LucideIcon } from "lucide-react";
-import { apiRequest } from "@/lib/api/client";
+import { useFormatters } from "@/i18n/provider";
+
+import { FormEvent, useState, type ReactNode } from "react";
+import { Activity, Bell, Building2, CheckCircle2, KeyRound, LoaderCircle, Monitor, RefreshCw, Save, ShieldCheck, ShoppingCart, SlidersHorizontal, type LucideIcon } from "lucide-react";
 import type { CompanySettings, SettingsTab } from "@/types/settings";
 
-const tabs: { id: SettingsTab; label: string; description: string; icon: LucideIcon }[] = [
-  { id: "company", label: "Empresa", description: "Dados cadastrais", icon: Building2 },
-  { id: "preferences", label: "Preferências", description: "Idioma e operação", icon: SlidersHorizontal },
-  { id: "sales", label: "Vendas", description: "Regras comerciais", icon: ShoppingCart },
-  { id: "notifications", label: "Notificações", description: "Alertas e resumos", icon: Bell },
-  { id: "online", label: "Página online", description: "Catálogo público", icon: Globe2 },
-  { id: "security", label: "Segurança", description: "Sessão e acesso", icon: ShieldCheck },
-];
-const segments = [
-  ["RETAIL", "Loja ou comércio"], ["RESTAURANT", "Restaurante"], ["SNACK_BAR", "Lanchonete"],
-  ["MARKET", "Mercado ou minimercado"], ["BAKERY", "Padaria"], ["SALON", "Salão de beleza"],
-  ["BARBERSHOP", "Barbearia"], ["TECHNICAL_ASSISTANCE", "Assistência técnica"],
-  ["SERVICE_PROVIDER", "Prestador de serviços"], ["OTHER", "Outro segmento"],
-];
+import { useI18n, useT } from "@/i18n/provider";
+import { localeLabels, locales as supportedLocales, type Locale } from "@/i18n/config";
+import { CURRENCY_CODES, REGION_CODES, TIME_ZONE_OPTIONS, currencyName, regionName } from "@/lib/regional/options";
+import {
+  useAccountPreferences,
+  useChangePassword,
+  useCompanySettings,
+  useDeleteSession,
+  useRevokeOtherSessions,
+  useRunJob,
+  useSaveCompanySettings,
+  useSecurityOverview,
+  useUpdatePreferences,
+  type JobStatusData,
+} from "@/features/settings/hooks/useSettings";
 
-export default function SettingsPanel() {
-  const [activeTab, setActiveTab] = useState<SettingsTab>("company");
-  const [company, setCompany] = useState<CompanySettings | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState(false);
-  const [error, setError] = useState("");
+const tabs: { id: SettingsTab; labelKey: string; descriptionKey: string; icon: LucideIcon }[] = [
+  { id: "company", labelKey: "company", descriptionKey: "companyDescription", icon: Building2 },
+  { id: "preferences", labelKey: "preferences", descriptionKey: "preferencesDescription", icon: SlidersHorizontal },
+  { id: "sales", labelKey: "sales", descriptionKey: "salesDescription", icon: ShoppingCart },
+  { id: "notifications", labelKey: "notifications", descriptionKey: "notificationsDescription", icon: Bell },
+  { id: "security", labelKey: "security", descriptionKey: "securityDescription", icon: ShieldCheck },
+];
+function segmentOptions(t: (key: string) => string): [string, string][] {
+  return [
+  ["RETAIL", t("settings.panel.segments.RETAIL")], ["RESTAURANT", t("settings.panel.segments.RESTAURANT")], ["SNACK_BAR", t("settings.panel.segments.SNACK_BAR")],
+  ["MARKET", t("settings.panel.segments.MARKET")], ["BAKERY", t("settings.panel.segments.BAKERY")], ["SALON", t("settings.panel.segments.SALON")],
+  ["BARBERSHOP", t("settings.panel.segments.BARBERSHOP")], ["TECHNICAL_ASSISTANCE", t("settings.panel.segments.TECHNICAL_ASSISTANCE")],
+  ["SERVICE_PROVIDER", t("settings.panel.segments.SERVICE_PROVIDER")], ["OTHER", t("settings.panel.segments.OTHER")],
+  ];
+}
+
+export default function SettingsPanel({ initialTab = "company" }: { initialTab?: SettingsTab }) {
+  const t = useT();
+  const [activeTab, setActiveTab] = useState<SettingsTab>(initialTab);
+  const { data: company = null, isLoading: loading, error: loadError } = useCompanySettings();
+  const saveMutation = useSaveCompanySettings();
+  const saving = saveMutation.isPending;
+  const [actionError, setActionError] = useState("");
   const [success, setSuccess] = useState("");
+  const preferencesMutation = useUpdatePreferences();
+  const { locale, setLocale } = useI18n();
 
-  useEffect(() => {
-    let active = true;
-    void apiRequest<CompanySettings>("/companies/current")
-      .then((data) => { if (active) setCompany(data); })
-      .catch((cause: unknown) => { if (active) setError(cause instanceof Error ? cause.message : "Não foi possível carregar as configurações."); })
-      .finally(() => { if (active) setLoading(false); });
-    return () => { active = false; };
-  }, []);
+  const errorMessage = actionError || (loadError instanceof Error ? loadError.message : "");
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -48,47 +61,73 @@ export default function SettingsPanel() {
       postalCode: data.get("postalCode"), street: data.get("street"), number: data.get("number"),
       city: data.get("city"), state: data.get("state"),
     };
-    else if (activeTab === "preferences") payload = { timezone: data.get("timezone") };
+    else if (activeTab === "preferences") {
+      try {
+        setActionError(""); setSuccess("");
+        const nextLocale = String(data.get("locale") ?? locale) as Locale;
+        await preferencesMutation.mutateAsync({
+          locale: nextLocale,
+          country: String(data.get("country") ?? ""),
+          preferredCurrency: String(data.get("preferredCurrency") ?? ""),
+          timezone: String(data.get("timezone") ?? ""),
+        });
+        setSuccess(t("settings.panel.savedRegional"));
+        if (nextLocale !== locale) setLocale(nextLocale);
+      } catch (cause) {
+        setActionError(cause instanceof Error ? cause.message : t("settings.panel.errors.saveRegional"));
+      }
+      return;
+    }
     else if (activeTab === "sales") payload = {
       defaultPayment: data.get("defaultPayment"), maximumDiscount: Number(data.get("maximumDiscount")),
-      requireCustomer: data.get("requireCustomer") === "on", allowPendingSales: data.get("allowPendingSales") === "on",
+      requireCustomer: data.get("requireCustomer") === "on", allowPendingSales: data.get("allowPendingSales") === "on", allowNegativeStock: data.get("allowNegativeStock") === "on",
     };
     else if (activeTab === "notifications") payload = {
       lowStockNotification: data.get("lowStockNotification") === "on",
       overdueAccountNotification: data.get("overdueAccountNotification") === "on",
       saleNotification: data.get("saleNotification") === "on",
       summaryEmail: data.get("summaryEmail"), summaryFrequency: data.get("summaryFrequency"),
+      monthlyReportEnabled: data.get("monthlyReportEnabled") === "on",
+      monthlyReportEmail: data.get("monthlyReportEmail"),
     };
-    else if (activeTab === "online") payload = {
-      publicPageEnabled: data.get("publicPageEnabled") === "on",
-      publicDescription: data.get("publicDescription"), publicWhatsapp: data.get("publicWhatsapp"),
-      publicPickupEnabled: data.get("publicPickupEnabled") === "on",
-      publicDeliveryEnabled: data.get("publicDeliveryEnabled") === "on",
+    else payload = {
+      sessionTimeout: Number(data.get("sessionTimeout")),
+      loginAttempts: Number(data.get("loginAttempts")),
+      requirePasswordForRecords: data.get("requirePasswordForRecords") === "on",
+      requirePasswordForStock: data.get("requirePasswordForStock") === "on",
+      requirePasswordForSaleReturns: data.get("requirePasswordForSaleReturns") === "on",
     };
-    else payload = { sessionTimeout: Number(data.get("sessionTimeout")), loginAttempts: Number(data.get("loginAttempts")) };
 
     try {
-      setSaving(true); setError(""); setSuccess("");
-      setCompany(await apiRequest<CompanySettings>("/companies/current", { method: "PATCH", body: JSON.stringify(payload) }));
-      setSuccess("Configurações salvas e aplicadas à empresa atual.");
-    } catch (cause) { setError(cause instanceof Error ? cause.message : "Não foi possível salvar as configurações."); }
-    finally { setSaving(false); }
+      setActionError(""); setSuccess("");
+      await saveMutation.mutateAsync(payload);
+      setSuccess(t("settings.panel.saved"));
+    } catch (cause) { setActionError(cause instanceof Error ? cause.message : t("settings.panel.errors.save")); }
   }
 
   const tab = tabs.find((item) => item.id === activeTab) ?? tabs[0];
   const ActiveIcon = tab.icon;
-  if (loading) return <div className="flex min-h-72 items-center justify-center gap-2 text-sm text-slate-500"><LoaderCircle className="size-4 animate-spin" />Carregando configurações...</div>;
+  if (loading) return <div className="flex min-h-72 items-center justify-center gap-2 text-sm text-slate-500"><LoaderCircle className="size-4 animate-spin" />{t("settings.panel.loading")}</div>;
 
   return <section>
+<<<<<<< HEAD
     <div><p className="text-[11px] font-bold uppercase tracking-[0.14em] text-orange-600">Administração</p><h1 className="mt-1 text-2xl font-black text-slate-950 sm:text-3xl">Configurações</h1><p className="mt-1 text-xs text-slate-500">Personalize os dados e as regras reais da empresa.</p></div>
     {error && !company ? <div role="alert" className="mt-5 rounded-xl border border-red-200 bg-red-50 p-4 text-xs font-semibold text-red-700">{error}</div> : company && <div className="mt-5 grid items-start gap-4 lg:grid-cols-[240px_1fr]">
       <nav aria-label="Seções de configurações" className="overflow-x-auto rounded-2xl border border-slate-200 bg-white p-2 shadow-sm lg:sticky lg:top-20"><div className="flex min-w-max gap-1 lg:min-w-0 lg:flex-col">{tabs.map((item) => { const Icon = item.icon; const active = activeTab === item.id; return <button key={item.id} type="button" onClick={() => { setActiveTab(item.id); setError(""); setSuccess(""); }} className={`flex min-w-44 items-center gap-3 rounded-xl px-3 py-2.5 text-left lg:min-w-0 ${active ? "bg-orange-50 text-orange-700" : "text-slate-600 hover:bg-slate-50"}`}><div className={`flex size-8 items-center justify-center rounded-lg ${active ? "bg-orange-100" : "bg-slate-100 text-slate-400"}`}><Icon className="size-4" /></div><div><p className="text-xs font-bold">{item.label}</p><p className="text-[9px] text-slate-400">{item.description}</p></div></button>; })}</div></nav>
       <form key={activeTab} onSubmit={handleSubmit} className="space-y-4"><div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm"><div className="flex items-center gap-3 border-b border-slate-100 pb-4"><div className="flex size-9 items-center justify-center rounded-xl bg-orange-50 text-orange-600"><ActiveIcon className="size-4" /></div><div><h2 className="text-sm font-bold text-slate-950">{tab.label}</h2><p className="text-[10px] text-slate-400">{tab.description}</p></div></div><div className="mt-4">{activeTab === "company" && <CompanyForm company={company} />}{activeTab === "preferences" && <PreferencesForm company={company} />}{activeTab === "sales" && <SalesForm company={company} />}{activeTab === "notifications" && <NotificationsForm company={company} />}{activeTab === "online" && <OnlineStoreForm company={company} />}{activeTab === "security" && <SecurityForm company={company} />}</div></div>
       {error && <Alert tone="error">{error}</Alert>}{success && <Alert tone="success"><CheckCircle2 className="size-4 shrink-0" />{success}</Alert>}<div className="flex justify-end"><button disabled={saving} className="flex h-11 items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-orange-600 to-amber-600 px-5 text-sm font-bold text-white disabled:opacity-70">{saving ? <><LoaderCircle className="size-4 animate-spin" />Salvando...</> : <><Save className="size-4" />Salvar alterações</>}</button></div></form>
+=======
+    <div><p className="text-[11px] font-bold uppercase tracking-[0.14em] text-orange-600">{t("settings.panel.eyebrow")}</p><h1 className="mt-1 text-2xl font-black text-slate-950 sm:text-3xl">{t("settings.panel.title")}</h1><p className="mt-1 text-xs text-slate-500">{t("settings.panel.subtitle")}</p></div>
+    {errorMessage && !company ? <div role="alert" className="mt-5 rounded-xl border border-red-200 bg-red-50 p-4 text-xs font-semibold text-red-700">{errorMessage}</div> : company && <div className="mt-5 grid items-start gap-4 lg:grid-cols-[240px_1fr]">
+      <nav aria-label={t("settings.panel.navigation")} className="overflow-x-auto rounded-2xl border border-slate-200 bg-white p-2 shadow-sm lg:sticky lg:top-20"><div className="flex min-w-max gap-1 lg:min-w-0 lg:flex-col">{tabs.map((item) => { const Icon = item.icon; const active = activeTab === item.id; return <button key={item.id} type="button" onClick={() => { setActiveTab(item.id); setActionError(""); setSuccess(""); }} className={`flex min-w-44 items-center gap-3 rounded-xl px-3 py-2.5 text-left lg:min-w-0 ${active ? "bg-orange-50 text-orange-700" : "text-slate-600 hover:bg-slate-50"}`}><div className={`flex size-8 items-center justify-center rounded-lg ${active ? "bg-orange-100" : "bg-slate-100 text-slate-400"}`}><Icon className="size-4" /></div><div><p className="text-xs font-bold">{t(`settings.panel.tabs.${item.labelKey}`)}</p><p className="text-[9px] text-slate-400">{t(`settings.panel.tabs.${item.descriptionKey}`)}</p></div></button>; })}</div></nav>
+      <form key={activeTab} onSubmit={handleSubmit} className="space-y-4"><div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm"><div className="flex items-center gap-3 border-b border-slate-100 pb-4"><div className="flex size-9 items-center justify-center rounded-xl bg-orange-50 text-orange-600"><ActiveIcon className="size-4" /></div><div><h2 className="text-sm font-bold text-slate-950">{t(`settings.panel.tabs.${tab.labelKey}`)}</h2><p className="text-[10px] text-slate-400">{t(`settings.panel.tabs.${tab.descriptionKey}`)}</p></div></div><div className="mt-4">{activeTab === "company" && <CompanyForm company={company} />}{activeTab === "preferences" && <PreferencesForm />}{activeTab === "sales" && <SalesForm company={company} />}{activeTab === "notifications" && <NotificationsForm company={company} />}{activeTab === "security" && <SecurityForm company={company} saving={saving} />}</div></div>
+      {errorMessage && <Alert tone="error">{errorMessage}</Alert>}{success && <Alert tone="success"><CheckCircle2 className="size-4 shrink-0" />{success}</Alert>}<div className="flex justify-end"><button disabled={saving} className="flex h-11 items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-orange-600 to-amber-600 px-5 text-sm font-bold text-white disabled:opacity-70">{saving ? <><LoaderCircle className="size-4 animate-spin" />{t("settings.panel.saving")}</> : <><Save className="size-4" />{t("settings.panel.submit")}</>}</button></div></form>
+>>>>>>> 0e59a660a5acf0b652a188ddf2e8ccc96de79e4d
     </div>}
   </section>;
 }
 
+<<<<<<< HEAD
 function CompanyForm({ company }: { company: CompanySettings }) { return <div className="space-y-5"><div className="grid gap-4 sm:grid-cols-2"><Field label="Razão social" id="legalName"><input id="legalName" name="legalName" required minLength={2} defaultValue={company.legalName ?? ""} className={inputClass} /></Field><Field label="Nome fantasia" id="tradeName"><input id="tradeName" name="tradeName" required minLength={2} defaultValue={company.tradeName} className={inputClass} /></Field><Field label="CPF ou CNPJ (opcional)" id="document"><input id="document" name="document" defaultValue={company.document ?? ""} inputMode="numeric" placeholder="Informe apenas para faturamento" className={inputClass} /></Field><Field label="Segmento" id="segment"><select id="segment" name="segment" defaultValue={company.segment} className={inputClass}>{segments.map(([value, label]) => <option key={value} value={value}>{label}</option>)}</select></Field><Field label="E-mail comercial" id="email"><input id="email" name="email" type="email" required defaultValue={company.email ?? ""} className={inputClass} /></Field><Field label="Telefone" id="phone"><input id="phone" name="phone" required defaultValue={company.phone ?? ""} className={inputClass} /></Field></div><h3 className="border-t border-slate-100 pt-5 text-xs font-bold text-slate-800">Endereço da empresa</h3><div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4"><Field label="CEP" id="postalCode"><input id="postalCode" name="postalCode" required defaultValue={company.postalCode ?? ""} className={inputClass} /></Field><Field label="Endereço" id="street" className="lg:col-span-2"><input id="street" name="street" required defaultValue={company.street ?? ""} className={inputClass} /></Field><Field label="Número" id="number"><input id="number" name="number" required defaultValue={company.number ?? ""} className={inputClass} /></Field><Field label="Cidade" id="city" className="lg:col-span-2"><input id="city" name="city" required defaultValue={company.city ?? ""} className={inputClass} /></Field><Field label="Estado" id="state"><input id="state" name="state" required maxLength={2} defaultValue={company.state ?? ""} className={inputClass} /></Field></div></div>; }
 function PreferencesForm({ company }: { company: CompanySettings }) { return <div className="grid gap-4 sm:grid-cols-2"><Field label="Idioma" id="language"><input id="language" value="Português (Brasil)" disabled className={inputClass} /></Field><Field label="Fuso horário" id="timezone"><select id="timezone" name="timezone" defaultValue={company.timezone} className={inputClass}><option value="America/Sao_Paulo">Brasília — São Paulo</option><option value="America/Manaus">Manaus</option><option value="America/Recife">Recife</option></select></Field><Field label="Moeda" id="currency"><input id="currency" value="Real brasileiro (R$)" disabled className={inputClass} /></Field><div className="rounded-xl border border-orange-100 bg-orange-50 p-3 text-[10px] leading-4 text-orange-700">O tema oficial permanece claro e o formato de data é brasileiro.</div></div>; }
 function SalesForm({ company }: { company: CompanySettings }) { return <div className="space-y-5"><div className="grid gap-4 sm:grid-cols-2"><Field label="Pagamento padrão" id="defaultPayment"><select id="defaultPayment" name="defaultPayment" defaultValue={company.defaultPayment} className={inputClass}><option value="PIX">PIX</option><option value="CASH">Dinheiro</option><option value="DEBIT_CARD">Cartão de débito</option><option value="CREDIT_CARD">Cartão de crédito</option><option value="BOLETO">Boleto</option></select></Field><Field label="Desconto máximo (%)" id="maximumDiscount"><input id="maximumDiscount" name="maximumDiscount" type="number" min={0} max={100} step="0.5" defaultValue={company.maximumDiscount} className={inputClass} /></Field></div><SettingsGroup title="Regras aplicadas"><Toggle name="requireCustomer" title="Exigir cliente identificado" description="Bloqueia venda e pedido sem cliente cadastrado." defaultChecked={company.requireCustomer} /><Toggle name="allowPendingSales" title="Permitir vendas pendentes" description="Preferência preparada para o fluxo de recebimentos." defaultChecked={company.allowPendingSales} /></SettingsGroup></div>; }
@@ -101,62 +140,113 @@ function SecurityForm({ company }: { company: CompanySettings }) {
   const [sessions, setSessions] = useState<SecuritySession[]>([]);
   const [audit, setAudit] = useState<AuditEntry[]>([]);
   const [jobs, setJobs] = useState<JobStatusData>({ emails: { queued: 0, sent: 0, failed: 0 }, recentRuns: [] });
+=======
+function CompanyForm({ company }: { company: CompanySettings }) { const t = useT(); return <div className="space-y-5"><div className="grid gap-4 sm:grid-cols-2"><Field label={t("settings.panel.company.legalName")} id="legalName"><input id="legalName" name="legalName" required minLength={2} defaultValue={company.legalName ?? ""} className={inputClass} /></Field><Field label={t("settings.panel.company.tradeName")} id="tradeName"><input id="tradeName" name="tradeName" required minLength={2} defaultValue={company.tradeName} className={inputClass} /></Field><Field label={t("settings.panel.company.document")} id="document"><input id="document" name="document" defaultValue={company.document ?? ""} inputMode="numeric" placeholder={t("settings.panel.company.documentPlaceholder")} className={inputClass} /></Field><Field label={t("settings.panel.company.segment")} id="segment"><select id="segment" name="segment" defaultValue={company.segment} className={inputClass}>{segmentOptions(t).map(([value, label]) => <option key={value} value={value}>{label}</option>)}</select></Field><Field label={t("settings.panel.company.email")} id="email"><input id="email" name="email" type="email" required defaultValue={company.email ?? ""} className={inputClass} /></Field><Field label={t("settings.panel.company.phone")} id="phone"><input id="phone" name="phone" required defaultValue={company.phone ?? ""} className={inputClass} /></Field></div><h3 className="border-t border-slate-100 pt-5 text-xs font-bold text-slate-800">{t("settings.panel.company.address")}</h3><div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4"><Field label={t("settings.panel.company.zip")} id="postalCode"><input id="postalCode" name="postalCode" required defaultValue={company.postalCode ?? ""} className={inputClass} /></Field><Field label={t("settings.panel.company.street")} id="street" className="lg:col-span-2"><input id="street" name="street" required defaultValue={company.street ?? ""} className={inputClass} /></Field><Field label={t("settings.panel.company.number")} id="number"><input id="number" name="number" required defaultValue={company.number ?? ""} className={inputClass} /></Field><Field label={t("settings.panel.company.city")} id="city" className="lg:col-span-2"><input id="city" name="city" required defaultValue={company.city ?? ""} className={inputClass} /></Field><Field label={t("settings.panel.company.state")} id="state"><input id="state" name="state" required maxLength={2} defaultValue={company.state ?? ""} className={inputClass} /></Field></div></div>; }
+function PreferencesForm() {
+  const t = useT();
+  const { data: preferences } = useAccountPreferences();
+  const { locale } = useI18n();
+  return <div className="space-y-5">
+    <div className="grid gap-4 sm:grid-cols-2">
+      <Field label={t("settings.regional.language")} id="locale"><select id="locale" name="locale" defaultValue={preferences?.locale ?? locale} className={inputClass}>{supportedLocales.map((item) => <option key={item} value={item}>{localeLabels[item].label}</option>)}</select></Field>
+      <Field label={t("settings.regional.country")} id="country"><select id="country" name="country" defaultValue={preferences?.country ?? "BR"} className={inputClass}>{REGION_CODES.map((code) => <option key={code} value={code}>{regionName(code, locale)}</option>)}</select></Field>
+      <Field label={t("settings.regional.currency")} id="preferredCurrency"><select id="preferredCurrency" name="preferredCurrency" defaultValue={preferences?.preferredCurrency ?? "BRL"} className={inputClass}>{CURRENCY_CODES.map((code) => <option key={code} value={code}>{code} — {currencyName(code, locale)}</option>)}</select></Field>
+      <Field label={t("settings.regional.timezone")} id="timezone"><select id="timezone" name="timezone" defaultValue={preferences?.timezone ?? "America/Sao_Paulo"} className={inputClass}>{TIME_ZONE_OPTIONS.map((zone) => <option key={zone} value={zone}>{zone}</option>)}</select></Field>
+    </div>
+    <p className="rounded-xl border border-orange-100 bg-orange-50 p-3 text-[10px] leading-4 text-orange-700">{t("settings.regional.note")} {t("settings.regional.languageHint")}</p>
+    <p className="text-[10px] text-slate-400">{t("settings.regional.description")}</p>
+  </div>;
+}
+
+function SalesForm({ company }: { company: CompanySettings }) { const t = useT(); return <div className="space-y-5"><div className="grid gap-4 sm:grid-cols-2"><Field label={t("settings.panel.sales.defaultPayment")} id="defaultPayment"><select id="defaultPayment" name="defaultPayment" defaultValue={company.defaultPayment} className={inputClass}><option value="PIX">PIX</option><option value="CASH">Dinheiro</option><option value="DEBIT_CARD">Cartão de débito</option><option value="CREDIT_CARD">Cartão de crédito</option><option value="BOLETO">Boleto</option></select></Field><Field label={t("settings.panel.sales.maxDiscount")} id="maximumDiscount"><input id="maximumDiscount" name="maximumDiscount" type="number" min={0} max={100} step="0.5" defaultValue={company.maximumDiscount} className={inputClass} /></Field></div><SettingsGroup title={t("settings.panel.sales.rulesApplied")}><Toggle name="requireCustomer" title={t("settings.panel.sales.requireCustomerTitle")} description={t("settings.panel.sales.requireCustomerHint")} defaultChecked={company.requireCustomer} /><Toggle name="allowPendingSales" title={t("settings.panel.sales.allowPendingSalesTitle")} description={t("settings.panel.notifications.receivablesNote")} defaultChecked={company.allowPendingSales} /><Toggle name="allowNegativeStock" title={t("settings.panel.sales.allowNegativeStockTitle")} description="Permite vender/pedir mais do que o disponível (desligado: bloqueia a operação)." defaultChecked={company.allowNegativeStock} /></SettingsGroup></div>; }
+function NotificationsForm({ company }: { company: CompanySettings }) { const t = useT(); return <div className="space-y-5"><SettingsGroup title={t("settings.panel.notifications.systemTitle")}><Toggle name="lowStockNotification" title={t("settings.panel.notifications.lowStockTitle")} description={t("settings.panel.notifications.lowStockHint")} defaultChecked={company.lowStockNotification} /><Toggle name="overdueAccountNotification" title={t("settings.panel.notifications.overdueTitle")} description={t("settings.panel.notifications.overdueHint")} defaultChecked={company.overdueAccountNotification} /><Toggle name="saleNotification" title={t("settings.panel.notifications.newSalesTitle")} description={t("settings.panel.notifications.digestHint")} defaultChecked={company.saleNotification} /></SettingsGroup><SettingsGroup title={t("settings.panel.notifications.monthlyTitle")}><Toggle name="monthlyReportEnabled" title={t("settings.panel.notifications.monthlyToggle")} description={t("settings.panel.notifications.monthlyHint")} defaultChecked={company.monthlyReportEnabled} /><Field label={t("settings.panel.notifications.monthlyEmail")} id="monthlyReportEmail"><input id="monthlyReportEmail" name="monthlyReportEmail" type="email" defaultValue={company.monthlyReportEmail ?? ""} placeholder={t("settings.panel.notifications.monthlyEmailPlaceholder")} className={inputClass} /></Field></SettingsGroup><div className="grid gap-4 sm:grid-cols-2"><Field label={t("settings.panel.notifications.summaryEmail")} id="summaryEmail"><input id="summaryEmail" name="summaryEmail" type="email" defaultValue={company.summaryEmail ?? ""} className={inputClass} /></Field><Field label={t("settings.panel.notifications.frequencyTitle")} id="summaryFrequency"><select id="summaryFrequency" name="summaryFrequency" defaultValue={company.summaryFrequency} className={inputClass}><option value="daily">{t("settings.panel.notifications.daily")}</option><option value="weekly">{t("settings.panel.notifications.weekly")}</option><option value="disabled">{t("settings.panel.notifications.disabled")}</option></select></Field></div><p className="text-[10px] text-slate-400">{t("settings.panel.notifications.notes")}</p></div>; }
+const emptyJobs: JobStatusData = { emails: { queued: 0, sent: 0, failed: 0 }, recentRuns: [] };
+
+function SecurityForm({ company, saving }: { company: CompanySettings; saving: boolean }) {
+  const { formatDateTime } = useFormatters();
+  const t = useT();
+  const { data: overview } = useSecurityOverview();
+  const changePasswordMutation = useChangePassword();
+  const deleteSessionMutation = useDeleteSession();
+  const revokeOthersMutation = useRevokeOtherSessions();
+  const runJobMutation = useRunJob();
+  const busy = changePasswordMutation.isPending || deleteSessionMutation.isPending || revokeOthersMutation.isPending || runJobMutation.isPending;
+  const sessions = overview?.sessions ?? [];
+  const audit = overview?.audit ?? [];
+  const jobs = overview?.jobs ?? emptyJobs;
+>>>>>>> 0e59a660a5acf0b652a188ddf2e8ccc96de79e4d
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmation, setConfirmation] = useState("");
-  const [busy, setBusy] = useState(false);
   const [feedback, setFeedback] = useState("");
-  useEffect(() => {
-    let active = true;
-    void Promise.all([apiRequest<SecuritySession[]>("/auth/sessions"), apiRequest<AuditEntry[]>("/audit"), apiRequest<JobStatusData>("/jobs/status")])
-      .then(([sessionData, auditData, jobData]) => { if (active) { setSessions(sessionData); setAudit(auditData); setJobs(jobData); } })
-      .catch((cause: unknown) => { if (active) setFeedback(cause instanceof Error ? cause.message : "Não foi possível carregar os dados de segurança."); });
-    return () => { active = false; };
-  }, []);
   async function changePassword() {
-    if (newPassword.length < 8) return setFeedback("A nova senha deve ter ao menos 8 caracteres.");
-    if (newPassword !== confirmation) return setFeedback("A confirmação da nova senha não confere.");
-    try { setBusy(true); setFeedback(""); await apiRequest("/auth/change-password", { method: "POST", body: JSON.stringify({ currentPassword, newPassword }) }); setCurrentPassword(""); setNewPassword(""); setConfirmation(""); setFeedback("Senha alterada. As demais sessões foram encerradas."); }
-    catch (cause) { setFeedback(cause instanceof Error ? cause.message : "Não foi possível alterar a senha."); }
-    finally { setBusy(false); }
+    if (newPassword.length < 8) return setFeedback(t("settings.panel.security.passwordMin"));
+    if (newPassword !== confirmation) return setFeedback(t("settings.panel.security.passwordMismatch"));
+    try { setFeedback(""); await changePasswordMutation.mutateAsync({ currentPassword, newPassword }); setCurrentPassword(""); setNewPassword(""); setConfirmation(""); setFeedback(t("settings.panel.security.passwordChangedHint")); }
+    catch (cause) { setFeedback(cause instanceof Error ? cause.message : t("settings.panel.security.passwordFailed")); }
   }
   async function revokeSession(id: string) {
-    try { setBusy(true); await apiRequest(`/auth/sessions/${id}`, { method: "DELETE" }); setSessions((items) => items.filter((item) => item.id !== id)); setFeedback("Sessão encerrada."); }
-    catch (cause) { setFeedback(cause instanceof Error ? cause.message : "Não foi possível encerrar a sessão."); }
-    finally { setBusy(false); }
+    try { await deleteSessionMutation.mutateAsync({ id }); setFeedback(t("settings.panel.security.sessionEndedHint")); }
+    catch (cause) { setFeedback(cause instanceof Error ? cause.message : t("settings.panel.security.endFailed")); }
   }
   async function revokeOthers() {
-    try { setBusy(true); const result = await apiRequest<{ revoked: number }>("/auth/sessions/revoke-others", { method: "POST" }); setSessions((items) => items.filter((item) => item.current)); setFeedback(`${result.revoked} outra(s) sessão(ões) encerrada(s).`); }
-    catch (cause) { setFeedback(cause instanceof Error ? cause.message : "Não foi possível encerrar as sessões."); }
-    finally { setBusy(false); }
+    try { const result = await revokeOthersMutation.mutateAsync(); setFeedback(t("settings.panel.security.endOthersDone", { count: result.revoked })); }
+    catch (cause) { setFeedback(cause instanceof Error ? cause.message : t("settings.panel.security.endOthersFailed")); }
   }
   async function runJob(path: "email" | "summaries") {
-    try {
-      setBusy(true); setFeedback("");
-      await apiRequest(`/jobs/run/${path}`, { method: "POST" });
-      setJobs(await apiRequest<JobStatusData>("/jobs/status"));
-      setFeedback(path === "email" ? "Fila de e-mails processada." : "Resumo e alertas processados.");
-    } catch (cause) { setFeedback(cause instanceof Error ? cause.message : "Não foi possível executar o processamento."); }
-    finally { setBusy(false); }
+    try { setFeedback(""); await runJobMutation.mutateAsync({ path }); setFeedback(path === "email" ? t("settings.panel.jobs.queueProcessed") : "Resumo e alertas processados."); }
+    catch (cause) { setFeedback(cause instanceof Error ? cause.message : t("settings.panel.errors.run")); }
   }
   return <div className="space-y-5">
+<<<<<<< HEAD
     <div className="grid gap-4 sm:grid-cols-2"><Field label="Duração máxima da sessão (minutos)" id="sessionTimeout"><input id="sessionTimeout" name="sessionTimeout" type="number" min={5} max={480} step={5} defaultValue={company.sessionTimeout} className={inputClass} /></Field><Field label="Tentativas antes do bloqueio" id="loginAttempts"><input id="loginAttempts" name="loginAttempts" type="number" min={3} max={10} defaultValue={company.loginAttempts} className={inputClass} /></Field></div>
     <div className="rounded-xl border border-green-200 bg-green-50 p-3 text-[10px] leading-4 text-green-800">As políticas são aplicadas no próximo login. O bloqueio dura 15 minutos após o limite de tentativas inválidas.</div>
     <section className="rounded-xl border border-slate-200 p-4"><div className="flex items-center gap-2"><KeyRound className="size-4 text-orange-600" /><h3 className="text-xs font-bold text-slate-800">Alterar minha senha</h3></div><div className="mt-4 grid gap-4 sm:grid-cols-3"><Field label="Senha atual" id="currentPassword"><input id="currentPassword" type="password" autoComplete="current-password" value={currentPassword} onChange={(event) => setCurrentPassword(event.target.value)} className={inputClass} /></Field><Field label="Nova senha" id="newPassword"><input id="newPassword" type="password" autoComplete="new-password" value={newPassword} onChange={(event) => setNewPassword(event.target.value)} className={inputClass} /></Field><Field label="Confirmar nova senha" id="passwordConfirmation"><input id="passwordConfirmation" type="password" autoComplete="new-password" value={confirmation} onChange={(event) => setConfirmation(event.target.value)} className={inputClass} /></Field></div><button type="button" disabled={busy || !currentPassword || !newPassword} onClick={() => void changePassword()} className="mt-3 h-10 rounded-xl bg-orange-600 px-4 text-xs font-bold text-white disabled:opacity-50">Alterar senha</button></section>
     <section className="rounded-xl border border-slate-200 p-4"><div className="flex flex-wrap items-center justify-between gap-3"><div className="flex items-center gap-2"><Monitor className="size-4 text-orange-600" /><div><h3 className="text-xs font-bold text-slate-800">Sessões e dispositivos</h3><p className="text-[10px] text-slate-400">Somente acessos desta empresa.</p></div></div><button type="button" disabled={busy || sessions.length < 2} onClick={() => void revokeOthers()} className="h-9 rounded-xl border border-slate-200 px-3 text-[10px] font-bold text-slate-600 disabled:opacity-40">Encerrar outras sessões</button></div><div className="mt-3 divide-y divide-slate-100">{sessions.map((session) => <div key={session.id} className="flex items-center justify-between gap-3 py-3"><div className="min-w-0"><p className="truncate text-xs font-bold text-slate-700">{session.userAgent || "Navegador não identificado"}</p><p className="mt-1 text-[10px] text-slate-400">{session.ipAddress || "IP não informado"} · expira {formatSecurityDate(session.expiresAt)}</p></div>{session.current ? <span className="rounded-full bg-green-50 px-2 py-1 text-[9px] font-bold text-green-700">Sessão atual</span> : <button type="button" disabled={busy} onClick={() => void revokeSession(session.id)} className="text-[10px] font-bold text-red-600">Encerrar</button>}</div>)}</div></section>
     <section className="rounded-xl border border-slate-200 p-4"><div className="flex flex-wrap items-center justify-between gap-3"><div className="flex items-center gap-2"><Activity className="size-4 text-orange-600" /><div><h3 className="text-xs font-bold text-slate-800">Processamento assíncrono</h3><p className="text-[10px] text-slate-400">Fila, reenvios e resumos desta empresa.</p></div></div><div className="flex gap-2"><button type="button" disabled={busy} onClick={() => void runJob("email")} className="flex h-9 items-center gap-1.5 rounded-xl border border-slate-200 px-3 text-[10px] font-bold text-slate-600 disabled:opacity-40"><RefreshCw className="size-3" /> Processar fila</button><button type="button" disabled={busy} onClick={() => void runJob("summaries")} className="h-9 rounded-xl bg-orange-600 px-3 text-[10px] font-bold text-white disabled:opacity-40">Gerar resumo</button></div></div><div className="mt-4 grid grid-cols-3 gap-2"><JobMetric label="Na fila" value={jobs.emails.queued} tone="amber" /><JobMetric label="Enviados" value={jobs.emails.sent} tone="green" /><JobMetric label="Falhas" value={jobs.emails.failed} tone="red" /></div><div className="mt-3 divide-y divide-slate-100">{jobs.recentRuns.slice(0, 5).map((run) => <div key={run.id} className="flex items-center justify-between gap-3 py-2.5"><div><p className="text-[10px] font-bold text-slate-700">{run.name === "EMAIL_DELIVERY" ? "Entrega de e-mails" : "Resumo e alertas"}</p><p className="text-[9px] text-slate-400">{run.processed} item(ns) · {formatSecurityDate(run.startedAt)}</p></div><span className={`rounded-full px-2 py-1 text-[9px] font-bold ${jobStatusClass(run.status)}`}>{jobStatusLabel(run.status)}</span></div>)}{!jobs.recentRuns.length && <p className="py-3 text-[10px] text-slate-400">Nenhum processamento registrado.</p>}</div></section>
     <section className="rounded-xl border border-slate-200 p-4"><h3 className="text-xs font-bold text-slate-800">Auditoria recente</h3><div className="mt-3 divide-y divide-slate-100">{audit.slice(0, 8).map((entry) => <div key={entry.id} className="flex justify-between gap-3 py-2.5"><div><p className="text-[10px] font-bold text-slate-700">{auditLabel(entry.action)}</p><p className="text-[9px] text-slate-400">{entry.userName} · {entry.entityType}</p></div><time className="text-[9px] text-slate-400">{formatSecurityDate(entry.createdAt)}</time></div>)}{!audit.length && <p className="py-3 text-[10px] text-slate-400">Nenhum evento registrado.</p>}</div></section>
+=======
+    <div className="grid gap-4 sm:grid-cols-2"><Field label={t("settings.panel.security.sessionTimeout")} id="sessionTimeout"><input id="sessionTimeout" name="sessionTimeout" type="number" min={5} max={480} step={5} defaultValue={company.sessionTimeout} className={inputClass} /></Field><Field label={t("settings.panel.security.lockoutAttempts")} id="loginAttempts"><input id="loginAttempts" name="loginAttempts" type="number" min={3} max={10} defaultValue={company.loginAttempts} className={inputClass} /></Field></div>
+    <div className="rounded-xl border border-green-200 bg-green-50 p-3 text-[10px] leading-4 text-green-800">{t("settings.panel.security.policyNote")}</div>
+    <SettingsGroup title={t("settings.panel.security.confirmations")}>
+      <Toggle name="requirePasswordForRecords" title={t("settings.panel.security.recordsTitle")} description={t("settings.panel.security.recordsHint")} defaultChecked={company.requirePasswordForRecords} />
+      <Toggle name="requirePasswordForStock" title={t("settings.panel.security.stockTitle")} description={t("settings.panel.security.stockHint")} defaultChecked={company.requirePasswordForStock} />
+      <Toggle name="requirePasswordForSaleReturns" title={t("settings.panel.security.returnsTitle")} description={t("settings.panel.security.returnsHint")} defaultChecked={company.requirePasswordForSaleReturns} />
+    </SettingsGroup>
+    <div className="flex justify-end">
+      <button type="submit" disabled={saving} className="flex h-10 items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-orange-600 to-amber-600 px-4 text-xs font-bold text-white shadow-sm shadow-orange-200 transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:translate-y-0">
+        {saving ? <><LoaderCircle className="size-4 animate-spin" />{t("settings.panel.saving")}</> : <><Save className="size-4" />{t("settings.panel.submitConfirmations")}</>}
+      </button>
+    </div>
+    <section className="rounded-xl border border-slate-200 p-4"><div className="flex items-center gap-2"><KeyRound className="size-4 text-orange-600" /><h3 className="text-xs font-bold text-slate-800">{t("settings.panel.security.passwordTitle")}</h3></div><div className="mt-4 grid gap-4 sm:grid-cols-3"><Field label={t("settings.panel.security.currentPassword")} id="currentPassword"><input id="currentPassword" type="password" autoComplete="current-password" value={currentPassword} onChange={(event) => setCurrentPassword(event.target.value)} className={inputClass} /></Field><Field label={t("settings.panel.security.newPasswordLabel")} id="newPassword"><input id="newPassword" type="password" autoComplete="new-password" value={newPassword} onChange={(event) => setNewPassword(event.target.value)} className={inputClass} /></Field><Field label={t("settings.panel.security.confirmPassword")} id="passwordConfirmation"><input id="passwordConfirmation" type="password" autoComplete="new-password" value={confirmation} onChange={(event) => setConfirmation(event.target.value)} className={inputClass} /></Field></div><button type="button" disabled={busy || !currentPassword || !newPassword} onClick={() => void changePassword()} className="mt-3 h-10 rounded-xl bg-orange-600 px-4 text-xs font-bold text-white disabled:opacity-50">{t("settings.panel.security.passwordAction")}</button></section>
+    <section className="rounded-xl border border-slate-200 p-4"><div className="flex flex-wrap items-center justify-between gap-3"><div className="flex items-center gap-2"><Monitor className="size-4 text-orange-600" /><div><h3 className="text-xs font-bold text-slate-800">{t("settings.panel.security.sessions")}</h3><p className="text-[10px] text-slate-400">{t("settings.panel.security.sessionsHint")}</p></div></div><button type="button" disabled={busy || sessions.length < 2} onClick={() => void revokeOthers()} className="h-9 rounded-xl border border-slate-200 px-3 text-[10px] font-bold text-slate-600 disabled:opacity-40">{t("settings.panel.security.endOthers")}</button></div><div className="mt-3 divide-y divide-slate-100">{sessions.map((session) => <div key={session.id} className="flex items-center justify-between gap-3 py-3"><div className="min-w-0"><p className="truncate text-xs font-bold text-slate-700">{session.deviceName || session.userAgent || t("settings.panel.security.unknownBrowser")}</p><p className="mt-1 text-[10px] text-slate-400">{session.ipAddress || t("settings.panel.security.unknownIp")} · início {formatDateTime(session.createdAt)} · expira {formatDateTime(session.expiresAt)}</p></div>{session.current ? <span className="rounded-full bg-green-50 px-2 py-1 text-[9px] font-bold text-green-700">{t("settings.panel.security.currentSession")}</span> : <button type="button" disabled={busy} onClick={() => void revokeSession(session.id)} className="text-[10px] font-bold text-red-600">{t("settings.panel.security.end")}</button>}</div>)}</div></section>
+    <section className="rounded-xl border border-slate-200 p-4"><div className="flex flex-wrap items-center justify-between gap-3"><div className="flex items-center gap-2"><Activity className="size-4 text-orange-600" /><div><h3 className="text-xs font-bold text-slate-800">{t("settings.panel.jobs.title")}</h3><p className="text-[10px] text-slate-400">Fila, reenvios e resumos desta empresa.</p></div></div><div className="flex gap-2"><button type="button" disabled={busy} onClick={() => void runJob("email")} className="flex h-9 items-center gap-1.5 rounded-xl border border-slate-200 px-3 text-[10px] font-bold text-slate-600 disabled:opacity-40"><RefreshCw className="size-3" /> Processar fila</button><button type="button" disabled={busy} onClick={() => void runJob("summaries")} className="h-9 rounded-xl bg-orange-600 px-3 text-[10px] font-bold text-white disabled:opacity-40">{t("settings.panel.notifications.generate")}</button></div></div><div className="mt-4 grid grid-cols-3 gap-2"><JobMetric label={t("settings.panel.security.queue")} value={jobs.emails.queued} tone="amber" /><JobMetric label={t("settings.panel.security.sent")} value={jobs.emails.sent} tone="green" /><JobMetric label={t("settings.panel.security.failed")} value={jobs.emails.failed} tone="red" /></div><div className="mt-3 divide-y divide-slate-100">{jobs.recentRuns.slice(0, 5).map((run) => <div key={run.id} className="flex items-center justify-between gap-3 py-2.5"><div><p className="text-[10px] font-bold text-slate-700">{run.name === "EMAIL_DELIVERY" ? "Entrega de e-mails" : "Resumo e alertas"}</p><p className="text-[9px] text-slate-400">{run.processed} item(ns) · {formatDateTime(run.startedAt)}</p></div><span className={`rounded-full px-2 py-1 text-[9px] font-bold ${jobStatusClass(run.status)}`}>{jobStatusLabel(run.status, t)}</span></div>)}{!jobs.recentRuns.length && <p className="py-3 text-[10px] text-slate-400">{t("settings.panel.jobs.empty")}</p>}</div></section>
+    <section className="rounded-xl border border-slate-200 p-4"><h3 className="text-xs font-bold text-slate-800">{t("settings.panel.audit.title")}</h3><div className="mt-3 divide-y divide-slate-100">{audit.slice(0, 8).map((entry) => <div key={entry.id} className="flex justify-between gap-3 py-2.5"><div><p className="text-[10px] font-bold text-slate-700">{auditLabel(entry.action, t)}</p><p className="text-[9px] text-slate-400">{entry.userName} · {entry.entityType}</p></div><time className="text-[9px] text-slate-400">{formatDateTime(entry.createdAt)}</time></div>)}{!audit.length && <p className="py-3 text-[10px] text-slate-400">{t("settings.panel.audit.empty")}</p>}</div></section>
+>>>>>>> 0e59a660a5acf0b652a188ddf2e8ccc96de79e4d
     {feedback && <div role="status" className="rounded-xl border border-yellow-200 bg-yellow-50 p-3 text-[10px] font-semibold text-yellow-800">{feedback}</div>}
   </div>;
 }
 function JobMetric({ label, value, tone }: { label: string; value: number; tone: "amber" | "green" | "red" }) { const colors = { amber: "bg-amber-50 text-amber-700", green: "bg-green-50 text-green-700", red: "bg-red-50 text-red-700" }; return <div className={`rounded-xl p-3 ${colors[tone]}`}><p className="text-lg font-black">{value}</p><p className="text-[9px] font-bold uppercase tracking-wide">{label}</p></div>; }
+<<<<<<< HEAD
 function jobStatusLabel(status: string) { return ({ COMPLETED: "Concluído", FAILED: "Falhou", SKIPPED: "Ignorado", RUNNING: "Executando" } as Record<string, string>)[status] ?? status; }
 function jobStatusClass(status: string) { return status === "COMPLETED" ? "bg-green-50 text-green-700" : status === "FAILED" ? "bg-red-50 text-red-700" : status === "RUNNING" ? "bg-yellow-50 text-yellow-700" : "bg-slate-100 text-slate-600"; }
 function formatSecurityDate(value: string) { return new Intl.DateTimeFormat("pt-BR", { dateStyle: "short", timeStyle: "short" }).format(new Date(value)); }
 function auditLabel(action: string) { return ({ LOGIN_SUCCESS: "Login realizado", LOGIN_FAILURE: "Tentativa de login inválida", PASSWORD_CHANGED: "Senha alterada", SESSION_REVOKED: "Sessão encerrada", COMPANY_UPDATED: "Empresa atualizada", EMPLOYEE_CREATED: "Funcionário criado", EMPLOYEE_ROLE_CHANGED: "Papel alterado", EMPLOYEE_STATUS_CHANGED: "Acesso alterado", SUBSCRIPTION_REQUESTED: "Solicitação de assinatura", CASH_REGISTER_OPENED: "Caixa aberto", CASH_REGISTER_CLOSED: "Caixa fechado", CASH_MOVEMENT_RECORDED: "Movimentação de caixa", SUPPLIER_CREATED: "Fornecedor criado", SUPPLIER_UPDATED: "Fornecedor atualizado", PURCHASE_CREATED: "Compra criada", PURCHASE_RECEIVED: "Compra recebida", PURCHASE_CANCELLED: "Compra cancelada", CATEGORY_CREATED: "Categoria criada", CATEGORY_UPDATED: "Categoria atualizada", SERVICE_CREATED: "Serviço criado", SERVICE_UPDATED: "Serviço atualizado" } as Record<string, string>)[action] ?? action; }
 
+=======
+function jobStatusLabel(status: string, t: (key: string) => string) { return ({ COMPLETED: t("settings.panel.jobs.statuses.COMPLETED"), FAILED: t("settings.panel.jobs.statuses.FAILED"), SKIPPED: t("settings.panel.jobs.statuses.SKIPPED"), RUNNING: t("settings.panel.jobs.statuses.RUNNING") } as Record<string, string>)[status] ?? status; }
+function jobStatusClass(status: string) { return status === "COMPLETED" ? "bg-green-50 text-green-700" : status === "FAILED" ? "bg-red-50 text-red-700" : status === "RUNNING" ? "bg-yellow-50 text-yellow-700" : "bg-slate-100 text-slate-600"; }
+
+function auditLabel(action: string, t: (key: string) => string) { return ({ LOGIN_SUCCESS: "Login realizado", LOGIN_FAILURE: "Tentativa de login inválida", PASSWORD_CHANGED: t("settings.panel.security.passwordChanged"), SESSION_REVOKED: t("settings.panel.security.sessionEnded"), COMPANY_UPDATED: "Empresa atualizada", EMPLOYEE_CREATED: "Funcionário criado", EMPLOYEE_ROLE_CHANGED: "Papel alterado", EMPLOYEE_STATUS_CHANGED: "Acesso alterado", SUBSCRIPTION_REQUESTED: "Solicitação de assinatura", CASH_REGISTER_OPENED: "Caixa aberto", CASH_REGISTER_CLOSED: "Caixa fechado", CASH_MOVEMENT_RECORDED: "Movimentação de caixa", SUPPLIER_CREATED: "Fornecedor criado", SUPPLIER_UPDATED: "Fornecedor atualizado", PURCHASE_CREATED: "Compra criada", PURCHASE_RECEIVED: "Compra recebida", PURCHASE_CANCELLED: "Compra cancelada", CATEGORY_CREATED: "Categoria criada", CATEGORY_UPDATED: "Categoria atualizada", SERVICE_CREATED: "Serviço criado", SERVICE_UPDATED: "Serviço atualizado", BUSINESS_GROUP_CREATED: "Grupo de lojas criado", UNIT_CREATED: "Nova loja criada", STOCK_TRANSFERRED: "Estoque transferido entre lojas", FINANCIAL_PAYMENT_RECORDED: "Pagamento financeiro registrado" } as Record<string, string>)[action] ?? action; }
+
+>>>>>>> 0e59a660a5acf0b652a188ddf2e8ccc96de79e4d
 const inputClass = "h-11 w-full rounded-xl border border-slate-200 bg-white px-3.5 text-sm text-slate-950 outline-none focus:border-orange-400 focus:ring-4 focus:ring-orange-100 disabled:bg-slate-50 disabled:text-slate-400";
 function Field({ label, id, children, className = "" }: { label: string; id: string; children: ReactNode; className?: string }) { return <div className={className}><label htmlFor={id} className="mb-1.5 block text-xs font-bold text-slate-700">{label}</label>{children}</div>; }
 function SettingsGroup({ title, children }: { title: string; children: ReactNode }) { return <fieldset className="overflow-hidden rounded-xl border border-slate-200"><legend className="sr-only">{title}</legend><div className="border-b border-slate-200 bg-slate-50 px-4 py-2.5 text-[10px] font-bold uppercase tracking-wider text-slate-500">{title}</div><div className="divide-y divide-slate-100">{children}</div></fieldset>; }
 function Toggle({ name, title, description, defaultChecked }: { name: string; title: string; description: string; defaultChecked: boolean }) { return <label className="flex cursor-pointer items-center justify-between gap-4 px-4 py-3"><span><span className="block text-xs font-bold text-slate-700">{title}</span><span className="text-[10px] text-slate-400">{description}</span></span><span className="relative shrink-0"><input type="checkbox" name={name} defaultChecked={defaultChecked} className="peer sr-only" /><span className="block h-6 w-11 rounded-full bg-slate-200 peer-checked:bg-orange-600" /><span className="absolute left-1 top-1 size-4 rounded-full bg-white shadow-sm transition peer-checked:translate-x-5" /></span></label>; }
 function Alert({ tone, children }: { tone: "error" | "success"; children: ReactNode }) { return <div role={tone === "error" ? "alert" : "status"} className={`flex items-start gap-2 rounded-xl border px-4 py-3 text-xs font-semibold ${tone === "error" ? "border-red-200 bg-red-50 text-red-700" : "border-green-200 bg-green-50 text-green-700"}`}>{children}</div>; }
+<<<<<<< HEAD
+=======
+
+/** Campo de cor com seletor visual + hex + limpar (vazio = usar a cor do tema). */
+>>>>>>> 0e59a660a5acf0b652a188ddf2e8ccc96de79e4d

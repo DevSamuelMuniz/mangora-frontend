@@ -1,0 +1,241 @@
+import { cache } from "react";
+import { cookies, headers } from "next/headers";
+
+import { getCurrentSession } from "@/lib/auth/server";
+import { createFormatters } from "@/lib/format";
+import { geoFromHeaders } from "@/lib/regional/geo";
+
+import { LOCALE_COOKIE, resolveLocale, type Locale } from "./config";
+import { createTranslator, fallbackChain, mergeMessages, type Messages } from "./runtime";
+
+const NAMESPACES = ["common", "navigation", "validations", "statuses", "paymentMethods", "errors", "settings", "dashboard", "sales", "pdv", "products", "stock", "customers", "suppliers", "finance", "reports", "employees", "units", "bank", "operations", "workspace", "forms", "orders", "billing", "publicUi", "landing", "site", "publicPages", "systemAdmin", "aiManager", "pageMeta", "accountSecurity", "modules", "categories", "services", "purchases", "labels"] as const;
+type Namespace = (typeof NAMESPACES)[number];
+
+const localeLoaders: Record<Locale, Record<Namespace, () => Promise<{ default: Messages }>>> = {
+  "pt-BR": {
+    common: () => import("../messages/pt-BR/common.json") as Promise<{ default: Messages }>,
+    navigation: () => import("../messages/pt-BR/navigation.json") as Promise<{ default: Messages }>,
+    validations: () => import("../messages/pt-BR/validations.json") as Promise<{ default: Messages }>,
+    statuses: () => import("../messages/pt-BR/statuses.json") as Promise<{ default: Messages }>,
+    paymentMethods: () => import("../messages/pt-BR/paymentMethods.json") as Promise<{ default: Messages }>,
+    errors: () => import("../messages/pt-BR/errors.json") as Promise<{ default: Messages }>,
+    settings: () => import("../messages/pt-BR/settings.json") as Promise<{ default: Messages }>,
+    dashboard: () => import("../messages/pt-BR/dashboard.json") as Promise<{ default: Messages }>,
+    sales: () => import("../messages/pt-BR/sales.json") as Promise<{ default: Messages }>,
+    pdv: () => import("../messages/pt-BR/pdv.json") as Promise<{ default: Messages }>,
+    products: () => import("../messages/pt-BR/products.json") as Promise<{ default: Messages }>,
+    stock: () => import("../messages/pt-BR/stock.json") as Promise<{ default: Messages }>,
+    customers: () => import("../messages/pt-BR/customers.json") as Promise<{ default: Messages }>,
+    suppliers: () => import("../messages/pt-BR/suppliers.json") as Promise<{ default: Messages }>,
+    finance: () => import("../messages/pt-BR/finance.json") as Promise<{ default: Messages }>,
+    reports: () => import("../messages/pt-BR/reports.json") as Promise<{ default: Messages }>,
+    employees: () => import("../messages/pt-BR/employees.json") as Promise<{ default: Messages }>,
+    units: () => import("../messages/pt-BR/units.json") as Promise<{ default: Messages }>,
+    bank: () => import("../messages/pt-BR/bank.json") as Promise<{ default: Messages }>,
+    operations: () => import("../messages/pt-BR/operations.json") as Promise<{ default: Messages }>,
+    workspace: () => import("../messages/pt-BR/workspace.json") as Promise<{ default: Messages }>,
+    forms: () => import("../messages/pt-BR/forms.json") as Promise<{ default: Messages }>,
+    orders: () => import("../messages/pt-BR/orders.json") as Promise<{ default: Messages }>,
+    billing: () => import("../messages/pt-BR/billing.json") as Promise<{ default: Messages }>,
+    publicUi: () => import("../messages/pt-BR/public-ui.json") as Promise<{ default: Messages }>,
+    landing: () => import("../messages/pt-BR/landing.json") as Promise<{ default: Messages }>,
+    site: () => import("../messages/pt-BR/site.json") as Promise<{ default: Messages }>,
+    publicPages: () => import("../messages/pt-BR/public-pages.json") as Promise<{ default: Messages }>,
+    systemAdmin: () => import("../messages/pt-BR/system-admin.json") as Promise<{ default: Messages }>,
+    aiManager: () => import("../messages/pt-BR/ai-manager.json") as Promise<{ default: Messages }>,
+    pageMeta: () => import("../messages/pt-BR/page-meta.json") as Promise<{ default: Messages }>,
+    accountSecurity: () => import("../messages/pt-BR/account-security.json") as Promise<{ default: Messages }>,
+    modules: () => import("../messages/pt-BR/modules.json") as Promise<{ default: Messages }>,
+    categories: () => import("../messages/pt-BR/categories.json") as Promise<{ default: Messages }>,
+    services: () => import("../messages/pt-BR/services.json") as Promise<{ default: Messages }>,
+    purchases: () => import("../messages/pt-BR/purchases.json") as Promise<{ default: Messages }>,
+    labels: () => import("../messages/pt-BR/labels.json") as Promise<{ default: Messages }>,
+  },
+  "en-US": {
+    common: () => import("../messages/en-US/common.json") as Promise<{ default: Messages }>,
+    navigation: () => import("../messages/en-US/navigation.json") as Promise<{ default: Messages }>,
+    validations: () => import("../messages/en-US/validations.json") as Promise<{ default: Messages }>,
+    statuses: () => import("../messages/en-US/statuses.json") as Promise<{ default: Messages }>,
+    paymentMethods: () => import("../messages/en-US/paymentMethods.json") as Promise<{ default: Messages }>,
+    errors: () => import("../messages/en-US/errors.json") as Promise<{ default: Messages }>,
+    settings: () => import("../messages/en-US/settings.json") as Promise<{ default: Messages }>,
+    dashboard: () => import("../messages/en-US/dashboard.json") as Promise<{ default: Messages }>,
+    sales: () => import("../messages/en-US/sales.json") as Promise<{ default: Messages }>,
+    pdv: () => import("../messages/en-US/pdv.json") as Promise<{ default: Messages }>,
+    products: () => import("../messages/en-US/products.json") as Promise<{ default: Messages }>,
+    stock: () => import("../messages/en-US/stock.json") as Promise<{ default: Messages }>,
+    customers: () => import("../messages/en-US/customers.json") as Promise<{ default: Messages }>,
+    suppliers: () => import("../messages/en-US/suppliers.json") as Promise<{ default: Messages }>,
+    finance: () => import("../messages/en-US/finance.json") as Promise<{ default: Messages }>,
+    reports: () => import("../messages/en-US/reports.json") as Promise<{ default: Messages }>,
+    employees: () => import("../messages/en-US/employees.json") as Promise<{ default: Messages }>,
+    units: () => import("../messages/en-US/units.json") as Promise<{ default: Messages }>,
+    bank: () => import("../messages/en-US/bank.json") as Promise<{ default: Messages }>,
+    operations: () => import("../messages/en-US/operations.json") as Promise<{ default: Messages }>,
+    workspace: () => import("../messages/en-US/workspace.json") as Promise<{ default: Messages }>,
+    forms: () => import("../messages/en-US/forms.json") as Promise<{ default: Messages }>,
+    orders: () => import("../messages/en-US/orders.json") as Promise<{ default: Messages }>,
+    billing: () => import("../messages/en-US/billing.json") as Promise<{ default: Messages }>,
+    publicUi: () => import("../messages/en-US/public-ui.json") as Promise<{ default: Messages }>,
+    landing: () => import("../messages/en-US/landing.json") as Promise<{ default: Messages }>,
+    site: () => import("../messages/en-US/site.json") as Promise<{ default: Messages }>,
+    publicPages: () => import("../messages/en-US/public-pages.json") as Promise<{ default: Messages }>,
+    systemAdmin: () => import("../messages/en-US/system-admin.json") as Promise<{ default: Messages }>,
+    aiManager: () => import("../messages/en-US/ai-manager.json") as Promise<{ default: Messages }>,
+    pageMeta: () => import("../messages/en-US/page-meta.json") as Promise<{ default: Messages }>,
+    accountSecurity: () => import("../messages/en-US/account-security.json") as Promise<{ default: Messages }>,
+    modules: () => import("../messages/en-US/modules.json") as Promise<{ default: Messages }>,
+    categories: () => import("../messages/en-US/categories.json") as Promise<{ default: Messages }>,
+    services: () => import("../messages/en-US/services.json") as Promise<{ default: Messages }>,
+    purchases: () => import("../messages/en-US/purchases.json") as Promise<{ default: Messages }>,
+    labels: () => import("../messages/en-US/labels.json") as Promise<{ default: Messages }>,
+  },
+  "es-ES": {
+    common: () => import("../messages/es-ES/common.json") as Promise<{ default: Messages }>,
+    navigation: () => import("../messages/es-ES/navigation.json") as Promise<{ default: Messages }>,
+    validations: () => import("../messages/es-ES/validations.json") as Promise<{ default: Messages }>,
+    statuses: () => import("../messages/es-ES/statuses.json") as Promise<{ default: Messages }>,
+    paymentMethods: () => import("../messages/es-ES/paymentMethods.json") as Promise<{ default: Messages }>,
+    errors: () => import("../messages/es-ES/errors.json") as Promise<{ default: Messages }>,
+    settings: () => import("../messages/es-ES/settings.json") as Promise<{ default: Messages }>,
+    dashboard: () => import("../messages/es-ES/dashboard.json") as Promise<{ default: Messages }>,
+    sales: () => import("../messages/es-ES/sales.json") as Promise<{ default: Messages }>,
+    pdv: () => import("../messages/es-ES/pdv.json") as Promise<{ default: Messages }>,
+    products: () => import("../messages/es-ES/products.json") as Promise<{ default: Messages }>,
+    stock: () => import("../messages/es-ES/stock.json") as Promise<{ default: Messages }>,
+    customers: () => import("../messages/es-ES/customers.json") as Promise<{ default: Messages }>,
+    suppliers: () => import("../messages/es-ES/suppliers.json") as Promise<{ default: Messages }>,
+    finance: () => import("../messages/es-ES/finance.json") as Promise<{ default: Messages }>,
+    reports: () => import("../messages/es-ES/reports.json") as Promise<{ default: Messages }>,
+    employees: () => import("../messages/es-ES/employees.json") as Promise<{ default: Messages }>,
+    units: () => import("../messages/es-ES/units.json") as Promise<{ default: Messages }>,
+    bank: () => import("../messages/es-ES/bank.json") as Promise<{ default: Messages }>,
+    operations: () => import("../messages/es-ES/operations.json") as Promise<{ default: Messages }>,
+    workspace: () => import("../messages/es-ES/workspace.json") as Promise<{ default: Messages }>,
+    forms: () => import("../messages/es-ES/forms.json") as Promise<{ default: Messages }>,
+    orders: () => import("../messages/es-ES/orders.json") as Promise<{ default: Messages }>,
+    billing: () => import("../messages/es-ES/billing.json") as Promise<{ default: Messages }>,
+    publicUi: () => import("../messages/es-ES/public-ui.json") as Promise<{ default: Messages }>,
+    landing: () => import("../messages/es-ES/landing.json") as Promise<{ default: Messages }>,
+    site: () => import("../messages/es-ES/site.json") as Promise<{ default: Messages }>,
+    publicPages: () => import("../messages/es-ES/public-pages.json") as Promise<{ default: Messages }>,
+    systemAdmin: () => import("../messages/es-ES/system-admin.json") as Promise<{ default: Messages }>,
+    aiManager: () => import("../messages/es-ES/ai-manager.json") as Promise<{ default: Messages }>,
+    pageMeta: () => import("../messages/es-ES/page-meta.json") as Promise<{ default: Messages }>,
+    accountSecurity: () => import("../messages/es-ES/account-security.json") as Promise<{ default: Messages }>,
+    modules: () => import("../messages/es-ES/modules.json") as Promise<{ default: Messages }>,
+    categories: () => import("../messages/es-ES/categories.json") as Promise<{ default: Messages }>,
+    services: () => import("../messages/es-ES/services.json") as Promise<{ default: Messages }>,
+    purchases: () => import("../messages/es-ES/purchases.json") as Promise<{ default: Messages }>,
+    labels: () => import("../messages/es-ES/labels.json") as Promise<{ default: Messages }>,
+  },
+  "pt-PT": {
+    common: () => import("../messages/pt-PT/common.json") as Promise<{ default: Messages }>,
+    navigation: () => import("../messages/pt-PT/navigation.json") as Promise<{ default: Messages }>,
+    validations: () => import("../messages/pt-PT/validations.json") as Promise<{ default: Messages }>,
+    statuses: () => import("../messages/pt-PT/statuses.json") as Promise<{ default: Messages }>,
+    paymentMethods: () => import("../messages/pt-PT/paymentMethods.json") as Promise<{ default: Messages }>,
+    errors: () => import("../messages/pt-PT/errors.json") as Promise<{ default: Messages }>,
+    settings: () => import("../messages/pt-PT/settings.json") as Promise<{ default: Messages }>,
+    dashboard: () => import("../messages/pt-PT/dashboard.json") as Promise<{ default: Messages }>,
+    sales: () => import("../messages/pt-PT/sales.json") as Promise<{ default: Messages }>,
+    pdv: () => import("../messages/pt-PT/pdv.json") as Promise<{ default: Messages }>,
+    products: () => import("../messages/pt-PT/products.json") as Promise<{ default: Messages }>,
+    stock: () => import("../messages/pt-PT/stock.json") as Promise<{ default: Messages }>,
+    customers: () => import("../messages/pt-PT/customers.json") as Promise<{ default: Messages }>,
+    suppliers: () => import("../messages/pt-PT/suppliers.json") as Promise<{ default: Messages }>,
+    finance: () => import("../messages/pt-PT/finance.json") as Promise<{ default: Messages }>,
+    reports: () => import("../messages/pt-PT/reports.json") as Promise<{ default: Messages }>,
+    employees: () => import("../messages/pt-PT/employees.json") as Promise<{ default: Messages }>,
+    units: () => import("../messages/pt-PT/units.json") as Promise<{ default: Messages }>,
+    bank: () => import("../messages/pt-PT/bank.json") as Promise<{ default: Messages }>,
+    operations: () => import("../messages/pt-PT/operations.json") as Promise<{ default: Messages }>,
+    workspace: () => import("../messages/pt-PT/workspace.json") as Promise<{ default: Messages }>,
+    forms: () => import("../messages/pt-PT/forms.json") as Promise<{ default: Messages }>,
+    orders: () => import("../messages/pt-PT/orders.json") as Promise<{ default: Messages }>,
+    billing: () => import("../messages/pt-PT/billing.json") as Promise<{ default: Messages }>,
+    publicUi: () => import("../messages/pt-PT/public-ui.json") as Promise<{ default: Messages }>,
+    landing: () => import("../messages/pt-PT/landing.json") as Promise<{ default: Messages }>,
+    site: () => import("../messages/pt-PT/site.json") as Promise<{ default: Messages }>,
+    publicPages: () => import("../messages/pt-PT/public-pages.json") as Promise<{ default: Messages }>,
+    systemAdmin: () => import("../messages/pt-PT/system-admin.json") as Promise<{ default: Messages }>,
+    aiManager: () => import("../messages/pt-PT/ai-manager.json") as Promise<{ default: Messages }>,
+    pageMeta: () => import("../messages/pt-PT/page-meta.json") as Promise<{ default: Messages }>,
+    accountSecurity: () => import("../messages/pt-PT/account-security.json") as Promise<{ default: Messages }>,
+    modules: () => import("../messages/pt-PT/modules.json") as Promise<{ default: Messages }>,
+    categories: () => import("../messages/pt-PT/categories.json") as Promise<{ default: Messages }>,
+    services: () => import("../messages/pt-PT/services.json") as Promise<{ default: Messages }>,
+    purchases: () => import("../messages/pt-PT/purchases.json") as Promise<{ default: Messages }>,
+    labels: () => import("../messages/pt-PT/labels.json") as Promise<{ default: Messages }>,
+  },
+};
+
+/** Carrega só os namespaces do locale atual, aplicando o fallback (pt-PT → pt-BR). */
+export async function loadMessages(locale: Locale): Promise<Messages> {
+  const chain = fallbackChain(locale);
+  let messages: Messages = {};
+  for (const item of [...chain].reverse()) {
+    const loaders = localeLoaders[item];
+    const layer: Messages = {};
+    for (const namespace of NAMESPACES) {
+      const loaded = await loaders[namespace]();
+      layer[namespace] = loaded.default;
+    }
+    messages = mergeMessages(messages, layer);
+  }
+  return messages;
+}
+
+/** Sessão em cache por request (compartilhada com layouts) só quando há cookie de sessão. */
+const cachedSession = cache(async () => {
+  try {
+    return await getCurrentSession();
+  } catch {
+    return null;
+  }
+});
+
+/**
+ * Locale do usuário: preferência salva → caminho com prefixo → cookie →
+ * Accept-Language → país detectado por IP → pt-BR.
+ * A preferência do perfil (independente do país/moeda) sempre vence, e o país
+ * detectado é apenas sugestão: nunca sobrepõe escolha explícita do usuário.
+ */
+export async function getLocale(): Promise<Locale> {
+  const [cookieStore, headerStore] = await Promise.all([cookies(), headers()]);
+  const cookieLocale = cookieStore.get(LOCALE_COOKIE)?.value ?? null;
+  const session = await cachedSession();
+  const geo = geoFromHeaders((name) => headerStore.get(name));
+  return resolveLocale({
+    preference: session?.user?.locale ?? session?.company?.locale ?? null,
+    path: headerStore.get("x-mangora-locale"),
+    cookie: cookieLocale,
+    acceptLanguage: headerStore.get("accept-language"),
+    countryLocale: geo.locale,
+  });
+}
+
+/** Sugestão regional detectada por IP (idioma, moeda e fuso) — usada nas preferências. */
+export async function getGeoLocation() {
+  const headerStore = await headers();
+  return geoFromHeaders((name) => headerStore.get(name));
+}
+
+export async function getTranslator() {
+  const locale = await getLocale();
+  const messages = await loadMessages(locale);
+  return { locale, messages, t: createTranslator(messages) };
+}
+
+export async function getRegionalPreferences() {
+  const session = await cachedSession();
+  return {
+    currency: session?.user.preferredCurrency ?? session?.company.preferredCurrency ?? "BRL",
+    timezone: session?.user.timezone ?? session?.company.timezone ?? "America/Sao_Paulo",
+  };
+}
+
+export async function getFormatters() {
+  const [locale, { currency, timezone }] = await Promise.all([getLocale(), getRegionalPreferences()]);
+  return createFormatters(locale, currency, timezone);
+}
