@@ -92,12 +92,16 @@ export default function DashboardHeader({ onOpenSidebar, session, simpleMode, on
   }
 
   return (
-    <header className="mangora-header sticky top-0 z-30 flex h-16 items-center border-b border-slate-200 bg-white/90 px-4 backdrop-blur-xl sm:px-6 lg:px-8">
-      <div className="flex w-full items-center justify-between gap-4">
-        <div className="flex min-w-0 items-center gap-3">
-          <button type="button" onClick={onOpenSidebar} aria-label="Abrir menu" className="flex size-10 shrink-0 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-600 hover:bg-slate-50 lg:hidden">
+    <header className="mangora-header sticky top-0 z-30 flex h-[4.25rem] items-center border-b border-slate-200 bg-white/90 px-3 backdrop-blur-xl sm:h-16 sm:px-6 lg:px-8">
+      <div className="flex w-full items-center justify-between gap-2 sm:gap-4">
+        <div className="flex min-w-0 items-center gap-2.5 sm:gap-3">
+          <button type="button" onClick={onOpenSidebar} aria-label="Abrir menu" className="flex size-11 shrink-0 items-center justify-center rounded-2xl border border-slate-200 bg-white text-slate-600 shadow-sm hover:bg-slate-50 lg:hidden">
             <Menu className="size-4.5" />
           </button>
+          <div className="min-w-0 sm:hidden">
+            <h1 className="truncate text-[15px] font-extrabold leading-tight text-[#173d2b]">Mangora</h1>
+            <p className="mt-0.5 truncate text-[10px] font-medium text-slate-400">Gestão do seu negócio</p>
+          </div>
           <div className="hidden min-w-0 sm:block">
             <h1 className="truncate text-sm font-bold text-slate-950">Painel de controle</h1>
             <p className="mt-0.5 truncate text-[11px] text-slate-400">Acompanhe os resultados da sua empresa</p>
@@ -111,7 +115,7 @@ export default function DashboardHeader({ onOpenSidebar, session, simpleMode, on
           </div>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex shrink-0 items-center gap-1.5 sm:gap-2">
 <<<<<<< HEAD
           <div className="relative">
             <button type="button" onClick={toggleNotifications} aria-label="Notificações" aria-expanded={notificationOpen} className="relative flex size-10 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-500 transition hover:bg-slate-50 hover:text-orange-600">
@@ -160,20 +164,21 @@ export default function DashboardHeader({ onOpenSidebar, session, simpleMode, on
               <div role="menu" aria-label="Menu do perfil" className="absolute right-0 mt-2 w-56 rounded-2xl border border-slate-200 bg-white p-2 shadow-2xl shadow-slate-300/50">
                 <div className="border-b border-slate-100 px-3 py-2"><p className="text-xs font-black text-slate-900">{session.user.name}</p><p className="mt-0.5 truncate text-[10px] text-slate-400">{session.user.email}</p></div>
 <<<<<<< HEAD
-                {(session.membership.role === "OWNER" || session.membership.role === "ADMIN") && <Link href="/configuracoes" role="menuitem" className="mt-1 flex items-center gap-2 rounded-xl px-3 py-2.5 text-xs font-semibold text-slate-600 hover:bg-slate-50 hover:text-orange-700"><UserRound className="size-4" /> Dados da empresa</Link>}
-                {(session.membership.role === "OWNER" || session.membership.role === "ADMIN") && <Link href="/configuracoes" role="menuitem" className="flex items-center gap-2 rounded-xl px-3 py-2.5 text-xs font-semibold text-slate-600 hover:bg-slate-50 hover:text-orange-700"><Settings className="size-4" /> Configurações</Link>}
-                {session.membership.role === "OWNER" && <Link href="/assinatura" role="menuitem" className="flex items-center gap-2 rounded-xl px-3 py-2.5 text-xs font-semibold text-slate-600 hover:bg-slate-50 hover:text-orange-700"><CreditCard className="size-4" /> Assinatura</Link>}
+  { (session.membership.role === "OWNER" || session.membership.role === "ADMIN") && <Link href="/configuracoes" role="menuitem" className="mt-1 flex items-center gap-2 rounded-xl px-3 py-2.5 text-xs font-semibold text-slate-600 hover:bg-slate-50 hover:text-orange-700"><UserRound className="size-4" /> Dados da empresa</Link> }
+  { (session.membership.role === "OWNER" || session.membership.role === "ADMIN") && <Link href="/configuracoes" role="menuitem" className="flex items-center gap-2 rounded-xl px-3 py-2.5 text-xs font-semibold text-slate-600 hover:bg-slate-50 hover:text-orange-700"><Settings className="size-4" /> Configurações</Link> }
+  { session.membership.role === "OWNER" && <Link href="/assinatura" role="menuitem" className="flex items-center gap-2 rounded-xl px-3 py-2.5 text-xs font-semibold text-slate-600 hover:bg-slate-50 hover:text-orange-700"><CreditCard className="size-4" /> Assinatura</Link> }
 =======
                 {can(session.membership.role, "company:configure") && <Link href="/configuracoes?secao=company" role="menuitem" className="mt-1 flex items-center gap-2 rounded-xl px-3 py-2.5 text-xs font-semibold text-slate-600 hover:bg-slate-50 hover:text-orange-700"><UserRound className="size-4" /> Dados da empresa</Link>}
                 {can(session.membership.role, "company:configure") && <Link href="/configuracoes?secao=preferences" role="menuitem" className="flex items-center gap-2 rounded-xl px-3 py-2.5 text-xs font-semibold text-slate-600 hover:bg-slate-50 hover:text-orange-700"><Settings className="size-4" /> {t("settings.panel.tabs.preferences")}</Link>}
                 {can(session.membership.role, "subscription:manage") && <Link href="/assinatura" role="menuitem" className="flex items-center gap-2 rounded-xl px-3 py-2.5 text-xs font-semibold text-slate-600 hover:bg-slate-50 hover:text-orange-700"><CreditCard className="size-4" /> Assinatura</Link>}
 >>>>>>> 0e59a660a5acf0b652a188ddf2e8ccc96de79e4d
-                <button type="button" role="menuitem" disabled={logoutLoading} onClick={() => void handleLogout()} className="mt-1 flex w-full items-center gap-2 border-t border-slate-100 px-3 py-2.5 text-xs font-semibold text-red-600 hover:bg-red-50 disabled:cursor-wait disabled:opacity-60"><LogOut className="size-4" /> {logoutLoading ? "Saindo..." : "Sair"}</button>
-              </div>
-            )}
-          </div>
-        </div>
-      </div>
-    </header>
+  <button type="button" role="menuitem" disabled={logoutLoading} onClick={() => void handleLogout()} className="mt-1 flex w-full items-center gap-2 border-t border-slate-100 px-3 py-2.5 text-xs font-semibold text-red-600 hover:bg-red-50 disabled:cursor-wait disabled:opacity-60"><LogOut className="size-4" /> {logoutLoading ? "Saindo..." : "Sair"}</button>
+              </div >
+            )
+}
+          </div >
+        </div >
+      </div >
+    </header >
   );
 }

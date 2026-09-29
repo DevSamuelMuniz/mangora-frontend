@@ -30,6 +30,8 @@ export default function BatchesWorkspace() {
 
   const costMethod = (form?.product as unknown as { costMethod?: "AVERAGE" | "FIFO" } | undefined)?.costMethod ?? "AVERAGE";
   const product = products.find((item) => item.id === productId);
+  const batchQuantity = batches.reduce((total, batch) => total + batch.quantity, 0);
+  const batchCostValue = batches.reduce((total, batch) => total + batch.quantity * batch.unitCost, 0);
 
   async function switchToFifo() {
     if (!productId) return;
@@ -99,6 +101,11 @@ export default function BatchesWorkspace() {
               {costMethod === "FIFO" && <button type="button" onClick={() => setShowForm((value) => !value)} className="inline-flex h-9 items-center gap-2 rounded-lg bg-orange-600 px-3 text-[11px] font-bold text-white hover:bg-orange-700"><Plus className="size-3.5" />{t("stock.batches.receive")}</button>}
             </div>
 
+            <div className="mt-3 grid grid-cols-2 gap-2 sm:gap-3">
+              <div className="rounded-xl border border-slate-100 bg-slate-50 p-3"><p className="text-[10px] font-semibold text-slate-500">{t("stock.batches.summaryQuantity")}</p><p className="mt-1 text-lg font-black tabular-nums text-slate-900">{batchQuantity}</p></div>
+              <div className="rounded-xl border border-slate-100 bg-slate-50 p-3"><p className="text-[10px] font-semibold text-slate-500">{t("stock.batches.summaryCost")}</p><p className="mt-1 truncate text-lg font-black tabular-nums text-slate-900">{formatCurrency(batchCostValue, locale)}</p></div>
+            </div>
+
             {nearExpiry.length > 0 && <p className="mt-2 rounded-xl bg-red-50 p-3 text-[11px] text-red-700"><strong>{t("stock.batches.nearExpiry")}</strong> {nearExpiry.map((batch) => `${batch.code} (${formatDate(batch.expiresAt!)})`).join(", ")}.</p>}
 
             {showForm && costMethod === "FIFO" && (
@@ -114,7 +121,13 @@ export default function BatchesWorkspace() {
             )}
 
             {batchesLoading ? <div className="mt-3 flex items-center justify-center py-8 text-xs text-slate-400"><LoaderCircle className="mr-2 size-4 animate-spin text-orange-600" />{t("stock.batches.loading")}</div> : !batches.length ? <p className="mt-3 rounded-xl bg-slate-50 p-4 text-center text-xs text-slate-400">{costMethod === "FIFO" ? t("stock.batches.empty") : t("stock.batches.emptyAverage")}</p> : (
-              <div className="mt-3 overflow-hidden rounded-xl border border-slate-200">
+              <div className="mt-3 space-y-2 sm:hidden">
+                {batches.map((batch) => <article key={batch.id} className="rounded-xl border border-slate-200 bg-white p-3">
+                  <div className="flex items-start justify-between gap-3"><div className="min-w-0"><p className="truncate text-sm font-black text-slate-900">{batch.code}</p><p className="mt-0.5 text-[10px] text-slate-500">{batch.quantity} un. · {batch.receivedByName}</p></div><span className="shrink-0 rounded-lg bg-green-50 px-2 py-1 text-[10px] font-bold text-green-700">{formatCurrency(batch.unitCost, locale)} / un.</span></div>
+                  <div className="mt-3 flex items-center justify-between border-t border-slate-100 pt-2 text-[10px]"><span className="font-semibold text-slate-500">{t("stock.batches.fields.validity")}</span>{batch.expiresAt ? <time className={new Date(batch.expiresAt).getTime() - now < 90 * 86_400_000 ? "font-bold text-red-600" : "text-slate-700"}>{formatDate(batch.expiresAt)}</time> : <span className="text-slate-400">{t("stock.batches.fields.noExpiry")}</span>}</div>
+                </article>)}
+              </div>
+              <div className="mt-3 hidden overflow-x-auto rounded-xl border border-slate-200 sm:block">
                 <table className="w-full text-left"><thead className="bg-slate-50 text-[10px] uppercase tracking-wide text-slate-400"><tr><th className="px-4 py-2.5">{t("stock.batches.fields.batch")}</th><th className="px-4 py-2.5">{t("stock.batches.fields.quantity")}</th><th className="px-4 py-2.5">{t("stock.batches.fields.costShort")}</th><th className="px-4 py-2.5">{t("stock.batches.fields.validity")}</th><th className="px-4 py-2.5">{t("stock.batches.fields.receivedBy")}</th></tr></thead><tbody className="divide-y divide-slate-100">{batches.map((batch) => <tr key={batch.id} className="text-xs"><td className="px-4 py-3 font-black text-slate-800">{batch.code}</td><td className="px-4 py-3 tabular-nums">{batch.quantity} un.</td><td className="px-4 py-3 tabular-nums text-slate-700">{formatCurrency(batch.unitCost, locale)}</td><td className="px-4 py-3">{batch.expiresAt ? <span className={new Date(batch.expiresAt).getTime() - now < 90 * 86_400_000 ? "font-bold text-red-600" : ""}>{formatDate(batch.expiresAt)}</span> : <span className="text-slate-400">{t("stock.batches.fields.noExpiry")}</span>}</td><td className="px-4 py-3 text-slate-500">{batch.receivedByName}</td></tr>)}</tbody></table>
               </div>
             )}

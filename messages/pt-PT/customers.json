@@ -52,13 +52,16 @@
   "loading": "Cargando clientes...",
   "loadFailed": "No se pudieron cargar los clientes",
   "details": {
-    "title": "Detalles del cliente",
+    "title": "Detalhes do cliente",
+    "open": "Ver detalhes",
+    "close": "Fechar detalhes do cliente",
     "notFound": "Cliente no encontrado.",
     "notInformed": "No informado",
     "never": "Nunca",
     "relationship": "Relación",
     "notes": "Observaciones",
-    "totalSpent": "Total comprado"
+    "totalSpent": "Total comprado",
+    "fields": { "document": "Documento", "type": "Tipo de cliente", "email": "E-mail", "phone": "Telefone", "address": "Morada", "postalCode": "Código postal", "lastPurchase": "Última compra" }
   },
   "deleteDialog": {
     "title": "¿Eliminar cliente?",

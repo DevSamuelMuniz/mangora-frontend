@@ -27,6 +27,13 @@
     "units": "Unidades em inventário",
     "value": "Valor estimado"
   },
+  "shortcuts": {
+    "inventory": "Inventário físico",
+    "inventoryHint": "Confira as prateleiras e registe diferenças com histórico de ajuste.",
+    "batches": "Lotes e custo",
+    "batchesHint": "Acompanhe o custo de aquisição, a validade e o saldo por lote.",
+    "open": "Abrir"
+  },
   "table": {
     "product": "Produto",
     "category": "Categoria",
@@ -195,6 +202,9 @@
     "searchPlaceholder": "Pesquisar produto para contar...",
     "searchLabel": "Pesquisar produto",
     "counted": "Contado",
+    "countedSummary": "{count} produto(s) contado(s); a pesquisa não remove os valores já introduzidos.",
+    "noDifference": "Sem diferenças",
+    "difference": "Diferença: {count} un.",
     "system": "sistema",
     "countedDiff": "contado",
     "complete": "Concluir contagem ({count})",
@@ -225,7 +235,11 @@
       "cancel": "Cancelar",
       "create": "Criar contagem"
     },
-    "countFallback": "Contagem INV-{code}"
+    "countFallback": "Contagem INV-{code}",
+    "draftsCount": "Contagens em curso",
+    "draftHint": "Contagens que ainda podem ser abertas e finalizadas.",
+    "completedCount": "Contagens concluídas",
+    "completedHint": "Consulte as diferenças e os ajustes registados."
   },
   "batches": {
     "eyebrow": "Inventário · Custo e validade",
@@ -239,6 +253,8 @@
     "averageHint": "Ative o FIFO para controlar validade e custo por lote nas vendas.",
     "activateFifo": "Ativar custo FIFO",
     "batchesOf": "Lotes de {name}",
+    "summaryQuantity": "Unidades nos lotes",
+    "summaryCost": "Custo total dos lotes",
     "receive": "Receber lote",
     "nearExpiry": "Validade próxima:",
     "loading": "A carregar lotes...",

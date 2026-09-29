@@ -53,12 +53,15 @@
   "loadFailed": "Não foi possível carregar os clientes",
   "details": {
     "title": "Detalhes do cliente",
+    "open": "Ver detalhes",
+    "close": "Fechar detalhes do cliente",
     "notFound": "Cliente não encontrado.",
     "notInformed": "Não informado",
     "never": "Nunca",
     "relationship": "Relacionamento",
     "notes": "Observações",
-    "totalSpent": "Total comprado"
+    "totalSpent": "Total comprado",
+    "fields": { "document": "Documento", "type": "Tipo de cliente", "email": "E-mail", "phone": "Telefone", "address": "Endereço", "postalCode": "CEP", "lastPurchase": "Última compra" }
   },
   "deleteDialog": {
     "title": "Excluir cliente?",

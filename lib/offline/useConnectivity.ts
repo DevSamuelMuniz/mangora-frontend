@@ -8,12 +8,16 @@ import { flushPending } from "@/lib/offline/sync";
 
 /** Estado de conectividade + quantidade de alterações aguardando sync. */
 export function useConnectivity() {
-  const [online, setOnline] = useState(() => (typeof navigator === "undefined" ? true : navigator.onLine));
+  // Keep the server render and the first client render identical. Reading
+  // navigator.onLine in the state initializer can make the offline banner
+  // appear only on the client and trigger a hydration mismatch.
+  const [online, setOnline] = useState(true);
   const [pending, setPending] = useState(0);
   const [syncing, setSyncing] = useState(false);
 
   useEffect(() => {
     let alive = true;
+    setOnline(navigator.onLine);
     const refresh = () => {
       void queuePendingCount().then((count) => { if (alive) setPending(count); });
     };

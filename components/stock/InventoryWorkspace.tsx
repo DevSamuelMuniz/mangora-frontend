@@ -25,6 +25,8 @@ export default function InventoryWorkspace() {
   const [actionError, setActionError] = useState("");
   const [showNew, setShowNew] = useState(false);
   const [editing, setEditing] = useState<StockCount | null>(null);
+  const draftCount = counts.filter((count) => count.status === "DRAFT").length;
+  const completedCount = counts.filter((count) => count.status === "COMPLETED").length;
 
   return (
     <section className="mx-auto max-w-5xl">
@@ -39,6 +41,11 @@ export default function InventoryWorkspace() {
 
       {notice && <div role="status" className="mt-4 flex items-center justify-between rounded-xl border border-green-200 bg-green-50 px-4 py-3 text-xs font-semibold text-green-700"><span>{notice}</span><button type="button" onClick={() => setNotice("")} className="font-bold underline">{t("stock.inventory.close")}</button></div>}
       {actionError && <div role="alert" className="mt-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-xs font-semibold text-red-700">{actionError}</div>}
+
+      <div className="mt-5 grid gap-3 sm:grid-cols-2">
+        <article className="flex items-center justify-between rounded-2xl border border-amber-200 bg-amber-50/70 px-4 py-3.5"><div><p className="text-[11px] font-bold text-amber-800">{t("stock.inventory.draftsCount")}</p><p className="mt-1 text-[10px] text-amber-700/80">{t("stock.inventory.draftHint")}</p></div><span className="text-2xl font-black tabular-nums text-amber-800">{isLoading ? "—" : draftCount}</span></article>
+        <article className="flex items-center justify-between rounded-2xl border border-green-200 bg-green-50/70 px-4 py-3.5"><div><p className="text-[11px] font-bold text-green-800">{t("stock.inventory.completedCount")}</p><p className="mt-1 text-[10px] text-green-700/80">{t("stock.inventory.completedHint")}</p></div><span className="text-2xl font-black tabular-nums text-green-800">{isLoading ? "—" : completedCount}</span></article>
+      </div>
 
       {isLoading ? <div className="mt-5 flex min-h-40 items-center justify-center text-xs font-semibold text-slate-500"><LoaderCircle className="mr-2 size-5 animate-spin text-orange-600" />{t("stock.inventory.loading")}</div> : error ? <div className="mt-5 rounded-2xl border border-red-200 bg-red-50 p-6 text-center text-xs text-red-700">{error instanceof Error ? error.message : t("stock.inventory.loadFailed")}<button type="button" onClick={() => void refetch()} className="ml-2 font-bold underline">{t("stock.inventory.retry")}</button></div> : !counts.length ? <Empty /> : (
         <div className="mt-5 space-y-3">
@@ -75,7 +82,10 @@ function CountEditor({ count, onDone, onError }: { count: StockCount; onDone: (m
     const q = search.trim().toLocaleLowerCase("pt-BR");
     return q ? trackStock.filter((product) => product.name.toLocaleLowerCase("pt-BR").includes(q)) : trackStock;
   }, [trackStock, search]);
-  const counted = visible.filter((product) => quantities[product.id] !== undefined && quantities[product.id] !== "");
+  const counted = trackStock.filter((product) => {
+    const value = quantities[product.id];
+    return value !== undefined && value !== "" && Number.isFinite(Number(value)) && Number(value) >= 0;
+  });
 
   async function saveAndComplete() {
     const items = counted.map((product) => ({ productId: product.id, countedStock: Math.max(0, Math.trunc(Number(quantities[product.id]))) }));
@@ -93,13 +103,21 @@ function CountEditor({ count, onDone, onError }: { count: StockCount; onDone: (m
     <div>
       <p className="text-xs font-bold text-slate-700">{t("stock.inventory.editorHint")}</p>
       <label className="relative mt-3 block"><span className="sr-only">{t("stock.inventory.searchLabel")}</span><Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-slate-400" /><input type="search" value={search} onChange={(event) => setSearch(event.target.value)} placeholder={t("stock.inventory.searchPlaceholder")} className="h-10 w-full rounded-xl border border-slate-200 bg-slate-50 pl-10 pr-4 text-sm outline-none focus:border-orange-300 focus:bg-white" /></label>
-      <div className="mt-3 max-h-80 divide-y divide-slate-100 overflow-y-auto rounded-xl border border-slate-200">
-        {visible.map((product) => <div key={product.id} className="flex items-center gap-3 p-3"><div className="min-w-0 flex-1"><p className="truncate text-xs font-bold text-slate-800">{product.name}</p><p className="mt-0.5 text-[10px] text-slate-400">SKU {product.sku} · sistema: {product.stock} un.</p></div><label className="flex items-center gap-2 text-[11px] font-bold text-slate-700">{t("stock.inventory.counted")}<input type="number" min={0} value={quantities[product.id] ?? ""} onChange={(event) => setQuantities((current) => ({ ...current, [product.id]: event.target.value }))} className="h-9 w-20 rounded-lg border border-slate-200 px-2 text-xs" /></label></div>)}
+      <div className="mt-3 max-h-[min(60vh,32rem)] divide-y divide-slate-100 overflow-y-auto rounded-xl border border-slate-200">
+        {visible.map((product) => {
+          const value = quantities[product.id];
+          const numericValue = value === undefined || value === "" ? null : Number(value);
+          const difference = numericValue === null || !Number.isFinite(numericValue) ? null : Math.trunc(numericValue) - product.stock;
+          return <div key={product.id} className="flex items-center gap-3 p-3 sm:p-3.5"><div className="min-w-0 flex-1"><p className="truncate text-xs font-bold text-slate-800">{product.name}</p><p className="mt-1 text-[10px] text-slate-500">SKU {product.sku} · <span className="font-semibold">{t("stock.inventory.system")}: {product.stock} un.</span></p>{difference !== null && <p className={`mt-1 text-[10px] font-bold ${difference === 0 ? "text-green-700" : "text-amber-700"}`}>{difference === 0 ? t("stock.inventory.noDifference") : t("stock.inventory.difference", { count: `${difference > 0 ? "+" : ""}${difference}` })}</p>}</div><label className="flex shrink-0 flex-col items-start gap-1 text-[10px] font-bold text-slate-600">{t("stock.inventory.counted")}<input type="number" inputMode="numeric" min={0} value={value ?? ""} onChange={(event) => setQuantities((current) => ({ ...current, [product.id]: event.target.value }))} className="h-11 w-24 rounded-xl border border-slate-200 bg-white px-3 text-base font-bold tabular-nums text-slate-900 focus:border-orange-400 focus:outline-none focus:ring-4 focus:ring-orange-100" /></label></div>;
+        })}
         {!visible.length && <p className="p-4 text-center text-xs text-slate-400">{trackStock.length ? "Nenhum produto encontrado." : "Nenhum produto com controle de estoque."}</p>}
       </div>
-      <div className="mt-4 flex flex-wrap justify-end gap-2">
+      <div className="mt-4 flex flex-col-reverse justify-between gap-3 sm:flex-row sm:items-center">
+        <p className="text-[10px] font-semibold text-slate-500">{t("stock.inventory.countedSummary", { count: counted.length })}</p>
+        <div className="flex flex-wrap justify-end gap-2">
         {count.items.length === 0 && <button type="button" onClick={() => void cancel.mutateAsync(count.id).then(() => onDone(t("stock.inventory.cancelled"))).catch((requestError: unknown) => onError(requestError instanceof Error ? requestError.message : t("stock.inventory.errors.generic")))} className="h-10 rounded-xl border border-red-200 px-4 text-xs font-bold text-red-600 hover:bg-red-50">{t("stock.inventory.cancelCount")}</button>}
         <button type="button" disabled={addItems.isPending || complete.isPending || !counted.length} onClick={() => void saveAndComplete()} className="inline-flex h-10 items-center gap-2 rounded-xl bg-green-600 px-4 text-xs font-bold text-white hover:bg-green-700 disabled:opacity-50">{(addItems.isPending || complete.isPending) && <LoaderCircle className="size-3.5 animate-spin" />}<CheckCircle2 className="size-3.5" />{t("stock.inventory.complete", { count: counted.length })}</button>
+        </div>
       </div>
     </div>
   );

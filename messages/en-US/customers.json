@@ -53,12 +53,15 @@
   "loadFailed": "Could not load customers",
   "details": {
     "title": "Customer details",
+    "open": "View details",
+    "close": "Close customer details",
     "notFound": "Customer not found.",
     "notInformed": "Not provided",
     "never": "Never",
     "relationship": "Relationship",
     "notes": "Notes",
-    "totalSpent": "Total spent"
+    "totalSpent": "Total spent",
+    "fields": { "document": "Document", "type": "Customer type", "email": "Email", "phone": "Phone", "address": "Address", "postalCode": "ZIP code", "lastPurchase": "Last purchase" }
   },
   "deleteDialog": {
     "title": "Delete customer?",

@@ -27,6 +27,13 @@
     "units": "Units in stock",
     "value": "Estimated value"
   },
+  "shortcuts": {
+    "inventory": "Physical inventory",
+    "inventoryHint": "Count shelf quantities and record discrepancies with an adjustment history.",
+    "batches": "Batches and cost",
+    "batchesHint": "Track purchase cost, expiry dates, and quantity by batch.",
+    "open": "Open"
+  },
   "table": {
     "product": "Product",
     "category": "Category",
@@ -195,6 +202,9 @@
     "searchPlaceholder": "Search product to count...",
     "searchLabel": "Search product",
     "counted": "Counted",
+    "countedSummary": "{count} product(s) counted; searching keeps values already entered.",
+    "noDifference": "No difference",
+    "difference": "Difference: {count} units.",
     "system": "system",
     "countedDiff": "counted",
     "complete": "Complete count ({count})",
@@ -225,7 +235,11 @@
       "cancel": "Cancel",
       "create": "Create count"
     },
-    "countFallback": "Count INV-{code}"
+    "countFallback": "Count INV-{code}",
+    "draftsCount": "Counts in progress",
+    "draftHint": "Counts that can still be opened and completed.",
+    "completedCount": "Completed counts",
+    "completedHint": "Review recorded differences and adjustments."
   },
   "batches": {
     "eyebrow": "Inventory · Cost & expiry",
@@ -239,6 +253,8 @@
     "averageHint": "Enable FIFO to track expiry and cost per batch on sales.",
     "activateFifo": "Enable FIFO cost",
     "batchesOf": "Batches of {name}",
+    "summaryQuantity": "Units in batches",
+    "summaryCost": "Total batch cost",
     "receive": "Receive batch",
     "nearExpiry": "Expiring soon:",
     "loading": "Loading batches...",
