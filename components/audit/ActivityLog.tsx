@@ -51,10 +51,12 @@ export default function ActivityLog() {
     <div className="mt-4 overflow-hidden rounded-2xl border bg-white shadow-sm">
       {isLoading ? <Empty icon={<LoaderCircle className="size-5 animate-spin text-orange-600" />} text={t("operations.audit.loading")} /> : error ? <Empty icon={<AlertTriangle className="size-6 text-red-500" />} text={t("operations.audit.loadFailed")} /> : visible.length ? <div className="divide-y">{visible.map((entry) => {
         const details = detailItems(entry, t, formatCurrency, locale);
+        const area = getArea(entry, t);
+        const genericSummary = entry.action === "DATA_CHANGED" ? summary(entry, t, formatCurrency, locale) : null;
         return <article key={entry.id} className="grid gap-3 px-4 py-4 transition hover:bg-orange-50/40 sm:grid-cols-[40px_1fr_auto]">
           <span className={`flex size-9 items-center justify-center rounded-xl ${tone(entry.action)}`}>{entry.action.includes("LOGIN") || entry.action.includes("PASSWORD") ? <ShieldCheck className="size-4" /> : <Activity className="size-4" />}</span>
-          <div className="min-w-0"><div className="flex flex-wrap items-center gap-2"><h2 className="text-sm font-bold text-slate-900">{translateLabel(entry.action, t)}</h2>{entry.action === "DATA_CHANGED" && <span className="rounded-full bg-blue-50 px-2 py-1 text-[9px] font-bold text-blue-700">{entityLabel(entry, t)}</span>}</div>
-            <p className="mt-1 text-xs leading-5 text-slate-600">{summary(entry, t, formatCurrency, locale)}</p>
+          <div className="min-w-0"><div className="flex flex-wrap items-center gap-2"><h2 className="text-sm font-bold text-slate-900">{genericSummary ?? translateLabel(entry.action, t)}</h2>{entry.action === "DATA_CHANGED" && <span className="rounded-full bg-blue-50 px-2 py-1 text-[9px] font-bold text-blue-700">{area.label}</span>}</div>
+            {entry.action !== "DATA_CHANGED" && <p className="mt-1 text-xs leading-5 text-slate-600">{summary(entry, t, formatCurrency, locale)}</p>}
             <p className="mt-2 text-[10px] text-slate-400">{t("operations.audit.byUser", { name: entry.userName })}</p>
             {details.length > 0 && <details className="mt-2"><summary className="w-fit cursor-pointer text-[10px] font-bold text-orange-700">{t("operations.audit.viewDetails")}</summary><dl className="mt-2 grid gap-x-5 gap-y-1 rounded-xl bg-slate-50 p-3 text-[11px] sm:grid-cols-2">{details.map(([label, value]) => <div key={label} className="flex min-w-0 gap-2"><dt className="shrink-0 text-slate-500">{label}:</dt><dd className="break-words font-semibold text-slate-700">{value}</dd></div>)}</dl></details>}
           </div><time className="text-[10px] font-semibold text-slate-500 sm:text-right">{formatDateTime(entry.createdAt, locale)}</time>
@@ -64,19 +66,25 @@ export default function ActivityLog() {
   </section>;
 }
 
-function entityLabel(entry: LogEntry, t: (key: string) => string) {
+function getArea(entry: LogEntry, t: (key: string) => string) {
   const path = typeof entry.metadata?.path === "string" ? entry.metadata.path : "";
-  const area = path.split("/").filter(Boolean)[0]?.toLowerCase() ?? entry.entityType.toLowerCase();
-  const known: Record<string, string> = { products: "products", sales: "sales", stock: "stock", employees: "employees", suppliers: "suppliers", purchases: "purchases", categories: "categories", services: "services", financial: "finance", companies: "company", "cash-registers": "cash", "cash-movements": "cash" };
-  const key = known[area];
-  return key ? t(`operations.audit.areas.${key}`) : area.replaceAll("_", " ");
+  const segments = path.split("?")[0].split("/").filter(Boolean).map((part) => part.toLowerCase());
+  const resourceIndex = segments.findIndex((part) => !["api", "v1", "v2"].includes(part) && !/^v\d+$/.test(part) && !/^\d+$/.test(part) && !/^[0-9a-f]{8}-[0-9a-f-]{27,}$/i.test(part));
+  const resource = segments[resourceIndex] ?? entry.entityType.toLowerCase();
+  const compound = resource === "stock" && segments[resourceIndex + 1] === "movements" ? "stockMovements" : resource;
+  const known: Record<string, string> = { products: "products", sales: "sales", stock: "stock", stockMovements: "stockMovements", employees: "employees", suppliers: "suppliers", purchases: "purchases", categories: "categories", services: "services", financial: "finance", companies: "company", company: "company", "cash-registers": "cash", "cash-movements": "cashMovements", orders: "orders", customers: "customers", units: "units", invoices: "fiscalDocuments" };
+  const key = known[compound];
+  if (key) return { label: t(`operations.audit.areas.${key}`), noun: t(`operations.audit.objects.${key}`) };
+  if (["api", "auth", "system"].includes(resource)) return { label: t("operations.audit.areas.system"), noun: t("operations.audit.objects.system") };
+  const label = resource.replaceAll("_", " ");
+  return { label, noun: label };
 }
 
 function summary(entry: LogEntry, t: (key: string, params?: Record<string, string | number>) => string, formatCurrency: (value: number, locale?: Locale) => string, locale: Locale) {
   if (entry.action === "DATA_CHANGED") {
     const method = String(entry.metadata?.method ?? "PATCH").toUpperCase();
     const verb = method === "POST" ? t("operations.audit.verbs.created") : method === "DELETE" ? t("operations.audit.verbs.deleted") : t("operations.audit.verbs.updated");
-    return t("operations.audit.changedSummary", { verb, area: entityLabel(entry, t) });
+    return t("operations.audit.changedSummary", { verb, area: getArea(entry, t).noun });
   }
   const items = detailItems(entry, t, formatCurrency, locale);
   return items.length ? items.map(([label, value]) => `${label}: ${value}`).join(" · ") : t("operations.audit.recordedSummary");
@@ -85,7 +93,7 @@ function summary(entry: LogEntry, t: (key: string, params?: Record<string, strin
 function detailItems(entry: LogEntry, t: (key: string, params?: Record<string, string | number>) => string, formatCurrency: (value: number, locale?: Locale) => string, locale: Locale): [string, string][] {
   const metadata = entry.metadata ?? {};
   const changes = metadata.changes && typeof metadata.changes === "object" && !Array.isArray(metadata.changes) ? metadata.changes as Record<string, unknown> : null;
-  if (entry.action === "DATA_CHANGED" && changes) return Object.entries(changes).slice(0, 8).map(([key, value]) => [fieldLabel(key, t), readableValue(value, key, t, formatCurrency, locale)]);
+  if (entry.action === "DATA_CHANGED" && changes) return Object.entries(changes).filter(([key, value]) => !/id$/i.test(key) && value !== null && value !== undefined && value !== "").slice(0, 8).map(([key, value]) => [fieldLabel(key, t), readableValue(value, key, t, formatCurrency, locale)]);
 
   const selected: Record<string, string[]> = {
     EMPLOYEE_CREATED: ["email", "role"], EMPLOYEE_ROLE_CHANGED: ["from", "to"], EMPLOYEE_STATUS_CHANGED: ["active"],
@@ -103,7 +111,7 @@ function detailItems(entry: LogEntry, t: (key: string, params?: Record<string, s
 }
 
 function fieldLabel(key: string, t: (key: string) => string) {
-  const labels: Record<string, string> = { name: "name", email: "email", role: "role", from: "from", to: "to", active: "active", fields: "fields", number: "number", total: "total", reason: "reason", openingAmount: "openingAmount", expectedAmount: "expectedAmount", actualAmount: "actualAmount", difference: "difference", discrepancy: "difference", type: "type", amount: "amount", quantity: "quantity", paymentMethod: "paymentMethod", itemType: "itemType", code: "code", tradeName: "tradeName", unitCode: "unitCode", targetPlan: "targetPlan", currency: "currency", effectiveAt: "effectiveAt", eventType: "eventType", status: "status", documentType: "documentType", provider: "provider", price: "price", sku: "sku", barcode: "barcode", category: "category", description: "description", trackStock: "trackStock", minimumStock: "minimumStock" };
+  const labels: Record<string, string> = { name: "name", email: "email", role: "role", from: "from", to: "to", active: "active", fields: "fields", number: "number", total: "total", reason: "reason", openingAmount: "openingAmount", expectedAmount: "expectedAmount", actualAmount: "actualAmount", difference: "difference", discrepancy: "difference", type: "type", amount: "amount", quantity: "quantity", paymentMethod: "paymentMethod", itemType: "itemType", code: "code", tradeName: "tradeName", unitCode: "unitCode", targetPlan: "targetPlan", currency: "currency", effectiveAt: "effectiveAt", eventType: "eventType", status: "status", documentType: "documentType", provider: "provider", price: "price", sku: "sku", barcode: "barcode", category: "category", description: "description", trackStock: "trackStock", minimumStock: "minimumStock", items: "items", payments: "payments", issueDate: "issueDate", dueDate: "dueDate", notes: "notes" };
   const translation = labels[key] ? t(`operations.audit.fields.${labels[key]}`) : "";
   return translation || key.replace(/([a-z])([A-Z])/g, "$1 $2").replaceAll("_", " ");
 }
@@ -112,12 +120,16 @@ function readableValue(value: unknown, key: string, t: (key: string, params?: Re
   if (typeof value === "boolean") return t(value ? "operations.audit.values.yes" : "operations.audit.values.no");
   if (typeof value === "number") return /amount|total|difference|discrepancy/i.test(key) ? formatCurrency(value, locale) : String(value);
   if (typeof value === "string") {
+    if (/date$/i.test(key) && !Number.isNaN(Date.parse(value))) return new Intl.DateTimeFormat(locale, { dateStyle: "medium", timeZone: "UTC" }).format(new Date(value));
     if (/amount|total|difference|discrepancy/i.test(key) && /^-?\d+(\.\d+)?$/.test(value)) return formatCurrency(Number(value), locale);
     const enumValues: Record<string, string> = { OWNER: "owner", ADMIN: "admin", MANAGER: "manager", SELLER: "seller", CASHIER: "cashier", IN: "in", OUT: "out", PIX: "pix", CASH: "cash", CARD: "card", CREDIT_CARD: "creditCard", DEBIT_CARD: "debitCard", BANK_TRANSFER: "bankTransfer" };
     const enumKey = enumValues[value.toUpperCase()];
     return enumKey ? t(`operations.audit.values.${enumKey}`) : value.replaceAll("_", " ");
   }
-  if (Array.isArray(value)) return value.map((item) => typeof item === "string" ? (key === "fields" ? fieldLabel(item, t) : readableValue(item, key, t, formatCurrency, locale)) : "").filter(Boolean).join(", ");
+  if (Array.isArray(value)) {
+    if (key === "items" || key === "payments") return t(`operations.audit.values.${key === "items" ? "itemCount" : "paymentCount"}`, { count: value.length });
+    return value.map((item) => typeof item === "string" ? (key === "fields" ? fieldLabel(item, t) : readableValue(item, key, t, formatCurrency, locale)) : "").filter(Boolean).join(", ");
+  }
   if (value && typeof value === "object") return t("operations.audit.values.updatedFields", { count: Object.keys(value).length });
   return String(value ?? "—");
 }
