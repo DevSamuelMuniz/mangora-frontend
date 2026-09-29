@@ -1,5 +1,4 @@
 {
-  "aiManager": {
     "eyebrow": "Gerente de IA",
     "title": "Tu especialista en finanzas y marketing",
     "subtitle": "Conoce toda tu tienda: ventas, productos, inventario, finanzas y pedidos. Pregunta lo que quieras.",
@@ -14,5 +13,4 @@
       "¿Cómo están las finanzas?",
       "¿Cómo aumentar las ventas?"
     ]
-  }
 }

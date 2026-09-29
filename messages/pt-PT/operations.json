@@ -38,8 +38,15 @@
   },
   "audit": {
     "title": "Auditoria",
+    "pageTitle": "Registo de atividades",
+    "pageDescription": "Veja quem realizou cada ação e que informações foram alteradas.",
     "subtitle": "Exclusivo do proprietário",
     "autoRefresh": "Atualização automática",
+    "refresh": "Atualizar registo",
+    "byUser": "Por {name}",
+    "viewDetails": "Ver campos e valores",
+    "changedSummary": "{verb} em {area}.",
+    "recordedSummary": "Ação registada no sistema.",
     "loading": "A carregar registo...",
     "loadFailed": "Não foi possível carregar o registo.",
     "empty": "Nenhum evento encontrado.",
@@ -48,8 +55,14 @@
       "all": "Todos"
     },
     "metrics": {
-      "visible": "Eventos apresentados"
+      "visible": "Eventos apresentados",
+      "people": "Pessoas no histórico",
+      "events": "Eventos carregados"
     },
+    "verbs": { "created": "Criou um registo", "updated": "Atualizou dados", "deleted": "Removeu um registo" },
+    "areas": { "products": "produtos", "sales": "vendas", "stock": "inventário", "employees": "funcionários", "suppliers": "fornecedores", "purchases": "compras", "categories": "categorias", "services": "serviços", "finance": "finanças", "company": "empresa", "cash": "caixa" },
+    "fields": { "generic": "Campo", "name": "Nome", "email": "E-mail", "role": "Função", "from": "Função anterior", "to": "Nova função", "active": "Acesso ativo", "fields": "Campos alterados", "number": "Número", "total": "Total", "reason": "Motivo", "openingAmount": "Saldo inicial", "expectedAmount": "Valor esperado", "actualAmount": "Valor contado", "difference": "Diferença", "resolution": "Resolução", "type": "Tipo", "amount": "Valor", "quantity": "Quantidade", "paymentMethod": "Forma de pagamento", "itemType": "Tipo", "code": "Código", "tradeName": "Nome da loja", "unitCode": "Código da loja", "targetPlan": "Plano solicitado", "currency": "Moeda", "effectiveAt": "Vigência", "eventType": "Evento", "status": "Estado", "documentType": "Documento", "provider": "Fornecedor", "price": "Preço", "sku": "SKU", "barcode": "Código de barras", "category": "Categoria", "description": "Descrição", "trackStock": "Controla inventário", "minimumStock": "Inventário mínimo" },
+    "values": { "yes": "Sim", "no": "Não", "updatedFields": "{count} campo(s)", "owner": "Proprietário", "admin": "Administrador", "manager": "Gerente", "seller": "Vendedor", "cashier": "Caixa", "in": "Entrada", "out": "Saída", "pix": "Pix", "cash": "Dinheiro", "card": "Cartão", "creditCard": "Cartão de crédito", "debitCard": "Cartão de débito", "bankTransfer": "Transferência bancária" },
     "table": {
       "when": "Data",
       "user": "Utilizador",
@@ -89,7 +102,21 @@
       "CASH_REGISTER_OPENED": "Caixa aberta",
       "CASH_REGISTER_CLOSED": "Caixa fechada",
       "CASH_MOVEMENT_RECORDED": "Movimento de caixa",
-      "FINANCIAL_PAYMENT_RECORDED": "Pagamento registado"
+      "FINANCIAL_PAYMENT_RECORDED": "Pagamento registado",
+      "PASSWORD_RESET_REQUESTED": "Pediu a reposição da palavra-passe",
+      "PASSWORD_RESET_COMPLETED": "Repôs a palavra-passe",
+      "SUBSCRIPTION_REQUESTED": "Pediu uma subscrição",
+      "SUBSCRIPTION_CHECKOUT_CREATED": "Iniciou o pagamento da subscrição",
+      "SUBSCRIPTION_ACTIVATED": "Subscrição ativada",
+      "SUBSCRIPTION_CANCELLED": "Subscrição cancelada",
+      "SUBSCRIPTION_PAYMENT_UPDATED": "Pagamento da subscrição atualizado",
+      "BUSINESS_GROUP_CREATED": "Grupo de lojas criado",
+      "UNIT_CREATED": "Loja criada",
+      "FISCAL_SETTINGS_UPDATED": "Definições fiscais atualizadas",
+      "FISCAL_DOCUMENT_PREPARED": "Documento fiscal preparado",
+      "FISCAL_PROVIDER_CONNECTED": "Fornecedor fiscal ligado",
+      "FISCAL_DOCUMENT_SUBMITTED": "Documento fiscal submetido",
+      "FISCAL_DOCUMENT_CANCELLED": "Documento fiscal cancelado"
     }
   }
 }

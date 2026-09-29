@@ -1,5 +1,4 @@
 {
-  "aiManager": {
     "eyebrow": "AI Manager",
     "title": "Your finance and marketing specialist",
     "subtitle": "Knows your whole store: sales, products, stock, finance and orders. Ask anything.",
@@ -14,5 +13,4 @@
       "How are the finances?",
       "How can I increase sales?"
     ]
-  }
 }

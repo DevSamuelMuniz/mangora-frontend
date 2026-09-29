@@ -38,8 +38,15 @@
   },
   "audit": {
     "title": "Audit",
+    "pageTitle": "Activity log",
+    "pageDescription": "See who performed each action and which information changed.",
     "subtitle": "Owner only",
     "autoRefresh": "Auto refresh",
+    "refresh": "Refresh log",
+    "byUser": "By {name}",
+    "viewDetails": "View fields and values",
+    "changedSummary": "{verb} in {area}.",
+    "recordedSummary": "Action recorded in the system.",
     "loading": "Loading log...",
     "loadFailed": "Could not load the log.",
     "empty": "No event found.",
@@ -48,8 +55,14 @@
       "all": "All"
     },
     "metrics": {
-      "visible": "Events shown"
+      "visible": "Events shown",
+      "people": "People in history",
+      "events": "Events loaded"
     },
+    "verbs": { "created": "Created a record", "updated": "Updated data", "deleted": "Removed a record" },
+    "areas": { "products": "products", "sales": "sales", "stock": "inventory", "employees": "employees", "suppliers": "suppliers", "purchases": "purchases", "categories": "categories", "services": "services", "finance": "finance", "company": "company", "cash": "cash register" },
+    "fields": { "generic": "Field", "name": "Name", "email": "Email", "role": "Role", "from": "Previous role", "to": "New role", "active": "Access active", "fields": "Changed fields", "number": "Number", "total": "Total", "reason": "Reason", "openingAmount": "Opening balance", "expectedAmount": "Expected amount", "actualAmount": "Counted amount", "difference": "Difference", "resolution": "Resolution", "type": "Type", "amount": "Amount", "quantity": "Quantity", "paymentMethod": "Payment method", "itemType": "Type", "code": "Code", "tradeName": "Store name", "unitCode": "Store code", "targetPlan": "Requested plan", "currency": "Currency", "effectiveAt": "Effective date", "eventType": "Event", "status": "Status", "documentType": "Document", "provider": "Provider", "price": "Price", "sku": "SKU", "barcode": "Barcode", "category": "Category", "description": "Description", "trackStock": "Track stock", "minimumStock": "Minimum stock" },
+    "values": { "yes": "Yes", "no": "No", "updatedFields": "{count} field(s)", "owner": "Owner", "admin": "Administrator", "manager": "Manager", "seller": "Seller", "cashier": "Cashier", "in": "Stock in", "out": "Stock out", "pix": "Pix", "cash": "Cash", "card": "Card", "creditCard": "Credit card", "debitCard": "Debit card", "bankTransfer": "Bank transfer" },
     "table": {
       "when": "Date",
       "user": "User",
@@ -89,7 +102,21 @@
       "CASH_REGISTER_OPENED": "Register opened",
       "CASH_REGISTER_CLOSED": "Register closed",
       "CASH_MOVEMENT_RECORDED": "Cash movement",
-      "FINANCIAL_PAYMENT_RECORDED": "Payment recorded"
+      "FINANCIAL_PAYMENT_RECORDED": "Payment recorded",
+      "PASSWORD_RESET_REQUESTED": "Requested a password reset",
+      "PASSWORD_RESET_COMPLETED": "Reset the password",
+      "SUBSCRIPTION_REQUESTED": "Requested a subscription",
+      "SUBSCRIPTION_CHECKOUT_CREATED": "Started subscription payment",
+      "SUBSCRIPTION_ACTIVATED": "Subscription activated",
+      "SUBSCRIPTION_CANCELLED": "Subscription cancelled",
+      "SUBSCRIPTION_PAYMENT_UPDATED": "Subscription payment updated",
+      "BUSINESS_GROUP_CREATED": "Store group created",
+      "UNIT_CREATED": "Store created",
+      "FISCAL_SETTINGS_UPDATED": "Tax settings updated",
+      "FISCAL_DOCUMENT_PREPARED": "Tax document prepared",
+      "FISCAL_PROVIDER_CONNECTED": "Tax provider connected",
+      "FISCAL_DOCUMENT_SUBMITTED": "Tax document submitted",
+      "FISCAL_DOCUMENT_CANCELLED": "Tax document cancelled"
     }
   }
 }

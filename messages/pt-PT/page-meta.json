@@ -1,5 +1,4 @@
 {
-  "pageMeta": {
     "assinatura": {
       "title": "Subscrição e planos",
       "description": "Faça a gestão do plano e acompanhe as cobranças da empresa."
@@ -80,5 +79,4 @@
       "title": "Fornecedores",
       "description": "Faça a gestão dos fornecedores da empresa."
     }
-  }
 }

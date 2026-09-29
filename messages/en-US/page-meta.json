@@ -1,5 +1,4 @@
 {
-  "pageMeta": {
     "assinatura": {
       "title": "Subscription and plans",
       "description": "Manage the plan and follow the company charges."
@@ -80,5 +79,4 @@
       "title": "Suppliers",
       "description": "Manage your company suppliers."
     }
-  }
 }

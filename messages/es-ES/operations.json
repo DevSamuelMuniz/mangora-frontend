@@ -38,8 +38,15 @@
   },
   "audit": {
     "title": "Auditoría",
+    "pageTitle": "Registro de actividad",
+    "pageDescription": "Consulta quién realizó cada acción y qué información cambió.",
     "subtitle": "Solo el propietario",
     "autoRefresh": "Actualización automática",
+    "refresh": "Actualizar registro",
+    "byUser": "Por {name}",
+    "viewDetails": "Ver campos y valores",
+    "changedSummary": "{verb} en {area}.",
+    "recordedSummary": "Acción registrada en el sistema.",
     "loading": "Cargando registro...",
     "loadFailed": "No se pudo cargar el registro.",
     "empty": "Ningún evento encontrado.",
@@ -48,8 +55,14 @@
       "all": "Todos"
     },
     "metrics": {
-      "visible": "Eventos mostrados"
+      "visible": "Eventos mostrados",
+      "people": "Personas en el historial",
+      "events": "Eventos cargados"
     },
+    "verbs": { "created": "Creó un registro", "updated": "Actualizó datos", "deleted": "Eliminó un registro" },
+    "areas": { "products": "productos", "sales": "ventas", "stock": "inventario", "employees": "empleados", "suppliers": "proveedores", "purchases": "compras", "categories": "categorías", "services": "servicios", "finance": "finanzas", "company": "empresa", "cash": "caja" },
+    "fields": { "generic": "Campo", "name": "Nombre", "email": "Correo", "role": "Rol", "from": "Rol anterior", "to": "Rol nuevo", "active": "Acceso activo", "fields": "Campos modificados", "number": "Número", "total": "Total", "reason": "Motivo", "openingAmount": "Saldo inicial", "expectedAmount": "Importe esperado", "actualAmount": "Importe contado", "difference": "Diferencia", "resolution": "Resolución", "type": "Tipo", "amount": "Importe", "quantity": "Cantidad", "paymentMethod": "Forma de pago", "itemType": "Tipo", "code": "Código", "tradeName": "Nombre de la tienda", "unitCode": "Código de tienda", "targetPlan": "Plan solicitado", "currency": "Moneda", "effectiveAt": "Vigencia", "eventType": "Evento", "status": "Estado", "documentType": "Documento", "provider": "Proveedor", "price": "Precio", "sku": "SKU", "barcode": "Código de barras", "category": "Categoría", "description": "Descripción", "trackStock": "Controla inventario", "minimumStock": "Inventario mínimo" },
+    "values": { "yes": "Sí", "no": "No", "updatedFields": "{count} campo(s)", "owner": "Propietario", "admin": "Administrador", "manager": "Gerente", "seller": "Vendedor", "cashier": "Cajero", "in": "Entrada", "out": "Salida", "pix": "Pix", "cash": "Efectivo", "card": "Tarjeta", "creditCard": "Tarjeta de crédito", "debitCard": "Tarjeta de débito", "bankTransfer": "Transferencia bancaria" },
     "table": {
       "when": "Fecha",
       "user": "Usuario",
@@ -89,7 +102,21 @@
       "CASH_REGISTER_OPENED": "Caja abierta",
       "CASH_REGISTER_CLOSED": "Caja cerrada",
       "CASH_MOVEMENT_RECORDED": "Movimiento de caja",
-      "FINANCIAL_PAYMENT_RECORDED": "Pago registrado"
+      "FINANCIAL_PAYMENT_RECORDED": "Pago registrado",
+      "PASSWORD_RESET_REQUESTED": "Solicitó restablecer la contraseña",
+      "PASSWORD_RESET_COMPLETED": "Restableció la contraseña",
+      "SUBSCRIPTION_REQUESTED": "Solicitó una suscripción",
+      "SUBSCRIPTION_CHECKOUT_CREATED": "Inició el pago de la suscripción",
+      "SUBSCRIPTION_ACTIVATED": "Suscripción activada",
+      "SUBSCRIPTION_CANCELLED": "Suscripción cancelada",
+      "SUBSCRIPTION_PAYMENT_UPDATED": "Pago de suscripción actualizado",
+      "BUSINESS_GROUP_CREATED": "Grupo de tiendas creado",
+      "UNIT_CREATED": "Tienda creada",
+      "FISCAL_SETTINGS_UPDATED": "Configuración fiscal actualizada",
+      "FISCAL_DOCUMENT_PREPARED": "Documento fiscal preparado",
+      "FISCAL_PROVIDER_CONNECTED": "Proveedor fiscal conectado",
+      "FISCAL_DOCUMENT_SUBMITTED": "Documento fiscal enviado",
+      "FISCAL_DOCUMENT_CANCELLED": "Documento fiscal cancelado"
     }
   }
 }
