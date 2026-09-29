@@ -28,7 +28,7 @@ export default function LowStock({ products }: { products: DashboardData["lowSto
 
         <Link
           href="/estoque"
-          className="flex items-center gap-1 text-[11px] font-bold text-violet-600 hover:text-violet-800"
+          className="flex items-center gap-1 text-[11px] font-bold text-orange-600 hover:text-orange-800"
         >
           Ver estoque
           <ArrowRight className="size-3.5" />

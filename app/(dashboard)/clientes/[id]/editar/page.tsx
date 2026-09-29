@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import CustomerForm from "@/components/customers/CustomerForm";
 
 export const metadata: Metadata = {
-  title: "Editar cliente | Gestão+",
+  title: "Editar cliente | Mangora",
   description: "Atualize os dados de um cliente da sua empresa.",
 };
 

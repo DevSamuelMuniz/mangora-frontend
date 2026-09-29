@@ -9,10 +9,10 @@ const products = [
 ];
 
 const payments = [
-  { method: "PIX", amount: 18432, percentage: 42, colorClassName: "bg-violet-600" },
-  { method: "Cartão de crédito", amount: 13165.71, percentage: 30, colorClassName: "bg-indigo-500" },
-  { method: "Cartão de débito", amount: 7456.57, percentage: 17, colorClassName: "bg-cyan-500" },
-  { method: "Dinheiro e outros", amount: 4825.72, percentage: 11, colorClassName: "bg-emerald-500" },
+  { method: "PIX", amount: 18432, percentage: 42, colorClassName: "bg-orange-600" },
+  { method: "Cartão de crédito", amount: 13165.71, percentage: 30, colorClassName: "bg-amber-500" },
+  { method: "Cartão de débito", amount: 7456.57, percentage: 17, colorClassName: "bg-yellow-500" },
+  { method: "Dinheiro e outros", amount: 4825.72, percentage: 11, colorClassName: "bg-green-500" },
 ];
 
 export const reportDatasets: Record<ReportPeriod, ReportDataset> = {

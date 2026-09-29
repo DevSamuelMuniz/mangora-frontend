@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import CustomerCatalog from "@/components/customers/CustomerCatalog";
 
 export const metadata: Metadata = {
-  title: "Clientes | Gestão+",
+  title: "Clientes | Mangora",
   description: "Gerencie os clientes da sua empresa.",
 };
 

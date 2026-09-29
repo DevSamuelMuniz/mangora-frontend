@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import ProductCatalog from "@/components/products/ProductCatalog";
 
 export const metadata: Metadata = {
-  title: "Produtos | Gestão+",
+  title: "Produtos | Mangora",
   description: "Gerencie o catálogo de produtos da sua empresa.",
 };
 

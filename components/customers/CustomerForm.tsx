@@ -112,18 +112,18 @@ export default function CustomerForm({ customerId }: { customerId?: string }) {
   }
 
   if (loadingCustomer) {
-    return <div className="flex min-h-72 items-center justify-center rounded-2xl border border-slate-200 bg-white"><LoaderCircle className="size-6 animate-spin text-violet-600" /><span className="ml-2 text-sm font-semibold text-slate-500">Carregando cliente...</span></div>;
+    return <div className="flex min-h-72 items-center justify-center rounded-2xl border border-slate-200 bg-white"><LoaderCircle className="size-6 animate-spin text-orange-600" /><span className="ml-2 text-sm font-semibold text-slate-500">Carregando cliente...</span></div>;
   }
 
   if (editing && !customer) {
-    return <div className="rounded-2xl border border-red-200 bg-red-50 p-6 text-center"><p className="text-sm font-bold text-red-700">{error || "Cliente não encontrado."}</p><Link href="/clientes" className="mt-4 inline-flex h-10 items-center rounded-xl bg-white px-4 text-xs font-bold text-violet-600 shadow-sm">Voltar para clientes</Link></div>;
+    return <div className="rounded-2xl border border-red-200 bg-red-50 p-6 text-center"><p className="text-sm font-bold text-red-700">{error || "Cliente não encontrado."}</p><Link href="/clientes" className="mt-4 inline-flex h-10 items-center rounded-xl bg-white px-4 text-xs font-bold text-orange-600 shadow-sm">Voltar para clientes</Link></div>;
   }
 
   return (
     <section className="mx-auto max-w-5xl">
       <div className="flex items-start gap-3">
-        <Link href="/clientes" aria-label="Voltar para clientes" className="flex size-10 shrink-0 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-500 shadow-sm transition hover:bg-slate-50 hover:text-violet-600"><ArrowLeft className="size-4" /></Link>
-        <div><p className="text-[11px] font-bold uppercase tracking-[0.14em] text-violet-600">Relacionamento</p><h1 className="mt-1 text-2xl font-black tracking-tight text-slate-950 sm:text-3xl">{editing ? "Editar cliente" : "Novo cliente"}</h1><p className="mt-1 text-xs text-slate-500">{editing ? "Atualize os dados do cliente selecionado." : "Preencha os dados para cadastrar o cliente."}</p></div>
+        <Link href="/clientes" aria-label="Voltar para clientes" className="flex size-10 shrink-0 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-500 shadow-sm transition hover:bg-slate-50 hover:text-orange-600"><ArrowLeft className="size-4" /></Link>
+        <div><p className="text-[11px] font-bold uppercase tracking-[0.14em] text-orange-600">Relacionamento</p><h1 className="mt-1 text-2xl font-black tracking-tight text-slate-950 sm:text-3xl">{editing ? "Editar cliente" : "Novo cliente"}</h1><p className="mt-1 text-xs text-slate-500">{editing ? "Atualize os dados do cliente selecionado." : "Preencha os dados para cadastrar o cliente."}</p></div>
       </div>
 
       <form key={customer?.id ?? "new"} onSubmit={handleSubmit} className="mt-5 space-y-4">
@@ -133,8 +133,8 @@ export default function CustomerForm({ customerId }: { customerId?: string }) {
             <legend className="mb-1.5 text-xs font-bold text-slate-700">Tipo de cliente</legend>
             <div className="grid gap-2 sm:max-w-md sm:grid-cols-2">
               {(["INDIVIDUAL", "COMPANY"] as CustomerType[]).map((type) => (
-                <label key={type} className={`flex h-11 cursor-pointer items-center gap-2.5 rounded-xl border px-3 text-xs font-bold transition ${customerType === type ? "border-violet-300 bg-violet-50 text-violet-700" : "border-slate-200 text-slate-600 hover:bg-slate-50"}`}>
-                  <input type="radio" name="type" value={type} checked={customerType === type} onChange={() => setCustomerType(type)} className="accent-violet-600" />
+                <label key={type} className={`flex h-11 cursor-pointer items-center gap-2.5 rounded-xl border px-3 text-xs font-bold transition ${customerType === type ? "border-orange-300 bg-orange-50 text-orange-700" : "border-slate-200 text-slate-600 hover:bg-slate-50"}`}>
+                  <input type="radio" name="type" value={type} checked={customerType === type} onChange={() => setCustomerType(type)} className="accent-orange-600" />
                   {type === "INDIVIDUAL" ? "Pessoa física" : "Pessoa jurídica"}
                 </label>
               ))}
@@ -165,11 +165,11 @@ export default function CustomerForm({ customerId }: { customerId?: string }) {
 
         <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:p-5">
           <SectionTitle icon={Building2} title="Observações" description="Anotações internas sobre preferências ou atendimento." />
-          <Field label="Observações (opcional)" id="notes" className="mt-4"><textarea id="notes" name="notes" rows={3} maxLength={2000} defaultValue={customer?.notes ?? ""} placeholder="Informações adicionais sobre o cliente..." className="w-full resize-y rounded-xl border border-slate-200 bg-white px-3.5 py-3 text-sm text-slate-950 outline-none transition placeholder:text-slate-400 focus:border-violet-400 focus:ring-4 focus:ring-violet-100" /></Field>
+          <Field label="Observações (opcional)" id="notes" className="mt-4"><textarea id="notes" name="notes" rows={3} maxLength={2000} defaultValue={customer?.notes ?? ""} placeholder="Informações adicionais sobre o cliente..." className="w-full resize-y rounded-xl border border-slate-200 bg-white px-3.5 py-3 text-sm text-slate-950 outline-none transition placeholder:text-slate-400 focus:border-orange-400 focus:ring-4 focus:ring-orange-100" /></Field>
         </div>
 
         {error && <div role="alert" className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-xs font-semibold text-red-700">{error}</div>}
-        <div className="flex flex-col-reverse gap-3 sm:flex-row sm:justify-end"><Link href="/clientes" className="flex h-11 items-center justify-center rounded-xl border border-slate-200 bg-white px-5 text-sm font-bold text-slate-600 transition hover:bg-slate-50">Cancelar</Link><button type="submit" disabled={loading} className="flex h-11 items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 px-5 text-sm font-bold text-white shadow-lg shadow-violet-200 transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-70 disabled:hover:translate-y-0">{loading ? <><LoaderCircle className="size-4 animate-spin" />Salvando...</> : <><Save className="size-4" />{editing ? "Salvar alterações" : "Salvar cliente"}</>}</button></div>
+        <div className="flex flex-col-reverse gap-3 sm:flex-row sm:justify-end"><Link href="/clientes" className="flex h-11 items-center justify-center rounded-xl border border-slate-200 bg-white px-5 text-sm font-bold text-slate-600 transition hover:bg-slate-50">Cancelar</Link><button type="submit" disabled={loading} className="flex h-11 items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-orange-600 to-amber-600 px-5 text-sm font-bold text-white shadow-lg shadow-orange-200 transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-70 disabled:hover:translate-y-0">{loading ? <><LoaderCircle className="size-4 animate-spin" />Salvando...</> : <><Save className="size-4" />{editing ? "Salvar alterações" : "Salvar cliente"}</>}</button></div>
       </form>
     </section>
   );
@@ -179,10 +179,10 @@ function digits(value: FormDataEntryValue | null) {
   return String(value ?? "").replace(/\D/g, "");
 }
 
-const inputClassName = "h-11 w-full rounded-xl border border-slate-200 bg-white px-3.5 text-sm text-slate-950 outline-none transition placeholder:text-slate-400 focus:border-violet-400 focus:ring-4 focus:ring-violet-100";
+const inputClassName = "h-11 w-full rounded-xl border border-slate-200 bg-white px-3.5 text-sm text-slate-950 outline-none transition placeholder:text-slate-400 focus:border-orange-400 focus:ring-4 focus:ring-orange-100";
 
 function SectionTitle({ icon: Icon, title, description }: { icon: LucideIcon; title: string; description: string }) {
-  return <div className="flex items-center gap-3 border-b border-slate-100 pb-4"><div className="flex size-9 items-center justify-center rounded-xl bg-violet-50 text-violet-600"><Icon className="size-4" /></div><div><h2 className="text-sm font-bold text-slate-950">{title}</h2><p className="mt-0.5 text-[10px] text-slate-400">{description}</p></div></div>;
+  return <div className="flex items-center gap-3 border-b border-slate-100 pb-4"><div className="flex size-9 items-center justify-center rounded-xl bg-orange-50 text-orange-600"><Icon className="size-4" /></div><div><h2 className="text-sm font-bold text-slate-950">{title}</h2><p className="mt-0.5 text-[10px] text-slate-400">{description}</p></div></div>;
 }
 
 function Field({ label, id, children, className = "" }: { label: string; id: string; children: ReactNode; className?: string }) {

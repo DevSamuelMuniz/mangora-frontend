@@ -111,19 +111,19 @@ export default function SalesCatalog() {
       <section>
         <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
           <div>
-            <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-violet-600">Comercial</p>
+            <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-orange-600">Comercial</p>
             <h1 className="mt-1 text-2xl font-black tracking-tight text-slate-950 sm:text-3xl">Vendas</h1>
             <p className="mt-1 text-xs text-slate-500">Acompanhe movimentações, pagamentos e resultados.</p>
           </div>
-          <Link href="/vendas/nova" className="inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 px-4 text-sm font-bold text-white shadow-lg shadow-violet-200 transition hover:-translate-y-0.5 hover:shadow-xl">
+          <Link href="/vendas/nova" className="inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-orange-600 to-amber-600 px-4 text-sm font-bold text-white shadow-lg shadow-orange-200 transition hover:-translate-y-0.5 hover:shadow-xl">
             <ShoppingCart className="size-4" />Nova venda
           </Link>
         </div>
 
         <div className="mt-5 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-          <SummaryCard icon={Banknote} label="Faturamento hoje" value={currencyFormatter.format(todayRevenue)} iconClassName="bg-emerald-50 text-emerald-600" />
-          <SummaryCard icon={ShoppingCart} label="Vendas hoje" value={String(todaySales.length)} iconClassName="bg-violet-50 text-violet-600" />
-          <SummaryCard icon={ReceiptText} label="Ticket médio" value={currencyFormatter.format(averageTicket)} iconClassName="bg-cyan-50 text-cyan-600" />
+          <SummaryCard icon={Banknote} label="Faturamento hoje" value={currencyFormatter.format(todayRevenue)} iconClassName="bg-green-50 text-green-600" />
+          <SummaryCard icon={ShoppingCart} label="Vendas hoje" value={String(todaySales.length)} iconClassName="bg-orange-50 text-orange-600" />
+          <SummaryCard icon={ReceiptText} label="Ticket médio" value={currencyFormatter.format(averageTicket)} iconClassName="bg-yellow-50 text-yellow-600" />
           <SummaryCard icon={XCircle} label="Vendas canceladas" value={String(cancelledCount)} iconClassName="bg-red-50 text-red-600" />
         </div>
 
@@ -132,7 +132,7 @@ export default function SalesCatalog() {
             <label className="relative">
               <span className="sr-only">Buscar vendas</span>
               <Search className="pointer-events-none absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-slate-400" />
-              <input type="search" value={search} onChange={(event) => { setSearch(event.target.value); setPage(1); }} placeholder="Buscar por código ou cliente..." className="h-11 w-full rounded-xl border border-slate-200 bg-slate-50 pl-10 pr-4 text-sm text-slate-950 outline-none transition placeholder:text-slate-400 focus:border-violet-300 focus:bg-white focus:ring-4 focus:ring-violet-100" />
+              <input type="search" value={search} onChange={(event) => { setSearch(event.target.value); setPage(1); }} placeholder="Buscar por código ou cliente..." className="h-11 w-full rounded-xl border border-slate-200 bg-slate-50 pl-10 pr-4 text-sm text-slate-950 outline-none transition placeholder:text-slate-400 focus:border-orange-300 focus:bg-white focus:ring-4 focus:ring-orange-100" />
             </label>
             <FilterSelect label="Status" value={status} onChange={(value) => { setStatus(value); setPage(1); }} options={[{ value: "COMPLETED", label: "Concluída" }, { value: "CANCELLED", label: "Cancelada" }]} />
             <FilterSelect label="Pagamento" value={paymentMethod} onChange={(value) => { setPaymentMethod(value); setPage(1); }} options={paymentMethods.map((method) => ({ value: method, label: paymentMethodLabels[method] }))} />
@@ -143,9 +143,9 @@ export default function SalesCatalog() {
 
         <div className="mt-4 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
           {loading ? (
-            <div className="flex min-h-80 items-center justify-center text-xs font-semibold text-slate-500"><LoaderCircle className="mr-2 size-5 animate-spin text-violet-600" />Carregando vendas...</div>
+            <div className="flex min-h-80 items-center justify-center text-xs font-semibold text-slate-500"><LoaderCircle className="mr-2 size-5 animate-spin text-orange-600" />Carregando vendas...</div>
           ) : error && sales.length === 0 ? (
-            <div className="flex min-h-80 flex-col items-center justify-center px-6 text-center"><AlertTriangle className="size-6 text-red-500" /><h2 className="mt-3 text-sm font-bold text-slate-900">Não foi possível carregar as vendas</h2><p className="mt-1 text-xs text-slate-500">{error}</p><button type="button" onClick={() => void loadSales()} className="mt-4 inline-flex h-10 items-center gap-2 rounded-xl border border-slate-200 px-4 text-xs font-bold text-violet-600"><RefreshCw className="size-3.5" />Tentar novamente</button></div>
+            <div className="flex min-h-80 flex-col items-center justify-center px-6 text-center"><AlertTriangle className="size-6 text-red-500" /><h2 className="mt-3 text-sm font-bold text-slate-900">Não foi possível carregar as vendas</h2><p className="mt-1 text-xs text-slate-500">{error}</p><button type="button" onClick={() => void loadSales()} className="mt-4 inline-flex h-10 items-center gap-2 rounded-xl border border-slate-200 px-4 text-xs font-bold text-orange-600"><RefreshCw className="size-3.5" />Tentar novamente</button></div>
           ) : visibleSales.length ? (
             <>
               <div className="overflow-x-auto">
@@ -159,7 +159,7 @@ export default function SalesCatalog() {
                       const StatusIcon = statusStyle.icon;
                       return (
                         <tr key={sale.id} className="transition hover:bg-slate-50">
-                          <td className="px-5 py-3.5"><p className="text-xs font-black text-violet-700">{sale.code}</p><p className="mt-1 text-[10px] text-slate-400">{sale.items.reduce((total, item) => total + item.quantity, 0)} item(ns)</p></td>
+                          <td className="px-5 py-3.5"><p className="text-xs font-black text-orange-700">{sale.code}</p><p className="mt-1 text-[10px] text-slate-400">{sale.items.reduce((total, item) => total + item.quantity, 0)} item(ns)</p></td>
                           <td className="px-4 py-3.5"><p className="max-w-52 truncate text-xs font-bold text-slate-800">{sale.customerName}</p></td>
                           <td className="px-4 py-3.5"><p className="text-xs text-slate-600">{formatDate(sale.createdAt)}</p><p className="mt-1 text-[10px] text-slate-400">{formatTime(sale.createdAt)}</p></td>
                           <td className="px-4 py-3.5 text-xs text-slate-600">{paymentMethodLabels[sale.paymentMethod]}</td>
@@ -191,10 +191,10 @@ export default function SalesCatalog() {
             </>
           ) : (
             <div className="flex min-h-80 flex-col items-center justify-center px-6 py-12 text-center">
-              <div className="flex size-12 items-center justify-center rounded-2xl bg-violet-50 text-violet-600"><ReceiptText className="size-5" /></div>
+              <div className="flex size-12 items-center justify-center rounded-2xl bg-orange-50 text-orange-600"><ReceiptText className="size-5" /></div>
               <h2 className="mt-4 text-sm font-bold text-slate-900">Nenhuma venda encontrada</h2>
               <p className="mt-1 text-xs text-slate-500">{sales.length === 0 ? "Registre a primeira venda da empresa." : "Ajuste os filtros para consultar outras movimentações."}</p>
-              {sales.length === 0 ? <Link href="/vendas/nova" className="mt-4 inline-flex h-10 items-center rounded-xl bg-violet-600 px-4 text-xs font-bold text-white">Registrar venda</Link> : <button type="button" onClick={clearFilters} className="mt-4 h-10 rounded-xl border border-slate-200 px-4 text-xs font-bold text-violet-600 hover:bg-violet-50">Limpar filtros</button>}
+              {sales.length === 0 ? <Link href="/vendas/nova" className="mt-4 inline-flex h-10 items-center rounded-xl bg-orange-600 px-4 text-xs font-bold text-white">Registrar venda</Link> : <button type="button" onClick={clearFilters} className="mt-4 h-10 rounded-xl border border-slate-200 px-4 text-xs font-bold text-orange-600 hover:bg-orange-50">Limpar filtros</button>}
             </div>
           )}
         </div>
@@ -211,7 +211,7 @@ function SummaryCard({ icon: Icon, label, value, iconClassName }: { icon: Lucide
 }
 
 function FilterSelect({ label, value, options, onChange }: { label: string; value: string; options: readonly { value: string; label: string }[]; onChange: (value: string) => void }) {
-  return <label><span className="sr-only">{label}</span><select value={value} onChange={(event) => onChange(event.target.value)} className="h-11 w-full rounded-xl border border-slate-200 bg-slate-50 px-3 text-xs font-semibold text-slate-600 outline-none transition focus:border-violet-300 focus:bg-white focus:ring-4 focus:ring-violet-100"><option value="all">{label}: todos</option>{options.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}</select></label>;
+  return <label><span className="sr-only">{label}</span><select value={value} onChange={(event) => onChange(event.target.value)} className="h-11 w-full rounded-xl border border-slate-200 bg-slate-50 px-3 text-xs font-semibold text-slate-600 outline-none transition focus:border-orange-300 focus:bg-white focus:ring-4 focus:ring-orange-100"><option value="all">{label}: todos</option>{options.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}</select></label>;
 }
 
 function PageButton({ label, disabled, onClick, children }: { label: string; disabled: boolean; onClick: () => void; children: ReactNode }) {
@@ -222,7 +222,7 @@ function SaleDetails({ sale, onClose }: { sale: Sale; onClose: () => void }) {
   return (
     <div className="fixed inset-0 z-[70] flex items-center justify-center bg-slate-950/40 p-4 backdrop-blur-sm">
       <div role="dialog" aria-modal="true" className="w-full max-w-lg rounded-2xl border border-slate-200 bg-white p-5 shadow-2xl">
-        <div className="flex items-start justify-between gap-4"><div><p className="text-[10px] font-bold uppercase tracking-wider text-violet-600">Detalhes da venda</p><h2 className="mt-1 text-lg font-black text-slate-950">Venda {sale.code}</h2><p className="mt-1 text-xs text-slate-500">{sale.customerName} · {formatDate(sale.createdAt)}, {formatTime(sale.createdAt)}</p></div><button type="button" onClick={onClose} aria-label="Fechar detalhes" className="flex size-9 items-center justify-center rounded-xl text-slate-400 hover:bg-slate-100"><X className="size-4" /></button></div>
+        <div className="flex items-start justify-between gap-4"><div><p className="text-[10px] font-bold uppercase tracking-wider text-orange-600">Detalhes da venda</p><h2 className="mt-1 text-lg font-black text-slate-950">Venda {sale.code}</h2><p className="mt-1 text-xs text-slate-500">{sale.customerName} · {formatDate(sale.createdAt)}, {formatTime(sale.createdAt)}</p></div><button type="button" onClick={onClose} aria-label="Fechar detalhes" className="flex size-9 items-center justify-center rounded-xl text-slate-400 hover:bg-slate-100"><X className="size-4" /></button></div>
         <div className="mt-5 overflow-hidden rounded-xl border border-slate-200">
           {sale.items.map((item) => <div key={item.id} className="flex items-center justify-between gap-4 border-b border-slate-100 px-3 py-3 last:border-0"><div><p className="text-xs font-bold text-slate-800">{item.productName}</p><p className="mt-0.5 text-[10px] text-slate-400">{item.quantity} × {currencyFormatter.format(item.unitPrice)}</p></div><p className="text-xs font-black text-slate-900">{currencyFormatter.format(item.subtotal)}</p></div>)}
         </div>
@@ -239,11 +239,11 @@ function Info({ label, value }: { label: string; value: string }) {
 
 function CancelSale({ sale, loading, onCancel, onConfirm }: { sale: Sale; loading: boolean; onCancel: () => void; onConfirm: (reason: string) => void }) {
   const [reason, setReason] = useState("");
-  return <div className="fixed inset-0 z-[70] flex items-center justify-center bg-slate-950/40 p-4 backdrop-blur-sm"><div role="alertdialog" aria-modal="true" className="w-full max-w-sm rounded-2xl border border-slate-200 bg-white p-5 shadow-2xl"><div className="flex size-10 items-center justify-center rounded-xl bg-red-50 text-red-600"><XCircle className="size-4" /></div><h2 className="mt-4 text-base font-black text-slate-950">Cancelar venda {sale.code}?</h2><p className="mt-2 text-xs leading-5 text-slate-500">Os itens controlados voltarão ao estoque e o total do cliente será estornado.</p><label htmlFor="cancelReason" className="mt-4 block text-xs font-bold text-slate-700">Motivo</label><textarea id="cancelReason" value={reason} onChange={(event) => setReason(event.target.value)} maxLength={500} rows={3} placeholder="Informe o motivo do cancelamento" className="mt-1.5 w-full resize-none rounded-xl border border-slate-200 p-3 text-xs outline-none focus:border-violet-300 focus:ring-4 focus:ring-violet-100" /><div className="mt-5 flex justify-end gap-2"><button type="button" disabled={loading} onClick={onCancel} className="h-10 rounded-xl border border-slate-200 px-4 text-xs font-bold text-slate-600 hover:bg-slate-50 disabled:opacity-50">Voltar</button><button type="button" disabled={loading || reason.trim().length < 3} onClick={() => onConfirm(reason)} className="inline-flex h-10 items-center gap-2 rounded-xl bg-red-600 px-4 text-xs font-bold text-white hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-50">{loading && <LoaderCircle className="size-3.5 animate-spin" />}Cancelar venda</button></div></div></div>;
+  return <div className="fixed inset-0 z-[70] flex items-center justify-center bg-slate-950/40 p-4 backdrop-blur-sm"><div role="alertdialog" aria-modal="true" className="w-full max-w-sm rounded-2xl border border-slate-200 bg-white p-5 shadow-2xl"><div className="flex size-10 items-center justify-center rounded-xl bg-red-50 text-red-600"><XCircle className="size-4" /></div><h2 className="mt-4 text-base font-black text-slate-950">Cancelar venda {sale.code}?</h2><p className="mt-2 text-xs leading-5 text-slate-500">Os itens controlados voltarão ao estoque e o total do cliente será estornado.</p><label htmlFor="cancelReason" className="mt-4 block text-xs font-bold text-slate-700">Motivo</label><textarea id="cancelReason" value={reason} onChange={(event) => setReason(event.target.value)} maxLength={500} rows={3} placeholder="Informe o motivo do cancelamento" className="mt-1.5 w-full resize-none rounded-xl border border-slate-200 p-3 text-xs outline-none focus:border-orange-300 focus:ring-4 focus:ring-orange-100" /><div className="mt-5 flex justify-end gap-2"><button type="button" disabled={loading} onClick={onCancel} className="h-10 rounded-xl border border-slate-200 px-4 text-xs font-bold text-slate-600 hover:bg-slate-50 disabled:opacity-50">Voltar</button><button type="button" disabled={loading || reason.trim().length < 3} onClick={() => onConfirm(reason)} className="inline-flex h-10 items-center gap-2 rounded-xl bg-red-600 px-4 text-xs font-bold text-white hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-50">{loading && <LoaderCircle className="size-3.5 animate-spin" />}Cancelar venda</button></div></div></div>;
 }
 
 function getStatusStyle(status: SaleStatus) {
-  if (status === "COMPLETED") return { className: "bg-emerald-50 text-emerald-600", icon: CheckCircle2 };
+  if (status === "COMPLETED") return { className: "bg-green-50 text-green-600", icon: CheckCircle2 };
   return { className: "bg-red-50 text-red-600", icon: XCircle };
 }
 

@@ -31,7 +31,7 @@ export default async function DashboardPage() {
             <section>
                 <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-end">
                     <div>
-                        <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-violet-600">
+                        <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-orange-600">
                             Visão geral
                         </p>
 
@@ -57,7 +57,7 @@ export default async function DashboardPage() {
                         variation={`${Math.abs(dashboard.metrics.revenueVariation).toLocaleString("pt-BR")}%`}
                         trend={getTrend(dashboard.metrics.revenueVariation)}
                         icon={CircleDollarSign}
-                        iconClassName="bg-emerald-50 text-emerald-600"
+                        iconClassName="bg-green-50 text-green-600"
                     />
 
                     <MetricCard
@@ -67,7 +67,7 @@ export default async function DashboardPage() {
                         variation={`${Math.abs(dashboard.metrics.salesVariation).toLocaleString("pt-BR")}%`}
                         trend={getTrend(dashboard.metrics.salesVariation)}
                         icon={ShoppingBag}
-                        iconClassName="bg-violet-50 text-violet-600"
+                        iconClassName="bg-orange-50 text-orange-600"
                     />
 
                     <MetricCard
@@ -77,7 +77,7 @@ export default async function DashboardPage() {
                         variation={`${Math.abs(dashboard.metrics.ticketVariation).toLocaleString("pt-BR")}%`}
                         trend={getTrend(dashboard.metrics.ticketVariation)}
                         icon={TrendingUp}
-                        iconClassName="bg-cyan-50 text-cyan-600"
+                        iconClassName="bg-yellow-50 text-yellow-600"
                     />
 
                     <MetricCard
@@ -104,7 +104,7 @@ export default async function DashboardPage() {
                             variation={`${dashboard.metrics.newCustomersThisMonth} novo(s)`}
                             trend={dashboard.metrics.newCustomersThisMonth > 0 ? "up" : "neutral"}
                             icon={Users}
-                            iconClassName="bg-indigo-50 text-indigo-600"
+                            iconClassName="bg-amber-50 text-amber-600"
                         />
                     </div>
                 </div>

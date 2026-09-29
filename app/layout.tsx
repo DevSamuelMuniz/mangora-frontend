@@ -13,9 +13,14 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Gestão+ | Gestão inteligente",
+  title: "Mangora | Gestão inteligente",
   description:
     "Gestão completa para vendas, estoque, clientes e financeiro da sua empresa.",
+  icons: {
+    icon: "/mangora-logo.png",
+    shortcut: "/mangora-logo.png",
+    apple: "/mangora-logo.png",
+  },
 };
 
 export default function RootLayout({

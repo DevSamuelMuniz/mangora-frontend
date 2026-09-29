@@ -15,7 +15,7 @@ async function loadStore(slug: string) {
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params; const store = await loadStore(slug);
-  return store ? { title: `${store.company.tradeName} | Gestão+`, description: store.company.description || `Catálogo e pedidos de ${store.company.tradeName}.` } : { title: "Página não encontrada | Gestão+" };
+  return store ? { title: `${store.company.tradeName} | Mangora`, description: store.company.description || `Catálogo e pedidos de ${store.company.tradeName}.` } : { title: "Página não encontrada | Mangora" };
 }
 
 export default async function PublicStorePage({ params }: { params: Promise<{ slug: string }> }) {

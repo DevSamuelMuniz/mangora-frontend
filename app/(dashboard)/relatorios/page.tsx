@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import ReportsOverview from "@/components/reports/ReportsOverview";
 
 export const metadata: Metadata = {
-  title: "Relatórios | Gestão+",
+  title: "Relatórios | Mangora",
   description: "Analise os resultados e o desempenho da sua empresa.",
 };
 

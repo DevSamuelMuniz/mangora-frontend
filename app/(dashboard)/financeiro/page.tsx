@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import FinancialOverview from "@/components/financial/FinancialOverview";
 
 export const metadata: Metadata = {
-  title: "Financeiro | Gestão+",
+  title: "Financeiro | Mangora",
   description: "Acompanhe receitas, despesas e fluxo de caixa.",
 };
 

@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import NewEmployeeForm from "@/components/employees/NewEmployeeForm";
 
 export const metadata: Metadata = {
-  title: "Novo funcionário | Gestão+",
+  title: "Novo funcionário | Mangora",
   description: "Prepare o cadastro de um novo funcionário.",
 };
 

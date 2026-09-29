@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import ProductForm from "@/components/products/ProductForm";
 
 export const metadata: Metadata = {
-  title: "Editar produto | Gestão+",
+  title: "Editar produto | Mangora",
   description: "Atualize as informações de um produto da sua empresa.",
 };
 

@@ -27,6 +27,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { roleLabels, type AuthSession, type MembershipRole } from "@/lib/auth/types";
+import BrandLogo from "@/components/brand/BrandLogo";
 
 type SidebarProps = {
   open: boolean;
@@ -177,19 +178,7 @@ export default function Sidebar({
             className="flex items-center gap-3"
             onClick={onClose}
           >
-            <div className="flex size-9 items-center justify-center rounded-xl bg-gradient-to-br from-violet-600 to-cyan-500 shadow-md shadow-violet-200">
-              <LayoutDashboard className="size-4.5 text-white" />
-            </div>
-
-            <div>
-              <p className="text-base font-black tracking-tight text-slate-950">
-                Gestão<span className="text-violet-600">+</span>
-              </p>
-
-              <p className="text-[9px] font-semibold uppercase tracking-[0.16em] text-slate-400">
-                Gestão inteligente
-              </p>
-            </div>
+            <BrandLogo className="h-9" priority />
           </Link>
 
           <button
@@ -207,9 +196,9 @@ export default function Sidebar({
             type="button"
             onClick={() => setCompanyOpen((current) => !current)}
             aria-expanded={companyOpen}
-            className="flex w-full items-center gap-3 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-left transition hover:border-violet-200 hover:bg-violet-50"
+            className="flex w-full items-center gap-3 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-left transition hover:border-orange-200 hover:bg-orange-50"
           >
-            <div className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-violet-100 text-violet-700">
+            <div className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-orange-100 text-orange-700">
               <Store className="size-4" />
             </div>
 
@@ -246,7 +235,7 @@ export default function Sidebar({
                   setCompanyOpen(false);
                   onClose();
                 }}
-                className="flex rounded-lg px-3 py-2 text-[11px] font-semibold text-slate-600 hover:bg-violet-50 hover:text-violet-700"
+                className="flex rounded-lg px-3 py-2 text-[11px] font-semibold text-slate-600 hover:bg-orange-50 hover:text-orange-700"
               >
                 Editar dados da empresa
               </Link>}
@@ -257,7 +246,7 @@ export default function Sidebar({
                   setCompanyOpen(false);
                   onClose();
                 }}
-                className="flex rounded-lg px-3 py-2 text-[11px] font-semibold text-slate-600 hover:bg-violet-50 hover:text-violet-700"
+                className="flex rounded-lg px-3 py-2 text-[11px] font-semibold text-slate-600 hover:bg-orange-50 hover:text-orange-700"
               >
                 Gerenciar assinatura
               </Link>}
@@ -282,14 +271,14 @@ export default function Sidebar({
                   onClick={onClose}
                   className={`flex h-10 items-center gap-3 rounded-xl px-3 text-sm font-semibold transition ${
                     active
-                      ? "bg-violet-50 text-violet-700"
+                      ? "bg-orange-50 text-orange-700"
                       : "text-slate-600 hover:bg-slate-100 hover:text-slate-950"
                   }`}
                 >
                   <Icon
                     className={`size-4.5 ${
                       active
-                        ? "text-violet-600"
+                        ? "text-orange-600"
                         : "text-slate-400"
                     }`}
                   />
@@ -318,14 +307,14 @@ export default function Sidebar({
                   onClick={onClose}
                   className={`flex h-10 items-center gap-3 rounded-xl px-3 text-sm font-semibold transition ${
                     active
-                      ? "bg-violet-50 text-violet-700"
+                      ? "bg-orange-50 text-orange-700"
                       : "text-slate-600 hover:bg-slate-100 hover:text-slate-950"
                   }`}
                 >
                   <Icon
                     className={`size-4.5 ${
                       active
-                        ? "text-violet-600"
+                        ? "text-orange-600"
                         : "text-slate-400"
                     }`}
                   />
@@ -338,9 +327,9 @@ export default function Sidebar({
         </nav>
 
         {session.membership.role === "OWNER" && <div className="border-t border-slate-200 p-3">
-          <div className="rounded-xl bg-gradient-to-br from-violet-600 to-indigo-600 p-3 text-white">
+          <div className="rounded-xl bg-gradient-to-br from-orange-600 to-amber-600 p-3 text-white">
             <div className="flex items-center gap-2">
-              <WalletCards className="size-4 text-violet-100" />
+              <WalletCards className="size-4 text-orange-100" />
 
               <p className="text-xs font-bold">
                 Assinatura da empresa

@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import NewOrderForm from "@/components/orders/NewOrderForm";
 
 export const metadata: Metadata = {
-  title: "Novo pedido | Gestão+",
+  title: "Novo pedido | Mangora",
   description: "Cadastre um novo pedido.",
 };
 

@@ -27,6 +27,7 @@ import {
   Zap,
   type LucideIcon,
 } from "lucide-react";
+import BrandLogo from "@/components/brand/BrandLogo";
 
 const features = [
   {
@@ -183,19 +184,19 @@ export default function Home() {
       <section className="relative isolate overflow-hidden pt-36 sm:pt-44">
         <div className="absolute inset-0 -z-20 bg-[radial-gradient(circle_at_50%_5%,rgba(124,58,237,0.14),transparent_35%),radial-gradient(circle_at_90%_40%,rgba(6,182,212,0.12),transparent_30%)]" />
 
-        <div className="absolute left-[-140px] top-24 -z-10 size-[420px] rounded-full bg-violet-300/30 blur-[130px]" />
-        <div className="absolute right-[-120px] top-80 -z-10 size-[400px] rounded-full bg-cyan-200/40 blur-[130px]" />
+        <div className="absolute left-[-140px] top-24 -z-10 size-[420px] rounded-full bg-orange-300/30 blur-[130px]" />
+        <div className="absolute right-[-120px] top-80 -z-10 size-[400px] rounded-full bg-yellow-200/40 blur-[130px]" />
 
         <div className="mx-auto grid max-w-7xl items-center gap-16 px-6 pb-24 lg:grid-cols-[1fr_0.95fr] lg:px-8 lg:pb-32">
           <div>
-            <div className="mb-7 inline-flex items-center gap-2 rounded-full border border-violet-200 bg-violet-50 px-4 py-2 text-sm font-semibold text-violet-700 shadow-sm">
-              <Sparkles className="size-4 text-violet-500" />
+            <div className="mb-7 inline-flex items-center gap-2 rounded-full border border-orange-200 bg-orange-50 px-4 py-2 text-sm font-semibold text-orange-700 shadow-sm">
+              <Sparkles className="size-4 text-orange-500" />
               Gestão completa para qualquer negócio
             </div>
 
             <h1 className="max-w-4xl text-5xl font-black leading-[1.04] tracking-[-0.045em] text-slate-950 sm:text-6xl lg:text-7xl">
               Sua empresa inteira em um{" "}
-              <span className="bg-gradient-to-r from-violet-600 via-fuchsia-500 to-cyan-500 bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-orange-600 via-fuchsia-500 to-yellow-500 bg-clip-text text-transparent">
                 único sistema.
               </span>
             </h1>
@@ -209,7 +210,7 @@ export default function Home() {
             <div className="mt-10 flex flex-col gap-4 sm:flex-row">
               <Link
                 href="/cadastro"
-                className="group inline-flex items-center justify-center gap-3 rounded-2xl bg-gradient-to-r from-violet-600 to-indigo-600 px-7 py-4 font-bold text-white shadow-xl shadow-violet-200 transition hover:-translate-y-0.5 hover:shadow-2xl"
+                className="group inline-flex items-center justify-center gap-3 rounded-2xl bg-gradient-to-r from-orange-600 to-amber-600 px-7 py-4 font-bold text-white shadow-xl shadow-orange-200 transition hover:-translate-y-0.5 hover:shadow-2xl"
               >
                 Testar gratuitamente
                 <ArrowRight className="size-5 transition group-hover:translate-x-1" />
@@ -217,7 +218,7 @@ export default function Home() {
 
               <Link
                 href="#recursos"
-                className="inline-flex items-center justify-center gap-3 rounded-2xl border border-slate-200 bg-white px-7 py-4 font-bold text-slate-800 shadow-sm transition hover:border-violet-200 hover:bg-violet-50"
+                className="inline-flex items-center justify-center gap-3 rounded-2xl border border-slate-200 bg-white px-7 py-4 font-bold text-slate-800 shadow-sm transition hover:border-orange-200 hover:bg-orange-50"
               >
                 Conhecer recursos
                 <ChevronRight className="size-5" />
@@ -273,11 +274,11 @@ export default function Home() {
               return (
                 <article
                   key={feature.title}
-                  className="group relative overflow-hidden rounded-3xl border border-slate-200 bg-white p-7 shadow-sm transition duration-300 hover:-translate-y-1 hover:border-violet-200 hover:shadow-xl hover:shadow-violet-100/60"
+                  className="group relative overflow-hidden rounded-3xl border border-slate-200 bg-white p-7 shadow-sm transition duration-300 hover:-translate-y-1 hover:border-orange-200 hover:shadow-xl hover:shadow-orange-100/60"
                 >
-                  <div className="absolute -right-10 -top-10 size-32 rounded-full bg-violet-100/0 blur-3xl transition group-hover:bg-violet-100" />
+                  <div className="absolute -right-10 -top-10 size-32 rounded-full bg-orange-100/0 blur-3xl transition group-hover:bg-orange-100" />
 
-                  <div className="relative flex size-13 items-center justify-center rounded-2xl border border-violet-100 bg-violet-50 text-violet-600">
+                  <div className="relative flex size-13 items-center justify-center rounded-2xl border border-orange-100 bg-orange-50 text-orange-600">
                     <Icon className="size-6" />
                   </div>
 
@@ -289,7 +290,7 @@ export default function Home() {
                     {feature.description}
                   </p>
 
-                  <div className="relative mt-6 flex items-center gap-2 text-sm font-semibold text-violet-600">
+                  <div className="relative mt-6 flex items-center gap-2 text-sm font-semibold text-orange-600">
                     Saiba mais
                     <ArrowRight className="size-4 transition group-hover:translate-x-1" />
                   </div>
@@ -317,9 +318,9 @@ export default function Home() {
               return (
                 <article
                   key={segment.title}
-                  className="flex gap-5 rounded-3xl border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-0.5 hover:border-cyan-200 hover:shadow-lg"
+                  className="flex gap-5 rounded-3xl border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-0.5 hover:border-yellow-200 hover:shadow-lg"
                 >
-                  <div className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-cyan-50 text-cyan-600">
+                  <div className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-yellow-50 text-yellow-600">
                     <Icon className="size-6" />
                   </div>
 
@@ -341,7 +342,7 @@ export default function Home() {
       <section className="border-y border-slate-200 bg-white py-24 sm:py-32">
         <div className="mx-auto grid max-w-7xl items-center gap-14 px-6 lg:grid-cols-2 lg:px-8">
           <div>
-            <div className="inline-flex items-center gap-2 rounded-full border border-cyan-200 bg-cyan-50 px-4 py-2 text-sm font-semibold text-cyan-700">
+            <div className="inline-flex items-center gap-2 rounded-full border border-yellow-200 bg-yellow-50 px-4 py-2 text-sm font-semibold text-yellow-700">
               <Zap className="size-4" />
               Simples para começar
             </div>
@@ -394,12 +395,12 @@ export default function Home() {
                 key={plan.name}
                 className={`relative flex flex-col rounded-[2rem] border p-7 sm:p-8 ${
                   plan.highlighted
-                    ? "border-violet-300 bg-gradient-to-b from-violet-50 to-white shadow-2xl shadow-violet-200/60 lg:-translate-y-4"
+                    ? "border-orange-300 bg-gradient-to-b from-orange-50 to-white shadow-2xl shadow-orange-200/60 lg:-translate-y-4"
                     : "border-slate-200 bg-white shadow-sm"
                 }`}
               >
                 {plan.highlighted && (
-                  <div className="absolute -top-4 left-1/2 -translate-x-1/2 rounded-full bg-gradient-to-r from-violet-600 to-cyan-500 px-4 py-2 text-xs font-black uppercase tracking-wider text-white shadow-lg">
+                  <div className="absolute -top-4 left-1/2 -translate-x-1/2 rounded-full bg-gradient-to-r from-orange-600 to-yellow-500 px-4 py-2 text-xs font-black uppercase tracking-wider text-white shadow-lg">
                     Mais escolhido
                   </div>
                 )}
@@ -426,8 +427,8 @@ export default function Home() {
                   href="/cadastro"
                   className={`mt-8 inline-flex items-center justify-center gap-2 rounded-2xl px-5 py-4 text-sm font-bold transition ${
                     plan.highlighted
-                      ? "bg-violet-600 text-white shadow-lg shadow-violet-200 hover:bg-violet-700"
-                      : "border border-slate-200 bg-slate-50 text-slate-900 hover:border-violet-200 hover:bg-violet-50"
+                      ? "bg-orange-600 text-white shadow-lg shadow-orange-200 hover:bg-orange-700"
+                      : "border border-slate-200 bg-slate-50 text-slate-900 hover:border-orange-200 hover:bg-orange-50"
                   }`}
                 >
                   Escolher plano
@@ -442,7 +443,7 @@ export default function Home() {
                       key={feature}
                       className="flex items-start gap-3 text-sm text-slate-700"
                     >
-                      <span className="mt-0.5 flex size-5 shrink-0 items-center justify-center rounded-full bg-emerald-50 text-emerald-600">
+                      <span className="mt-0.5 flex size-5 shrink-0 items-center justify-center rounded-full bg-green-50 text-green-600">
                         <Check className="size-3.5" strokeWidth={3} />
                       </span>
                       {feature}
@@ -461,9 +462,9 @@ export default function Home() {
       </section>
 
       <section id="contato" className="px-6 pb-24 pt-8 lg:px-8 lg:pb-32">
-        <div className="relative mx-auto max-w-7xl overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-violet-600 via-indigo-600 to-cyan-600 px-7 py-16 text-center shadow-2xl shadow-violet-200 sm:px-12 sm:py-20">
+        <div className="relative mx-auto max-w-7xl overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-orange-600 via-amber-600 to-yellow-600 px-7 py-16 text-center shadow-2xl shadow-orange-200 sm:px-12 sm:py-20">
           <div className="absolute -left-20 -top-20 size-72 rounded-full bg-white/15 blur-3xl" />
-          <div className="absolute -bottom-32 -right-20 size-80 rounded-full bg-cyan-200/20 blur-3xl" />
+          <div className="absolute -bottom-32 -right-20 size-80 rounded-full bg-yellow-200/20 blur-3xl" />
 
           <div className="relative mx-auto max-w-3xl">
             <div className="mx-auto flex size-14 items-center justify-center rounded-2xl border border-white/30 bg-white/15">
@@ -474,7 +475,7 @@ export default function Home() {
               Pronto para transformar a gestão da sua empresa?
             </h2>
 
-            <p className="mx-auto mt-6 max-w-2xl text-lg leading-8 text-violet-50">
+            <p className="mx-auto mt-6 max-w-2xl text-lg leading-8 text-orange-50">
               Comece agora e tenha vendas, estoque, clientes e financeiro
               trabalhando juntos em uma única plataforma.
             </p>
@@ -482,7 +483,7 @@ export default function Home() {
             <div className="mt-9 flex flex-col justify-center gap-4 sm:flex-row">
               <Link
                 href="/cadastro"
-                className="inline-flex items-center justify-center gap-3 rounded-2xl bg-white px-7 py-4 font-bold text-slate-950 shadow-lg transition hover:bg-violet-50"
+                className="inline-flex items-center justify-center gap-3 rounded-2xl bg-white px-7 py-4 font-bold text-slate-950 shadow-lg transition hover:bg-orange-50"
               >
                 Criar minha conta
                 <ArrowRight className="size-5" />
@@ -510,29 +511,20 @@ function Header() {
     <header className="fixed inset-x-0 top-0 z-50 border-b border-slate-200/80 bg-white/85 backdrop-blur-xl">
       <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-6 lg:px-8">
         <Link href="/" className="flex items-center gap-3">
-          <Logo />
-
-          <div>
-            <span className="block text-lg font-black tracking-tight text-slate-950">
-              Gestão<span className="text-violet-600">+</span>
-            </span>
-            <span className="block text-[10px] font-semibold uppercase tracking-[0.24em] text-slate-400">
-              Gestão inteligente
-            </span>
-          </div>
+          <BrandLogo className="h-11" priority />
         </Link>
 
         <nav className="hidden items-center gap-8 text-sm font-medium text-slate-600 lg:flex">
-          <Link href="#recursos" className="transition hover:text-violet-600">
+          <Link href="#recursos" className="transition hover:text-orange-600">
             Recursos
           </Link>
-          <Link href="#segmentos" className="transition hover:text-violet-600">
+          <Link href="#segmentos" className="transition hover:text-orange-600">
             Segmentos
           </Link>
-          <Link href="#planos" className="transition hover:text-violet-600">
+          <Link href="#planos" className="transition hover:text-orange-600">
             Planos
           </Link>
-          <Link href="#contato" className="transition hover:text-violet-600">
+          <Link href="#contato" className="transition hover:text-orange-600">
             Contato
           </Link>
         </nav>
@@ -547,7 +539,7 @@ function Header() {
 
           <Link
             href="/cadastro"
-            className="inline-flex items-center gap-2 rounded-xl bg-slate-950 px-5 py-3 text-sm font-bold text-white transition hover:bg-violet-600"
+            className="inline-flex items-center gap-2 rounded-xl bg-slate-950 px-5 py-3 text-sm font-bold text-white transition hover:bg-orange-600"
           >
             Começar agora
             <ArrowRight className="size-4" />
@@ -566,18 +558,10 @@ function Header() {
   );
 }
 
-function Logo() {
-  return (
-    <div className="flex size-11 items-center justify-center rounded-2xl bg-gradient-to-br from-violet-600 to-cyan-500 shadow-lg shadow-violet-200">
-      <LayoutDashboard className="size-6 text-white" />
-    </div>
-  );
-}
-
 function Benefit({ text }: { text: string }) {
   return (
     <span className="flex items-center gap-2">
-      <CheckCircle2 className="size-4 text-emerald-500" />
+      <CheckCircle2 className="size-4 text-green-500" />
       {text}
     </span>
   );
@@ -594,7 +578,7 @@ function SectionHeader({
 }) {
   return (
     <div className="mx-auto max-w-3xl text-center">
-      <span className="text-sm font-black uppercase tracking-[0.22em] text-violet-600">
+      <span className="text-sm font-black uppercase tracking-[0.22em] text-orange-600">
         {eyebrow}
       </span>
 
@@ -618,7 +602,7 @@ function Step({
 }) {
   return (
     <div className="flex gap-5 rounded-2xl border border-slate-200 bg-slate-50 p-5">
-      <span className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-violet-100 text-sm font-black text-violet-700">
+      <span className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-orange-100 text-sm font-black text-orange-700">
         {number}
       </span>
 
@@ -633,21 +617,21 @@ function Step({
 function DashboardPreview() {
   return (
     <div className="relative mx-auto w-full max-w-[620px]">
-      <div className="absolute inset-0 translate-y-10 rounded-[2rem] bg-violet-300/30 blur-3xl" />
+      <div className="absolute inset-0 translate-y-10 rounded-[2rem] bg-orange-300/30 blur-3xl" />
 
       <div className="relative overflow-hidden rounded-[2rem] border border-slate-200 bg-white shadow-2xl shadow-slate-300/50">
         <div className="flex items-center justify-between border-b border-slate-200 px-5 py-4">
           <div className="flex gap-2">
             <span className="size-2.5 rounded-full bg-red-400" />
             <span className="size-2.5 rounded-full bg-amber-400" />
-            <span className="size-2.5 rounded-full bg-emerald-400" />
+            <span className="size-2.5 rounded-full bg-green-400" />
           </div>
 
           <div className="rounded-lg border border-slate-200 bg-slate-50 px-3 py-1.5 text-[10px] font-medium text-slate-400">
-            app.gestaomais.com
+            app.mangora.com.br
           </div>
 
-          <div className="size-8 rounded-full bg-gradient-to-br from-violet-500 to-cyan-400" />
+          <div className="size-8 rounded-full bg-gradient-to-br from-orange-500 to-yellow-400" />
         </div>
 
         <div className="grid min-h-[480px] grid-cols-[72px_1fr]">
@@ -665,7 +649,7 @@ function DashboardPreview() {
                   key={index}
                   className={`flex size-10 items-center justify-center rounded-xl ${
                     index === 0
-                      ? "bg-violet-600 text-white shadow-md"
+                      ? "bg-orange-600 text-white shadow-md"
                       : "text-slate-400"
                   }`}
                 >
@@ -715,7 +699,7 @@ function DashboardPreview() {
                     <div className="h-2.5 w-24 rounded bg-slate-300" />
                     <div className="mt-2 h-2 w-16 rounded bg-slate-200" />
                   </div>
-                  <BarChart3 className="size-4 text-violet-500" />
+                  <BarChart3 className="size-4 text-orange-500" />
                 </div>
 
                 <div className="mt-8 flex h-36 items-end gap-2">
@@ -723,7 +707,7 @@ function DashboardPreview() {
                     (height, index) => (
                       <div
                         key={index}
-                        className="flex-1 rounded-t-md bg-gradient-to-t from-violet-500 to-cyan-400"
+                        className="flex-1 rounded-t-md bg-gradient-to-t from-orange-500 to-yellow-400"
                         style={{ height: `${height}%` }}
                       />
                     ),
@@ -757,7 +741,7 @@ function DashboardPreview() {
             <div className="mt-4 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
               <div className="mb-4 flex items-center justify-between">
                 <div className="h-2.5 w-24 rounded bg-slate-300" />
-                <div className="h-7 w-20 rounded-lg bg-violet-100" />
+                <div className="h-7 w-20 rounded-lg bg-orange-100" />
               </div>
 
               <div className="space-y-3">
@@ -786,7 +770,7 @@ function DashboardPreview() {
                     <span
                       className={`rounded-full px-2 py-1 text-[8px] font-bold ${
                         status === "Concluído"
-                          ? "bg-emerald-50 text-emerald-600"
+                          ? "bg-green-50 text-green-600"
                           : "bg-amber-50 text-amber-600"
                       }`}
                     >
@@ -805,7 +789,7 @@ function DashboardPreview() {
         icon={PackageCheck}
         title="Venda concluída"
         description="Estoque atualizado automaticamente"
-        iconClassName="bg-emerald-50 text-emerald-600"
+        iconClassName="bg-green-50 text-green-600"
       />
 
       <FloatingNotification
@@ -813,7 +797,7 @@ function DashboardPreview() {
         icon={CreditCard}
         title="Pagamento aprovado"
         description="R$ 189,90 via PIX"
-        iconClassName="bg-cyan-50 text-cyan-600"
+        iconClassName="bg-yellow-50 text-yellow-600"
       />
     </div>
   );
@@ -833,10 +817,10 @@ function MetricCard({
   return (
     <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
       <div className="flex items-center justify-between">
-        <div className="flex size-8 items-center justify-center rounded-lg bg-violet-50 text-violet-600">
+        <div className="flex size-8 items-center justify-center rounded-lg bg-orange-50 text-orange-600">
           <Icon className="size-4" />
         </div>
-        <span className="text-[9px] font-bold text-emerald-600">{detail}</span>
+        <span className="text-[9px] font-bold text-green-600">{detail}</span>
       </div>
 
       <p className="mt-4 text-[9px] text-slate-400">{label}</p>
@@ -906,7 +890,7 @@ function OperationsPreview() {
 
   return (
     <div className="relative">
-      <div className="absolute inset-0 rounded-full bg-cyan-200/40 blur-[100px]" />
+      <div className="absolute inset-0 rounded-full bg-yellow-200/40 blur-[100px]" />
 
       <div className="relative rounded-[2rem] border border-slate-200 bg-slate-50 p-5 shadow-2xl shadow-slate-200 sm:p-7">
         <div className="flex items-center justify-between">
@@ -919,7 +903,7 @@ function OperationsPreview() {
             </p>
           </div>
 
-          <div className="flex size-11 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-600">
+          <div className="flex size-11 items-center justify-center rounded-2xl bg-green-50 text-green-600">
             <Zap className="size-5" />
           </div>
         </div>
@@ -933,7 +917,7 @@ function OperationsPreview() {
                 key={item.label}
                 className="flex items-center gap-4 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm"
               >
-                <div className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-violet-50 text-violet-600">
+                <div className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-orange-50 text-orange-600">
                   <Icon className="size-5" />
                 </div>
 
@@ -946,7 +930,7 @@ function OperationsPreview() {
                   </p>
                 </div>
 
-                <span className="text-right text-xs font-bold text-cyan-600">
+                <span className="text-right text-xs font-bold text-yellow-600">
                   {item.value}
                 </span>
               </div>
@@ -955,16 +939,16 @@ function OperationsPreview() {
         </div>
 
         <div className="mt-5 grid grid-cols-2 gap-3">
-          <div className="rounded-2xl bg-gradient-to-br from-violet-100 to-violet-50 p-5">
-            <ShieldCheck className="size-5 text-violet-600" />
+          <div className="rounded-2xl bg-gradient-to-br from-orange-100 to-orange-50 p-5">
+            <ShieldCheck className="size-5 text-orange-600" />
             <p className="mt-6 text-2xl font-black text-slate-950">Seguro</p>
             <p className="mt-1 text-xs text-slate-500">
               Dados protegidos e separados
             </p>
           </div>
 
-          <div className="rounded-2xl bg-gradient-to-br from-cyan-100 to-cyan-50 p-5">
-            <Smartphone className="size-5 text-cyan-600" />
+          <div className="rounded-2xl bg-gradient-to-br from-yellow-100 to-yellow-50 p-5">
+            <Smartphone className="size-5 text-yellow-600" />
             <p className="mt-6 text-2xl font-black text-slate-950">
               Responsivo
             </p>
@@ -986,10 +970,7 @@ function Footer() {
       <div className="mx-auto grid max-w-7xl gap-12 px-6 py-14 sm:grid-cols-2 lg:grid-cols-4 lg:px-8">
         <div className="sm:col-span-2 lg:col-span-1">
           <Link href="/" className="flex items-center gap-3">
-            <Logo />
-            <span className="text-lg font-black text-slate-950">
-              Gestão<span className="text-violet-600">+</span>
-            </span>
+            <BrandLogo className="h-10" />
           </Link>
 
           <p className="mt-5 max-w-xs text-sm leading-6 text-slate-500">
@@ -1030,7 +1011,7 @@ function Footer() {
 
       <div className="border-t border-slate-200">
         <div className="mx-auto flex max-w-7xl flex-col gap-3 px-6 py-6 text-sm text-slate-500 sm:flex-row sm:items-center sm:justify-between lg:px-8">
-          <p>© {currentYear} Gestão+. Todos os direitos reservados.</p>
+          <p>© {currentYear} Mangora. Todos os direitos reservados.</p>
           <p>Desenvolvido para simplificar empresas.</p>
         </div>
       </div>
@@ -1054,7 +1035,7 @@ function FooterColumn({
           <li key={label}>
             <Link
               href={href}
-              className="text-sm text-slate-500 transition hover:text-violet-600"
+              className="text-sm text-slate-500 transition hover:text-orange-600"
             >
               {label}
             </Link>
