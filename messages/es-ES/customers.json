@@ -58,7 +58,14 @@
     "never": "Nunca",
     "relationship": "Relación",
     "notes": "Observaciones",
-    "totalSpent": "Total comprado"
+    "totalSpent": "Total comprado",
+    "purchaseHistory": "Historial de compras",
+    "purchaseHistoryHint": "Ventas completadas por mes.",
+    "purchaseMonth": "Mes",
+    "monthSales": "{count} ventas este mes",
+    "averageSale": "Promedio por venta",
+    "loadingPurchases": "Cargando ventas...",
+    "noPurchasesMonth": "No hay ventas completadas este mes."
   },
   "deleteDialog": {
     "title": "¿Eliminar cliente?",

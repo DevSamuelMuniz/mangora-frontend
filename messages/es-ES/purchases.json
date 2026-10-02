@@ -54,7 +54,9 @@
       "dueDate": "Vencimiento",
       "notes": "Observaciones",
       "items": "Artículos",
-      "total": "Total"
+      "total": "Total",
+      "cost": "Coste unitario",
+      "salePrice": "Precio de venta"
     },
     "errors": {
       "supplier": "Selecciona un proveedor activo.",
@@ -65,6 +67,7 @@
       "paymentMethods": "Elige formas de pago diferentes.",
       "create": "No se pudo crear la compra.",
       "action": "No se pudo completar la operación."
-    }
+    },
+    "salePriceNote": "El precio indicado se actualizará en el producto al recibir la compra. Déjalo vacío para mantener el precio actual."
   }
 }

@@ -26,6 +26,7 @@ import {
 
 import type { Customer, CustomerType } from "@/types/customer";
 import { formatDocument, formatPhone } from "@/lib/format";
+import { useCustomerPurchases } from "@/features/customers/hooks/useCustomers";
 import { useCustomers, useDeleteCustomer } from "@/features/customers/hooks/useCustomers";
 import { FilterSelect } from "@/components/shared/FilterSelect";
 import { PageButton } from "@/components/shared/PageButton";
@@ -152,6 +153,11 @@ function CustomerDetails({ customer, onClose }: { customer: Customer; onClose: (
   const { formatCurrency, formatDate } = useFormatters();
   const t = useT();
   const { locale } = useI18n();
+  const [purchaseMonth, setPurchaseMonth] = useState(() => {
+    const now = new Date();
+    return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
+  });
+  const { data: monthlyPurchases, isLoading: purchasesLoading, error: purchasesError } = useCustomerPurchases(customer.id, purchaseMonth);
   const panelRef = useRef<HTMLDivElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
   const location = [customer.street, customer.number, customer.district, customer.city, customer.state].filter(Boolean).join(", ") || t("customers.details.notInformed");
@@ -213,6 +219,11 @@ function CustomerDetails({ customer, onClose }: { customer: Customer; onClose: (
             <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4"><p className="text-[10px] font-semibold text-slate-500">{t("customers.details.fields.lastPurchase")}</p><p className="mt-1.5 truncate text-sm font-black text-slate-800">{customer.lastPurchaseAt ? formatDate(new Date(customer.lastPurchaseAt)) : t("customers.details.never")}</p></div>
           </div>
           <section className="mt-6"><h3 className="text-xs font-black text-slate-900">{t("customers.details.relationship")}</h3><dl className="mt-3 grid gap-2.5 sm:grid-cols-2">{details.map(([label, value]) => <div key={label} className="min-w-0 rounded-xl border border-slate-100 bg-white p-3.5"><dt className="text-[10px] font-semibold text-slate-400">{label}</dt><dd className="mt-1.5 break-words text-xs font-bold leading-5 text-slate-800">{value || t("customers.details.notInformed")}</dd></div>)}</dl></section>
+          <section className="mt-6">
+            <div className="flex flex-wrap items-end justify-between gap-3"><div><h3 className="text-xs font-black text-slate-900">{t("customers.details.purchaseHistory")}</h3><p className="mt-1 text-[10px] text-slate-500">{t("customers.details.purchaseHistoryHint")}</p></div><label className="text-[10px] font-bold text-slate-600">{t("customers.details.purchaseMonth")}<input type="month" value={purchaseMonth} onChange={(event) => setPurchaseMonth(event.target.value)} className="mt-1 block h-9 rounded-lg border border-slate-200 px-2 text-xs" /></label></div>
+            {monthlyPurchases && <div className="mt-3 grid grid-cols-2 gap-2"><div className="rounded-xl bg-orange-50 p-3"><p className="text-[9px] text-orange-700">{t("customers.details.monthSales", { count: monthlyPurchases.count })}</p><p className="mt-1 text-sm font-black text-slate-900">{formatCurrency(monthlyPurchases.total, locale)}</p></div><div className="rounded-xl bg-slate-50 p-3"><p className="text-[9px] text-slate-500">{t("customers.details.averageSale")}</p><p className="mt-1 text-sm font-black text-slate-900">{formatCurrency(monthlyPurchases.count ? monthlyPurchases.total / monthlyPurchases.count : 0, locale)}</p></div></div>}
+            {purchasesLoading ? <p className="mt-3 rounded-xl bg-slate-50 p-4 text-center text-xs text-slate-500">{t("customers.details.loadingPurchases")}</p> : purchasesError ? <p role="alert" className="mt-3 rounded-xl bg-red-50 p-3 text-xs text-red-700">{purchasesError.message}</p> : monthlyPurchases?.sales.length ? <div className="mt-3 divide-y rounded-xl border border-slate-200">{monthlyPurchases.sales.map((sale) => <article key={sale.id} className="p-3"><div className="flex items-start justify-between gap-3"><div><p className="text-xs font-black text-orange-700">{sale.code}</p><p className="mt-1 text-[10px] text-slate-500">{formatDate(new Date(sale.createdAt))} · {t(`paymentMethods.${sale.paymentMethod}`)}</p></div><strong className="text-xs">{formatCurrency(sale.total, locale)}</strong></div><div className="mt-2 space-y-1">{sale.items.map((item, index) => <p key={`${sale.id}-${index}`} className="text-[10px] text-slate-600">{item.quantity} × {item.productName} <span className="text-slate-400">· {formatCurrency(item.subtotal, locale)}</span></p>)}</div></article>)}</div> : !purchasesLoading && <p className="mt-3 rounded-xl border border-dashed border-slate-200 p-4 text-center text-xs text-slate-500">{t("customers.details.noPurchasesMonth")}</p>}
+          </section>
           {customer.notes && <section className="mt-5 rounded-2xl border border-slate-200 bg-slate-50 p-4"><h3 className="text-[10px] font-bold uppercase tracking-wide text-slate-500">{t("customers.details.notes")}</h3><p className="mt-2 whitespace-pre-wrap text-xs leading-5 text-slate-700">{customer.notes}</p></section>}
         </div>
 

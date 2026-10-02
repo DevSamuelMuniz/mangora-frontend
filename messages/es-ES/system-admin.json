@@ -26,7 +26,8 @@
     "unlocked": "Acceso desbloqueado.",
     "sessionsClosed": "Sesiones cerradas.",
     "resetEmailSent": "Correo de restablecimiento de contraseña enviado.",
-    "resetLinkDev": "Enlace de restablecimiento (dev): {url}"
+    "resetLinkDev": "Enlace de restablecimiento (dev): {url}",
+    "couponUpdated": "Estado del cupón actualizado."
   },
   "errors": {
     "loadCentral": "No se pudo cargar la central.",
@@ -52,7 +53,12 @@
     "mrrNote": "suma de los planes actuales",
     "newNote": "registros desde el día 1",
     "recentTitle": "Registros recientes",
-    "recentCopy": "Las últimas empresas que entraron en la plataforma."
+    "recentCopy": "Las últimas empresas que entraron en la plataforma.",
+    "alertsTitle": "Atención operativa",
+    "alertsCopy": "{count} cuenta(s) reciente(s) necesitan revisión.",
+    "openPlans": "Ver planes",
+    "openPrices": "Editar precios",
+    "openCoupons": "Gestionar cupones"
   },
   "search": {
     "companies": "Buscar por empresa, correo o documento",
@@ -94,7 +100,9 @@
       "BUSINESS": "Business",
       "PREMIUM": "Premium",
       "ENTERPRISE": "Enterprise"
-    }
+    },
+    "viewCompanies": "Ver empresas",
+    "managePrices": "Gestionar precios"
   },
   "prices": {
     "eyebrow": "Country → Market → PlanPrice",
@@ -187,7 +195,9 @@
     "listTitle": "Cupones registrados",
     "listDescription": "Descuento aplicado solo a la primera mensualidad.",
     "uses": "{used}/{max} usos",
-    "empty": "Ningún cupón registrado."
+    "empty": "Ningún cupón registrado.",
+    "activate": "Activar",
+    "deactivate": "Desactivar"
   },
   "state": {
     "loading": "Cargando la operación…",

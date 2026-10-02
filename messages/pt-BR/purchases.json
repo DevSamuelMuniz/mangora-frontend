@@ -54,7 +54,9 @@
       "dueDate": "Vencimento",
       "notes": "Observações",
       "items": "Itens",
-      "total": "Total"
+      "total": "Total",
+      "cost": "Custo unitário",
+      "salePrice": "Preço de venda"
     },
     "errors": {
       "supplier": "Selecione um fornecedor ativo.",
@@ -65,6 +67,7 @@
       "paymentMethods": "Escolha formas de pagamento diferentes.",
       "create": "Não foi possível criar a compra.",
       "action": "Não foi possível concluir a operação."
-    }
+    },
+    "salePriceNote": "A data de venda será atualizada ao receber a compra; vazio mantém o preço atual."
   }
 }

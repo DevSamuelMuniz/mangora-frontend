@@ -54,7 +54,9 @@
       "dueDate": "Due date",
       "notes": "Notes",
       "items": "Items",
-      "total": "Total"
+      "total": "Total",
+      "cost": "Unit cost",
+      "salePrice": "Sale price"
     },
     "errors": {
       "supplier": "Select an active supplier.",
@@ -65,6 +67,7 @@
       "paymentMethods": "Choose different payment methods.",
       "create": "We could not create the purchase.",
       "action": "We could not complete the action."
-    }
+    },
+    "salePriceNote": "The sale price updates the product when receiving the purchase. Leave blank to keep the current price."
   }
 }

@@ -6,7 +6,7 @@ export type Purchase = {
   notes: string | null; receivedAt: string | null; receivedByName: string | null; cancelledAt: string | null;
   cancelledByName: string | null; cancelReason: string | null; createdAt: string;
   supplier: { id: string; legalName: string; tradeName: string | null; document: string | null };
-  items: { id: string; productId: string; productName: string; sku: string; quantity: number; unitCost: number; subtotal: number }[];
+  items: { id: string; productId: string; productName: string; sku: string; quantity: number; unitCost: number; salePrice: number | null; subtotal: number }[];
   payments: { id: string; method: PurchasePaymentMethod; amount: number }[];
   financialEntry: { id: string; status: string; dueDate: string } | null;
 };

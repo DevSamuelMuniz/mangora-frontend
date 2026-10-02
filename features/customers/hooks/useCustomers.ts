@@ -4,6 +4,11 @@ import { apiRequest } from "@/lib/api/client";
 import { useApiQuery } from "@/lib/hooks/useApiQuery";
 import type { Customer } from "@/types/customer";
 
+export type CustomerMonthlyPurchases = {
+    month: string; total: number; count: number;
+    sales: Array<{ id: string; number: number; code: string; createdAt: string; total: number; paymentMethod: string; items: Array<{ productName: string; quantity: number; unitPrice: number; subtotal: number }>; payments: Array<{ method: string; amount: number }> }>;
+};
+
 /**
  * Domínio de clientes — hooks de estado de servidor.
  *
@@ -35,6 +40,14 @@ export function useCustomerForm(customerId: string | null) {
         queryKey: ["customer-form", customerId ?? "new"],
         queryFn: () => (customerId ? apiRequest<Customer>(`/customers/${customerId}`) : Promise.resolve(null)),
         enabled: Boolean(customerId),
+    });
+}
+
+export function useCustomerPurchases(customerId: string, month: string) {
+    return useQuery<CustomerMonthlyPurchases, Error>({
+        queryKey: ["customer-purchases", customerId, month],
+        queryFn: () => apiRequest<CustomerMonthlyPurchases>(`/customers/${customerId}/purchases?month=${month}`),
+        enabled: Boolean(customerId && month),
     });
 }
 

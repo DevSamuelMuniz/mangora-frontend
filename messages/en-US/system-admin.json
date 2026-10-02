@@ -26,7 +26,8 @@
     "unlocked": "Access unlocked.",
     "sessionsClosed": "Sessions ended.",
     "resetEmailSent": "Password reset e-mail sent.",
-    "resetLinkDev": "Reset link (dev): {url}"
+    "resetLinkDev": "Reset link (dev): {url}",
+    "couponUpdated": "Coupon status updated."
   },
   "errors": {
     "loadCentral": "We could not load the console.",
@@ -52,7 +53,12 @@
     "mrrNote": "sum of current plans",
     "newNote": "sign-ups since day 1",
     "recentTitle": "Recent sign-ups",
-    "recentCopy": "The latest companies that joined the platform."
+    "recentCopy": "The latest companies that joined the platform.",
+    "alertsTitle": "Operational attention",
+    "alertsCopy": "{count} recent account(s) need review.",
+    "openPlans": "View plans",
+    "openPrices": "Edit prices",
+    "openCoupons": "Manage coupons"
   },
   "search": {
     "companies": "Search by company, e-mail or document",
@@ -94,7 +100,9 @@
       "BUSINESS": "Business",
       "PREMIUM": "Premium",
       "ENTERPRISE": "Enterprise"
-    }
+    },
+    "viewCompanies": "View companies",
+    "managePrices": "Manage prices"
   },
   "prices": {
     "eyebrow": "Country → Market → PlanPrice",
@@ -187,7 +195,9 @@
     "listTitle": "Registered coupons",
     "listDescription": "Discount applied only to the first monthly payment.",
     "uses": "{used}/{max} uses",
-    "empty": "No coupon registered."
+    "empty": "No coupon registered.",
+    "activate": "Activate",
+    "deactivate": "Deactivate"
   },
   "state": {
     "loading": "Loading the operation…",

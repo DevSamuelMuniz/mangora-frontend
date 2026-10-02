@@ -61,7 +61,22 @@
     "relationship": "Relación",
     "notes": "Observaciones",
     "totalSpent": "Total comprado",
-    "fields": { "document": "Documento", "type": "Tipo de cliente", "email": "E-mail", "phone": "Telefone", "address": "Morada", "postalCode": "Código postal", "lastPurchase": "Última compra" }
+    "fields": {
+      "document": "Documento",
+      "type": "Tipo de cliente",
+      "email": "E-mail",
+      "phone": "Telefone",
+      "address": "Morada",
+      "postalCode": "Código postal",
+      "lastPurchase": "Última compra"
+    },
+    "purchaseHistory": "Histórico de compras",
+    "purchaseHistoryHint": "Vendas concluídas por mês.",
+    "purchaseMonth": "Mês",
+    "monthSales": "{count} vendas no mês",
+    "averageSale": "Média por venda",
+    "loadingPurchases": "A carregar vendas...",
+    "noPurchasesMonth": "Nenhuma venda concluída neste mês."
   },
   "deleteDialog": {
     "title": "¿Eliminar cliente?",

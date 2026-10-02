@@ -61,7 +61,22 @@
     "relationship": "Relationship",
     "notes": "Notes",
     "totalSpent": "Total spent",
-    "fields": { "document": "Document", "type": "Customer type", "email": "Email", "phone": "Phone", "address": "Address", "postalCode": "ZIP code", "lastPurchase": "Last purchase" }
+    "fields": {
+      "document": "Document",
+      "type": "Customer type",
+      "email": "Email",
+      "phone": "Phone",
+      "address": "Address",
+      "postalCode": "ZIP code",
+      "lastPurchase": "Last purchase"
+    },
+    "purchaseHistory": "Purchase history",
+    "purchaseHistoryHint": "Completed sales by month.",
+    "purchaseMonth": "Month",
+    "monthSales": "{count} sales this month",
+    "averageSale": "Average sale",
+    "loadingPurchases": "Loading sales...",
+    "noPurchasesMonth": "No completed sales this month."
   },
   "deleteDialog": {
     "title": "Delete customer?",

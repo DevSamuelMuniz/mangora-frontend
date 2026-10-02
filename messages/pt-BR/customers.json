@@ -61,7 +61,22 @@
     "relationship": "Relacionamento",
     "notes": "Observações",
     "totalSpent": "Total comprado",
-    "fields": { "document": "Documento", "type": "Tipo de cliente", "email": "E-mail", "phone": "Telefone", "address": "Endereço", "postalCode": "CEP", "lastPurchase": "Última compra" }
+    "fields": {
+      "document": "Documento",
+      "type": "Tipo de cliente",
+      "email": "E-mail",
+      "phone": "Telefone",
+      "address": "Endereço",
+      "postalCode": "CEP",
+      "lastPurchase": "Última compra"
+    },
+    "purchaseHistory": "Histórico de compras",
+    "purchaseHistoryHint": "Vendas concluídas por mês.",
+    "purchaseMonth": "Mês",
+    "monthSales": "{count} vendas no mês",
+    "averageSale": "Média por venda",
+    "loadingPurchases": "Carregando vendas...",
+    "noPurchasesMonth": "Nenhuma venda concluída neste mês."
   },
   "deleteDialog": {
     "title": "Excluir cliente?",
