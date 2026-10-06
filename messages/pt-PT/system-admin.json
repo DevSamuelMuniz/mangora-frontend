@@ -67,6 +67,8 @@
   "companies": {
     "panelTitle": "Empresas e subscrições",
     "panelDescription": "{count} registos apresentados · até 100 contas recentes",
+    "groupTotals": "Consolidado do grupo · {count} lojas",
+    "unitTotals": "Apenas esta loja",
     "usersCount": "{count} utilizador(es)",
     "open": "Abrir",
     "edit": "Editar",
