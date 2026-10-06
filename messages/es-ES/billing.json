@@ -97,6 +97,26 @@
     "choosePlan": "Elige el plan ideal",
     "couponAppliedLong": "Cupón aplicado: primera mensualidad por {first}. Las siguientes serán de {recurring}."
   },
+  "pendingPayment": {
+    "eyebrow": "Suscripción · pago vencido",
+    "title": "Hay un pago pendiente para tu empresa",
+    "description": "El cobro de la suscripción de {company} venció. Revisa los importes y fechas y paga para mantener tu plan.",
+    "plan": "Plan",
+    "totalDue": "Total pendiente",
+    "overdueCount": "Cobros vencidos",
+    "invoicesTitle": "Detalles de los cobros",
+    "showAll": "Ver todos ({count})",
+    "showLess": "Mostrar menos",
+    "dueDate": "Vencimiento: {date}",
+    "lateDays": "Hace {count} día(s)",
+    "reference": "Referencia: {reference}",
+    "secondCopy": "Abrir pago",
+    "paymentLinkUnavailable": "Abre la suscripción para solicitar otra copia",
+    "payNow": "Pagar ahora",
+    "viewBilling": "Ver cobro",
+    "remindLater": "Recordármelo más tarde",
+    "close": "Cerrar aviso"
+  },
   "trialGate": {
     "eyebrow": "Fin del periodo gratuito",
     "copy": "Tu cuenta sigue activa en el plan Free, sin cobro. Tus datos y los recursos esenciales siguen disponibles.",

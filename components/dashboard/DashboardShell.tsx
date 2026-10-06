@@ -9,6 +9,7 @@ import { setUserProperties } from "@/lib/analytics";
 import OfflineBanner from "@/components/pwa/OfflineBanner";
 import TrialAccessGate from "@/components/subscription/TrialAccessGate";
 import MfaRecommendationModal from "@/components/security/MfaRecommendationModal";
+import PendingSubscriptionPaymentModal from "@/components/subscription/PendingSubscriptionPaymentModal";
 
 type DashboardShellProps = {
   children: ReactNode;
@@ -54,6 +55,7 @@ export default function DashboardShell({
 
       <div className="mangora-workspace lg:pl-64">
         <MfaRecommendationModal session={session} />
+        <PendingSubscriptionPaymentModal session={session} />
         <RouteToast />
         <OfflineBanner />
         <DashboardHeader

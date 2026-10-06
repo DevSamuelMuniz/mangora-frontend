@@ -97,6 +97,26 @@
     "choosePlan": "Escolha o plano ideal",
     "couponAppliedLong": "Cupom aplicado: primeira mensalidade por {first}. As próximas serão de {recurring}."
   },
+  "pendingPayment": {
+    "eyebrow": "Assinatura · cobrança vencida",
+    "title": "Existe um pagamento pendente para sua empresa",
+    "description": "A cobrança da assinatura de {company} venceu. Confira os valores e datas abaixo e regularize o pagamento para manter seu plano.",
+    "plan": "Plano",
+    "totalDue": "Total em aberto",
+    "overdueCount": "Cobranças vencidas",
+    "invoicesTitle": "Detalhes das cobranças",
+    "showAll": "Ver todas ({count})",
+    "showLess": "Mostrar menos",
+    "dueDate": "Vencimento: {date}",
+    "lateDays": "Há {count} dia(s)",
+    "reference": "Referência: {reference}",
+    "secondCopy": "Abrir pagamento",
+    "paymentLinkUnavailable": "Acesse a assinatura para solicitar a 2ª via",
+    "payNow": "Pagar agora",
+    "viewBilling": "Ver cobrança",
+    "remindLater": "Lembrar mais tarde",
+    "close": "Fechar aviso"
+  },
   "trialGate": {
     "eyebrow": "Fim do período gratuito",
     "copy": "Sua conta continua ativa no plano Free, sem cobrança. Seus dados e os recursos essenciais seguem disponíveis.",

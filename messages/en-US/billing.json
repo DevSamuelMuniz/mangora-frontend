@@ -97,6 +97,26 @@
     "choosePlan": "Choose the ideal plan",
     "couponAppliedLong": "Coupon applied: first monthly payment of {first}. The following ones will be {recurring}."
   },
+  "pendingPayment": {
+    "eyebrow": "Subscription · overdue payment",
+    "title": "Your company has a pending payment",
+    "description": "The subscription charge for {company} is overdue. Review the amounts and dates below and pay to keep your plan active.",
+    "plan": "Plan",
+    "totalDue": "Total due",
+    "overdueCount": "Overdue charges",
+    "invoicesTitle": "Charge details",
+    "showAll": "View all ({count})",
+    "showLess": "Show less",
+    "dueDate": "Due: {date}",
+    "lateDays": "{count} day(s) overdue",
+    "reference": "Reference: {reference}",
+    "secondCopy": "Open payment",
+    "paymentLinkUnavailable": "Open subscription to request a new copy",
+    "payNow": "Pay now",
+    "viewBilling": "View charge",
+    "remindLater": "Remind me later",
+    "close": "Close notice"
+  },
   "trialGate": {
     "eyebrow": "End of the free period",
     "copy": "Your account stays active on the Free plan, with no charge. Your data and the essential features remain available.",
