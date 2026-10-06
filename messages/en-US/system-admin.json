@@ -122,6 +122,7 @@
     "confirmRemove": "Confirm removal",
     "usersCount": "{count} user(s)",
     "activeUsers": "Users",
+    "activeMembershipLinks": "Active memberships",
     "products": "Products",
     "services": "Services",
     "customers": "Customers",

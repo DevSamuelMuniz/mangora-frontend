@@ -69,6 +69,8 @@
     "panelDescription": "{count} registos apresentados · até 100 contas recentes",
     "groupTotals": "Consolidado do grupo · {count} lojas",
     "unitTotals": "Apenas esta loja",
+    "activeUsers": "Utilizadores",
+    "activeMembershipLinks": "Vínculos ativos",
     "usersCount": "{count} utilizador(es)",
     "open": "Abrir",
     "edit": "Editar",
