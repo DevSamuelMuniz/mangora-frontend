@@ -145,6 +145,7 @@
     "companySuspended": "Suspensa",
     "plan": "Plano",
     "subscriptionStatus": "Estado da subscrição",
+    "subscriptionPrice": "Preço mensal da subscrição (€)",
     "unitPrice": "Preço por loja personalizado",
     "ownersLimit": "Limite de proprietários",
     "employeesLimit": "Limite de funcionários",

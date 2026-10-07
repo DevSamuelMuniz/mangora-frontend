@@ -206,6 +206,7 @@
     "companySuspended": "Suspended",
     "plan": "Plan",
     "subscriptionStatus": "Subscription status",
+    "subscriptionPrice": "Monthly subscription price",
     "unitPrice": "Custom price per store",
     "ownersLimit": "Owner limit",
     "employeesLimit": "Employee limit",

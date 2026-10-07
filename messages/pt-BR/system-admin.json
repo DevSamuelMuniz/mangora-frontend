@@ -206,6 +206,7 @@
     "companySuspended": "Suspensa",
     "plan": "Plano",
     "subscriptionStatus": "Status da assinatura",
+    "subscriptionPrice": "Preço mensal da assinatura (R$)",
     "unitPrice": "Preço por loja personalizado",
     "ownersLimit": "Limite de donos",
     "employeesLimit": "Limite de funcionários",
