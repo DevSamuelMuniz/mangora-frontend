@@ -123,6 +123,8 @@
     "scheduleOnly": "Sua cobrança venceu em {date}. Regularize para recuperar o acesso ao sistema.",
     "perMonth": "por mês",
     "goToBilling": "Abrir opções de pagamento",
+    "openingPayment": "Preparando pagamento...",
+    "paymentError": "Não foi possível abrir a cobrança. Tente novamente.",
     "ownerRequired": "Peça ao proprietário da empresa para concluir o pagamento."
   },
   "trialGate": {

@@ -123,6 +123,8 @@
     "scheduleTitle": "Payment overdue",
     "perMonth": "per month",
     "goToBilling": "View payment options",
+    "openingPayment": "Preparing payment...",
+    "paymentError": "Could not open the charge. Please try again.",
     "ownerRequired": "Ask the company owner to complete the payment."
   },
   "trialGate": {

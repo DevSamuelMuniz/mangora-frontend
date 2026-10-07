@@ -123,6 +123,8 @@
     "scheduleTitle": "Cobro vencido",
     "perMonth": "al mes",
     "goToBilling": "Ver opciones de pago",
+    "openingPayment": "Preparando el pago...",
+    "paymentError": "No se pudo abrir el cobro. Inténtalo de nuevo.",
     "ownerRequired": "Pide al propietario de la empresa que complete el pago."
   },
   "trialGate": {

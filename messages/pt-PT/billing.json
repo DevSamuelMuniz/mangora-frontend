@@ -131,6 +131,8 @@
     "scheduleTitle": "Cobrança vencida",
     "perMonth": "por mês",
     "goToBilling": "Ver opções de pagamento",
+    "openingPayment": "A preparar pagamento...",
+    "paymentError": "Não foi possível abrir a cobrança. Tente novamente.",
     "ownerRequired": "Peça ao proprietário da empresa para concluir o pagamento.",
     "remindLater": "O pagamento será confirmado automaticamente."
   }
