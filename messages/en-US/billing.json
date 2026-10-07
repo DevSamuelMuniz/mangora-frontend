@@ -115,7 +115,8 @@
     "payNow": "Pay now",
     "viewBilling": "View charge",
     "remindLater": "Remind me later",
-    "close": "Close notice"
+    "close": "Close notice",
+    "scheduleOnly": "The billing date configured for your company has passed."
   },
   "trialGate": {
     "eyebrow": "End of the free period",

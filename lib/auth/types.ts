@@ -36,6 +36,7 @@ export type AuthSession = {
     subscriptionPlan: "FREE" | "START" | "BUSINESS" | "PREMIUM" | "ENTERPRISE";
     subscriptionStatus: "TRIAL" | "PENDING" | "ACTIVE" | "PAST_DUE" | "CANCELLED";
     trialEndsAt: string | null;
+    billingDueAt: string | null;
     trialDaysRemaining: number;
     trialExpired: boolean;
     accessBlocked: boolean;

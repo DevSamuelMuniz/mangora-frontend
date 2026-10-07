@@ -115,7 +115,8 @@
     "payNow": "Pagar ahora",
     "viewBilling": "Ver cobro",
     "remindLater": "Recordármelo más tarde",
-    "close": "Cerrar aviso"
+    "close": "Cerrar aviso",
+    "scheduleOnly": "La fecha de cobro configurada para tu empresa ya venció."
   },
   "trialGate": {
     "eyebrow": "Fin del periodo gratuito",
