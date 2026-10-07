@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { apiRequest } from "@/lib/api/client";
 
-type Settings = { email: string; purchases: boolean; paid: boolean; pending: boolean; emailConfigured: boolean };
+type Settings = { email: string; purchases: boolean; paid: boolean; pending: boolean; newRegistrations: boolean; emailConfigured: boolean };
 
 export default function BillingConfigPanel() {
   const [settings, setSettings] = useState<Settings | null>(null);
@@ -21,8 +21,8 @@ export default function BillingConfigPanel() {
     if (!settings) return;
     setBusy(true); setError(""); setMessage("");
     try {
-      const { email, purchases, paid, pending } = settings;
-      setSettings(await apiRequest<Settings>("/system-admin/billing-config", { method: "PATCH", body: JSON.stringify({ email, purchases, paid, pending }) }));
+      const { email, purchases, paid, pending, newRegistrations } = settings;
+      setSettings(await apiRequest<Settings>("/system-admin/billing-config", { method: "PATCH", body: JSON.stringify({ email, purchases, paid, pending, newRegistrations }) }));
       setMessage("Configurações salvas.");
     } catch (cause) { setError(cause instanceof Error ? cause.message : "Não foi possível salvar."); }
     finally { setBusy(false); }
@@ -41,7 +41,7 @@ export default function BillingConfigPanel() {
         <span className="mt-2 block text-xs font-normal text-[#597064]">Deixe vazio para desativar todos os avisos.</span>
       </label>
       <fieldset disabled={busy} className="space-y-3"><legend className="mb-3 text-sm font-bold">Quando avisar</legend>
-        {([['purchases', 'Compra de assinatura iniciada'], ['paid', 'Pagamento realizado'], ['pending', 'Pagamento pendente ou em atraso']] as const).map(([key, label]) => <label key={key} className="flex items-center gap-3 text-sm"><input type="checkbox" checked={settings[key]} onChange={(event) => { setSettings({ ...settings, [key]: event.target.checked }); setMessage(""); }} className="size-4 accent-[#123d2b]" />{label}</label>)}
+        {([['newRegistrations', 'Novo cadastro de empresa'], ['purchases', 'Compra de assinatura iniciada'], ['paid', 'Novo pagamento confirmado'], ['pending', 'Pagamento pendente ou em atraso']] as const).map(([key, label]) => <label key={key} className="flex items-center gap-3 text-sm"><input type="checkbox" checked={settings[key]} onChange={(event) => { setSettings({ ...settings, [key]: event.target.checked }); setMessage(""); }} className="size-4 accent-[#123d2b]" />{label}</label>)}
       </fieldset>
       <p className="text-xs text-[#597064]">Avisos enviados quando a compra é iniciada ou o status da cobrança é informado pelo provedor. Incluem empresa, plano, valor e referência do pagamento.</p>
       <button type="submit" disabled={busy} className="rounded-xl bg-[#123d2b] px-4 py-2 text-sm font-bold text-white disabled:opacity-50">{busy ? "Salvando…" : "Salvar configurações"}</button>
