@@ -133,6 +133,14 @@
     "goToBilling": "Ver opções de pagamento",
     "openingPayment": "A preparar pagamento...",
     "paymentError": "Não foi possível abrir a cobrança. Tente novamente.",
+    "detailsTitle": "Preencha os dados para pagamento",
+    "detailsHint": "Confirme os dados de faturação da empresa. Serão guardados antes de criar a cobrança.",
+    "saveAndPay": "Guardar dados e abrir pagamento",
+    "invalidDocument": "Introduza um NIF ou CPF válido com 11 ou 14 dígitos.",
+    "invalidPhone": "Introduza um telefone válido com indicativo da área.",
+    "requiredBillingDetails": "Preencha corretamente todos os dados de faturação.",
+    "detailsLoadError": "Não foi possível carregar os dados da empresa. Tente novamente.",
+    "detailsSaveError": "Não foi possível guardar os dados de faturação.",
     "ownerRequired": "Peça ao proprietário da empresa para concluir o pagamento.",
     "remindLater": "O pagamento será confirmado automaticamente."
   }

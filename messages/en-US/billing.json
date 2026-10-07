@@ -125,6 +125,14 @@
     "goToBilling": "View payment options",
     "openingPayment": "Preparing payment...",
     "paymentError": "Could not open the charge. Please try again.",
+    "detailsTitle": "Complete payment details",
+    "detailsHint": "Review the company's billing information. It will be saved before the charge is created.",
+    "saveAndPay": "Save details and open payment",
+    "invalidDocument": "Enter a valid tax ID with 11 or 14 digits.",
+    "invalidPhone": "Enter a valid phone number including area code.",
+    "requiredBillingDetails": "Complete all billing details correctly.",
+    "detailsLoadError": "Could not load company details. Please try again.",
+    "detailsSaveError": "Could not save billing details.",
     "ownerRequired": "Ask the company owner to complete the payment."
   },
   "trialGate": {

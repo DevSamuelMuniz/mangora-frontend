@@ -125,6 +125,14 @@
     "goToBilling": "Abrir opções de pagamento",
     "openingPayment": "Preparando pagamento...",
     "paymentError": "Não foi possível abrir a cobrança. Tente novamente.",
+    "detailsTitle": "Complete os dados para pagamento",
+    "detailsHint": "Confira os dados de faturamento da empresa. Eles serão salvos no cadastro antes de gerar a cobrança.",
+    "saveAndPay": "Salvar dados e abrir pagamento",
+    "invalidDocument": "Informe um CPF ou CNPJ com 11 ou 14 números.",
+    "invalidPhone": "Informe um telefone válido com DDD.",
+    "requiredBillingDetails": "Preencha todos os dados de faturamento corretamente.",
+    "detailsLoadError": "Não foi possível carregar os dados da empresa. Tente novamente.",
+    "detailsSaveError": "Não foi possível salvar os dados de faturamento.",
     "ownerRequired": "Peça ao proprietário da empresa para concluir o pagamento."
   },
   "trialGate": {

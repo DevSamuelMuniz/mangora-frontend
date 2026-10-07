@@ -5,6 +5,8 @@ import { AlertTriangle, CalendarClock, CreditCard, ExternalLink, FileText, X } f
 import type { AuthSession } from "@/lib/auth/types";
 import { useFormatters, useI18n, useT } from "@/i18n/provider";
 import { useSubscription } from "@/features/subscription/hooks/useSubscription";
+import { useCompanySettings, useSaveCompanySettings } from "@/features/settings/hooks/useSettings";
+import type { CompanySettings } from "@/types/settings";
 import type { SubscriptionInvoice } from "@/types/subscription";
 import { apiRequest } from "@/lib/api/client";
 
@@ -13,11 +15,15 @@ export default function PendingSubscriptionPaymentModal({ session }: { session: 
   const { locale } = useI18n();
   const { formatCurrency, formatDate } = useFormatters();
   const { data: overview } = useSubscription();
+  const { data: companySettings } = useCompanySettings();
+  const saveCompany = useSaveCompanySettings();
   const [open, setOpen] = useState(false);
   const [showAll, setShowAll] = useState(false);
   const [snoozedUntil, setSnoozedUntil] = useState(0);
   const [openingPayment, setOpeningPayment] = useState(false);
   const [paymentError, setPaymentError] = useState<string | null>(null);
+  const [showBillingDetails, setShowBillingDetails] = useState(false);
+  const [billingDetails, setBillingDetails] = useState({ legalName: "", document: "", email: "", phone: "", postalCode: "", street: "", number: "", city: "", state: "" });
   const isOwner = session.membership.role === "OWNER";
 
   const overdueInvoices = useMemo(() => {
@@ -59,19 +65,73 @@ export default function PendingSubscriptionPaymentModal({ session }: { session: 
   const formatPrice = (value: number) => formatCurrency(value, locale);
   const totalDue = overdueInvoices.length ? overdueInvoices.reduce((sum, invoice) => sum + invoice.amount, 0) : overview?.price ?? 0;
 
+  function billingDetailsAreValid(company: CompanySettings | undefined) {
+    const document = company?.document?.replace(/\D/g, "") ?? "";
+    const phone = company?.phone?.replace(/\D/g, "") ?? "";
+    const postalCode = company?.postalCode?.replace(/\D/g, "") ?? "";
+    return Boolean(company?.legalName?.trim() && (document.length === 11 || document.length === 14) && company.email?.trim() && phone.length >= 10 && postalCode.length === 8 && company.street?.trim() && company.number?.trim() && company.city?.trim() && /^[A-Z]{2}$/i.test(company.state ?? ""));
+  }
+
+  function requestBillingDetails() {
+    if (!companySettings) {
+      setPaymentError(t("billing.pendingPayment.detailsLoadError"));
+      return;
+    }
+    setBillingDetails({ legalName: companySettings.legalName ?? "", document: companySettings.document ?? "", email: companySettings.email ?? "", phone: companySettings.phone ?? "", postalCode: companySettings.postalCode ?? "", street: companySettings.street ?? "", number: companySettings.number ?? "", city: companySettings.city ?? "", state: companySettings.state ?? "" });
+    setShowBillingDetails(true);
+  }
+
   async function openPayment() {
-    if (openingPayment) return;
+    if (!isOwner || openingPayment) return;
     setPaymentError(null);
+    if (!billingDetailsAreValid(companySettings)) {
+      requestBillingDetails();
+      return;
+    }
+    await createPaymentLink();
+  }
+
+  async function createPaymentLink(paymentTab?: Window | null) {
+    if (openingPayment) return;
     if (payHref) {
-      window.location.assign(payHref);
+      if (paymentTab && !paymentTab.closed) paymentTab.location.assign(payHref);
+      else window.open(payHref, "_blank", "noopener,noreferrer");
       return;
     }
     setOpeningPayment(true);
     try {
       const result = await apiRequest<{ paymentUrl: string }>("/subscription/payment-link", { method: "POST", body: "{}" });
-      window.location.assign(result.paymentUrl);
+      if (paymentTab && !paymentTab.closed) paymentTab.location.assign(result.paymentUrl);
+      else window.open(result.paymentUrl, "_blank", "noopener,noreferrer");
     } catch (error) {
+      paymentTab?.close();
       setPaymentError(error instanceof Error ? error.message : t("billing.pendingPayment.paymentError"));
+      setOpeningPayment(false);
+    }
+  }
+
+  async function saveBillingDetailsAndPay(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (!companySettings) return;
+    const document = billingDetails.document.replace(/\D/g, "");
+    const phone = billingDetails.phone.replace(/\D/g, "");
+    const postalCode = billingDetails.postalCode.replace(/\D/g, "");
+    const state = billingDetails.state.trim().toUpperCase();
+    if (![11, 14].includes(document.length)) { setPaymentError(t("billing.pendingPayment.invalidDocument")); return; }
+    if (phone.length < 10 || phone.length > 15) { setPaymentError(t("billing.pendingPayment.invalidPhone")); return; }
+    if (!/^\d{8}$/.test(postalCode) || !billingDetails.legalName.trim() || !billingDetails.email.trim() || !billingDetails.street.trim() || !billingDetails.number.trim() || !billingDetails.city.trim() || !/^[A-Z]{2}$/.test(state)) { setPaymentError(t("billing.pendingPayment.requiredBillingDetails")); return; }
+    setOpeningPayment(true);
+    setPaymentError(null);
+    let paymentTab: Window | null = null;
+    try {
+      paymentTab = window.open("about:blank", "_blank");
+      await saveCompany.mutateAsync({ ...billingDetails, document, phone, postalCode, state });
+      setShowBillingDetails(false);
+      setOpeningPayment(false);
+      await createPaymentLink(paymentTab);
+    } catch (error) {
+      paymentTab?.close();
+      setPaymentError(error instanceof Error ? error.message : t("billing.pendingPayment.detailsSaveError"));
       setOpeningPayment(false);
     }
   }
@@ -98,9 +158,8 @@ export default function PendingSubscriptionPaymentModal({ session }: { session: 
           <div className="mb-2 flex items-center justify-between gap-2"><h3 className="text-xs font-black text-[#123d2b]">{t(overdueInvoices.length ? "billing.pendingPayment.invoicesTitle" : "billing.pendingPayment.nextStepTitle")}</h3>{overdueInvoices.length > 1 && <button type="button" onClick={() => setShowAll((value) => !value)} className="text-[10px] font-bold text-orange-700 underline underline-offset-2">{showAll ? t("billing.pendingPayment.showLess") : t("billing.pendingPayment.showAll", { count: overdueInvoices.length })}</button>}</div>
           <div className="space-y-2">{visibleInvoices.map((invoice) => <InvoiceCard key={invoice.id} invoice={invoice} formatCurrency={formatPrice} formatDate={formatDate} t={t} />)}{scheduleOverdue && overdueInvoices.length === 0 && <article className="rounded-xl border border-amber-200 bg-amber-50/60 p-4"><p className="text-xs font-black text-[#123d2b]">{t("billing.pendingPayment.scheduleTitle")}</p><p className="mt-1 text-[10px] leading-4 text-slate-700">{t("billing.pendingPayment.scheduleOnly", { date: dueDate ? formatDate(dueDate) : "—" })}</p><p className="mt-3 text-lg font-black text-[#123d2b]">{formatCurrency(overview?.price ?? 0, locale)}<span className="ml-1 text-[10px] font-semibold text-slate-500">{t("billing.pendingPayment.perMonth")}</span></p></article>}</div>
         </div>
-        <div className="flex flex-col-reverse gap-2 border-t border-slate-100 pt-4 sm:flex-row sm:justify-end">
-          {isOwner ? <button type="button" onClick={() => void openPayment()} disabled={openingPayment} className="flex h-11 items-center justify-center gap-2 rounded-xl bg-[#ff6b1a] px-5 text-xs font-black text-white shadow-[0_4px_0_#c9460b] hover:bg-[#e95b10] disabled:cursor-wait disabled:opacity-70">{openingPayment ? t("billing.pendingPayment.openingPayment") : t(paymentInvoice ? "billing.pendingPayment.payNow" : "billing.pendingPayment.goToBilling")}<ExternalLink className="size-4" /></button> : <p className="rounded-xl bg-amber-50 px-4 py-3 text-center text-xs font-bold text-amber-900">{t("billing.pendingPayment.ownerRequired")}</p>}
-        </div>
+        {showBillingDetails && <form onSubmit={(event) => void saveBillingDetailsAndPay(event)} className="rounded-2xl border border-amber-200 bg-amber-50/70 p-4"><h3 className="text-sm font-black text-[#123d2b]">{t("billing.pendingPayment.detailsTitle")}</h3><p className="mt-1 text-[10px] leading-4 text-slate-600">{t("billing.pendingPayment.detailsHint")}</p><div className="mt-3 grid gap-3 sm:grid-cols-2">{([ ["legalName", "legalName"], ["document", "document"], ["email", "email"], ["phone", "phone"], ["postalCode", "zip"], ["street", "street"], ["number", "number"], ["city", "city"], ["state", "state"] ] as const).map(([field, label]) => <label key={field} className={`text-[10px] font-bold text-[#315847] ${field === "street" || field === "city" ? "sm:col-span-2" : ""}`}>{t(`settings.panel.company.${label}`)}<input required type={field === "email" ? "email" : "text"} inputMode={field === "document" || field === "phone" || field === "postalCode" ? "numeric" : undefined} maxLength={field === "document" ? 18 : field === "phone" ? 16 : field === "postalCode" ? 9 : field === "state" ? 2 : undefined} value={billingDetails[field]} onChange={(event) => setBillingDetails((current) => ({ ...current, [field]: event.target.value }))} className="mt-1.5 h-10 w-full rounded-xl border border-[#123d2b]/15 bg-white px-3 text-xs" /></label>)}</div><div className="mt-4 flex flex-col-reverse gap-2 sm:flex-row sm:justify-end"><button type="button" onClick={() => setShowBillingDetails(false)} className="h-10 rounded-xl border border-[#123d2b]/15 bg-white px-4 text-xs font-bold">{t("common.cancel")}</button><button type="submit" disabled={openingPayment || saveCompany.isPending} className="flex h-10 items-center justify-center gap-2 rounded-xl bg-[#ff6b1a] px-5 text-xs font-black text-white disabled:opacity-60">{openingPayment ? t("billing.pendingPayment.openingPayment") : t("billing.pendingPayment.saveAndPay")}</button></div></form>}
+        {!showBillingDetails && <div className="flex flex-col-reverse gap-2 border-t border-slate-100 pt-4 sm:flex-row sm:justify-end">{isOwner ? <button type="button" onClick={() => void openPayment()} disabled={openingPayment} className="flex h-11 items-center justify-center gap-2 rounded-xl bg-[#ff6b1a] px-5 text-xs font-black text-white shadow-[0_4px_0_#c9460b] hover:bg-[#e95b10] disabled:cursor-wait disabled:opacity-70">{openingPayment ? t("billing.pendingPayment.openingPayment") : t(paymentInvoice ? "billing.pendingPayment.payNow" : "billing.pendingPayment.goToBilling")}<ExternalLink className="size-4" /></button> : <p className="rounded-xl bg-amber-50 px-4 py-3 text-center text-xs font-bold text-amber-900">{t("billing.pendingPayment.ownerRequired")}</p>}</div>}
         {paymentError && <p role="alert" className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-xs font-semibold text-red-800">{paymentError}</p>}
       </div>
     </section>

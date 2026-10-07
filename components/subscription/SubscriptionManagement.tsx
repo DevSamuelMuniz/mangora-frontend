@@ -35,6 +35,7 @@ export default function SubscriptionManagement() {
 
   async function requestChange() {
     if (!selected || !overview) return;
+    let paymentTab: Window | null = null;
     try {
       setActionError("");
       if (selected.id === "enterprise") {
@@ -44,15 +45,21 @@ export default function SubscriptionManagement() {
         setMessage(t("billing.toasts.contactRequested"));
       } else {
         if (!overview.provider.configured) throw new Error(`Configure o ${overview.provider.name} no backend antes de contratar um plano.`);
+        paymentTab = window.open("about:blank", "_blank");
         const checkout = await checkoutMutation.mutateAsync({
           targetPlan: selected.id.toUpperCase(),
           ...(overview.provider.name === "ASAAS" ? { billingType, nextDueDate, couponCode: couponCode.trim() || undefined } : {}),
         });
-        if (checkout.checkoutUrl) window.location.assign(checkout.checkoutUrl);
-        else setMessage((checkout.discount ?? 0) > 0 && checkout.firstCharge != null && checkout.recurringPrice != null ? t("billing.manage.couponAppliedLong", { first: formatCurrency(checkout.firstCharge, locale), recurring: formatCurrency(checkout.recurringPrice, locale) }) : `Cobrança criada no ${overview.provider.name}. O plano será ativado assim que o pagamento for confirmado.`);
+        if (checkout.checkoutUrl) {
+          if (paymentTab) paymentTab.location.assign(checkout.checkoutUrl);
+          else window.open(checkout.checkoutUrl, "_blank", "noopener,noreferrer");
+        } else {
+          paymentTab?.close();
+          setMessage((checkout.discount ?? 0) > 0 && checkout.firstCharge != null && checkout.recurringPrice != null ? t("billing.manage.couponAppliedLong", { first: formatCurrency(checkout.firstCharge, locale), recurring: formatCurrency(checkout.recurringPrice, locale) }) : `Cobrança criada no ${overview.provider.name}. O plano será ativado assim que o pagamento for confirmado.`);
+        }
       }
       setSelected(null);
-    } catch (cause) { setActionError(cause instanceof Error ? cause.message : t("billing.errors.contact")); }
+    } catch (cause) { paymentTab?.close(); setActionError(cause instanceof Error ? cause.message : t("billing.errors.contact")); }
   }
   async function requestCancellation() {
     try {

@@ -125,6 +125,14 @@
     "goToBilling": "Ver opciones de pago",
     "openingPayment": "Preparando el pago...",
     "paymentError": "No se pudo abrir el cobro. Inténtalo de nuevo.",
+    "detailsTitle": "Completa los datos de pago",
+    "detailsHint": "Revisa los datos de facturación de la empresa. Se guardarán antes de crear el cobro.",
+    "saveAndPay": "Guardar datos y abrir pago",
+    "invalidDocument": "Introduce un documento fiscal válido de 11 o 14 dígitos.",
+    "invalidPhone": "Introduce un teléfono válido con prefijo de área.",
+    "requiredBillingDetails": "Completa correctamente todos los datos de facturación.",
+    "detailsLoadError": "No se pudieron cargar los datos de la empresa. Inténtalo de nuevo.",
+    "detailsSaveError": "No se pudieron guardar los datos de facturación.",
     "ownerRequired": "Pide al propietario de la empresa que complete el pago."
   },
   "trialGate": {
