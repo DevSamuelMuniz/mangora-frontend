@@ -116,7 +116,8 @@
     "viewBilling": "Ver cobrança",
     "remindLater": "Lembrar mais tarde",
     "close": "Fechar aviso",
-    "scheduleOnly": "A data de cobrança configurada para sua empresa já venceu."
+    "scheduleOnly": "A data de cobrança configurada para sua empresa já venceu.",
+    "ownerRequired": "Peça ao proprietário da empresa para concluir o pagamento."
   },
   "trialGate": {
     "eyebrow": "Fim do período gratuito",
@@ -139,3 +140,4 @@
     "closeWarning": "Fechar aviso"
   }
 }
+

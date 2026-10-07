@@ -24,21 +24,22 @@ export default function PendingSubscriptionPaymentModal({ session }: { session: 
       .sort((a, b) => new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime());
   }, [overview]);
   const scheduleDue = session.company.billingDueAt ? new Date(session.company.billingDueAt) : null;
-  const scheduleOverdue = Boolean(scheduleDue && scheduleDue.getTime() < new Date(new Date().toDateString()).getTime() && session.company.subscriptionPlan !== "FREE" && session.company.subscriptionStatus !== "CANCELLED");
+  const dueTodayOrEarlier = scheduleDue ? new Date(scheduleDue.getFullYear(), scheduleDue.getMonth(), scheduleDue.getDate()).getTime() <= new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()).getTime() : false;
+  const scheduleOverdue = Boolean(dueTodayOrEarlier && session.company.subscriptionPlan !== "FREE" && session.company.subscriptionStatus !== "CANCELLED");
   const hasOverdue = overdueInvoices.length > 0 || scheduleOverdue;
 
   useEffect(() => {
-    if (!isOwner || !hasOverdue) return;
+    if (!hasOverdue || (!isOwner && !scheduleOverdue)) return;
     const timer = window.setTimeout(() => {
       setOpen(true);
     }, 0);
     return () => window.clearTimeout(timer);
-  }, [hasOverdue, isOwner]);
+  }, [hasOverdue, isOwner, scheduleOverdue]);
 
   if (!open || !hasOverdue) return null;
   const visibleInvoices = showAll ? overdueInvoices : overdueInvoices.slice(0, 1);
   const paymentInvoice = overdueInvoices.find((invoice) => invoice.invoiceUrl || invoice.bankSlipUrl);
-  const payHref = paymentInvoice?.invoiceUrl ?? paymentInvoice?.bankSlipUrl ?? "/assinatura";
+  const payHref = paymentInvoice?.invoiceUrl ?? paymentInvoice?.bankSlipUrl ?? (isOwner ? "/assinatura" : "/assinatura");
   const formatPrice = (value: number) => formatCurrency(value, locale);
   const totalDue = overdueInvoices.length ? overdueInvoices.reduce((sum, invoice) => sum + invoice.amount, 0) : overview?.price ?? 0;
 
@@ -64,7 +65,7 @@ export default function PendingSubscriptionPaymentModal({ session }: { session: 
           <div className="space-y-2">{visibleInvoices.map((invoice) => <InvoiceCard key={invoice.id} invoice={invoice} formatCurrency={formatPrice} formatDate={formatDate} t={t} />)}{scheduleOverdue && overdueInvoices.length === 0 && <article className="rounded-xl border border-amber-200 bg-amber-50/60 p-4"><p className="text-lg font-black text-[#123d2b]">{formatCurrency(overview?.price ?? 0, locale)}</p><p className="mt-1 text-[10px] text-slate-600">{t("billing.pendingPayment.dueDate", { date: formatDate(session.company.billingDueAt!) })}</p><p className="mt-2 text-[10px] text-slate-600">{t("billing.pendingPayment.scheduleOnly")}</p></article>}</div>
         </div>
         <div className="flex flex-col-reverse gap-2 border-t border-slate-100 pt-4 sm:flex-row sm:justify-end">
-          <a href={payHref} target={paymentInvoice ? "_blank" : undefined} rel={paymentInvoice ? "noreferrer" : undefined} className="flex h-11 items-center justify-center gap-2 rounded-xl bg-[#ff6b1a] px-5 text-xs font-black text-white shadow-[0_4px_0_#c9460b] hover:bg-[#e95b10]">{t("billing.pendingPayment.payNow")}<ExternalLink className="size-4" /></a>
+          {isOwner ? <a href={payHref} target={paymentInvoice ? "_blank" : undefined} rel={paymentInvoice ? "noreferrer" : undefined} className="flex h-11 items-center justify-center gap-2 rounded-xl bg-[#ff6b1a] px-5 text-xs font-black text-white shadow-[0_4px_0_#c9460b] hover:bg-[#e95b10]">{t("billing.pendingPayment.payNow")}<ExternalLink className="size-4" /></a> : <p className="rounded-xl bg-amber-50 px-4 py-3 text-center text-xs font-bold text-amber-900">{t("billing.pendingPayment.ownerRequired")}</p>}
         </div>
       </div>
     </section>

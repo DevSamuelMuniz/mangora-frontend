@@ -116,7 +116,8 @@
     "viewBilling": "Ver cobro",
     "remindLater": "Recordármelo más tarde",
     "close": "Cerrar aviso",
-    "scheduleOnly": "La fecha de cobro configurada para tu empresa ya venció."
+    "scheduleOnly": "La fecha de cobro configurada para tu empresa ya venció.",
+    "ownerRequired": "Pide al propietario de la empresa que complete el pago."
   },
   "trialGate": {
     "eyebrow": "Fin del periodo gratuito",
@@ -139,3 +140,4 @@
     "closeWarning": "Cerrar aviso"
   }
 }
+
