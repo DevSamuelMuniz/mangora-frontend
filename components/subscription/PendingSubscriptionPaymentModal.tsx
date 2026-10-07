@@ -23,8 +23,13 @@ export default function PendingSubscriptionPaymentModal({ session }: { session: 
       .filter((invoice) => invoice.status === "OVERDUE" || ((invoice.status === "PENDING" || invoice.status === "CONFIRMED") && new Date(invoice.dueDate).getTime() < now))
       .sort((a, b) => new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime());
   }, [overview]);
-  const scheduleDue = session.company.billingDueAt ? new Date(session.company.billingDueAt) : null;
-  const dueTodayOrEarlier = scheduleDue ? new Date(scheduleDue.getFullYear(), scheduleDue.getMonth(), scheduleDue.getDate()).getTime() <= new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()).getTime() : false;
+  // Use the live subscription schedule when the session was created before the
+  // admin edited its due date. Date-only comparison avoids UTC/local midnight drift.
+  const dueDate = session.company.billingDueAt ?? overview?.nextBillingAt ?? null;
+  const dueKey = dueDate?.slice(0, 10) ?? "";
+  const now = new Date();
+  const todayKey = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
+  const dueTodayOrEarlier = Boolean(dueKey && dueKey <= todayKey);
   const scheduleOverdue = Boolean(dueTodayOrEarlier && session.company.subscriptionPlan !== "FREE" && session.company.subscriptionStatus !== "CANCELLED");
   const hasOverdue = overdueInvoices.length > 0 || scheduleOverdue;
 
@@ -39,7 +44,7 @@ export default function PendingSubscriptionPaymentModal({ session }: { session: 
   if (!open || !hasOverdue) return null;
   const visibleInvoices = showAll ? overdueInvoices : overdueInvoices.slice(0, 1);
   const paymentInvoice = overdueInvoices.find((invoice) => invoice.invoiceUrl || invoice.bankSlipUrl);
-  const payHref = paymentInvoice?.invoiceUrl ?? paymentInvoice?.bankSlipUrl ?? (isOwner ? "/assinatura" : "/assinatura");
+  const payHref = paymentInvoice?.invoiceUrl ?? paymentInvoice?.bankSlipUrl ?? "/assinatura";
   const formatPrice = (value: number) => formatCurrency(value, locale);
   const totalDue = overdueInvoices.length ? overdueInvoices.reduce((sum, invoice) => sum + invoice.amount, 0) : overview?.price ?? 0;
 
@@ -57,15 +62,15 @@ export default function PendingSubscriptionPaymentModal({ session }: { session: 
       <div className="space-y-4 p-5 sm:p-7">
         <div className="grid gap-3 sm:grid-cols-3">
           <Summary icon={FileText} label={t("billing.pendingPayment.plan")} value={overview?.pendingPlan ?? overview?.planName ?? session.company.subscriptionPlan} />
-          <Summary icon={CreditCard} label={t("billing.pendingPayment.totalDue")} value={formatCurrency(totalDue, locale)} />
-          <Summary icon={CalendarClock} label={t("billing.pendingPayment.overdueCount")} value={String(overdueInvoices.length)} />
+          <Summary icon={CreditCard} label={t(overdueInvoices.length ? "billing.pendingPayment.totalDue" : "billing.pendingPayment.monthlyPrice")} value={formatCurrency(totalDue, locale)} />
+          <Summary icon={CalendarClock} label={t(overdueInvoices.length ? "billing.pendingPayment.overdueCount" : "billing.pendingPayment.dueDateLabel")} value={overdueInvoices.length ? String(overdueInvoices.length) : dueDate ? formatDate(dueDate) : "—"} />
         </div>
         <div>
-          <div className="mb-2 flex items-center justify-between gap-2"><h3 className="text-xs font-black text-[#123d2b]">{t("billing.pendingPayment.invoicesTitle")}</h3>{overdueInvoices.length > 1 && <button type="button" onClick={() => setShowAll((value) => !value)} className="text-[10px] font-bold text-orange-700 underline underline-offset-2">{showAll ? t("billing.pendingPayment.showLess") : t("billing.pendingPayment.showAll", { count: overdueInvoices.length })}</button>}</div>
-          <div className="space-y-2">{visibleInvoices.map((invoice) => <InvoiceCard key={invoice.id} invoice={invoice} formatCurrency={formatPrice} formatDate={formatDate} t={t} />)}{scheduleOverdue && overdueInvoices.length === 0 && <article className="rounded-xl border border-amber-200 bg-amber-50/60 p-4"><p className="text-lg font-black text-[#123d2b]">{formatCurrency(overview?.price ?? 0, locale)}</p><p className="mt-1 text-[10px] text-slate-600">{t("billing.pendingPayment.dueDate", { date: formatDate(session.company.billingDueAt!) })}</p><p className="mt-2 text-[10px] text-slate-600">{t("billing.pendingPayment.scheduleOnly")}</p></article>}</div>
+          <div className="mb-2 flex items-center justify-between gap-2"><h3 className="text-xs font-black text-[#123d2b]">{t(overdueInvoices.length ? "billing.pendingPayment.invoicesTitle" : "billing.pendingPayment.nextStepTitle")}</h3>{overdueInvoices.length > 1 && <button type="button" onClick={() => setShowAll((value) => !value)} className="text-[10px] font-bold text-orange-700 underline underline-offset-2">{showAll ? t("billing.pendingPayment.showLess") : t("billing.pendingPayment.showAll", { count: overdueInvoices.length })}</button>}</div>
+          <div className="space-y-2">{visibleInvoices.map((invoice) => <InvoiceCard key={invoice.id} invoice={invoice} formatCurrency={formatPrice} formatDate={formatDate} t={t} />)}{scheduleOverdue && overdueInvoices.length === 0 && <article className="rounded-xl border border-amber-200 bg-amber-50/60 p-4"><p className="text-xs font-black text-[#123d2b]">{t("billing.pendingPayment.scheduleTitle")}</p><p className="mt-1 text-[10px] leading-4 text-slate-700">{t("billing.pendingPayment.scheduleOnly", { date: dueDate ? formatDate(dueDate) : "—" })}</p><p className="mt-3 text-lg font-black text-[#123d2b]">{formatCurrency(overview?.price ?? 0, locale)}<span className="ml-1 text-[10px] font-semibold text-slate-500">{t("billing.pendingPayment.perMonth")}</span></p></article>}</div>
         </div>
         <div className="flex flex-col-reverse gap-2 border-t border-slate-100 pt-4 sm:flex-row sm:justify-end">
-          {isOwner ? <a href={payHref} target={paymentInvoice ? "_blank" : undefined} rel={paymentInvoice ? "noreferrer" : undefined} className="flex h-11 items-center justify-center gap-2 rounded-xl bg-[#ff6b1a] px-5 text-xs font-black text-white shadow-[0_4px_0_#c9460b] hover:bg-[#e95b10]">{t("billing.pendingPayment.payNow")}<ExternalLink className="size-4" /></a> : <p className="rounded-xl bg-amber-50 px-4 py-3 text-center text-xs font-bold text-amber-900">{t("billing.pendingPayment.ownerRequired")}</p>}
+          {isOwner ? <a href={payHref} target={paymentInvoice ? "_blank" : undefined} rel={paymentInvoice ? "noreferrer" : undefined} className="flex h-11 items-center justify-center gap-2 rounded-xl bg-[#ff6b1a] px-5 text-xs font-black text-white shadow-[0_4px_0_#c9460b] hover:bg-[#e95b10]">{t(paymentInvoice ? "billing.pendingPayment.payNow" : "billing.pendingPayment.goToBilling")}<ExternalLink className="size-4" /></a> : <p className="rounded-xl bg-amber-50 px-4 py-3 text-center text-xs font-bold text-amber-900">{t("billing.pendingPayment.ownerRequired")}</p>}
         </div>
       </div>
     </section>

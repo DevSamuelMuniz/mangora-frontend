@@ -1,5 +1,5 @@
 {
-  "title": "Assinatura e planos",
+  "title": "Subscrição e planos",
   "subtitle": "Acompanhe o estado real, a utilização e as cobranças da assinatura.",
   "eyebrow": "Administração",
   "loading": "A carregar assinatura...",
@@ -34,7 +34,7 @@
     "toDefine": "A definir"
   },
   "provider": {
-    "title": "Provedor disponível",
+    "title": "Subscrição e planos",
     "asaas": "Asaas",
     "paddle": "Paddle",
     "sandbox": "Sandbox",
@@ -45,7 +45,7 @@
     "billing": "Pagamento"
   },
   "history": {
-    "title": "Histórico",
+    "title": "Subscrição e planos",
     "planChanged": "Troca de plano solicitada",
     "activated": "Plano ativado",
     "discountUpdated": "Desconto atualizado",
@@ -98,7 +98,7 @@
     "couponAppliedLong": "Cupão aplicado: primeira mensalidade por {first}. As seguintes serão de {recurring}."
   },
   "trialGate": {
-    "eyebrow": "Fim do período gratuito",
+    "eyebrow": "Administração",
     "copy": "A sua conta continua ativa no plano Free, sem cobrança. Os seus dados e os recursos essenciais continuam disponíveis.",
     "secureNote": "Só escolhe um plano pago se quiser recursos avançados.",
     "daysRemaining": "{count} dias restantes",
@@ -116,6 +116,22 @@
     "freeActive": "Plano Free ativo.",
     "freeHint": "Continue no essencial sem cobrança.",
     "closeWarning": "Fechar aviso"
+  },
+  "pendingPayment": {
+    "eyebrow": "COBRANÇA VENCIDA",
+    "title": "A sua subscrição está vencida",
+    "description": "O pagamento da subscrição de {company} venceu. Regularize a cobrança para recuperar o acesso ao sistema.",
+    "totalDue": "Valor em dívida",
+    "overdueCount": "Cobranças vencidas",
+    "invoicesTitle": "Cobranças a regularizar",
+    "scheduleOnly": "A sua cobrança venceu em {date}. Regularize para recuperar o acesso ao sistema.",
+    "monthlyPrice": "Mensalidade estimada",
+    "dueDateLabel": "Vencimento",
+    "nextStepTitle": "Próximo passo",
+    "scheduleTitle": "Cobrança vencida",
+    "perMonth": "por mês",
+    "goToBilling": "Ver opções de pagamento",
+    "ownerRequired": "Peça ao proprietário da empresa para concluir o pagamento.",
+    "remindLater": "O pagamento será confirmado automaticamente."
   }
 }
-

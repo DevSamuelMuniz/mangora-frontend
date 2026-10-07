@@ -34,7 +34,7 @@
     "toDefine": "Por definir"
   },
   "provider": {
-    "title": "Proveedor disponible",
+    "title": "Suscripción y planes",
     "asaas": "Asaas",
     "paddle": "Paddle",
     "sandbox": "Sandbox",
@@ -45,7 +45,7 @@
     "billing": "Pago"
   },
   "history": {
-    "title": "Historial",
+    "title": "Suscripción y planes",
     "planChanged": "Cambio de plan solicitado",
     "activated": "Plan activado",
     "discountUpdated": "Descuento actualizado",
@@ -98,13 +98,13 @@
     "couponAppliedLong": "Cupón aplicado: primera mensualidad por {first}. Las siguientes serán de {recurring}."
   },
   "pendingPayment": {
-    "eyebrow": "Suscripción · pago vencido",
-    "title": "Hay un pago pendiente para tu empresa",
-    "description": "El cobro de la suscripción de {company} venció. Revisa los importes y fechas y paga para mantener tu plan.",
+    "eyebrow": "PAGO VENCIDO",
+    "title": "Tu suscripción está vencida",
+    "description": "El pago de la suscripción de {company} venció. Regulariza el cobro para recuperar el acceso al sistema.",
     "plan": "Plan",
-    "totalDue": "Total pendiente",
-    "overdueCount": "Cobros vencidos",
-    "invoicesTitle": "Detalles de los cobros",
+    "totalDue": "Importe pendiente",
+    "overdueCount": "Pagos vencidos",
+    "invoicesTitle": "Pagos por regularizar",
     "showAll": "Ver todos ({count})",
     "showLess": "Mostrar menos",
     "dueDate": "Vencimiento: {date}",
@@ -114,13 +114,19 @@
     "paymentLinkUnavailable": "Abre la suscripción para solicitar otra copia",
     "payNow": "Pagar ahora",
     "viewBilling": "Ver cobro",
-    "remindLater": "Recordármelo más tarde",
+    "remindLater": "El pago se confirmará automáticamente.",
     "close": "Cerrar aviso",
-    "scheduleOnly": "La fecha de cobro configurada para tu empresa ya venció.",
+    "scheduleOnly": "Tu cobro venció el {date}. Paga para recuperar el acceso al sistema.",
+    "monthlyPrice": "Precio mensual estimado",
+    "dueDateLabel": "Vencimiento",
+    "nextStepTitle": "Siguiente paso",
+    "scheduleTitle": "Cobro vencido",
+    "perMonth": "al mes",
+    "goToBilling": "Ver opciones de pago",
     "ownerRequired": "Pide al propietario de la empresa que complete el pago."
   },
   "trialGate": {
-    "eyebrow": "Fin del periodo gratuito",
+    "eyebrow": "Administración",
     "copy": "Tu cuenta sigue activa en el plan Free, sin cobro. Tus datos y los recursos esenciales siguen disponibles.",
     "secureNote": "Solo eliges un plan de pago si quieres recursos avanzados.",
     "daysRemaining": "{count} días restantes",
@@ -140,4 +146,3 @@
     "closeWarning": "Cerrar aviso"
   }
 }
-

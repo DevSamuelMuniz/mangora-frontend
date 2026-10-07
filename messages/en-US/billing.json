@@ -34,7 +34,7 @@
     "toDefine": "To be defined"
   },
   "provider": {
-    "title": "Available provider",
+    "title": "Subscription and plans",
     "asaas": "Asaas",
     "paddle": "Paddle",
     "sandbox": "Sandbox",
@@ -45,7 +45,7 @@
     "billing": "Payment"
   },
   "history": {
-    "title": "History",
+    "title": "Subscription and plans",
     "planChanged": "Plan change requested",
     "activated": "Plan activated",
     "discountUpdated": "Discount updated",
@@ -98,13 +98,13 @@
     "couponAppliedLong": "Coupon applied: first monthly payment of {first}. The following ones will be {recurring}."
   },
   "pendingPayment": {
-    "eyebrow": "Subscription · overdue payment",
-    "title": "Your company has a pending payment",
-    "description": "The subscription charge for {company} is overdue. Review the amounts and dates below and pay to keep your plan active.",
+    "eyebrow": "PAYMENT OVERDUE",
+    "title": "Your subscription is overdue",
+    "description": "The subscription payment for {company} is overdue. Pay the balance to restore access to the system.",
     "plan": "Plan",
-    "totalDue": "Total due",
-    "overdueCount": "Overdue charges",
-    "invoicesTitle": "Charge details",
+    "totalDue": "Outstanding balance",
+    "overdueCount": "Overdue payments",
+    "invoicesTitle": "Payments to resolve",
     "showAll": "View all ({count})",
     "showLess": "Show less",
     "dueDate": "Due: {date}",
@@ -114,13 +114,19 @@
     "paymentLinkUnavailable": "Open subscription to request a new copy",
     "payNow": "Pay now",
     "viewBilling": "View charge",
-    "remindLater": "Remind me later",
+    "remindLater": "Payment confirmation is automatic.",
     "close": "Close notice",
-    "scheduleOnly": "The billing date configured for your company has passed.",
+    "scheduleOnly": "Your payment was due on {date}. Pay to restore access to the system.",
+    "monthlyPrice": "Estimated monthly price",
+    "dueDateLabel": "Due date",
+    "nextStepTitle": "Next step",
+    "scheduleTitle": "Payment overdue",
+    "perMonth": "per month",
+    "goToBilling": "View payment options",
     "ownerRequired": "Ask the company owner to complete the payment."
   },
   "trialGate": {
-    "eyebrow": "End of the free period",
+    "eyebrow": "Administration",
     "copy": "Your account stays active on the Free plan, with no charge. Your data and the essential features remain available.",
     "secureNote": "You only choose a paid plan if you want advanced features.",
     "daysRemaining": "{count} days remaining",
@@ -140,4 +146,3 @@
     "closeWarning": "Close notice"
   }
 }
-
