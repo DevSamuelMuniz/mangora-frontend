@@ -2,7 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { BellRing, Building2, Check, CheckCircle2, CreditCard, Mail, ReceiptText, Save, Settings2, ShieldCheck, UserRoundPlus, WalletCards, type LucideIcon } from "lucide-react";
-import { apiRequest, ApiError } from "@/lib/api/client";
+import { apiRequest } from "@/lib/api/client";
+import { useT } from "@/i18n/provider";
 
 type Settings = { email: string; purchases: boolean; paid: boolean; pending: boolean; newRegistrations: boolean; emailConfigured: boolean };
 type EventKey = "newRegistrations" | "purchases" | "paid" | "pending";
@@ -15,6 +16,7 @@ const eventCards: Array<{ key: EventKey; title: string; description: string; ico
 ];
 
 export default function BillingConfigPanel() {
+  const t = useT();
   const [settings, setSettings] = useState<Settings | null>(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
@@ -26,9 +28,12 @@ export default function BillingConfigPanel() {
       .then((data) => { if (active) setSettings(data); })
       .catch((cause: unknown) => {
         if (!active) return;
-        setError(cause instanceof ApiError && cause.status === 404
-          ? "Esta versão da API ainda não oferece as configurações de notificações. Atualize o serviço de backend e tente novamente."
-          : cause instanceof Error ? cause.message : "Não foi possível carregar as configurações.");
+        const saved = window.localStorage.getItem("mangora:system-notifications");
+        if (saved) {
+          try { setSettings({ emailConfigured: false, ...JSON.parse(saved) as Omit<Settings, "emailConfigured"> }); }
+          catch { setSettings({ email: "", purchases: true, paid: true, pending: true, newRegistrations: true, emailConfigured: false }); }
+        } else setSettings({ email: "", purchases: true, paid: true, pending: true, newRegistrations: true, emailConfigured: false });
+        setMessage("A API ainda não disponibiliza esta função. Você pode salvar as preferências neste navegador; o envio por e-mail depende da atualização do servidor.");
       });
     return () => { active = false; };
   }, []);
@@ -39,12 +44,19 @@ export default function BillingConfigPanel() {
     setBusy(true); setError(""); setMessage("");
     try {
       const { email, purchases, paid, pending, newRegistrations } = settings;
-      setSettings(await apiRequest<Settings>("/system-admin/billing-config", { method: "PATCH", body: JSON.stringify({ email: email.trim(), purchases, paid, pending, newRegistrations }) }));
-      setMessage("Preferências de notificação salvas.");
+      const payload = { email: email.trim(), purchases, paid, pending, newRegistrations };
+      try {
+        await apiRequest<Settings>("/system-admin/billing-config", { method: "PATCH", body: JSON.stringify(payload) });
+        setSettings({ ...payload, emailConfigured: settings.emailConfigured });
+        setMessage("Preferências de notificação salvas no sistema.");
+      } catch (cause) {
+        if (!(cause instanceof Error) || !cause.message.includes("Cannot GET") && !cause.message.includes("Cannot PATCH")) throw cause;
+        window.localStorage.setItem("mangora:system-notifications", JSON.stringify(payload));
+        setSettings({ ...payload, emailConfigured: false });
+        setMessage("Preferências salvas neste navegador. O envio de e-mails será ativado quando o backend atualizado estiver disponível.");
+      }
     } catch (cause) {
-      setError(cause instanceof ApiError && cause.status === 404
-        ? "A API publicada ainda não reconhece esta configuração. Atualize o backend para habilitar o salvamento."
-        : cause instanceof Error ? cause.message : "Não foi possível salvar as configurações.");
+      setError(cause instanceof Error ? cause.message : "Não foi possível salvar as configurações.");
     } finally { setBusy(false); }
   }
 
@@ -61,7 +73,7 @@ export default function BillingConfigPanel() {
       </div>
     </section>
 
-    {error && <div role="alert" className="flex gap-3 rounded-2xl border border-red-200 bg-red-50 p-4 text-xs font-semibold leading-5 text-red-800"><ShieldCheck className="mt-0.5 size-4 shrink-0" /><p>{error}</p></div>}
+      {error && <div role="alert" className="flex gap-3 rounded-2xl border border-red-200 bg-red-50 p-4 text-xs font-semibold leading-5 text-red-800"><ShieldCheck className="mt-0.5 size-4 shrink-0" /><p>{error}</p></div>}
     {message && <div role="status" className="flex items-center gap-2 rounded-2xl border border-green-200 bg-green-50 p-4 text-xs font-bold text-green-800"><CheckCircle2 className="size-4" />{message}</div>}
     {!settings && !error && <section role="status" className="rounded-2xl border border-[#123d2b]/15 bg-[#fffdf8] p-8 text-center text-xs font-bold text-[#597064]">Carregando preferências…</section>}
 
@@ -76,7 +88,7 @@ export default function BillingConfigPanel() {
         <div className="mt-5 grid gap-3 md:grid-cols-2">{eventCards.map(({ key, title, description, icon: Icon, tag }) => { const enabled = settings[key]; return <label key={key} className={`flex cursor-pointer items-start gap-3 rounded-2xl border p-4 transition ${enabled ? "border-[#123d2b]/25 bg-[#f4f8f3]" : "border-[#123d2b]/10 bg-white hover:bg-[#faf9f4]"}`}><span className={`grid size-10 shrink-0 place-items-center rounded-xl ${enabled ? "bg-[#123d2b] text-[#ffcf5a]" : "bg-[#f5f4ed] text-[#789083]"}`}><Icon className="size-4.5" /></span><span className="min-w-0 flex-1"><span className="flex flex-wrap items-center gap-2"><span className="text-xs font-black text-[#123d2b]">{title}</span><span className="rounded-full bg-white px-2 py-0.5 text-[8px] font-black tracking-wide text-[#789083]">{tag}</span></span><span className="mt-1 block text-[10px] leading-4 text-[#597064]">{description}</span></span><span className={`relative mt-1 inline-flex h-6 w-11 shrink-0 items-center rounded-full transition ${enabled ? "bg-[#147a45]" : "bg-[#d5dbd5]"}`}><input type="checkbox" checked={enabled} disabled={busy} onChange={(event) => update(key, event.target.checked)} className="peer sr-only" aria-label={title} /><span className={`pointer-events-none absolute size-4 rounded-full bg-white shadow transition-transform ${enabled ? "translate-x-6" : "translate-x-1"}`} />{enabled && <Check className="pointer-events-none absolute left-1.5 size-3 text-white" />}</span></label>; })}</div>
       </section>
 
-      {!settings.emailConfigured && <div className="flex gap-3 rounded-2xl border border-amber-200 bg-amber-50 p-4 text-[10px] leading-5 text-amber-900"><Building2 className="mt-0.5 size-4 shrink-0" /><p><strong>O envio ainda não está conectado.</strong> Salve suas preferências agora. As mensagens ficam na fila até o servidor de e-mail ser configurado.</p></div>}
+      {!settings.emailConfigured && <div className="flex gap-3 rounded-2xl border border-amber-200 bg-amber-50 p-4 text-[10px] leading-5 text-amber-900"><Building2 className="mt-0.5 size-4 shrink-0" /><p><strong>O envio por e-mail ainda não foi ativado no servidor.</strong> As preferências desta tela ficam salvas neste navegador, mas não conseguem disparar e-mails até a API atualizada receber o deploy.</p></div>}
 
       <div className="sticky bottom-3 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-[#123d2b]/10 bg-[#fffdf8]/95 p-3 shadow-lg backdrop-blur"><p className="hidden items-center gap-2 pl-2 text-[10px] text-[#597064] sm:flex"><CreditCard className="size-4" />As notificações incluem os dados da empresa e do evento.</p><button type="submit" disabled={busy} className="ml-auto flex h-11 items-center justify-center gap-2 rounded-xl bg-[#ce4a0a] px-5 text-xs font-black text-white shadow-[0_3px_0_#963203] transition hover:bg-[#b94108] disabled:cursor-wait disabled:opacity-60"><Save className="size-4" />{busy ? "Salvando…" : "Salvar preferências"}</button></div>
     </form>}
