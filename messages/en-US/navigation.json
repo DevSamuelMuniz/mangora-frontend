@@ -30,7 +30,8 @@
     "employees": "Employees",
     "subscription": "Subscription",
     "settings": "Settings",
-    "labels": "Labels"
+    "labels": "Labels",
+    "systemAdmin": "System admin"
   },
   "admin": "Administration"
 }

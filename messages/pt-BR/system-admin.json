@@ -6,7 +6,9 @@
     "plans": "Planos",
     "prices": "Preços globais",
     "coupons": "Cupons",
-    "central": "Central"
+    "central": "Central",
+    "billing": "Cobrança",
+    "config": "Configurações do sistema"
   },
   "header": {
     "badge": "System",
@@ -32,7 +34,8 @@
     "sessionsClosed": "Sessões encerradas.",
     "resetEmailSent": "E-mail de redefinição de senha enviado.",
     "resetLinkDev": "Link de redefinição (dev): {url}",
-    "couponUpdated": "Estado do cupom atualizado."
+    "couponUpdated": "Estado do cupom atualizado.",
+    "paymentRegistered": "Pagamento registrado e próximo vencimento atualizado."
   },
   "errors": {
     "loadCentral": "Não foi possível carregar a central.",
@@ -219,7 +222,8 @@
     "billingTimelineSuspends": "Somente leitura {date}",
     "billingTimelineEmpty": "Nenhuma data marcada — a loja segue a régua automática do sistema.",
     "planDefaultPlaceholder": "Padrão do plano",
-    "limitsHint": "Deixe um campo vazio para usar o valor padrão do plano. Alterações em preço atualizam a assinatura única do grupo no Asaas."
+    "limitsHint": "Deixe um campo vazio para usar o valor padrão do plano. Alterações em preço atualizam a assinatura única do grupo no Asaas.",
+    "billingDescription": "Ajuste as datas de aviso, vencimento e suspensão para esta assinatura."
   },
   "support": {
     "eyebrow": "Central de suporte",
@@ -282,5 +286,22 @@
     "PAID": "Pago",
     "OVERDUE": "Vencido",
     "REMOVED": "Removida"
+  },
+  "billing": {
+    "copy": "Acompanhe vencimentos, identifique contas que precisam de atenção e registre pagamentos em um só lugar.",
+    "filterAttention": "Precisam de atenção",
+    "filterAll": "Todas",
+    "paidPlans": "Planos pagos ativos",
+    "eyebrow": "GESTÃO FINANCEIRA",
+    "accountsTitle": "Contas e próximos passos",
+    "amount": "Valor mensal",
+    "noDate": "Sem vencimento",
+    "attention": "Precisam de atenção",
+    "filterLabel": "Mostrar",
+    "dueSoon": "Vencem nos próximos 7 dias",
+    "empty": "Nenhuma cobrança corresponde a este filtro.",
+    "currentPlan": "Plano atual",
+    "title": "Cobranças e assinaturas",
+    "accountsCopy": "{count} conta(s) nesta visão"
   }
 }

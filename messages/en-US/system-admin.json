@@ -6,7 +6,9 @@
     "plans": "Plans",
     "prices": "Global prices",
     "coupons": "Coupons",
-    "central": "Console"
+    "central": "Console",
+    "billing": "Billing",
+    "config": "System settings"
   },
   "header": {
     "badge": "System",
@@ -32,7 +34,8 @@
     "sessionsClosed": "Sessions ended.",
     "resetEmailSent": "Password reset e-mail sent.",
     "resetLinkDev": "Reset link (dev): {url}",
-    "couponUpdated": "Coupon status updated."
+    "couponUpdated": "Coupon status updated.",
+    "paymentRegistered": "Payment registered and next due date updated."
   },
   "errors": {
     "loadCentral": "We could not load the console.",
@@ -219,7 +222,8 @@
     "billingTimelineSuspends": "Read-only {date}",
     "billingTimelineEmpty": "No dates set — the store follows the system's automatic schedule.",
     "planDefaultPlaceholder": "Plan default",
-    "limitsHint": "Leave a field empty to use the plan default. Price changes update the group's single subscription in Asaas."
+    "limitsHint": "Leave a field empty to use the plan default. Price changes update the group's single subscription in Asaas.",
+    "billingDescription": "Adjust notice, due, and suspension dates for this subscription."
   },
   "support": {
     "eyebrow": "Support console",
@@ -282,5 +286,22 @@
     "PAID": "Paid",
     "OVERDUE": "Overdue",
     "REMOVED": "Removed"
+  },
+  "billing": {
+    "copy": "Track due dates, find accounts that need attention, and register payments in one place.",
+    "filterAttention": "Need attention",
+    "filterAll": "All",
+    "paidPlans": "Active paid plans",
+    "eyebrow": "BILLING OPERATIONS",
+    "accountsTitle": "Accounts and next steps",
+    "amount": "Monthly amount",
+    "noDate": "No due date",
+    "attention": "Need attention",
+    "filterLabel": "Show",
+    "dueSoon": "Due in the next 7 days",
+    "empty": "No billing accounts match this filter.",
+    "currentPlan": "Current plan",
+    "title": "Billing and subscriptions",
+    "accountsCopy": "{count} account(s) in this view"
   }
 }

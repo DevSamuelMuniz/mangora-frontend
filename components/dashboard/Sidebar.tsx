@@ -17,6 +17,7 @@ import {
   ChevronDown,
   CircleDollarSign,
   CreditCard,
+  ShieldCheck,
   FileText,
   FolderTree,
   ClipboardList,
@@ -87,6 +88,7 @@ const navigationGroups: NavigationGroup[] = [
 ];
 
 const secondaryNavigation: NavigationItem[] = [
+  { key: "systemAdmin", href: "/adm/adm/sys", icon: ShieldCheck },
   {
     key: "stores",
     href: "/unidades",

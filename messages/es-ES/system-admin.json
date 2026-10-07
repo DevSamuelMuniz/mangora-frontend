@@ -6,7 +6,9 @@
     "plans": "Planes",
     "prices": "Precios globales",
     "coupons": "Cupones",
-    "central": "Central"
+    "central": "Central",
+    "billing": "Cobros",
+    "config": "Configuración del sistema"
   },
   "header": {
     "badge": "System",
@@ -32,7 +34,8 @@
     "sessionsClosed": "Sesiones cerradas.",
     "resetEmailSent": "Correo de restablecimiento de contraseña enviado.",
     "resetLinkDev": "Enlace de restablecimiento (dev): {url}",
-    "couponUpdated": "Estado del cupón actualizado."
+    "couponUpdated": "Estado del cupón actualizado.",
+    "paymentRegistered": "Pago registrado y próximo vencimiento actualizado."
   },
   "errors": {
     "loadCentral": "No se pudo cargar la central.",
@@ -219,7 +222,8 @@
     "billingTimelineSuspends": "Solo lectura {date}",
     "billingTimelineEmpty": "Sin fechas definidas — la tienda sigue la regla automática del sistema.",
     "planDefaultPlaceholder": "Valor del plan",
-    "limitsHint": "Deja un campo vacío para usar el valor del plan. Los cambios de precio actualizan la suscripción única del grupo en Asaas."
+    "limitsHint": "Deja un campo vacío para usar el valor del plan. Los cambios de precio actualizan la suscripción única del grupo en Asaas.",
+    "billingDescription": "Ajusta las fechas de aviso, vencimiento y suspensión de esta suscripción."
   },
   "support": {
     "eyebrow": "Central de soporte",
@@ -282,5 +286,22 @@
     "PAID": "Pagado",
     "OVERDUE": "Atrasado",
     "REMOVED": "Eliminada"
+  },
+  "billing": {
+    "copy": "Consulta vencimientos, identifica las cuentas que requieren atención y registra pagos en un solo lugar.",
+    "filterAttention": "Requieren atención",
+    "filterAll": "Todas",
+    "paidPlans": "Planes de pago activos",
+    "eyebrow": "GESTIÓN FINANCIERA",
+    "accountsTitle": "Cuentas y próximos pasos",
+    "amount": "Importe mensual",
+    "noDate": "Sin vencimiento",
+    "attention": "Requieren atención",
+    "filterLabel": "Mostrar",
+    "dueSoon": "Vencen en los próximos 7 días",
+    "empty": "Ningún cobro coincide con este filtro.",
+    "currentPlan": "Plan actual",
+    "title": "Cobros y suscripciones",
+    "accountsCopy": "{count} cuenta(s) en esta vista"
   }
 }
