@@ -8,7 +8,8 @@
     "coupons": "Cupones",
     "central": "Central",
     "billing": "Cobros",
-    "config": "Configuración del sistema"
+    "config": "Configuración del sistema",
+    "payments": "Pagos"
   },
   "header": {
     "badge": "System",
@@ -67,10 +68,6 @@
     "openPlans": "Ver planes",
     "openPrices": "Editar precios",
     "openCoupons": "Gestionar cupones"
-  },
-  "search": {
-    "companies": "Buscar por empresa, correo o documento",
-    "users": "Buscar por nombre o correo"
   },
   "companies": {
     "panelTitle": "Empresas y suscripciones",
@@ -304,5 +301,22 @@
     "currentPlan": "Plan actual",
     "title": "Cobros y suscripciones",
     "accountsCopy": "{count} cuenta(s) en esta vista"
+  },
+  "payments": {
+    "description": "{count} pago(s) mostrados · hasta 500 registros",
+    "search": "Buscar empresa, correo o ID de pago",
+    "title": "Todos los pagos",
+    "openInvoice": "Abrir factura",
+    "paidAt": "Pagado el",
+    "dueDate": "Vencimiento",
+    "allStatuses": "Todos los estados",
+    "status": "Estado",
+    "empty": "No se encontraron pagos.",
+    "netAmount": "Neto"
+  },
+  "search": {
+    "companies": "Buscar por empresa, correo o documento",
+    "users": "Buscar por nombre o correo",
+    "payments": "Buscar empresa, correo o ID de pago"
   }
 }

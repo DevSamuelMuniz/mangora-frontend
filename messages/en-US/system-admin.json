@@ -8,7 +8,8 @@
     "coupons": "Coupons",
     "central": "Console",
     "billing": "Billing",
-    "config": "System settings"
+    "config": "System settings",
+    "payments": "Payments"
   },
   "header": {
     "badge": "System",
@@ -67,10 +68,6 @@
     "openPlans": "View plans",
     "openPrices": "Edit prices",
     "openCoupons": "Manage coupons"
-  },
-  "search": {
-    "companies": "Search by company, e-mail or document",
-    "users": "Search by name or e-mail"
   },
   "companies": {
     "panelTitle": "Companies and subscriptions",
@@ -304,5 +301,22 @@
     "currentPlan": "Current plan",
     "title": "Billing and subscriptions",
     "accountsCopy": "{count} account(s) in this view"
+  },
+  "payments": {
+    "description": "{count} payment(s) shown · up to 500 records",
+    "search": "Search company, email, or payment ID",
+    "title": "All payments",
+    "openInvoice": "Open invoice",
+    "paidAt": "Paid at",
+    "dueDate": "Due date",
+    "allStatuses": "All statuses",
+    "status": "Status",
+    "empty": "No payments found.",
+    "netAmount": "Net"
+  },
+  "search": {
+    "companies": "Search by company, e-mail or document",
+    "users": "Search by name or e-mail",
+    "payments": "Search company, email, or payment ID"
   }
 }

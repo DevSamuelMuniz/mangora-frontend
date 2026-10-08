@@ -8,7 +8,8 @@
     "coupons": "Cupons",
     "central": "Central",
     "billing": "Cobrança",
-    "config": "Configurações do sistema"
+    "config": "Configurações do sistema",
+    "payments": "Pagamentos"
   },
   "header": {
     "badge": "System",
@@ -67,10 +68,6 @@
     "openPlans": "Ver planos",
     "openPrices": "Editar preços",
     "openCoupons": "Gerir cupons"
-  },
-  "search": {
-    "companies": "Buscar por empresa, e-mail ou documento",
-    "users": "Buscar por nome ou e-mail"
   },
   "companies": {
     "panelTitle": "Empresas e assinaturas",
@@ -304,5 +301,22 @@
     "currentPlan": "Plano atual",
     "title": "Cobranças e assinaturas",
     "accountsCopy": "{count} conta(s) nesta visão"
+  },
+  "payments": {
+    "description": "{count} pagamento(s) exibido(s) · até 500 registros",
+    "search": "Buscar empresa, e-mail ou ID do pagamento",
+    "title": "Todos os pagamentos",
+    "openInvoice": "Abrir fatura",
+    "paidAt": "Pago em",
+    "dueDate": "Vencimento",
+    "allStatuses": "Todos os status",
+    "status": "Status",
+    "empty": "Nenhum pagamento encontrado.",
+    "netAmount": "Líquido"
+  },
+  "search": {
+    "companies": "Buscar por empresa, e-mail ou documento",
+    "users": "Buscar por nome ou e-mail",
+    "payments": "Buscar empresa, e-mail ou ID do pagamento"
   }
 }

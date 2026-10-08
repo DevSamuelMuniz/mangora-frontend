@@ -5,7 +5,7 @@ import { useFormatters } from "@/i18n/provider";
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { Activity, AlertTriangle, ArrowLeft, Building2, Check, CheckCircle2, ChevronDown, ChevronLeft, ChevronRight, CreditCard, Globe2, KeyRound, LayoutDashboard, LifeBuoy, LoaderCircle, LockKeyhole, LogOut, Pencil, RefreshCw, Search, ShieldCheck, Tags, Unlock, Users, X, SlidersHorizontal, CalendarClock, CircleDollarSign } from "lucide-react";
+import { Activity, AlertTriangle, ArrowLeft, Building2, Check, CheckCircle2, ChevronDown, ChevronLeft, ChevronRight, CreditCard, Globe2, KeyRound, LayoutDashboard, LifeBuoy, LoaderCircle, LockKeyhole, LogOut, Pencil, RefreshCw, Search, ShieldCheck, Tags, Unlock, Users, X, SlidersHorizontal, CalendarClock, CircleDollarSign, ExternalLink } from "lucide-react";
 import BrandLogo from "@/components/brand/BrandLogo";
 import { useT } from "@/i18n/provider";
 import type { Translate } from "@/i18n/runtime";
@@ -13,8 +13,8 @@ import { ApiError, apiRequest } from "@/lib/api/client";
 import BillingConfigPanel from "./BillingConfigPanel";
 
 
-type Tab = "overview" | "companies" | "users" | "plans" | "prices" | "coupons" | "billing" | "config";
-const tabs: Tab[] = ["overview", "companies", "users", "plans", "prices", "coupons", "billing", "config"];
+type Tab = "overview" | "companies" | "users" | "plans" | "prices" | "coupons" | "billing" | "payments" | "config";
+const tabs: Tab[] = ["overview", "companies", "users", "plans", "prices", "coupons", "billing", "payments", "config"];
 type Overview = { metrics: { users: number; activeUsers: number; companies: number; activeCompanies: number; newCompanies: number; monthlyRecurringRevenue: number }; plans: Plan[]; recentCompanies: Company[] };
 type Plan = { id: string; name: string; price: number | null; ownerLimit: number | null; employeeLimit: number | null; unitLimit: number | null; companies: number };
 type User = { id: string; name: string; email: string; phone: string | null; status: string; isSystemAdmin: boolean; failedLoginAttempts: number; lockedUntil: string | null; createdAt: string; _count: { memberships: number; sessions: number } };
@@ -24,12 +24,14 @@ type Company = { id: string; tradeName: string; slug: string; email?: string | n
 type Coupon = { id: string; code: string; type: "PERCENT" | "FIXED"; value: number; planScope: string | null; maxUses: number; usedCount: number; status: string };
 type PlanPrice = { id: string; market: string | null; country: string | null; currency: string; amount: number; interval: string; provider: string; providerPriceId: string | null; active: boolean };
 type PlanPricing = { id: string; code: string; name: string; active: boolean; prices: PlanPrice[] };
+type SystemPayment = { id: string; providerPaymentId: string; billingType: string | null; status: string; rawStatus: string; amount: number; netAmount: number | null; dueDate: string; paidAt: string | null; invoiceUrl: string | null; bankSlipUrl: string | null; createdAt: string; company: { id: string; tradeName: string; email: string | null; subscriptionPlan: string } };
 
 function buildNav(t: Translate) {
   return [
     { id: "overview" as const, label: t("systemAdmin.nav.overview"), icon: LayoutDashboard },
     { id: "companies" as const, label: t("systemAdmin.nav.companies"), icon: Building2 },
     { id: "billing" as const, label: t("systemAdmin.nav.billing"), icon: CircleDollarSign },
+    { id: "payments" as const, label: t("systemAdmin.nav.payments"), icon: CreditCard },
     { id: "users" as const, label: t("systemAdmin.nav.users"), icon: Users },
     { id: "plans" as const, label: t("systemAdmin.nav.plans"), icon: CreditCard },
     { id: "prices" as const, label: t("systemAdmin.nav.prices"), icon: Globe2 },
@@ -58,6 +60,8 @@ export default function SystemAdminConsole({ operatorName }: { operatorName: str
   const [companies, setCompanies] = useState<Company[]>([]);
   const [coupons, setCoupons] = useState<Coupon[]>([]);
   const [planPrices, setPlanPrices] = useState<PlanPricing[]>([]);
+  const [payments, setPayments] = useState<SystemPayment[]>([]);
+  const [paymentStatus, setPaymentStatus] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [accessDenied, setAccessDenied] = useState(false);
@@ -91,14 +95,15 @@ export default function SystemAdminConsole({ operatorName }: { operatorName: str
   async function load() {
     setLoading(true); setError(""); setAccessDenied(false);
     try {
-      const [summary, userList, companyList, couponList, prices] = await Promise.all([
+      const [summary, userList, companyList, couponList, prices, paymentList] = await Promise.all([
         apiRequest<Overview>("/system-admin/overview"),
         apiRequest<User[]>("/system-admin/users"),
         apiRequest<Company[]>("/system-admin/companies"),
         apiRequest<Coupon[]>("/system-admin/coupons"),
         apiRequest<PlanPricing[]>("/system-admin/plan-prices"),
+        apiRequest<SystemPayment[]>("/system-admin/payments"),
       ]);
-      setOverview(summary); setUsers(userList); setCompanies(companyList); setCoupons(couponList); setPlanPrices(prices);
+      setOverview(summary); setUsers(userList); setCompanies(companyList); setCoupons(couponList); setPlanPrices(prices); setPayments(paymentList);
     } catch (cause) {
       const denied = cause instanceof ApiError && cause.status === 403;
       setAccessDenied(denied);
@@ -113,9 +118,10 @@ export default function SystemAdminConsole({ operatorName }: { operatorName: str
       apiRequest<Company[]>("/system-admin/companies"),
       apiRequest<Coupon[]>("/system-admin/coupons"),
       apiRequest<PlanPricing[]>("/system-admin/plan-prices"),
-    ]).then(([summary, userList, companyList, couponList, prices]) => {
+      apiRequest<SystemPayment[]>("/system-admin/payments"),
+    ]).then(([summary, userList, companyList, couponList, prices, paymentList]) => {
       if (!active) return;
-      setOverview(summary); setUsers(userList); setCompanies(companyList); setCoupons(couponList); setPlanPrices(prices); setLoading(false);
+      setOverview(summary); setUsers(userList); setCompanies(companyList); setCoupons(couponList); setPlanPrices(prices); setPayments(paymentList); setLoading(false);
     }).catch((cause: unknown) => {
       if (!active) return;
       const denied = cause instanceof ApiError && cause.status === 403;
@@ -147,7 +153,7 @@ export default function SystemAdminConsole({ operatorName }: { operatorName: str
         <div className="p-4 sm:p-7">
           {message && <div role="status" className="mb-4 flex items-center gap-2 rounded-xl border border-green-200 bg-green-50 px-4 py-3 text-xs font-bold text-green-700"><CheckCircle2 className="size-4" />{message}</div>}
           {loading ? <Loading /> : error ? <Denied message={error} /> : overview && <>
-            {(tab === "companies" || tab === "users") && <SearchBar value={search} onChange={(value) => { setSearch(value); const params = new URLSearchParams(searchParams.toString()); if (value) params.set("q", value); else params.delete("q"); router.replace(`${pathname}${params.size ? `?${params.toString()}` : ""}`, { scroll: false }); }} placeholder={tab === "companies" ? t("systemAdmin.search.companies") : t("systemAdmin.search.users")} />}
+            {(tab === "companies" || tab === "users" || tab === "payments") && <SearchBar value={search} onChange={(value) => { setSearch(value); const params = new URLSearchParams(searchParams.toString()); if (value) params.set("q", value); else params.delete("q"); router.replace(`${pathname}${params.size ? `?${params.toString()}` : ""}`, { scroll: false }); }} placeholder={tab === "companies" ? t("systemAdmin.search.companies") : tab === "users" ? t("systemAdmin.search.users") : t("systemAdmin.payments.search")} />}
             {tab === "overview" && <OverviewPanel data={overview} onCompanies={() => navigate("companies")} onUsers={() => navigate("users")} onPlans={() => navigate("plans")} onPrices={() => navigate("prices")} onCoupons={() => navigate("coupons")} />}
             {tab === "config" && <BillingConfigPanel />}
             {tab === "companies" && <CompaniesPanel items={visibleCompanies} onEdit={setEditingCompany} onReload={() => void load()} notify={notify} />}
@@ -156,6 +162,7 @@ export default function SystemAdminConsole({ operatorName }: { operatorName: str
             {tab === "prices" && <PlanPricesPanel plans={planPrices} onReload={() => void load()} notify={notify} />}
             {tab === "coupons" && <CouponsPanel items={coupons} onCreated={(coupon) => { setCoupons((current) => [coupon, ...current]); notify(t("systemAdmin.messages.couponCreated")); }} onUpdated={(coupon) => { setCoupons((current) => current.map((item) => item.id === coupon.id ? coupon : item)); notify(t("systemAdmin.messages.couponUpdated")); }} />}
             {tab === "billing" && <BillingPanel items={companies.filter((company) => !company.removedAt)} onEdit={(company) => setEditingCompany({ ...company, subscriptionPlan: company.subscriptionPlan, subscriptionStatus: company.subscriptionStatus })} onPayment={async (company) => { const updated = await apiRequest<Partial<Company> & { id: string }>(`/system-admin/companies/${company.id}/confirm-payment`, { method: "POST" }); setCompanies((items) => items.map((item) => item.id === updated.id ? { ...item, ...updated } : item)); notify(t("systemAdmin.messages.paymentRegistered")); }} />}
+            {tab === "payments" && <PaymentsPanel items={payments.filter((item) => (!normalized || `${item.company.tradeName} ${item.company.email ?? ""} ${item.providerPaymentId}`.toLocaleLowerCase("pt-BR").includes(normalized)) && (!paymentStatus || item.status === paymentStatus))} status={paymentStatus} onStatus={setPaymentStatus} />}
           </>}
         </div>
       </section>
@@ -253,6 +260,16 @@ function BillingPanel({ items, onEdit, onPayment }: { items: Company[]; onEdit: 
       </article>; })}{!filtered.length && <Empty text={t("systemAdmin.billing.empty")} />}</div>
     </section>
   </div>;
+}
+
+function PaymentsPanel({ items, status, onStatus }: { items: SystemPayment[]; status: string; onStatus: (status: string) => void }) {
+  const t = useT();
+  const { formatCurrency, formatDate } = useFormatters();
+  const allStatuses = ["PENDING", "CONFIRMED", "RECEIVED", "OVERDUE", "REFUNDED", "CANCELLED"];
+  return <section className="overflow-hidden rounded-2xl border border-[#123d2b]/15 bg-[#fffdf8]">
+    <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#123d2b]/10 px-5 py-4"><div><h2 className="text-sm font-black">{t("systemAdmin.payments.title")}</h2><p className="mt-1 text-[10px] text-[#597064]">{t("systemAdmin.payments.description", { count: items.length })}</p></div><label className="flex items-center gap-2 text-[10px] font-bold text-[#315847]"><span>{t("systemAdmin.payments.status")}</span><select value={status} onChange={(event) => onStatus(event.target.value)} className="h-9 rounded-lg border border-[#123d2b]/15 bg-white px-2"><option value="">{t("systemAdmin.payments.allStatuses")}</option>{allStatuses.map((value) => <option key={value} value={value}>{codeLabel("systemAdmin.status", value, t)}</option>)}</select></label></div>
+    <div className="divide-y divide-[#123d2b]/10">{items.map((payment) => <article key={payment.id} className="grid gap-3 px-5 py-4 sm:grid-cols-[1.4fr_1fr_1fr_auto] sm:items-center"><div className="min-w-0"><p className="truncate text-xs font-black text-[#123d2b]">{payment.company.tradeName}</p><p className="mt-1 truncate text-[10px] text-[#597064]">{payment.company.email || payment.providerPaymentId}</p><p className="mt-1 text-[9px] text-[#597064]">{codeLabel("systemAdmin.plans.codes", payment.company.subscriptionPlan, t)} · {payment.billingType || "—"}</p></div><div><p className="text-sm font-black text-[#123d2b]">{formatCurrency(payment.amount)}</p>{payment.netAmount !== null && <p className="mt-1 text-[9px] text-[#597064]">{t("systemAdmin.payments.netAmount")}: {formatCurrency(payment.netAmount)}</p>}</div><div><Badge value={payment.status} /><p className="mt-1 text-[9px] text-[#597064]">{t("systemAdmin.payments.dueDate")}: {formatDate(payment.dueDate)}</p>{payment.paidAt && <p className="mt-1 text-[9px] text-[#597064]">{t("systemAdmin.payments.paidAt")}: {formatDate(payment.paidAt)}</p>}</div>{(payment.invoiceUrl || payment.bankSlipUrl) && <a href={payment.invoiceUrl || payment.bankSlipUrl || undefined} target="_blank" rel="noreferrer" className="inline-flex h-9 items-center justify-center gap-1 rounded-lg border border-[#123d2b]/15 px-3 text-[10px] font-bold text-[#315847] hover:text-[#ce4a0a]">{t("systemAdmin.payments.openInvoice")}<ExternalLink className="size-3" /></a>}</article>)}{!items.length && <Empty text={t("systemAdmin.payments.empty")} />}</div>
+  </section>;
 }
 
 function CompanyInsightsCarousel({ items }: { items: Company[] }) {
