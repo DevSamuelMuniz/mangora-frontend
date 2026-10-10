@@ -3,7 +3,7 @@ import { cookies, headers } from "next/headers";
 
 import { getCurrentSession } from "@/lib/auth/server";
 import { createFormatters } from "@/lib/format";
-import { geoFromHeaders } from "@/lib/regional/geo";
+import { geoFromHeaders, isSupportedCurrency, isTimezone } from "@/lib/regional/geo";
 
 import { LOCALE_COOKIE, resolveLocale, type Locale } from "./config";
 import { createTranslator, fallbackChain, mergeMessages, type Messages } from "./runtime";
@@ -229,9 +229,33 @@ export async function getTranslator() {
 
 export async function getRegionalPreferences() {
   const session = await cachedSession();
+  const userCurrency = session?.user?.preferredCurrency;
+  const companyCurrency = session?.company?.preferredCurrency;
+  const userTimezone = session?.user?.timezone;
+  const companyTimezone = session?.company?.timezone;
+
+  // Preferences are persisted user data. Validate them before passing them to
+  // Intl formatters, which throw RangeError for unsupported currencies/timezones.
+  if (userCurrency && !isSupportedCurrency(userCurrency)) {
+    console.warn(JSON.stringify({ event: "invalid_regional_preference", field: "user.preferredCurrency" }));
+  }
+  if (companyCurrency && !isSupportedCurrency(companyCurrency)) {
+    console.warn(JSON.stringify({ event: "invalid_regional_preference", field: "company.preferredCurrency" }));
+  }
+  if (userTimezone && !isTimezone(userTimezone)) {
+    console.warn(JSON.stringify({ event: "invalid_regional_preference", field: "user.timezone" }));
+  }
+  if (companyTimezone && !isTimezone(companyTimezone)) {
+    console.warn(JSON.stringify({ event: "invalid_regional_preference", field: "company.timezone" }));
+  }
+
   return {
-    currency: session?.user.preferredCurrency ?? session?.company.preferredCurrency ?? "BRL",
-    timezone: session?.user.timezone ?? session?.company.timezone ?? "America/Sao_Paulo",
+    currency: (userCurrency && isSupportedCurrency(userCurrency) ? userCurrency : null)
+      ?? (companyCurrency && isSupportedCurrency(companyCurrency) ? companyCurrency : null)
+      ?? "BRL",
+    timezone: (userTimezone && isTimezone(userTimezone) ? userTimezone : null)
+      ?? (companyTimezone && isTimezone(companyTimezone) ? companyTimezone : null)
+      ?? "America/Sao_Paulo",
   };
 }
 

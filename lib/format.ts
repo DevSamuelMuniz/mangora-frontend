@@ -6,6 +6,7 @@
  * telas em vez de criar formatters locais.
  */
 import { BRAZIL_TIME_ZONE } from "./timezone";
+import { isSupportedCurrency, isTimezone } from "./regional/geo";
 
 export type FormatLocale = "pt-BR" | "en-US" | "es-ES" | "pt-PT";
 const DEFAULT_LOCALE: FormatLocale = "pt-BR";
@@ -13,15 +14,17 @@ const DEFAULT_LOCALE: FormatLocale = "pt-BR";
 type FormatterBundle = { currency: Intl.NumberFormat; dateLong: Intl.DateTimeFormat; dateShort: Intl.DateTimeFormat; dateTime: Intl.DateTimeFormat; time: Intl.DateTimeFormat };
 const formatters = new Map<string, FormatterBundle>();
 function bundle(locale: FormatLocale = DEFAULT_LOCALE, timeZone: string = BRAZIL_TIME_ZONE, currency = "BRL"): FormatterBundle {
-    const key = `${locale}:${timeZone}:${currency}`;
+    const safeTimeZone = isTimezone(timeZone) ? timeZone : BRAZIL_TIME_ZONE;
+    const safeCurrency = isSupportedCurrency(currency) ? currency : "BRL";
+    const key = `${locale}:${safeTimeZone}:${safeCurrency}`;
     const cached = formatters.get(key);
     if (cached) return cached;
     const created: FormatterBundle = {
-        currency: new Intl.NumberFormat(locale, { style: "currency", currency }),
-        dateLong: new Intl.DateTimeFormat(locale, { timeZone, weekday: "long", day: "numeric", month: "long" }),
-        dateShort: new Intl.DateTimeFormat(locale, { timeZone, day: "2-digit", month: "2-digit", year: "numeric" }),
-        dateTime: new Intl.DateTimeFormat(locale, { timeZone, day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit" }),
-        time: new Intl.DateTimeFormat(locale, { timeZone, hour: "2-digit", minute: "2-digit" }),
+        currency: new Intl.NumberFormat(locale, { style: "currency", currency: safeCurrency }),
+        dateLong: new Intl.DateTimeFormat(locale, { timeZone: safeTimeZone, weekday: "long", day: "numeric", month: "long" }),
+        dateShort: new Intl.DateTimeFormat(locale, { timeZone: safeTimeZone, day: "2-digit", month: "2-digit", year: "numeric" }),
+        dateTime: new Intl.DateTimeFormat(locale, { timeZone: safeTimeZone, day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit" }),
+        time: new Intl.DateTimeFormat(locale, { timeZone: safeTimeZone, hour: "2-digit", minute: "2-digit" }),
     };
     formatters.set(key, created);
     return created;

@@ -80,6 +80,7 @@ const TIMEZONE_PATTERN = /^[A-Za-z]+(?:[_+-][A-Za-z0-9]+)*\/(?:[A-Za-z0-9_+-]+\/
 export function isTimezone(value: string | null | undefined): boolean {
   if (!value) return false;
   const candidate = value.trim();
+  if (candidate === "UTC") return true;
   if (!TIMEZONE_PATTERN.test(candidate)) return false;
   try {
     new Intl.DateTimeFormat("en-US", { timeZone: candidate });
