@@ -6,7 +6,6 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import {
-  Bot,
   ChevronDown,
   CreditCard,
   LogOut,
@@ -121,7 +120,6 @@ export default function DashboardHeader({ onOpenSidebar, session, simpleMode, on
             <input type="checkbox" aria-label="Ativar modo simples" checked={simpleMode} onChange={(event) => onSimpleModeChange(event.target.checked)} className="peer sr-only" />
             <span aria-hidden="true" className="relative h-5 w-9 rounded-full bg-slate-200 transition peer-checked:bg-orange-500 after:absolute after:left-0.5 after:top-0.5 after:size-4 after:rounded-full after:bg-white after:shadow-sm after:transition-transform peer-checked:after:translate-x-4" />
           </label>
-          <Link href="/gerente-ia" className="hidden h-10 items-center gap-1.5 rounded-xl bg-[#123d2b] px-3 text-[11px] font-black text-white transition hover:bg-[#147a45] md:flex"><Bot className="size-4" />Gerente de IA</Link>
           <NotificationCenter onOpen={() => setProfileOpen(false)} />
 
           <div ref={profileMenuRef} className="relative">
