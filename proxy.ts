@@ -17,7 +17,7 @@ import { geoFromHeaders, geoHeaders } from "@/lib/regional/geo";
  * A geolocalização é apenas uma sugestão: a preferência salva, o caminho com
  * prefixo e o cookie do usuário continuam vencendo (ver `resolveLocale`).
  */
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   const geo = geoFromHeaders((name) => request.headers.get(name));
   const { locale, pathname } = splitLocalePrefix(request.nextUrl.pathname);
 
