@@ -1,4 +1,7 @@
 {
+  "settingsTitle": "Two-factor authentication",
+  "enabledStatus": "Enabled",
+  "disabledStatus": "Disabled by default. Enable it whenever you want to protect your account.",
   "eyebrow": "Account protection",
   "title": "Confirm it is you",
   "subtitle": "Protect your data and your company operations.",

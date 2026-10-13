@@ -1,4 +1,7 @@
 {
+  "settingsTitle": "Autenticación de dos factores",
+  "enabledStatus": "Activada",
+  "disabledStatus": "Desactivada por defecto. Actívala cuando quieras para proteger tu cuenta.",
   "eyebrow": "Protección de la cuenta",
   "title": "Confirma que eres tú",
   "subtitle": "Protege tus datos y las operaciones de tu empresa.",
