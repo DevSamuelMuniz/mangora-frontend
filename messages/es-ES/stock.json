@@ -1,6 +1,14 @@
 {
   "title": "Inventario",
   "subtitle": "Controla saldos, niveles mínimos y movimientos.",
+  "intake": {
+    "back": "Volver al inventario", "eyebrow": "Reposición", "title": "Entrada rápida", "subtitle": "Añade productos y cantidades con un historial completo de movimientos.",
+    "importCsv": "Importar hoja de cálculo", "mode": { "existing": "Producto existente", "new": "Crear producto nuevo" },
+    "product": "Buscar producto", "searchPlaceholder": "Escribe el nombre, SKU o escanea el código de barras...", "noProducts": "Aún no hay productos.", "changeProduct": "Cambiar",
+    "currentStock": "{count} en stock", "entryDetails": "Datos de la entrada", "fields": { "name": "Nombre del producto", "sku": "SKU", "category": "Categoría", "salePrice": "Precio de venta", "barcode": "Código de barras (opcional)", "minimumStock": "Stock mínimo", "quantity": "Cantidad recibida", "unitCost": "Coste unitario (opcional)", "supplier": "Proveedor (opcional)", "notes": "Notas (opcional)", "optional": "Opcional" },
+    "quantityError": "Introduce un número entero mayor que cero.", "productError": "Selecciona un producto para continuar.", "newProductError": "Indica nombre, SKU, categoría y un precio de venta válido.", "failed": "No se pudo registrar la entrada.", "success": "Entrada de stock registrada.",
+    "preview": "Stock tras la entrada", "previewHint": "Comprueba la cantidad antes de guardar.", "noSelection": "Selecciona un producto", "unitsAfter": "unidades disponibles tras guardar", "historyNote": "El historial registra la cantidad, el coste, las notas y el usuario responsable.", "cancel": "Cancelar", "save": "Registrar entrada"
+  },
   "actions": {
     "newMovement": "Nuevo movimiento",
     "move": "Mover inventario",

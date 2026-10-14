@@ -62,7 +62,11 @@
     "downloadFailed": "Could not download the file.",
     "download": "Download copy",
     "template": "Full table with Mangora fields",
-    "csvReady": "CSV ready to open in Excel or Google Sheets."
+    "csvReady": "CSV ready to open in Excel or Google Sheets.",
+    "chooseCsv": "Choose CSV",
+    "importAction": "Import",
+    "selectFile": "Select CSV file",
+    "readFileFailed": "Could not read the CSV file."
   },
   "confirm": {
     "checking": "Checking operation protection...",

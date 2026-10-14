@@ -13,7 +13,7 @@
   },
   "summary": {
     "revenueToday": "Faturamento hoje",
-    "salesToday": "Vendas hoje",
+    "totalRevenue": "Faturamento total",
     "averageTicket": "Ticket médio",
     "cancelled": "Vendas canceladas"
   },

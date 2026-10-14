@@ -1,4 +1,9 @@
 {
+  "viewMode": {
+    "label": "Visualização dos produtos",
+    "list": "Lista",
+    "cards": "Cartões"
+  },
   "title": "Catálogo",
   "subtitle": "Registe artigos e controle preços, inventário e visibilidade.",
   "actions": {

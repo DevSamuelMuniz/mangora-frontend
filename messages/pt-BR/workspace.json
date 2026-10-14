@@ -62,7 +62,11 @@
     "downloadFailed": "Não foi possível baixar o arquivo.",
     "download": "Baixar cópia",
     "template": "Tabela completa com os campos da Mangora",
-    "csvReady": "CSV pronto para abrir no Excel ou Google Sheets."
+    "csvReady": "CSV pronto para abrir no Excel ou Google Sheets.",
+    "chooseCsv": "Escolher CSV",
+    "importAction": "Importar",
+    "selectFile": "Selecionar arquivo CSV",
+    "readFileFailed": "Não foi possível ler o arquivo CSV."
   },
   "confirm": {
     "checking": "Verificando proteção da operação...",

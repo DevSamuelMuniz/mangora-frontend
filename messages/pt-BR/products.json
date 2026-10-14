@@ -1,4 +1,9 @@
 {
+  "viewMode": {
+    "label": "Visualização dos produtos",
+    "list": "Lista",
+    "cards": "Cards"
+  },
   "title": "Catálogo",
   "subtitle": "Cadastre itens, controle preços, estoque e visibilidade.",
   "actions": {

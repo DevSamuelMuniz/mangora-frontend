@@ -13,7 +13,7 @@
   },
   "summary": {
     "revenueToday": "Revenue today",
-    "salesToday": "Sales today",
+    "totalRevenue": "Total revenue",
     "averageTicket": "Average ticket",
     "cancelled": "Cancelled sales"
   },

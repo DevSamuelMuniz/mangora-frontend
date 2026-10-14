@@ -1,6 +1,14 @@
 {
   "title": "Estoque",
   "subtitle": "Controle saldos, níveis mínimos e movimentações.",
+  "intake": {
+    "back": "Voltar ao estoque", "eyebrow": "Reposição", "title": "Entrada rápida", "subtitle": "Adicione produtos e quantidades ao estoque com registro no histórico.",
+    "importCsv": "Importar planilha", "mode": { "existing": "Produto existente", "new": "Cadastrar novo produto" },
+    "product": "Buscar produto", "searchPlaceholder": "Digite nome, SKU ou leia o código de barras...", "noProducts": "Nenhum produto cadastrado.", "changeProduct": "Trocar",
+    "currentStock": "{count} un. no estoque", "entryDetails": "Dados da entrada", "fields": { "name": "Nome do produto", "sku": "SKU", "category": "Categoria", "salePrice": "Preço de venda", "barcode": "Código de barras (opcional)", "minimumStock": "Estoque mínimo", "quantity": "Quantidade que entrou", "unitCost": "Custo unitário (opcional)", "supplier": "Fornecedor (opcional)", "notes": "Observações (opcional)", "optional": "Opcional" },
+    "quantityError": "Informe uma quantidade inteira maior que zero.", "productError": "Selecione um produto para continuar.", "newProductError": "Preencha nome, SKU, categoria e um preço de venda válido.", "failed": "Não foi possível registrar a entrada.", "success": "Entrada de estoque registrada.",
+    "preview": "Saldo após a entrada", "previewHint": "Confira a quantidade antes de salvar.", "noSelection": "Selecione um produto", "unitsAfter": "unidades disponíveis após salvar", "historyNote": "A entrada será registrada no histórico com quantidade, custo, observações e usuário responsável.", "cancel": "Cancelar", "save": "Registrar entrada"
+  },
   "actions": {
     "newMovement": "Nova movimentação",
     "move": "Movimentar",

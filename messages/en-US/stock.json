@@ -1,6 +1,14 @@
 {
   "title": "Inventory",
   "subtitle": "Track balances, minimum levels and movements.",
+  "intake": {
+    "back": "Back to inventory", "eyebrow": "Restock", "title": "Quick stock intake", "subtitle": "Add products and quantities with a complete movement history.",
+    "importCsv": "Import spreadsheet", "mode": { "existing": "Existing product", "new": "Create new product" },
+    "product": "Find product", "searchPlaceholder": "Enter a name, SKU, or scan a barcode...", "noProducts": "No products yet.", "changeProduct": "Change",
+    "currentStock": "{count} in stock", "entryDetails": "Intake details", "fields": { "name": "Product name", "sku": "SKU", "category": "Category", "salePrice": "Sale price", "barcode": "Barcode (optional)", "minimumStock": "Minimum stock", "quantity": "Quantity received", "unitCost": "Unit cost (optional)", "supplier": "Supplier (optional)", "notes": "Notes (optional)", "optional": "Optional" },
+    "quantityError": "Enter a whole number greater than zero.", "productError": "Select a product to continue.", "newProductError": "Enter a name, SKU, category, and valid sale price.", "failed": "Could not record this stock intake.", "success": "Stock intake recorded.",
+    "preview": "Stock after intake", "previewHint": "Check the quantity before saving.", "noSelection": "Select a product", "unitsAfter": "units available after saving", "historyNote": "The movement history records the quantity, cost, notes, and responsible user.", "cancel": "Cancel", "save": "Record intake"
+  },
   "actions": {
     "newMovement": "New movement",
     "move": "Move stock",

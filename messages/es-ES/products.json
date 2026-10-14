@@ -1,4 +1,9 @@
 {
+  "viewMode": {
+    "label": "Vista de productos",
+    "list": "Lista",
+    "cards": "Tarjetas"
+  },
   "title": "Catálogo",
   "subtitle": "Registra artículos y controla precios, inventario y visibilidad.",
   "actions": {

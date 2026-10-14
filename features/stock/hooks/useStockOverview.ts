@@ -31,6 +31,19 @@ export function useCreateStockMovement() {
     });
 }
 
+export function useReceiveStock() {
+    const queryClient = useQueryClient();
+    return useMutation<{ productId: string; movement: StockMovement }, Error, Record<string, unknown>>({
+        mutationFn: (payload) => apiRequest("/stock/receive", { method: "POST", body: JSON.stringify(payload) }),
+        onSuccess: () => {
+            void Promise.all([
+                queryClient.invalidateQueries({ queryKey: stockQueryKey }),
+                queryClient.invalidateQueries({ queryKey: ["products"] }),
+            ]);
+        },
+    });
+}
+
 export function useCreateStockTransfer() {
     const queryClient = useQueryClient();
     return useMutation<unknown, Error, Record<string, unknown>>({

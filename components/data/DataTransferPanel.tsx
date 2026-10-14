@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useT } from "@/i18n/provider";
 import type { Translate } from "@/i18n/runtime";
 import { Download, FileSpreadsheet, LoaderCircle, Package, Upload, Users, Warehouse } from "lucide-react";
@@ -22,6 +22,7 @@ export default function DataTransferPanel() {
   const [content, setContent] = useState("");
   const [notice, setNotice] = useState("");
   const [error, setError] = useState("");
+  const fileInput = useRef<HTMLInputElement>(null);
   const importCsv = useImportCsv(kind);
 
   async function runImport() {
@@ -88,9 +89,10 @@ export default function DataTransferPanel() {
             ))}
           </div>
           <textarea value={content} onChange={(event) => setContent(event.target.value)} rows={6} placeholder={importKinds.find((entry) => entry.kind === kind)?.hint} className="mt-3 w-full resize-y rounded-xl border border-amber-200 bg-white p-3.5 font-mono text-[11px] leading-5 text-slate-800 outline-none transition placeholder:text-slate-400 focus:border-amber-400 focus:ring-4 focus:ring-amber-100" />
+          <input ref={fileInput} type="file" accept=".csv,text/csv" className="sr-only" aria-label={t("workspace.data.selectFile")} onChange={async (event) => { const file = event.target.files?.[0]; if (!file) return; try { setContent(await file.text()); setError(""); setNotice(file.name); } catch { setError(t("workspace.data.readFileFailed")); } event.target.value = ""; }} />
           <div className="mt-3 flex items-center justify-between gap-3">
             <p className="text-[10px] text-amber-700">{t("workspace.data.duplicates")}</p>
-            <button type="button" onClick={() => void runImport()} disabled={importCsv.isPending || !content.trim()} className="inline-flex h-10 items-center gap-2 rounded-xl bg-amber-500 px-4 text-xs font-bold text-white hover:bg-amber-600 disabled:opacity-50">{importCsv.isPending ? <LoaderCircle className="size-3.5 animate-spin" /> : <Upload className="size-3.5" />}Importar</button>
+            <div className="flex gap-2"><button type="button" onClick={() => fileInput.current?.click()} className="inline-flex h-10 items-center gap-2 rounded-xl border border-amber-300 bg-white px-4 text-xs font-bold text-amber-800 hover:bg-amber-100"><Upload className="size-3.5" />{t("workspace.data.chooseCsv")}</button><button type="button" onClick={() => void runImport()} disabled={importCsv.isPending || !content.trim()} className="inline-flex h-10 items-center gap-2 rounded-xl bg-amber-500 px-4 text-xs font-bold text-white hover:bg-amber-600 disabled:opacity-50">{importCsv.isPending ? <LoaderCircle className="size-3.5 animate-spin" /> : <Upload className="size-3.5" />}{t("workspace.data.importAction")}</button></div>
           </div>
         </article>
       </div>

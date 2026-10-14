@@ -77,7 +77,8 @@ export default function SalesCatalog() {
   const todayKey = brazilDateKey();
   const todaySales = completedSales.filter((sale) => brazilDateKey(sale.createdAt) === todayKey);
   const todayRevenue = todaySales.reduce((total, sale) => total + sale.total, 0);
-  const averageTicket = completedSales.length ? completedSales.reduce((total, sale) => total + sale.total, 0) / completedSales.length : 0;
+  const totalRevenue = completedSales.reduce((total, sale) => total + sale.total, 0);
+  const averageTicket = completedSales.length ? totalRevenue / completedSales.length : 0;
   const cancelledCount = sales.filter((sale) => sale.status === "CANCELLED").length;
   const totalPages = Math.max(1, Math.ceil(filteredSales.length / PAGE_SIZE));
   const currentPage = Math.min(page, totalPages);
@@ -126,7 +127,7 @@ export default function SalesCatalog() {
 
         <div className="mt-5 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
           <SummaryCard icon={Banknote} label={t("sales.summary.revenueToday")} value={formatCurrency(todayRevenue, locale)} iconClassName="bg-green-50 text-green-600" />
-          <SummaryCard icon={ShoppingCart} label={t("sales.summary.salesToday")} value={String(todaySales.length)} iconClassName="bg-orange-50 text-orange-600" />
+          <SummaryCard icon={Banknote} label={t("sales.summary.totalRevenue")} value={formatCurrency(totalRevenue, locale)} iconClassName="bg-orange-50 text-orange-600" />
           <SummaryCard icon={ReceiptText} label={t("sales.summary.averageTicket")} value={formatCurrency(averageTicket, locale)} iconClassName="bg-yellow-50 text-yellow-600" />
           <SummaryCard icon={XCircle} label={t("sales.summary.cancelled")} value={String(cancelledCount)} iconClassName="bg-red-50 text-red-600" />
         </div>

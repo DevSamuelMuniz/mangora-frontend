@@ -1,4 +1,9 @@
 {
+  "viewMode": {
+    "label": "Product view",
+    "list": "List",
+    "cards": "Cards"
+  },
   "title": "Catalog",
   "subtitle": "Register items and control prices, stock and visibility.",
   "actions": {

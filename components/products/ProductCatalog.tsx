@@ -3,6 +3,7 @@
 import { useFormatters } from "@/i18n/provider";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useI18n, useT } from "@/i18n/provider";
 import { useMemo, useState } from "react";
 import {
@@ -10,6 +11,8 @@ import {
   ChevronLeft,
   ChevronRight,
   Eye,
+  LayoutGrid,
+  List,
   LoaderCircle,
   MoreHorizontal,
   Package,
@@ -43,6 +46,7 @@ export default function ProductCatalog() {
   const [status, setStatus] = useState<StatusFilter>("all");
   const [stockFilter, setStockFilter] = useState<StockFilter>("all");
   const [page, setPage] = useState(1);
+  const [viewMode, setViewMode] = useState<"list" | "cards">("list");
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [productToDelete, setProductToDelete] = useState<Product | null>(null);
   const [actionsProduct, setActionsProduct] = useState<Product | null>(null);
@@ -132,6 +136,14 @@ export default function ProductCatalog() {
           </div>
         </div>
 
+        <div role="group" aria-label={t("products.viewMode.label")} className="mt-4 flex justify-end gap-1">
+          {([{ mode: "list", icon: List }, { mode: "cards", icon: LayoutGrid }] as const).map(({ mode, icon: Icon }) => (
+            <button key={mode} type="button" aria-pressed={viewMode === mode} onClick={() => setViewMode(mode)} className={`inline-flex h-10 items-center gap-2 rounded-xl border px-3 text-xs font-bold transition focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600 ${viewMode === mode ? "border-orange-200 bg-orange-50 text-orange-700" : "border-slate-200 bg-white text-slate-500 hover:bg-slate-50"}`}>
+              <Icon aria-hidden="true" className="size-4" />{t(`products.viewMode.${mode}`)}
+            </button>
+          ))}
+        </div>
+
         {errorMessage && products.length > 0 && (
           <div role="alert" className="mt-4 flex items-center justify-between gap-3 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-xs font-semibold text-red-700">
             <span>{errorMessage}</span>
@@ -154,6 +166,39 @@ export default function ProductCatalog() {
             </div>
           ) : visibleProducts.length > 0 ? (
             <>
+              {viewMode === "cards" ? (
+                <div className="grid gap-4 bg-slate-50/60 p-4 sm:grid-cols-2 xl:grid-cols-3">
+                  {visibleProducts.map((product) => {
+                    const availableStock = product.stock - product.reservedStock;
+                    const lowStock = product.trackStock && availableStock <= product.minimumStock;
+                    return (
+                      <article key={product.id} className="flex min-w-0 flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white">
+                        <button type="button" onClick={() => setSelectedProduct(product)} aria-label={`${t("products.actions.view")}: ${product.name}`} className="relative flex aspect-[16/9] items-center justify-center bg-slate-50 text-orange-500 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-orange-600">
+                          <ProductCardImage key={product.imageUrl} product={product} />
+                        </button>
+                        <div className="flex flex-1 flex-col p-4">
+                          <div className="flex items-start justify-between gap-3">
+                            <p className="min-w-0 break-words text-[11px] font-semibold text-slate-500">{product.category}</p>
+                            <span className={`shrink-0 rounded-full px-2.5 py-1 text-[10px] font-bold ${product.active ? "bg-green-50 text-green-600" : "bg-slate-100 text-slate-500"}`}>{product.active ? t("products.status.active") : t("products.status.inactive")}</span>
+                          </div>
+                          <button type="button" onClick={() => setSelectedProduct(product)} className="mt-2 break-words text-left text-sm font-bold text-slate-900 hover:text-orange-600 focus-visible:outline-orange-600">{product.name}</button>
+                          <p className="mt-1 break-all text-[10px] text-slate-400">SKU: {product.sku}</p>
+                          <p className="mt-4 text-xl font-black tracking-tight text-slate-950">{formatCurrency(product.price, locale)}</p>
+                          <p className={`mt-2 flex items-center gap-1.5 text-xs ${lowStock ? "text-amber-700" : "text-slate-500"}`}>
+                            {lowStock && <AlertTriangle aria-hidden="true" className="size-3.5 shrink-0" />}
+                            {product.trackStock ? `${t("products.stock.available")}: ${availableStock}` : t("products.stock.untracked")}
+                          </p>
+                          {product.trackStock && product.reservedStock > 0 && <p className="mt-1 text-[10px] text-slate-400">{t("products.stock.reservedShort", { count: product.reservedStock })}</p>}
+                          <div className="mt-auto flex items-center justify-between gap-2 pt-4">
+                            <Link href={`/produtos?acao=editar&id=${product.id}`} className="inline-flex h-10 items-center gap-2 rounded-xl border border-slate-200 px-3 text-xs font-bold text-slate-700 hover:bg-slate-50 focus-visible:outline-orange-600"><Pencil aria-hidden="true" className="size-3.5" />{t("products.actions.edit")}</Link>
+                            <button type="button" onClick={() => setActionsProduct(product)} aria-label={t("products.actionsAria", { name: product.name })} className="flex size-10 items-center justify-center rounded-xl text-slate-500 hover:bg-slate-100 focus-visible:outline-orange-600"><MoreHorizontal className="size-4" /></button>
+                          </div>
+                        </div>
+                      </article>
+                    );
+                  })}
+                </div>
+              ) : (
               <div className="overflow-x-auto">
                 <table className="w-full min-w-[880px] border-collapse text-left">
                   <thead className="border-b border-slate-200 bg-slate-50 text-[10px] font-bold uppercase tracking-[0.12em] text-slate-500">
@@ -186,6 +231,7 @@ export default function ProductCatalog() {
                   </tbody>
                 </table>
               </div>
+              )}
               <div className="flex flex-col gap-3 border-t border-slate-200 px-4 py-3 sm:flex-row sm:items-center sm:justify-between sm:px-5">
                 <p className="text-[11px] text-slate-500">Mostrando {visibleProducts.length} de {filteredProducts.length} produto(s)</p>
                 <div className="flex items-center gap-2">
@@ -218,6 +264,13 @@ export default function ProductCatalog() {
       {productToDelete && <DeleteProductModal product={productToDelete} loading={deleteProduct.isPending} onCancel={() => setProductToDelete(null)} onConfirm={() => void confirmDelete()} />}
     </>
   );
+}
+
+function ProductCardImage({ product }: { product: Product }) {
+  const [failed, setFailed] = useState(false);
+  return product.imageUrl && !failed
+    ? <Image src={product.imageUrl} alt="" fill unoptimized sizes="(min-width: 1280px) 33vw, (min-width: 640px) 50vw, 100vw" onError={() => setFailed(true)} className="object-contain p-3" />
+    : <Package aria-hidden="true" className="size-12" />;
 }
 
 function ProductActionsModal({ product, onClose, onView, onDelete }: { product: Product; onClose: () => void; onView: () => void; onDelete: () => void }) {
