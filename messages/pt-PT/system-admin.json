@@ -31,7 +31,7 @@
     "resetEmailSent": "E-mail de redefinição de palavra-passe enviado.",
     "resetLinkDev": "Ligação de redefinição (dev): {url}",
     "couponUpdated": "Estado do cupão atualizado.",
-    "paymentRegistered": "Pagamento registado, conta ativada e próximo vencimento atualizado."
+    "paymentRegistered": "Pagamento reconhecido, cobrança atual cancelada, conta ativada e próxima renovação agendada."
   },
   "errors": {
     "loadCentral": "Não foi possível carregar a central.",

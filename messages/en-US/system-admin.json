@@ -36,7 +36,7 @@
     "resetEmailSent": "Password reset e-mail sent.",
     "resetLinkDev": "Reset link (dev): {url}",
     "couponUpdated": "Coupon status updated.",
-    "paymentRegistered": "Payment registered, account activated, and next due date updated."
+    "paymentRegistered": "Payment recognized, current charge cancelled, account activated, and next renewal scheduled."
   },
   "errors": {
     "loadCentral": "We could not load the console.",
