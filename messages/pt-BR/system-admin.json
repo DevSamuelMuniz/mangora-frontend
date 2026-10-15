@@ -36,7 +36,7 @@
     "resetEmailSent": "E-mail de redefinição de senha enviado.",
     "resetLinkDev": "Link de redefinição (dev): {url}",
     "couponUpdated": "Estado do cupom atualizado.",
-    "paymentRegistered": "Pagamento registrado e próximo vencimento atualizado."
+    "paymentRegistered": "Pagamento registrado, conta ativada e próximo vencimento atualizado."
   },
   "errors": {
     "loadCentral": "Não foi possível carregar a central.",

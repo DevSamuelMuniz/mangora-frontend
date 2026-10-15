@@ -36,7 +36,7 @@
     "resetEmailSent": "Correo de restablecimiento de contraseña enviado.",
     "resetLinkDev": "Enlace de restablecimiento (dev): {url}",
     "couponUpdated": "Estado del cupón actualizado.",
-    "paymentRegistered": "Pago registrado y próximo vencimiento actualizado."
+    "paymentRegistered": "Pago registrado, cuenta activada y próximo vencimiento actualizado."
   },
   "errors": {
     "loadCentral": "No se pudo cargar la central.",
