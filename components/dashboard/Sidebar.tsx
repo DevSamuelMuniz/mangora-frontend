@@ -38,6 +38,7 @@ import { roleLabels, type AuthSession, type MembershipRole } from "@/lib/auth/ty
 import BrandLogo from "@/components/brand/BrandLogo";
 import { useT } from "@/i18n/provider";
 import { can } from "@/lib/permissions";
+import { isSystemAdminEmail } from "@/lib/auth/system-admin";
 import { useSwitchCompany, useUnitGroup } from "@/features/units/hooks/useUnits";
 
 type SidebarProps = {
@@ -132,7 +133,7 @@ export default function Sidebar({
   const [switching, setSwitching] = useState("");
   const [openGroups, setOpenGroups] = useState<Record<string, boolean>>(() => Object.fromEntries(navigationGroups.map((group) => [group.key, group.items.some((item) => pathname === item.href || pathname.startsWith(item.href + "/"))])));
   const visibleNavigationGroups = navigationGroups.map((group) => ({ ...group, items: group.items.filter((item) => (!item.roles || item.roles.includes(session.membership.role)) && (!simpleMode || item.simple)) })).filter((group) => group.items.length > 0);
-  const visibleSecondaryNavigation = secondaryNavigation.filter((item) => (!item.roles || item.roles.includes(session.membership.role)) && (!simpleMode || item.simple));
+  const visibleSecondaryNavigation = secondaryNavigation.filter((item) => (item.key !== "systemAdmin" || isSystemAdminEmail(session.user.email)) && (!item.roles || item.roles.includes(session.membership.role)) && (!simpleMode || item.simple));
 
   async function switchUnit(membershipId: string) {
     if (membershipId === session.membership.id) return setCompanyOpen(false);
