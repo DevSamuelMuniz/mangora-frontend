@@ -312,7 +312,16 @@
     "allStatuses": "All statuses",
     "status": "Status",
     "empty": "No payments found.",
-    "netAmount": "Net"
+    "netAmount": "Net",
+    "reconcile": "Check payments",
+    "reconciling": "Checking...",
+    "reconcileResult": "Checked: {checked} · updated: {updated} · failed: {failed}.",
+    "providerUnavailable": "Asaas integration is unavailable; payments were not checked.",
+    "possibleDuplicate": "Possible duplicate",
+    "cancelPending": "Cancel charge",
+    "cancelConfirm": "Cancel the pending charge for {company} with the provider? The financial history will be kept.",
+    "cancelled": "Charge cancelled; financial record preserved.",
+    "reconciledInstead": "The provider reported a different status; the payment was updated instead of cancelled."
   },
   "search": {
     "companies": "Search by company, e-mail or document",

@@ -248,7 +248,16 @@
     "allStatuses": "Todos os estados",
     "status": "Estado",
     "empty": "Não foram encontrados pagamentos.",
-    "netAmount": "Líquido"
+    "netAmount": "Líquido",
+    "reconcile": "Verificar pagamentos",
+    "reconciling": "A verificar...",
+    "reconcileResult": "Verificados: {checked} · atualizados: {updated} · falhas: {failed}.",
+    "providerUnavailable": "Integração com o Asaas indisponível; os pagamentos não foram consultados.",
+    "possibleDuplicate": "Possível duplicado",
+    "cancelPending": "Cancelar cobrança",
+    "cancelConfirm": "Cancelar a cobrança pendente de {company} no fornecedor? O histórico será mantido.",
+    "cancelled": "Cobrança cancelada e registo financeiro preservado.",
+    "reconciledInstead": "O fornecedor indicou outro estado; o pagamento foi atualizado em vez de cancelado."
   },
   "search": {
     "companies": "Procurar por empresa, e-mail ou documento",

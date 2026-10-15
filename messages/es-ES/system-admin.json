@@ -312,7 +312,16 @@
     "allStatuses": "Todos los estados",
     "status": "Estado",
     "empty": "No se encontraron pagos.",
-    "netAmount": "Neto"
+    "netAmount": "Neto",
+    "reconcile": "Verificar pagos",
+    "reconciling": "Verificando...",
+    "reconcileResult": "Verificados: {checked} · actualizados: {updated} · fallidos: {failed}.",
+    "providerUnavailable": "La integración con Asaas no está disponible; no se consultaron los pagos.",
+    "possibleDuplicate": "Posible duplicado",
+    "cancelPending": "Cancelar cobro",
+    "cancelConfirm": "¿Cancelar en el proveedor el cobro pendiente de {company}? Se conservará el historial financiero.",
+    "cancelled": "Cobro cancelado; registro financiero conservado.",
+    "reconciledInstead": "El proveedor indicó otro estado; el pago se actualizó en vez de cancelarse."
   },
   "search": {
     "companies": "Buscar por empresa, correo o documento",

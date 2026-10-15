@@ -3,9 +3,9 @@
 import { useFormatters } from "@/i18n/provider";
 
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { Activity, AlertTriangle, ArrowLeft, Building2, Check, CheckCircle2, ChevronDown, ChevronLeft, ChevronRight, CreditCard, Globe2, KeyRound, LayoutDashboard, LifeBuoy, LoaderCircle, LockKeyhole, LogOut, Pencil, RefreshCw, Search, ShieldCheck, Tags, Unlock, Users, X, SlidersHorizontal, CalendarClock, CircleDollarSign, ExternalLink } from "lucide-react";
+import { Activity, AlertTriangle, ArrowLeft, Building2, Check, CheckCircle2, ChevronDown, ChevronLeft, ChevronRight, CreditCard, Globe2, KeyRound, LayoutDashboard, LifeBuoy, LoaderCircle, LockKeyhole, LogOut, Pencil, RefreshCw, Search, ShieldCheck, Tags, Unlock, Users, X, SlidersHorizontal, CalendarClock, CircleDollarSign, ExternalLink, Trash2 } from "lucide-react";
 import BrandLogo from "@/components/brand/BrandLogo";
 import { useT } from "@/i18n/provider";
 import type { Translate } from "@/i18n/runtime";
@@ -24,7 +24,8 @@ type Company = { id: string; tradeName: string; slug: string; email?: string | n
 type Coupon = { id: string; code: string; type: "PERCENT" | "FIXED"; value: number; planScope: string | null; maxUses: number; usedCount: number; status: string };
 type PlanPrice = { id: string; market: string | null; country: string | null; currency: string; amount: number; interval: string; provider: string; providerPriceId: string | null; active: boolean };
 type PlanPricing = { id: string; code: string; name: string; active: boolean; prices: PlanPrice[] };
-type SystemPayment = { id: string; providerPaymentId: string; billingType: string | null; status: string; rawStatus: string; amount: number; netAmount: number | null; dueDate: string; paidAt: string | null; invoiceUrl: string | null; bankSlipUrl: string | null; createdAt: string; company: { id: string; tradeName: string; email: string | null; subscriptionPlan: string } };
+type SystemPayment = { id: string; providerPaymentId: string; billingType: string | null; status: string; rawStatus: string; amount: number; netAmount: number | null; dueDate: string; paidAt: string | null; invoiceUrl: string | null; bankSlipUrl: string | null; createdAt: string; isDuplicate?: boolean; duplicateOfPaymentId?: string | null; company: { id: string; tradeName: string; email: string | null; subscriptionPlan: string } };
+type PaymentReconciliation = { items: SystemPayment[]; checked: number; updated: number; failed: number; providerConfigured: boolean };
 
 function buildNav(t: Translate) {
   return [
@@ -61,6 +62,16 @@ export default function SystemAdminConsole({ operatorName }: { operatorName: str
   const [coupons, setCoupons] = useState<Coupon[]>([]);
   const [planPrices, setPlanPrices] = useState<PlanPricing[]>([]);
   const [payments, setPayments] = useState<SystemPayment[]>([]);
+  const reconcileSystemPayments = useCallback(async () => {
+    const result = await apiRequest<PaymentReconciliation>("/system-admin/payments/reconcile", { method: "POST" });
+    setPayments(result.items);
+    return result;
+  }, [setPayments]);
+  const cancelSystemPayment = useCallback(async (id: string) => {
+    const result = await apiRequest<{ items: SystemPayment[]; outcome: "CANCELLED" | "RECONCILED" | "UPDATED" }>(`/system-admin/payments/${id}/cancel`, { method: "POST" });
+    setPayments(result.items);
+    return result.outcome;
+  }, [setPayments]);
   const [paymentStatus, setPaymentStatus] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -162,7 +173,7 @@ export default function SystemAdminConsole({ operatorName }: { operatorName: str
             {tab === "prices" && <PlanPricesPanel plans={planPrices} onReload={() => void load()} notify={notify} />}
             {tab === "coupons" && <CouponsPanel items={coupons} onCreated={(coupon) => { setCoupons((current) => [coupon, ...current]); notify(t("systemAdmin.messages.couponCreated")); }} onUpdated={(coupon) => { setCoupons((current) => current.map((item) => item.id === coupon.id ? coupon : item)); notify(t("systemAdmin.messages.couponUpdated")); }} />}
             {tab === "billing" && <BillingPanel items={companies.filter((company) => !company.removedAt)} onEdit={(company) => setEditingCompany({ ...company, subscriptionPlan: company.subscriptionPlan, subscriptionStatus: company.subscriptionStatus })} onPayment={async (company) => { const updated = await apiRequest<Partial<Company> & { id: string }>(`/system-admin/companies/${company.id}/confirm-payment`, { method: "POST" }); const activation = (item: Company) => ({ status: updated.status ?? item.status, subscriptionStatus: updated.subscriptionStatus ?? item.subscriptionStatus, billingDueAt: updated.billingDueAt, nextBillingAt: updated.billingDueAt, billingNoticeAt: updated.billingNoticeAt, billingSuspendsAt: updated.billingSuspendsAt }); setCompanies((items) => items.map((item) => item.id === updated.id || (company.businessGroupId && item.businessGroupId === company.businessGroupId) ? { ...item, ...activation(item) } : item)); void apiRequest<SystemPayment[]>("/system-admin/payments").then(setPayments).catch(() => undefined); notify(t("systemAdmin.messages.paymentRegistered")); }} />}
-            {tab === "payments" && <PaymentsPanel items={payments.filter((item) => (!normalized || `${item.company.tradeName} ${item.company.email ?? ""} ${item.providerPaymentId}`.toLocaleLowerCase("pt-BR").includes(normalized)) && (!paymentStatus || item.status === paymentStatus))} status={paymentStatus} onStatus={setPaymentStatus} />}
+            {tab === "payments" && <PaymentsPanel items={payments.filter((item) => (!normalized || `${item.company.tradeName} ${item.company.email ?? ""} ${item.providerPaymentId}`.toLocaleLowerCase("pt-BR").includes(normalized)) && (!paymentStatus || item.status === paymentStatus))} status={paymentStatus} onStatus={setPaymentStatus} onReconcile={reconcileSystemPayments} onCancel={cancelSystemPayment} />}
           </>}
         </div>
       </section>
@@ -262,13 +273,47 @@ function BillingPanel({ items, onEdit, onPayment }: { items: Company[]; onEdit: 
   </div>;
 }
 
-function PaymentsPanel({ items, status, onStatus }: { items: SystemPayment[]; status: string; onStatus: (status: string) => void }) {
+function PaymentsPanel({ items, status, onStatus, onReconcile, onCancel }: { items: SystemPayment[]; status: string; onStatus: (status: string) => void; onReconcile: () => Promise<PaymentReconciliation>; onCancel: (id: string) => Promise<"CANCELLED" | "RECONCILED" | "UPDATED"> }) {
   const t = useT();
   const { formatCurrency, formatDate } = useFormatters();
+  const [reconciling, setReconciling] = useState(false);
+  const [busyId, setBusyId] = useState("");
+  const [feedback, setFeedback] = useState("");
+  const [error, setError] = useState("");
+  const reconciledOnOpen = useRef(false);
   const allStatuses = ["PENDING", "CONFIRMED", "RECEIVED", "OVERDUE", "REFUNDED", "CANCELLED"];
+  const reconcile = useCallback(async () => {
+    setReconciling(true); setError("");
+    try {
+      const result = await onReconcile();
+      setFeedback(!result.providerConfigured ? t("systemAdmin.payments.providerUnavailable") : t("systemAdmin.payments.reconcileResult", { checked: result.checked, updated: result.updated, failed: result.failed }));
+    } catch (cause) {
+      setError(cause instanceof Error ? cause.message : t("systemAdmin.errors.save"));
+    } finally { setReconciling(false); }
+  }, [onReconcile, t]);
+  useEffect(() => {
+    if (reconciledOnOpen.current) return;
+    reconciledOnOpen.current = true;
+    void onReconcile().then((result) => {
+      setFeedback(!result.providerConfigured ? t("systemAdmin.payments.providerUnavailable") : t("systemAdmin.payments.reconcileResult", { checked: result.checked, updated: result.updated, failed: result.failed }));
+    }).catch((cause: unknown) => {
+      setError(cause instanceof Error ? cause.message : t("systemAdmin.errors.save"));
+    });
+  }, [onReconcile, t]);
+  async function cancel(payment: SystemPayment) {
+    if (!window.confirm(t("systemAdmin.payments.cancelConfirm", { company: payment.company.tradeName }))) return;
+    setBusyId(payment.id); setError(""); setFeedback("");
+    try {
+      const outcome = await onCancel(payment.id);
+      setFeedback(t(outcome === "CANCELLED" ? "systemAdmin.payments.cancelled" : "systemAdmin.payments.reconciledInstead"));
+    } catch (cause) {
+      setError(cause instanceof Error ? cause.message : t("systemAdmin.errors.save"));
+    } finally { setBusyId(""); }
+  }
   return <section className="overflow-hidden rounded-2xl border border-[#123d2b]/15 bg-[#fffdf8]">
-    <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#123d2b]/10 px-5 py-4"><div><h2 className="text-sm font-black">{t("systemAdmin.payments.title")}</h2><p className="mt-1 text-[10px] text-[#597064]">{t("systemAdmin.payments.description", { count: items.length })}</p></div><label className="flex items-center gap-2 text-[10px] font-bold text-[#315847]"><span>{t("systemAdmin.payments.status")}</span><select value={status} onChange={(event) => onStatus(event.target.value)} className="h-9 rounded-lg border border-[#123d2b]/15 bg-white px-2"><option value="">{t("systemAdmin.payments.allStatuses")}</option>{allStatuses.map((value) => <option key={value} value={value}>{codeLabel("systemAdmin.status", value, t)}</option>)}</select></label></div>
-    <div className="divide-y divide-[#123d2b]/10">{items.map((payment) => <article key={payment.id} className="grid gap-3 px-5 py-4 sm:grid-cols-[1.4fr_1fr_1fr_auto] sm:items-center"><div className="min-w-0"><p className="truncate text-xs font-black text-[#123d2b]">{payment.company.tradeName}</p><p className="mt-1 truncate text-[10px] text-[#597064]">{payment.company.email || payment.providerPaymentId}</p><p className="mt-1 text-[9px] text-[#597064]">{codeLabel("systemAdmin.plans.codes", payment.company.subscriptionPlan, t)} · {payment.billingType || "—"}</p></div><div><p className="text-sm font-black text-[#123d2b]">{formatCurrency(payment.amount)}</p>{payment.netAmount !== null && <p className="mt-1 text-[9px] text-[#597064]">{t("systemAdmin.payments.netAmount")}: {formatCurrency(payment.netAmount)}</p>}</div><div><PaymentStatusBadge value={payment.status} /><p className="mt-1 text-[9px] text-[#597064]">{t("systemAdmin.payments.dueDate")}: {formatDate(payment.dueDate)}</p>{payment.paidAt && <p className="mt-1 text-[9px] text-[#597064]">{t("systemAdmin.payments.paidAt")}: {formatDate(payment.paidAt)}</p>}</div>{(payment.invoiceUrl || payment.bankSlipUrl) && <a href={payment.invoiceUrl || payment.bankSlipUrl || undefined} target="_blank" rel="noreferrer" className="inline-flex h-9 items-center justify-center gap-1 rounded-lg border border-[#123d2b]/15 px-3 text-[10px] font-bold text-[#315847] hover:text-[#ce4a0a]">{t("systemAdmin.payments.openInvoice")}<ExternalLink className="size-3" /></a>}</article>)}{!items.length && <Empty text={t("systemAdmin.payments.empty")} />}</div>
+    <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#123d2b]/10 px-5 py-4"><div><h2 className="text-sm font-black">{t("systemAdmin.payments.title")}</h2><p className="mt-1 text-[10px] text-[#597064]">{t("systemAdmin.payments.description", { count: items.length })}</p></div><div className="flex flex-wrap items-center gap-3"><label className="flex items-center gap-2 text-[10px] font-bold text-[#315847]"><span>{t("systemAdmin.payments.status")}</span><select value={status} onChange={(event) => onStatus(event.target.value)} className="h-9 rounded-lg border border-[#123d2b]/15 bg-white px-2"><option value="">{t("systemAdmin.payments.allStatuses")}</option>{allStatuses.map((value) => <option key={value} value={value}>{codeLabel("systemAdmin.status", value, t)}</option>)}</select></label><button type="button" onClick={() => void reconcile()} disabled={reconciling} className="inline-flex h-9 items-center gap-2 rounded-lg bg-[#123d2b] px-3 text-[10px] font-black text-white disabled:opacity-60">{reconciling ? <LoaderCircle className="size-3.5 animate-spin" /> : <RefreshCw className="size-3.5" />}{t(reconciling ? "systemAdmin.payments.reconciling" : "systemAdmin.payments.reconcile")}</button></div></div>
+    {feedback && <p role="status" className="border-b border-green-100 bg-green-50 px-5 py-2.5 text-[10px] font-bold text-green-800">{feedback}</p>}{error && <p role="alert" className="border-b border-red-100 bg-red-50 px-5 py-2.5 text-[10px] font-bold text-red-700">{error}</p>}
+    <div className="divide-y divide-[#123d2b]/10">{items.map((payment) => <article key={payment.id} className="grid gap-3 px-5 py-4 sm:grid-cols-[1.4fr_1fr_1fr_auto] sm:items-center"><div className="min-w-0"><p className="truncate text-xs font-black text-[#123d2b]">{payment.company.tradeName}</p><p className="mt-1 truncate text-[10px] text-[#597064]">{payment.company.email || payment.providerPaymentId}</p><p className="mt-1 text-[9px] text-[#597064]">{codeLabel("systemAdmin.plans.codes", payment.company.subscriptionPlan, t)} · {payment.billingType || "—"}</p>{payment.isDuplicate && <span className="mt-2 inline-flex rounded-full bg-orange-50 px-2 py-1 text-[8px] font-black uppercase text-orange-800">{t("systemAdmin.payments.possibleDuplicate")}</span>}</div><div><p className="text-sm font-black text-[#123d2b]">{formatCurrency(payment.amount)}</p>{payment.netAmount !== null && <p className="mt-1 text-[9px] text-[#597064]">{t("systemAdmin.payments.netAmount")}: {formatCurrency(payment.netAmount)}</p>}</div><div><PaymentStatusBadge value={payment.status} /><p className="mt-1 text-[9px] text-[#597064]">{t("systemAdmin.payments.dueDate")}: {formatDate(payment.dueDate)}</p>{payment.paidAt && <p className="mt-1 text-[9px] text-[#597064]">{t("systemAdmin.payments.paidAt")}: {formatDate(payment.paidAt)}</p>}</div><div className="flex flex-wrap gap-2">{(payment.invoiceUrl || payment.bankSlipUrl) && <a href={payment.invoiceUrl || payment.bankSlipUrl || undefined} target="_blank" rel="noreferrer" className="inline-flex h-9 items-center justify-center gap-1 rounded-lg border border-[#123d2b]/15 px-3 text-[10px] font-bold text-[#315847] hover:text-[#ce4a0a]">{t("systemAdmin.payments.openInvoice")}<ExternalLink className="size-3" /></a>}{["PENDING", "OVERDUE"].includes(payment.status) && <button type="button" disabled={busyId === payment.id} onClick={() => void cancel(payment)} className="inline-flex h-9 items-center justify-center gap-1 rounded-lg border border-red-200 bg-red-50 px-3 text-[10px] font-bold text-red-700 hover:bg-red-100 disabled:opacity-50">{busyId === payment.id ? <LoaderCircle className="size-3 animate-spin" /> : <Trash2 className="size-3" />}{t("systemAdmin.payments.cancelPending")}</button>}</div></article>)}{!items.length && <Empty text={t("systemAdmin.payments.empty")} />}</div>
   </section>;
 }
 
