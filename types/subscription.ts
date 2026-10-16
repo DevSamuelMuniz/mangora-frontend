@@ -37,6 +37,7 @@ export type SubscriptionOverview = {
   accessBlocked: boolean;
   price: number;
   nextBillingAt: string | null;
+  billingDueAt: string | null;
   paymentMethod: string | null;
   pendingPlan: "START" | "BUSINESS" | "PREMIUM" | null;
   cancellation: {

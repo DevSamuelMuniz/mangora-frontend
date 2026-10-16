@@ -9,9 +9,10 @@ import { subscriptionPlans } from "./subscription-data";
 import ContractAndHistory from "./ContractAndHistory";
 import ConfirmDialog from "@/components/ui/ConfirmDialog";
 import type { SubscriptionOverview, SubscriptionPlan } from "@/types/subscription";
+import { apiRequest } from "@/lib/api/client";
 
 import { addDaysToBrazilDateKey } from "@/lib/timezone";
-import { useCancelSubscription, useReactivateSubscription, useSubscription, useSubscriptionCheckout, useSubscriptionRequest } from "@/features/subscription/hooks/useSubscription";
+import { useReconcileSubscription, useCancelSubscription, useReactivateSubscription, useSubscription, useSubscriptionCheckout, useSubscriptionRequest } from "@/features/subscription/hooks/useSubscription";
 
 
 export default function SubscriptionManagement() {
@@ -21,6 +22,9 @@ export default function SubscriptionManagement() {
   const { data: overview, isPending: loading, error } = useSubscription();
   const requestMutation = useSubscriptionRequest();
   const checkoutMutation = useSubscriptionCheckout();
+  const reconcileMutation = useReconcileSubscription();
+  const [paymentUrl, setPaymentUrl] = useState<string | null>(null);
+  const [openingPayment, setOpeningPayment] = useState(false);
   const cancelMutation = useCancelSubscription();
   const saving = requestMutation.isPending || checkoutMutation.isPending || cancelMutation.isPending;
   const [actionError, setActionError] = useState("");
@@ -50,7 +54,10 @@ export default function SubscriptionManagement() {
           targetPlan: selected.id.toUpperCase(),
           ...(overview.provider.name === "ASAAS" ? { billingType, nextDueDate, couponCode: couponCode.trim() || undefined } : {}),
         });
+        setPaymentUrl(checkout.checkoutUrl ?? null);
+        if (paymentTab) paymentTab.opener = null;
         if (checkout.checkoutUrl) {
+          setMessage("Pagamento aberto. Após pagar, clique em Verificar pagamento para atualizar seu acesso.");
           if (paymentTab) paymentTab.location.assign(checkout.checkoutUrl);
           else window.open(checkout.checkoutUrl, "_blank", "noopener,noreferrer");
         } else {
@@ -84,6 +91,29 @@ export default function SubscriptionManagement() {
 
   return <section className="space-y-5">
     <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between"><div><p className="text-[11px] font-bold uppercase tracking-[0.14em] text-orange-600">{t("billing.eyebrow")}</p><h1 className="mt-1 text-2xl font-black text-slate-950 sm:text-3xl">{t("billing.title")}</h1><p className="mt-1 text-xs text-slate-500">{overview.trialExpired ? "O período completo terminou e sua conta continua ativa no Free." : overview.status === "TRIAL" ? `Você está nos 7 dias grátis${overview.trialDaysRemaining ? ` — restam ${overview.trialDaysRemaining} dia(s)` : ""}.` : t("billing.subtitle")}</p></div><span className={`w-fit rounded-full border px-3 py-1.5 text-[11px] font-bold ${overview.status === "ACTIVE" || overview.plan === "FREE" ? "border-green-200 bg-green-50 text-green-700" : "border-amber-200 bg-amber-50 text-amber-700"}`}>{statusLabel}</span></div>
+    {(overview.pendingPlan || overview.accessBlocked || paymentUrl) && <div className="rounded-2xl border border-amber-200 bg-amber-50 p-4" role="status">
+      <p className="text-sm font-bold text-amber-950">{overview.pendingPlan ? "Aguardando confirmação do pagamento" : "Situação do pagamento"}</p>
+      <p className="mt-1 text-xs text-amber-900">Seu acesso será atualizado quando o Asaas confirmar o pagamento. Se a janela não abriu, use o link abaixo.</p>
+      <div className="mt-3 flex flex-wrap gap-3">
+        {paymentUrl && <a href={paymentUrl} target="_blank" rel="noopener noreferrer" className="text-xs font-bold underline">Abrir pagamento</a>}
+        {!paymentUrl && overview.provider.name === "ASAAS" && <button disabled={openingPayment} className="text-xs font-bold underline disabled:opacity-50" onClick={async () => {
+          const tab = window.open("about:blank", "_blank");
+          if (tab) tab.opener = null;
+          setOpeningPayment(true); setActionError("");
+          try {
+            const result = await apiRequest<{ paymentUrl: string }>("/subscription/payment-link", { method: "POST" });
+            setPaymentUrl(result.paymentUrl);
+            if (tab) tab.location.assign(result.paymentUrl);
+          } catch (error) { tab?.close(); setActionError(error instanceof Error ? error.message : "Não foi possível abrir o pagamento."); }
+          finally { setOpeningPayment(false); }
+        }}>{openingPayment ? "Abrindo…" : "Abrir pagamento"}</button>}
+        <button disabled={reconcileMutation.isPending} className="text-xs font-bold underline disabled:opacity-50" onClick={async () => {
+          setActionError("");
+          try { const updated = await reconcileMutation.mutateAsync(); setMessage(updated.pendingPlan || updated.accessBlocked ? "Pagamento ainda não confirmado. Aguarde a compensação e tente novamente." : "Situação atualizada. Seu acesso está liberado."); }
+          catch (error) { setActionError(error instanceof Error ? error.message : "Não foi possível verificar o pagamento."); }
+        }}>{reconcileMutation.isPending ? "Verificando…" : "Verificar pagamento"}</button>
+      </div>
+    </div>}
     {overview.cancellation?.requested && (
       <div className="rounded-2xl border border-amber-300 bg-amber-50 p-4">
         <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-center">

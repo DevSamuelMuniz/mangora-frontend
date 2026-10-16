@@ -1,3 +1,4 @@
+import { useRouter } from "next/navigation";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { apiRequest } from "@/lib/api/client";
@@ -11,8 +12,11 @@ import type { SubscriptionOverview } from "@/types/subscription";
 
 export const subscriptionQueryKey = ["subscription"] as const;
 
-export function useSubscription() {
+export function useSubscription(enabled = true) {
     return useQuery<SubscriptionOverview, Error>({
+        enabled,
+        refetchOnWindowFocus: true,
+        refetchInterval: (query) => query.state.data?.pendingPlan || query.state.data?.accessBlocked ? 15_000 : false,
         queryKey: subscriptionQueryKey,
         queryFn: () => apiRequest<SubscriptionOverview>("/subscription"),
     });
@@ -55,6 +59,19 @@ export function useReactivateSubscription() {
         mutationFn: () => apiRequest("/subscription/reactivate", { method: "POST" }),
         onSuccess: () => {
             void queryClient.invalidateQueries({ queryKey: subscriptionQueryKey });
+        },
+    });
+}
+
+export function useReconcileSubscription() {
+    const queryClient = useQueryClient();
+    const router = useRouter();
+    return useMutation<SubscriptionOverview, Error, void>({
+        mutationFn: () => apiRequest("/subscription/reconcile", { method: "POST" }),
+        onSuccess: (overview) => {
+            queryClient.setQueryData(subscriptionQueryKey, overview);
+            void queryClient.invalidateQueries();
+            router.refresh();
         },
     });
 }
