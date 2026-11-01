@@ -87,6 +87,10 @@ export default function StockMovementForm({ initialProductId = "" }: { initialPr
     const formData = new FormData(event.currentTarget);
     const unitCostValue = String(formData.get("unitCost") ?? "").trim();
     const reason = String(formData.get("reason") ?? "").trim();
+    if (reason.length < 2 || reason.length > 120) {
+      setError(t("stock.form.errors.reason"));
+      return;
+    }
     const notes = String(formData.get("notes") ?? "").trim();
     const payload: StockMovementInput = {
       productId,
@@ -123,7 +127,7 @@ export default function StockMovementForm({ initialProductId = "" }: { initialPr
               <Field label={t("stock.form.fields.product")} id="productId" className="sm:col-span-2"><select id="productId" name="productId" required disabled={loadingProducts} value={productId} onChange={(event) => { setProductId(event.target.value); setError(""); }} className={inputClassName}><option value="">{loadingProducts ? "Carregando produtos..." : "Selecione um produto"}</option>{products.map((product) => <option key={product.id} value={product.id}>{product.name} · {product.sku} · {product.stock - product.reservedStock} disp. ({product.reservedStock} reserv.)</option>)}</select></Field>
               <Field label={movementType === "ADJUSTMENT" ? "Novo saldo contado" : "Quantidade"} id="quantity"><input id="quantity" name="quantity" type="number" required min={movementType === "ADJUSTMENT" ? 0 : 1} step="1" value={quantity} onChange={(event) => setQuantity(event.target.value)} placeholder="0" className={inputClassName} /></Field>
               <Field label={t("stock.form.fields.costOptional")} id="unitCost"><div className="relative"><span className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-xs font-bold text-slate-400">R$</span><input id="unitCost" name="unitCost" type="number" min="0" step="0.01" placeholder="0,00" className={`${inputClassName} pl-10`} /></div></Field>
-              <Field label={t("stock.form.fields.reason")} id="reason" className="sm:col-span-2"><select key={movementType} id="reason" name="reason" required defaultValue="" className={inputClassName}><option value="" disabled>{t("stock.form.fields.reasonPlaceholder")}</option>{reasons[movementType].map((reason) => <option key={reason} value={reason}>{t(`stock.form.reasons.${movementType}.${reason}`)}</option>)}</select></Field>
+              <Field label={t("stock.form.fields.reason")} id="reason" className="sm:col-span-2"><select key={movementType} id="reason" name="reason" required defaultValue="" className={inputClassName}><option value="" disabled>{t("stock.form.fields.reasonPlaceholder")}</option>{reasons[movementType].map((reason) => { const label = t(`stock.form.reasons.${movementType}.${reason}`); return <option key={reason} value={label}>{label}</option>; })}</select></Field>
               <Field label={t("stock.form.fields.notes")} id="notes" className="sm:col-span-2"><textarea id="notes" name="notes" rows={3} maxLength={1000} placeholder={t("stock.form.fields.notesPlaceholder")} className="w-full resize-y rounded-xl border border-slate-200 bg-white px-3.5 py-3 text-sm text-slate-950 outline-none transition placeholder:text-slate-400 focus:border-orange-400 focus:ring-4 focus:ring-orange-100" /></Field>
             </div>
           </div>

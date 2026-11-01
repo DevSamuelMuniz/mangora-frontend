@@ -126,6 +126,7 @@
     },
     "errors": {
       "product": "Selecciona un producto.",
+      "reason": "Seleccione un motivo válido de entre 2 y 120 caracteres.",
       "quantity": "Introduce una cantidad entera mayor que cero.",
       "counted": "Introduce un saldo contado válido.",
       "projected": "Saldo proyectado no válido. Reduce la cantidad.",

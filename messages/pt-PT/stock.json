@@ -133,6 +133,7 @@
     },
     "errors": {
       "product": "Selecione um produto.",
+      "reason": "Selecione um motivo válido, com 2 a 120 caracteres.",
       "quantity": "Indique uma quantidade inteira superior a zero.",
       "counted": "Indique um saldo contado válido.",
       "projected": "Saldo projetado inválido. Reduza a quantidade.",

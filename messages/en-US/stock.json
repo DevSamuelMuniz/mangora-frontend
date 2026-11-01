@@ -133,6 +133,7 @@
     },
     "errors": {
       "product": "Select a product.",
+      "reason": "Select a valid reason with 2 to 120 characters.",
       "quantity": "Enter a whole quantity greater than zero.",
       "counted": "Enter a valid counted balance.",
       "projected": "Invalid projected balance. Reduce the quantity.",
