@@ -64,6 +64,10 @@ Settings use native details/summary, retaining keyboard behavior and normal docu
 scroll. Status regions reserve space. Native select popups are intentionally owned
 by the operating system.
 
+At PDV sale completion, print settings occupy a separate 320px column to the
+right of the sale summary from the md breakpoint; on smaller screens the two
+panels stack in document order. Expanding settings does not stretch the summary.
+
 ## Elevation & Depth
 
 Borders define workspace panels; the paper preview alone carries a small shadow.

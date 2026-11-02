@@ -59,7 +59,8 @@ export default function DoneStep({ sale, company, received, change, onFinish }: 
     }, [printOptionsOpen]);
 
     return (
-        <><div className="mx-auto flex w-full max-w-md flex-col items-center rounded-2xl border-2 border-pdv-line bg-pdv-panel p-8 text-center">
+        <><div className="mx-auto grid w-full max-w-4xl items-start gap-6 md:grid-cols-[minmax(0,1fr)_320px]">
+        <div className="flex min-w-0 w-full flex-col items-center rounded-2xl border-2 border-pdv-line bg-pdv-panel p-8 text-center">
             <span className="flex size-16 items-center justify-center rounded-full bg-pdv-ok/15 text-green-400">
                 <CheckCircle2 className="size-8" />
             </span>
@@ -92,7 +93,8 @@ export default function DoneStep({ sale, company, received, change, onFinish }: 
             </div>
             <p className="mt-4 font-mono text-[10px] text-pdv-fg/60">{t("labels.printHint")}</p>
             <p role={printFailed ? "alert" : "status"} aria-live="polite" className="mt-3 min-h-10 text-xs text-pdv-fg">{printing ? t("labels.printing") : printMessage}</p>
-            <div className="mt-4 w-full"><PrintSettings kind="receipt" /></div>
+        </div>
+        <aside className="min-w-0"><PrintSettings kind="receipt" /></aside>
         </div>
         {printOptionsOpen && <dialog ref={printDialog} aria-labelledby="print-options-title" onCancel={() => setPrintOptionsOpen(false)} className="fixed inset-0 m-0 h-dvh max-h-none w-dvw max-w-none place-items-center border-0 bg-[#071c14]/75 p-4 backdrop-blur-sm open:grid" onMouseDown={(event) => { if (event.target === event.currentTarget) setPrintOptionsOpen(false); }}>
             <div className="w-full max-w-3xl overflow-hidden rounded-3xl border-2 border-[#173d2b] bg-[#fffaf0] text-left shadow-[8px_10px_0_#f59e0b]">
