@@ -2,9 +2,10 @@ import JsBarcode from "jsbarcode";
 
 export type LabelSize = { width: number; height: number }; // millimetres
 export type LabelItem = { id: string; name: string; code: string; price: string; quantity: number };
-export type LabelPaper = "roll" | "a4";
+export type LabelPaper = "continuous" | "roll" | "a4";
 export const MAX_LABELS = 500;
 export const LABEL_SIZES = [
+  { width: 48, height: 30 },
   { width: 50, height: 50 }, { width: 50, height: 40 },
   { width: 50, height: 30 }, { width: 40, height: 30 },
   { width: 30, height: 20 }, { width: 60, height: 40 },
@@ -45,59 +46,9 @@ export function labelMarkup(item: Pick<LabelItem, "name" | "code" | "price">) {
 }
 
 export const LABEL_CSS = `
-.product-label{box-sizing:border-box;width:var(--label-width);height:var(--label-height);padding:2mm;background:#fff;color:#000;display:grid;grid-template-rows:minmax(3.7mm,1fr) auto minmax(4mm,1.4fr) auto;gap:0.4mm;overflow:hidden;font-family:Arial,sans-serif;text-align:center;break-inside:avoid;}
-.product-label-name{font-size:9pt;font-weight:700;line-height:1.15;overflow:hidden;overflow-wrap:anywhere;align-self:center;max-height:100%;}
+.product-label{box-sizing:border-box;width:var(--label-width);height:var(--label-height);padding:2mm;background:#fff;color:#000;display:grid;grid-template-rows:auto auto minmax(3mm,12mm) auto;align-content:start;gap:0.4mm;overflow:hidden;font-family:Arial,sans-serif;text-align:center;break-inside:avoid;}
+.product-label-name{font-size:9pt;font-weight:700;line-height:1.15;overflow:hidden;overflow-wrap:anywhere;align-self:start;max-height:7mm;}
 .product-label-price{font-size:10pt;font-weight:800;line-height:1.1;white-space:nowrap;}
 .product-label svg{display:block;width:100%;height:100%;}
 .product-label-code{font-family:Arial,sans-serif;font-size:8pt;line-height:1.1;white-space:nowrap;}
 `;
-
-export function buildLabelDocument(items: LabelItem[], size: LabelSize, paper: LabelPaper, title: string) {
-  const total = items.reduce((sum, item) => sum + item.quantity, 0);
-  if (!validLabelSize(size) || !items.length || total > MAX_LABELS || items.some((item) => !Number.isInteger(item.quantity) || item.quantity < 1 || !barcodeFits(item.code, size.width))) {
-    throw new Error("Invalid label print job");
-  }
-  const columns = paper === "a4" ? Math.floor(202 / (size.width + 2)) : 1;
-  const rows = paper === "a4" ? Math.floor(289 / (size.height + 2)) : 1;
-  const perPage = columns * rows;
-  const labels = items.flatMap((item) => Array.from({ length: item.quantity }, () => labelMarkup(item)));
-  const pages: string[] = [];
-  for (let index = 0; index < labels.length; index += perPage) {
-    pages.push(`<section class="label-page">${labels.slice(index, index + perPage).join("")}</section>`);
-  }
-  return `<!doctype html><html><head><meta charset="utf-8"><title>${escapeHtml(title)}</title><style>
-@page{size:${paper === "a4" ? "A4 portrait" : `${size.width}mm ${size.height}mm`};margin:${paper === "a4" ? "5mm" : "0"};}
-html,body{margin:0;padding:0;}body{--label-width:${size.width}mm;--label-height:${size.height}mm;}
-${LABEL_CSS}
-.label-page{display:grid;grid-template-columns:repeat(${columns},${size.width}mm);gap:${paper === "a4" ? "2mm" : "0"};break-after:page;}
-.label-page:last-child{break-after:auto;}
-</style></head><body>${pages.join("")}</body></html>`;
-}
-
-/** Isolated print document so the dashboard and navigation never enter the job. */
-export function printLabels(html: string): Promise<void> {
-  return new Promise((resolve, reject) => {
-    const frame = document.createElement("iframe");
-    frame.title = "Print";
-    frame.style.cssText = "position:fixed;left:-10000px;top:0;width:1px;height:1px;border:0";
-    const cleanup = () => frame.remove();
-    frame.onload = async () => {
-      try {
-        const target = frame.contentWindow;
-        if (!target) throw new Error("Print window unavailable");
-        await target.document.fonts?.ready;
-        target.addEventListener("afterprint", cleanup, { once: true });
-        target.focus();
-        target.print();
-        // Fallback for browsers that do not dispatch afterprint.
-        window.setTimeout(cleanup, 300_000);
-        resolve();
-      } catch (error) {
-        cleanup();
-        reject(error);
-      }
-    };
-    frame.srcdoc = html;
-    document.body.appendChild(frame);
-  });
-}

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { barcodeData, barcodeFits, buildLabelDocument, labelCode, labelMarkup, validLabelSize } from "@/lib/labels";
+import { barcodeData, barcodeFits, labelCode, labelMarkup } from "@/lib/labels";
 
 const product = { id: "p1", name: 'Café <Especial> & "Premium"', code: "0012345678905", price: "R$ 19,90", quantity: 2 };
 
@@ -29,33 +29,4 @@ describe("etiquetas", () => {
     expect(root.querySelectorAll("svg rect").length).toBeGreaterThan(20);
   });
 
-  it("gera páginas em tamanho físico exato e as quantidades pedidas", () => {
-    const html = buildLabelDocument([product], { width: 50, height: 40 }, "roll", "Etiquetas");
-    expect(html).toContain("size:50mm 40mm;margin:0");
-    const parsed = new DOMParser().parseFromString(html, "text/html");
-    expect(parsed.querySelectorAll(".label-page")).toHaveLength(2);
-    expect(parsed.querySelectorAll(".product-label")).toHaveLength(2);
-    expect(parsed.querySelectorAll(".product-label-code")[1].textContent).toBe(product.code);
-    expect(parsed.querySelector("nav")).toBeNull();
-  });
-
-  it("pagina A4 sem cortar etiquetas ou criar página extra", () => {
-    // Three columns x six rows for 50 x 40 mm, 5 mm margins and 2 mm gaps.
-    const html = buildLabelDocument([{ ...product, quantity: 19 }], { width: 50, height: 40 }, "a4", "Etiquetas");
-    const parsed = new DOMParser().parseFromString(html, "text/html");
-    const pages = parsed.querySelectorAll(".label-page");
-    expect(pages).toHaveLength(2);
-    expect(pages[0].children).toHaveLength(18);
-    expect(pages[1].children).toHaveLength(1);
-    expect(html).toContain("size:A4 portrait;margin:5mm");
-  });
-
-  it("rejeita medidas, quantidades e códigos que impedem uma impressão válida", () => {
-    expect(validLabelSize({ width: NaN, height: 50 })).toBe(false);
-    expect(validLabelSize({ width: 29, height: 50 })).toBe(false);
-    for (const quantity of [0, -1, 1.5, 501]) {
-      expect(() => buildLabelDocument([{ ...product, quantity }], { width: 50, height: 50 }, "roll", "Etiquetas")).toThrow();
-    }
-    expect(() => buildLabelDocument([{ ...product, code: "1".repeat(32) }], { width: 30, height: 20 }, "roll", "Etiquetas")).toThrow();
-  });
 });

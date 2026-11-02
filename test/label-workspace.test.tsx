@@ -4,15 +4,15 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import LabelWorkspace from "@/components/labels/LabelWorkspace";
 import I18nProvider from "@/i18n/provider";
 import labels from "@/messages/pt-BR/labels.json";
-import { printLabels } from "@/lib/labels";
+import { submitPrintJob } from "@/lib/printing/service";
 
 vi.mock("@/features/products/hooks/useProducts", () => ({ useProducts: () => ({
   data: [{ id: "coffee", name: "Café especial", barcode: "0012345678905", sku: "CAFE", price: 19.9 }, { id: "tea", name: "Chá", barcode: null, sku: "CHA", price: 0 }],
   isLoading: false, error: null,
 }) }));
-vi.mock("@/lib/labels", async (original) => ({ ...await original<typeof import("@/lib/labels")>(), printLabels: vi.fn().mockResolvedValue(undefined) }));
+vi.mock("@/lib/printing/service", () => ({ submitPrintJob: vi.fn().mockResolvedValue(undefined), findPrinters: vi.fn().mockResolvedValue([]) }));
 
-afterEach(() => { cleanup(); vi.clearAllMocks(); });
+afterEach(() => { cleanup(); localStorage.clear(); vi.clearAllMocks(); });
 function setup() { render(<I18nProvider locale="pt-BR" messages={{ labels, navigation: { groups: { supplies: "Suprimentos" } } }}><LabelWorkspace /></I18nProvider>); }
 
 describe("página Etiquetas", () => {
@@ -24,13 +24,13 @@ describe("página Etiquetas", () => {
     fireEvent.change(screen.getByLabelText("Tamanho (largura × altura)"), { target: { value: "50x40" } });
     fireEvent.change(screen.getByLabelText("Quantidade de etiquetas de Café especial"), { target: { value: "3" } });
     fireEvent.click(screen.getByRole("button", { name: "Imprimir 3 etiquetas" }));
-    await waitFor(() => expect(printLabels).toHaveBeenCalledOnce());
-    const html = vi.mocked(printLabels).mock.calls[0][0];
-    expect(html).toContain("size:50mm 40mm");
-    const prices = new DOMParser().parseFromString(html, "text/html").querySelectorAll(".product-label-price");
-    expect([...prices].map((node) => node.textContent?.replace(/\s/g, " "))).toEqual(["R$ 19,90", "R$ 19,90", "R$ 19,90"]);
+    await waitFor(() => expect(submitPrintJob).toHaveBeenCalledOnce());
+    const job = vi.mocked(submitPrintJob).mock.calls[0][0];
+    expect(job.width).toBe(50);
+    expect(job.height).toBe(120);
+    expect(job.pdf.getNumberOfPages()).toBe(1);
     expect(screen.getByText(/R\$\s19,90/)).toBeTruthy();
-    expect(new DOMParser().parseFromString(html, "text/html").querySelectorAll(".product-label")).toHaveLength(3);
+    expect(JSON.parse(localStorage.getItem("mangora.printing.v1")!).labelHeight).toBe(40);
   });
 
   it("mantém a seleção ao pesquisar e bloqueia medidas personalizadas inválidas", () => {

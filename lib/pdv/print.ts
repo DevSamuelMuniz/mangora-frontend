@@ -1,132 +1,99 @@
+import { jsPDF } from "jspdf";
 import type { CompanySettings } from "@/types/settings";
 import { paymentMethodLabels, type Sale } from "@/types/sale";
 import { formatDateTime } from "@/lib/format";
+import { readPrintPreferences } from "@/lib/printing/preferences";
+import { submitPrintJob, type PrintJob } from "@/lib/printing/service";
 
-type ReceiptCompany = Pick<
-    CompanySettings,
-    "tradeName" | "document" | "phone" | "email" | "street" | "number" | "city" | "state" | "postalCode"
->;
+type ReceiptCompany = Pick<CompanySettings, "tradeName" | "document" | "phone" | "email" | "street" | "number" | "city" | "state" | "postalCode">;
+export type ReceiptMode = "standard" | "bold" | "extra-bold";
+type ChangeInfo = { received: number; change: number };
 
-/** Imprime o cupom da venda (80mm) em uma janela dedicada. */
-export function printReceipt(sale: Sale, company: ReceiptCompany | null, changeInfo?: { received: number; change: number }, mode: "standard" | "bold" | "extra-bold" = "standard") {
-    const isCashChange = sale.paymentMethod === "CASH" && changeInfo !== undefined;
-    const style = mode === "extra-bold"
-        ? { font: "14px", weight: 900, item: "14px", muted: "11px", brand: "18px", line: "2px", totalBorder: "3px", total: "25px", footer: "11px", family: "Arial, sans-serif" }
-        : mode === "bold"
-            ? { font: "14px", weight: 700, item: "14px", muted: "12px", brand: "18px", line: "2px", totalBorder: "3px", total: "26px", footer: "12px", family: "'Courier New', monospace" }
-            : { font: "12px", weight: 400, item: "12px", muted: "11px", brand: "15px", line: "1px", totalBorder: "2px", total: "22px", footer: "11px", family: "'Courier New', monospace" };
-    const items = sale.items
-        .map((item) => {
-            const name = wrapText(escapeHtml(item.productName), 30);
-            return `<tr>
-                <td colspan="2" style="padding:3px 0 0;font-size:${style.item}">${name}<br><span style="color:${mode === "standard" ? "#444" : "#000"}">${item.quantity} x ${formatMoney(item.unitPrice)}</span></td>
-                <td style="text-align:right;font-size:${style.item};font-weight:900;vertical-align:bottom">${formatMoney(item.subtotal)}</td>
-            </tr>`;
-        })
-        .join("");
+export function buildReceiptPdf(sale: Sale, company: ReceiptCompany | null, changeInfo?: ChangeInfo, mode: ReceiptMode = "standard", width: 58 | 80 = 80): PrintJob {
+  const measure = new jsPDF({ unit: "mm" });
+  const fontSize = mode === "extra-bold" ? 11 : mode === "bold" ? 10 : 9;
+  type Line = { text: string; size: number; bold: boolean; center: boolean; height: number };
+  const lines: Line[] = [];
+  const inset = width === 58 ? 5 : 4;
+  function text(value: string, size = fontSize, bold = mode !== "standard", center = false) {
+    measure.setFont("helvetica", bold ? "bold" : "normal").setFontSize(size);
+    const wrapped: string[] = measure.splitTextToSize(value, width - inset * 2);
+    for (const line of wrapped) lines.push({ text: line, size, bold, center, height: size * 0.352778 * 1.25 });
+  }
+  const money = (value: number) => Number(value).toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+  const separator = () => text("-".repeat(width === 58 ? 29 : 43), 9, false);
+  text(company?.tradeName || "Mangora", 13, true, true);
+  if (company?.document) text(`CNPJ/CPF ${company.document}`, 8, false, true);
+  const address = [company?.street, company?.number, company?.city, company?.state, company?.postalCode].filter(Boolean).join(", ");
+  if (address) text(address, 8, false, true);
+  const contact = [company?.phone, company?.email].filter(Boolean).join(" / ");
+  if (contact) text(contact, 8, false, true);
+  separator();
+  text("CUPOM DE VENDA", 11, true, true);
+  text(`Venda: ${sale.code}`);
+  text(`Data: ${formatDateTime(sale.createdAt)}`);
+  if (sale.createdByName) text(`Operador: ${sale.createdByName}`);
+  text(`Cliente: ${sale.customerName}`);
+  if (sale.customerDocument) text(`CPF/CNPJ: ${sale.customerDocument}`);
+  text(`Pagamento: ${paymentMethodLabels[sale.paymentMethod]}`);
+  separator();
+  for (const item of sale.items) {
+    text(item.productName);
+    text(`${item.quantity} x ${money(item.unitPrice)} = ${money(item.subtotal)}`);
+  }
+  separator();
+  text(`Subtotal: ${money(sale.subtotal)}`);
+  if (Number(sale.discount) > 0) text(`Desconto: - ${money(sale.discount)}`);
+  text(`TOTAL: ${money(sale.total)}`, 14, true);
+  for (const payment of sale.payments ?? []) text(`${paymentMethodLabels[payment.method]}: ${money(payment.amount)}`);
+  if (sale.paymentMethod === "CASH" && changeInfo) {
+    text(`Valor recebido: ${money(changeInfo.received)}`);
+    text(`Troco: ${money(changeInfo.change)}`, fontSize, true);
+  }
+  if (sale.notes) text(`Obs: ${sale.notes}`);
+  separator();
+  text("Obrigado pela preferência!", 9, true, true);
+  text("Gerado por Mangora", 8, false, true);
 
-    const address = [company?.street, company?.number].filter(Boolean).join(", ");
-    const cityLine = [company?.city, company?.state].filter(Boolean).join(" - ");
-    const contact = [company?.phone, company?.email].filter(Boolean).join(" · ");
-
-    const html = `<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><title>Cupom ${sale.code}</title>
-<style>
-  * { box-sizing: border-box; margin: 0; }
-  @page { size: 80mm auto; margin: 0; }
-  html { width: 100%; }
-  body { font-family: ${style.family}; color: #000; width: 72mm; max-width: 100%; margin: 0 auto; padding: 2mm 0; font-size: ${style.font}; font-weight: ${style.weight}; -webkit-print-color-adjust: exact; print-color-adjust: exact; overflow-wrap: anywhere; }
-  .center { text-align: center; }
-  .brand { font-weight: 900; font-size: ${style.brand}; letter-spacing: 1px; }
-  .muted { color: ${mode === "standard" ? "#444" : "#000"}; font-size: ${style.muted}; }
-  .divider { border-top: ${style.line} dashed #000; margin: 7px 0; }
-  .divider-solid { border-top: ${style.line} solid #000; margin: 7px 0; }
-  table { width: 100%; table-layout: fixed; border-collapse: collapse; }
-  .meta { width: 100%; }
-  .meta td { padding: 1px 0; vertical-align: top; }
-  .meta td:first-child { width: 42%; padding-right: 2mm; }
-  .meta td:last-child { width: 58%; text-align: right; overflow-wrap: anywhere; }
-  .total-row td { font-size: 15px; font-weight: bold; padding-top: 4px; }
-  .total-box { border: ${style.totalBorder} solid #000; margin: 8px 0; padding: 6px 8px; text-align: center; }
-  .total-box .label { font-size: 10px; text-transform: uppercase; letter-spacing: 2px; }
-  .total-box .value { font-size: ${style.total}; font-weight: 900; }
-  .footer { text-align: center; font-size: ${style.footer}; margin-top: 8px; }
-  .notes { margin-top: 6px; font-size: ${style.footer}; color: #000; }
-  @media print { body { margin-inline: auto; } }
-</style></head><body>
-  <p class="center brand">${escapeHtml(company?.tradeName ?? "Mangora")}</p>
-  ${company?.document ? `<p class="center muted">CNPJ/CPF ${escapeHtml(company.document)}</p>` : ""}
-  ${address ? `<p class="center muted">${escapeHtml(address)}</p>` : ""}
-  ${cityLine ? `<p class="center muted">${escapeHtml(cityLine)}${company?.postalCode ? ` · CEP ${escapeHtml(company.postalCode)}` : ""}</p>` : ""}
-  ${contact ? `<p class="center muted">${escapeHtml(contact)}</p>` : ""}
-  <div class="divider"></div>
-  <p class="center" style="font-weight:bold;letter-spacing:2px;">CUPOM DE VENDA</p>
-  <div class="divider-solid"></div>
-  <table class="meta">
-    <tr><td>Venda</td><td>${escapeHtml(sale.code)}</td></tr>
-    <tr><td>Data</td><td>${formatDateTime(sale.createdAt)}</td></tr>
-    ${sale.createdByName ? `<tr><td>Operador</td><td>${escapeHtml(sale.createdByName)}</td></tr>` : ""}
-    <tr><td>Cliente</td><td>${escapeHtml(sale.customerName)}</td></tr>
-    ${sale.customerDocument ? `<tr><td>CPF/CNPJ</td><td>${escapeHtml(sale.customerDocument)}</td></tr>` : ""}
-    <tr><td>Pagamento</td><td>${escapeHtml(paymentMethodLabels[sale.paymentMethod])}</td></tr>
-  </table>
-  <div class="divider"></div>
-  <table>${items}</table>
-  <div class="divider"></div>
-  <table class="meta">
-    <tr><td>Subtotal</td><td>${formatMoney(sale.subtotal)}</td></tr>
-    ${Number(sale.discount) > 0 ? `<tr><td>Desconto</td><td>- ${formatMoney(Number(sale.discount))}</td></tr>` : ""}
-  </table>
-  <div class="total-box">
-    <div class="label">Total</div>
-    <div class="value">${formatMoney(sale.total)}</div>
-  </div>
-  ${sale.payments?.length ? `
-  <div class="divider-solid"></div>
-  <table class="meta">
-    ${sale.payments.map((payment) => `<tr><td>${escapeHtml(paymentMethodLabels[payment.method])}</td><td>${formatMoney(payment.amount)}</td></tr>`).join("")}
-  </table>` : ""}
-  ${isCashChange ? `
-  <div class="divider-solid"></div>
-  <table class="meta">
-    <tr><td>Valor recebido</td><td>${formatMoney(changeInfo.received)}</td></tr>
-    <tr><td style="font-weight:bold">Troco</td><td style="font-weight:bold">${formatMoney(changeInfo.change)}</td></tr>
-  </table>` : ""}
-  ${sale.notes ? `<div class="notes">Obs: ${escapeHtml(sale.notes)}</div>` : ""}
-  <p class="footer">Obrigado pela preferência!</p>
-  <p class="footer muted">Gerado por Mangora</p>
-  <script>window.onload = function(){ window.print(); }</script>
-</body></html>`;
-
-    const win = window.open("", "_blank", "width=420,height=600");
-    if (!win) return;
-    win.document.write(html);
-    win.document.close();
-    win.focus();
-}
-
-function formatMoney(value: number): string {
-    return value.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
-}
-
-function escapeHtml(value: string): string {
-    return value.replace(/[&<>"']/g, (char) =>
-        ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[char] ?? char,
-    );
-}
-
-/** Quebra texto longo em linhas de até `width` caracteres (nomes de itens). */
-function wrapText(value: string, width: number): string {
-    if (value.length <= width) return value;
-    const lines: string[] = [];
-    let current = "";
-    for (const word of value.split(" ")) {
-        if ((current + " " + word).trim().length > width) {
-            if (current) lines.push(current);
-            current = word;
-        } else {
-            current = (current + " " + word).trim();
-        }
+  // Measure and paginate before allocating roll pages; no A4 height or blank tail.
+  const pages: Line[][] = [[]];
+  let used = 6;
+  for (const line of lines) {
+    if (used + line.height > 990) { pages.push([]); used = 6; }
+    pages[pages.length - 1].push(line);
+    used += line.height;
+  }
+  const heights = pages.map(page => Math.max(30, 6 + page.reduce((sum, line) => sum + line.height, 0)));
+  const pdf = new jsPDF({ unit: "mm", format: [width, heights[0]], orientation: width > heights[0] ? "landscape" : "portrait", compress: true });
+  const parts: NonNullable<PrintJob["parts"]> = [];
+  pages.forEach((page, index) => {
+    if (index) pdf.addPage([width, heights[index]], width > heights[index] ? "landscape" : "portrait");
+    const part = new jsPDF({ unit: "mm", format: [width, heights[index]], orientation: width > heights[index] ? "landscape" : "portrait", compress: true });
+    let y = 3;
+    for (const line of page) {
+      pdf.setFont("helvetica", line.bold ? "bold" : "normal").setFontSize(line.size);
+      y += line.height;
+      pdf.text(line.text, line.center ? width / 2 : inset, y - 1, { align: line.center ? "center" : "left" });
+      part.setFont("helvetica", line.bold ? "bold" : "normal").setFontSize(line.size);
+      part.text(line.text, line.center ? width / 2 : inset, y - 1, { align: line.center ? "center" : "left" });
     }
-    if (current) lines.push(current);
-    return lines.join("<br>");
+    parts.push({ pdf: part, width, height: heights[index] });
+  });
+  return { pdf, width, height: heights[0], kind: "receipt", parts, filename: `cupom-${sale.code.replace(/[^\w-]/g, "_")}.pdf` };
+}
+
+export async function printReceipt(sale: Sale, company: ReceiptCompany | null, changeInfo?: ChangeInfo, mode: ReceiptMode = "standard") {
+  return submitPrintJob(buildReceiptPdf(sale, company, changeInfo, mode, readPrintPreferences().receiptWidth));
+}
+
+const automaticAttempts = new Set<string>();
+export function claimAutomaticReceipt(saleId: string) {
+  if (automaticAttempts.has(saleId)) return false;
+  const key = `mangora.print-attempt.${saleId}`;
+  try {
+    if (sessionStorage.getItem(key)) return false;
+    sessionStorage.setItem(key, "1");
+  } catch { /* In-memory protection remains when storage is blocked. */ }
+  automaticAttempts.add(saleId);
+  return true;
 }
