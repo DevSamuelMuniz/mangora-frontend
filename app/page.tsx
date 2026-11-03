@@ -23,12 +23,13 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { getTranslator } from "@/i18n/server";
-import { alternateLanguages, localePath } from "@/i18n/urls";
+import { localePath } from "@/i18n/urls";
+import { publicMetadata, landingFaq } from "@/lib/seo";
 import BrandLogo from "@/components/brand/BrandLogo";
 import MascotPose from "@/components/brand/MascotPose";
 import { marketingPlans } from "@/lib/plans";
 import { brazilDateKey } from "@/lib/timezone";
-import { brand, brandGraph } from "@/lib/brand";
+import { buildBrandGraph } from "@/lib/brand";
 import ConversionTracking from "@/components/marketing/ConversionTracking";
 import ProductWalkthrough from "@/components/marketing/ProductWalkthrough";
 import MarketSelector from "@/components/marketing/MarketSelector";
@@ -38,13 +39,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const { t, locale } = await getTranslator();
   const title = t("landing.meta.title");
   const description = t("landing.meta.description");
-  return {
-    title: { absolute: title },
-    description,
-  alternates: { canonical: localePath("/", locale), languages: alternateLanguages("/") },
-  openGraph: { url: "/", type: "website", locale: locale.replace("-", "_"), siteName: brand.name, title, description, images: [{ url: brand.image, width: 500, height: 500, alt: "Mangora — sistema de gestão online" }] },
-  twitter: { card: "summary_large_image", title, description, images: [brand.image] },
-  };
+  return publicMetadata("/", locale, title, description);
 }
 
 function buildResources(t: (key: string) => string) {
@@ -91,7 +86,9 @@ function buildSegments(t: (key: string) => string) {
 }
 
 export default async function Home() {
-  const { t } = await getTranslator();
+  const { t, locale } = await getTranslator();
+  const faq = landingFaq(t);
+  const brandGraph = buildBrandGraph(locale, t("landing.meta.description"), faq);
   return (
     <main className="mangora-landing min-h-screen overflow-hidden bg-[#fff8ea] font-[family-name:var(--font-manrope)] text-[#123d2b]">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(brandGraph).replace(/</g, "\\u003c") }} />
@@ -383,13 +380,7 @@ export default async function Home() {
         <div className="mx-auto max-w-3xl">
           <h2 className="font-[family-name:var(--font-bricolage)] text-4xl font-extrabold tracking-tight text-[#123d2b]">{t("landing.faq.title")}</h2>
           <div className="mt-8 divide-y divide-[#123d2b]/15">
-            {[
-              [t("landing.faq.card.question"), t("landing.faq.card.answer")],
-              [t("landing.faq.afterTrial.question"), t("landing.faq.afterTrial.answer")],
-              [t("landing.faq.install.question"), t("landing.faq.install.answer")],
-              [t("landing.faq.firstSteps.question"), t("landing.faq.firstSteps.answer")],
-              [t("landing.faq.doubt.question"), t("landing.faq.doubt.answer")],
-            ].map(([question, answer]) => <details key={question} className="group py-5"><summary className="cursor-pointer rounded-lg text-lg font-bold text-[#123d2b] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#147a45]">{question}</summary><p className="mt-4 max-w-2xl leading-7 text-[#315847]">{answer}</p></details>)}
+            {faq.map(({ question, answer }) => <details key={question} className="group py-5"><summary className="cursor-pointer rounded-lg text-lg font-bold text-[#123d2b] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#147a45]">{question}</summary><p className="mt-4 max-w-2xl leading-7 text-[#315847]">{answer}</p></details>)}
           </div>
         </div>
       </section>
@@ -443,11 +434,12 @@ export default async function Home() {
   );
 }
 
-function Header({ t }: { t: (key: string, params?: Record<string, string | number>) => string }) {
+async function Header({ t }: { t: (key: string, params?: Record<string, string | number>) => string }) {
+  const { locale } = await getTranslator();
   return (
     <header className="fixed inset-x-0 top-0 z-50 border-b border-[#123d2b]/10 bg-[#fff8ea]/90 backdrop-blur-xl">
       <div className="mx-auto flex h-16 max-w-[1380px] items-center justify-between gap-2 px-4 sm:h-20 sm:px-8 lg:px-10">
-        <Link href="/" aria-label={t("landing.nav.home")}>
+        <Link href={localePath("/", locale)} aria-label={t("landing.nav.home")}>
           <BrandLogo className="h-8 sm:h-11" priority />
         </Link>
 
@@ -624,7 +616,8 @@ function JourneyStep({ number, title, copy }: { number: string; title: string; c
   );
 }
 
-function Footer({ t }: { t: (key: string, params?: Record<string, string | number>) => string }) {
+async function Footer({ t }: { t: (key: string, params?: Record<string, string | number>) => string }) {
+  const { locale } = await getTranslator();
   const year = brazilDateKey().slice(0, 4);
   return (
     <footer className="border-t border-[#123d2b]/10 bg-[#fff8ea]">
@@ -634,9 +627,9 @@ function Footer({ t }: { t: (key: string, params?: Record<string, string | numbe
           <p className="mt-5 max-w-xs text-sm font-medium leading-6 text-[#597064]">{t("landing.hero.title")}</p>
           <div className="mt-6 inline-flex items-center gap-2 rounded-full bg-[#dff4e7] px-4 py-2 text-xs font-extrabold text-[#147a45]"><ShieldCheck className="size-4" /> Seus dados protegidos</div>
         </div>
-        <FooterLinks title={t("landing.footer.platform")} links={[[t("landing.nav.features"), "#recursos"], [t("landing.nav.howItWorks"), "#como-funciona"], [t("landing.nav.plans"), "#planos"], [t("landing.nav.login"), "/login"]]} />
-        <FooterLinks title={t("landing.footer.company")} links={[[t("landing.footer.about"), "/sobre"], [t("landing.footer.support"), "/suporte"], [t("landing.footer.partners"), "/parceiros"], [t("landing.footer.contact"), "#contato"]]} />
-        <FooterLinks title={t("landing.footer.trust")} links={[[t("landing.footer.terms"), "/termos"], [t("landing.footer.privacy"), "/privacidade"], [t("landing.footer.security"), "/seguranca"], [t("landing.footer.lgpd"), "/lgpd"]]} />
+        <FooterLinks locale={locale} title={t("landing.footer.platform")} links={[[t("landing.nav.features"), "#recursos"], [t("landing.nav.howItWorks"), "#como-funciona"], [t("landing.nav.plans"), "#planos"], [t("landing.nav.login"), "/login"]]} />
+        <FooterLinks locale={locale} title={t("landing.footer.company")} links={[["Guias (PT-BR)", "/guias"], [t("landing.footer.about"), "/sobre"], [t("landing.footer.support"), "/suporte"], [t("landing.footer.partners"), "/parceiros"], [t("landing.footer.contact"), "#contato"]]} />
+        <FooterLinks locale={locale} title={t("landing.footer.trust")} links={[[t("landing.footer.terms"), "/termos"], [t("landing.footer.privacy"), "/privacidade"], [t("landing.footer.security"), "/seguranca"], [t("landing.footer.lgpd"), "/lgpd"]]} />
       </div>
       <div className="border-t border-[#123d2b]/10">
         <div className="mx-auto flex max-w-[1380px] flex-col gap-2 px-5 py-6 text-xs font-semibold text-[#6a7d73] sm:flex-row sm:justify-between sm:px-8 lg:px-10">
@@ -648,12 +641,12 @@ function Footer({ t }: { t: (key: string, params?: Record<string, string | numbe
   );
 }
 
-function FooterLinks({ title, links }: { title: string; links: [string, string][] }) {
+function FooterLinks({ title, links, locale }: { title: string; links: [string, string][]; locale: import("@/i18n/config").Locale }) {
   return (
     <div>
       <h3 className="font-[family-name:var(--font-bricolage)] font-extrabold text-[#123d2b]">{title}</h3>
       <ul className="mt-5 space-y-3">
-        {links.map(([label, href]) => <li key={label}><Link href={href} className="text-sm font-semibold text-[#597064] transition hover:text-[#ff6b1a]">{label}</Link></li>)}
+        {links.map(([label, href]) => <li key={label}><Link href={href === "/guias" ? href : href.startsWith("/") ? localePath(href, locale) : href} className="text-sm font-semibold text-[#597064] transition hover:text-[#ff6b1a]">{label}</Link></li>)}
       </ul>
     </div>
   );

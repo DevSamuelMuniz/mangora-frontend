@@ -1,5 +1,6 @@
 import { NextRequest } from "next/server";
 import { API_BASE_URL, assertApiUrlConfigured } from "@/lib/api/config";
+import { signBackendIdentity } from "@/lib/api/backend-identity";
 
 const BACKEND_URL = API_BASE_URL;
 
@@ -25,6 +26,7 @@ async function proxy(request: NextRequest, context: RouteContext) {
   if (inferredCountry && /^[A-Z]{2}$/i.test(inferredCountry)) headers.set("x-vercel-ip-country", inferredCountry.toUpperCase());
   headers.set("x-forwarded-host", request.headers.get("host") ?? "");
   headers.set("x-forwarded-proto", request.nextUrl.protocol.replace(":", ""));
+  signBackendIdentity(request.headers, target, request.method, headers);
 
   const hasBody = !["GET", "HEAD"].includes(request.method);
   let response: Response;
@@ -39,6 +41,14 @@ async function proxy(request: NextRequest, context: RouteContext) {
     });
   } catch {
     return Response.json({ message: "O servidor da Mangora está temporariamente indisponível. Tente novamente em instantes." }, { status: 502 });
+  }
+
+  // Edge protection can return an HTML challenge with 429. It is not a failed
+  // password attempt and cannot be completed inside this server-side fetch.
+  if (response.headers.get("cf-mitigated") === "challenge" || response.headers.get("content-type")?.includes("text/html")) {
+    console.error(JSON.stringify({ event: "backend_upstream_protection", status: response.status, path: target.pathname, trace: response.headers.get("cf-ray") }));
+    await response.body?.cancel();
+    return Response.json({ code: "UPSTREAM_PROTECTION", message: "A conexão com o servidor foi bloqueada pela proteção da hospedagem. Tente novamente em instantes. Se persistir, entre em contato com o suporte." }, { status: 503, headers: { "Cache-Control": "no-store" } });
   }
 
   const responseHeaders = new Headers(response.headers);

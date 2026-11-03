@@ -23,6 +23,7 @@ export class ApiError extends Error {
   constructor(
     message: string,
     readonly status: number,
+    readonly retryAfterSeconds?: number,
   ) {
     super(message);
     this.name = "ApiError";
@@ -93,7 +94,14 @@ export async function apiRequest<T>(path: string, init?: RequestInit): Promise<T
       }
     }
     const raw = Array.isArray(payload.message) ? payload.message.join(" ") : payload.message;
-    throw new ApiError(describeError(response.status, raw), response.status);
+    const wait = Number(response.headers.get("Retry-After"));
+    const retryAfterSeconds = Number.isFinite(wait) && wait > 0 ? Math.ceil(wait) : undefined;
+    const count = retryAfterSeconds && retryAfterSeconds >= 60 ? Math.ceil(retryAfterSeconds / 60) : retryAfterSeconds;
+    const unit = retryAfterSeconds && retryAfterSeconds >= 60 ? (count === 1 ? "minuto" : "minutos") : (count === 1 ? "segundo" : "segundos");
+    const message = response.status === 429 && retryAfterSeconds
+      ? `Muitas tentativas. Aguarde ${count} ${unit} antes de tentar novamente.`
+      : describeError(response.status, raw);
+    throw new ApiError(message, response.status, retryAfterSeconds);
   }
 
   if (response.status === 204) return undefined as T;

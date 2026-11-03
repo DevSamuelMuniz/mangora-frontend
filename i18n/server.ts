@@ -5,7 +5,7 @@ import { getCurrentSession } from "@/lib/auth/server";
 import { createFormatters } from "@/lib/format";
 import { geoFromHeaders, isSupportedCurrency, isTimezone } from "@/lib/regional/geo";
 
-import { LOCALE_COOKIE, resolveLocale, type Locale } from "./config";
+import { isLocale, LOCALE_COOKIE, resolveLocale, type Locale } from "./config";
 import { createTranslator, fallbackChain, mergeMessages, type Messages } from "./runtime";
 
 const NAMESPACES = ["common", "navigation", "validations", "statuses", "paymentMethods", "errors", "settings", "dashboard", "sales", "pdv", "products", "stock", "customers", "suppliers", "finance", "reports", "employees", "units", "bank", "operations", "workspace", "forms", "orders", "billing", "publicUi", "landing", "site", "publicPages", "systemAdmin", "aiManager", "pageMeta", "accountSecurity", "modules", "categories", "services", "purchases", "labels"] as const;
@@ -203,6 +203,9 @@ const cachedSession = cache(async () => {
  */
 export async function getLocale(): Promise<Locale> {
   const [cookieStore, headerStore] = await Promise.all([cookies(), headers()]);
+  // Public indexed URLs have a stable language, independent of cookies or account.
+  const publicLocale = headerStore.get("x-mangora-public-locale");
+  if (isLocale(publicLocale)) return publicLocale;
   const cookieLocale = cookieStore.get(LOCALE_COOKIE)?.value ?? null;
   const session = await cachedSession();
   const geo = geoFromHeaders((name) => headerStore.get(name));

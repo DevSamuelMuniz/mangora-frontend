@@ -19,6 +19,18 @@ compartilhadas e por `ARCHITECTURE.md`.
 - Ao registrar a venda, iniciar uma tentativa de cupom se autoReceipt estiver ativa.
   Não repetir automaticamente uma tentativa ambígua. A ação manual permite reimprimir.
 - Só informar envio ao spooler; não alegar impressão física concluída.
+- Na lista de vendas, reimprimir é uma ação manual por venda concluída, disponível
+  na linha e nos detalhes. Essas ações abrem `PrintDialog`, que também prepara
+  etiquetas e cupons manuais do PDV. Consultar a venda e a empresa ao confirmar;
+  reutilizar `printReceipt` e as preferências locais do PDV. Abrir os detalhes
+  ou o modal não dispara impressão/download. Uma falha não deve provocar reenvio
+  automático. O envio só ocorre em “Confirmar impressão”. Enquanto envia,
+  bloquear alterações e fechamento para evitar uma tentativa ambígua.
+- O modal mostra resumo do documento, perfil e fila local, papel, método e
+  preferências persistidas. Em etiquetas, permitir medidas, papel e quantidades
+  dentro da preparação, com prévia e validações antes de habilitar a confirmação.
+- A impressão automática de conclusão do PDV permanece regida por `autoReceipt`;
+  a confirmação do modal é obrigatória para ações manuais.
 - Erros preservam o produto/venda para nova tentativa após conferir a fila.
 - Usar controles nativos de seleção: popup e teclado pertencem ao sistema operacional.
 - O perfil Knup KP-1025 aplica as medidas publicadas pelo fabricante (58 mm de

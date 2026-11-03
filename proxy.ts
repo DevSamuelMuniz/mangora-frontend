@@ -1,8 +1,10 @@
+import { isGuidePath } from "@/lib/guides";
 import { NextResponse, type NextRequest } from "next/server";
 
 import { LOCALE_COOKIE } from "@/i18n/config";
 import { splitLocalePrefix } from "@/i18n/urls";
 import { geoFromHeaders, geoHeaders } from "@/lib/regional/geo";
+import { isPublicMarketingPath } from "@/lib/seo";
 
 /**
  * Duas responsabilidades:
@@ -21,10 +23,23 @@ export function proxy(request: NextRequest) {
   const geo = geoFromHeaders((name) => request.headers.get(name));
   const { locale, pathname } = splitLocalePrefix(request.nextUrl.pathname);
 
-  const headers = new Headers(request.headers);
-  for (const [name, value] of Object.entries(geoHeaders(geo))) headers.set(name, value);
+  if (locale && isGuidePath(pathname)) {
+    const canonical = request.nextUrl.clone();
+    canonical.pathname = pathname;
+    return NextResponse.redirect(canonical, 308);
+  }
 
-  if (!locale) return NextResponse.next({ request: { headers } });
+  const headers = new Headers(request.headers);
+  headers.delete("x-mangora-public-locale");
+  headers.delete("x-mangora-locale");
+  for (const [name, value] of Object.entries(geoHeaders(geo))) headers.set(name, value);
+  if (isPublicMarketingPath(pathname)) headers.set("x-mangora-public-locale", locale ?? "pt-BR");
+
+  const applyIndexing = (response: NextResponse) => {
+    if (!isPublicMarketingPath(pathname) && !pathname.startsWith("/loja/") && !pathname.startsWith("/opengraph-image")) response.headers.set("X-Robots-Tag", "noindex, nofollow");
+    return response;
+  };
+  if (!locale) return applyIndexing(NextResponse.next({ request: { headers } }));
 
   headers.set("x-mangora-locale", locale);
 
@@ -38,7 +53,7 @@ export function proxy(request: NextRequest) {
     sameSite: "lax",
     secure: request.nextUrl.protocol === "https:",
   });
-  return response;
+  return applyIndexing(response);
 }
 
 export const config = {

@@ -61,5 +61,26 @@
   "printerProfile": "Modelo da impressora",
   "genericProfile": "Outras impressoras",
   "knupHint": "Bobina nominal de 58 mm; faixa útil de 48 mm. Etiquetas centradas, em bobina contínua. Use papel de 58 mm no controlador.",
-  "knupSizeError": "A KP-1025 imprime até 48 mm de largura e não utiliza A4. Escolha largura até 4,8 cm e bobina contínua ou etiqueta individual."
+  "knupSizeError": "A KP-1025 imprime até 48 mm de largura e não utiliza A4. Escolha largura até 4,8 cm e bobina contínua ou etiqueta individual.",
+  "dialog": {
+    "eyebrow": "Preparar impressão",
+    "hint": "Confirme o conteúdo, o papel e a impressora antes de enviar.",
+    "close": "Fechar preparação de impressão",
+    "device": "Impressora e papel",
+    "browserDevice": "Escolhida no diálogo do navegador",
+    "media": "Papel e área de impressão",
+    "knupMedia": "Bobina de 58 mm · área útil de 48 mm",
+    "selectPrinterHint": "Procure e selecione a impressora para ativar o envio direto.",
+    "cancel": "Voltar",
+    "confirm": "Confirmar impressão",
+    "receiptSummary": "Resumo do talão",
+    "intensity": "Intensidade da impressão",
+    "mode": {
+      "standard": "Padrão",
+      "bold": "Forte",
+      "extra-bold": "Extra forte"
+    },
+    "labelTitle": "Imprimir etiquetas",
+    "receiptTitle": "Imprimir talão"
+  }
 }

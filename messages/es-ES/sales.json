@@ -9,7 +9,8 @@
     "cancel": "Cancelar venta",
     "register": "Registrar venta",
     "clearFilters": "Limpiar filtros",
-    "retry": "Intentar de nuevo"
+    "retry": "Intentar de nuevo",
+    "printReceipt": "Imprimir recibo"
   },
   "summary": {
     "revenueToday": "Facturación de hoy",
@@ -79,5 +80,8 @@
   "actionsAria": "Acciones de la venta {code}",
   "cashNote": "Las ventas en efectivo se registran en la caja abierta de la empresa.",
   "receivableNote": "El importe quedará en cuentas por cobrar y podrá liquidarse parcialmente.",
-  "finalNote": "Al finalizar, la venta y la salida de inventario se registran juntas."
+  "finalNote": "Al finalizar, la venta y la salida de inventario se registran juntas.",
+  "printAria": "Imprimir recibo de la venta {code}",
+  "printUnavailable": "Esta venta se canceló y no puede imprimirse como una venta completada.",
+  "viewAria": "Ver venta {code}"
 }

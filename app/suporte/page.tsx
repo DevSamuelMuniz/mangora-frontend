@@ -1,15 +1,11 @@
 import type { Metadata } from "next";
 import PublicInfoPage from "@/components/public/PublicInfoPage";
 import { getTranslator } from "@/i18n/server";
-import { alternateLanguages, localePath } from "@/i18n/urls";
+import { publicMetadata } from "@/lib/seo";
 
 export async function generateMetadata(): Promise<Metadata> {
   const { t, locale } = await getTranslator();
-  return {
-    title: t("publicPages.support.metaTitle"),
-    description: t("publicPages.support.metaDescription"),
-    alternates: { canonical: localePath("/suporte", locale), languages: alternateLanguages("/suporte") },
-  };
+  return publicMetadata("/suporte", locale, t("publicPages.support.metaTitle"), t("publicPages.support.metaDescription"));
 }
 
 export default async function SupportPage() {

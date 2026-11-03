@@ -1,3 +1,6 @@
+import type { Locale } from "@/i18n/config";
+import { localePath } from "@/i18n/urls";
+
 export const brand = {
   name: "Mangora",
   url: "https://www.mangora.com.br",
@@ -6,7 +9,9 @@ export const brand = {
   image: "/mangora-whatsapp.png",
 };
 
-export const brandGraph = {
+export function buildBrandGraph(locale: Locale, description: string, faq: { question: string; answer: string }[] = []) {
+const pageUrl = new URL(localePath("/", locale), brand.url).href;
+return {
   "@context": "https://schema.org",
   "@graph": [
     {
@@ -15,7 +20,7 @@ export const brandGraph = {
       name: brand.name,
       url: brand.url,
       logo: { "@type": "ImageObject", url: `${brand.url}${brand.image}`, width: 500, height: 500 },
-      description: brand.description,
+      description,
     },
     {
       "@type": "WebSite",
@@ -23,19 +28,30 @@ export const brandGraph = {
       name: brand.name,
       alternateName: ["Sistema Mangora", "mangora.com.br"],
       url: `${brand.url}/`,
-      inLanguage: "pt-BR",
+      inLanguage: locale,
       publisher: { "@id": `${brand.url}/#organization` },
     },
     {
       "@type": "SoftwareApplication",
       "@id": `${brand.url}/#software`,
       name: brand.name,
-      url: brand.url,
+      url: pageUrl,
+      inLanguage: locale,
       image: `${brand.url}${brand.image}`,
-      description: brand.description,
+      description,
       applicationCategory: "BusinessApplication",
       operatingSystem: "Web",
       publisher: { "@id": `${brand.url}/#organization` },
     },
+    {
+      "@type": faq.length ? ["WebPage", "FAQPage"] : "WebPage",
+      "@id": `${pageUrl}#webpage`, url: pageUrl, inLanguage: locale,
+      name: brand.name, description,
+      isPartOf: { "@id": `${brand.url}/#website` },
+      about: { "@id": `${brand.url}/#software` },
+      ...(faq.length ? { mainEntity: faq.map(item => ({ "@type": "Question", name: item.question, acceptedAnswer: { "@type": "Answer", text: item.answer } })) } : {}),
+    },
   ],
 };
+}
+export const brandGraph = buildBrandGraph("pt-BR", brand.description);

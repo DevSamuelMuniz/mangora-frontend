@@ -1,5 +1,6 @@
+vi.mock("next/navigation", () => ({ useRouter: () => ({ push: vi.fn() }) }));
 import React, { StrictMode } from "react";
-import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { cleanup, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import I18nProvider from "@/i18n/provider";
 import DoneStep from "@/components/pdv/DoneStep";
@@ -14,10 +15,20 @@ import type { Sale } from "@/types/sale";
 vi.mock("@/lib/pdv/print", async original => ({ ...await original<typeof import("@/lib/pdv/print")>(), printReceipt: vi.fn().mockResolvedValue(undefined) }));
 vi.mock("@/lib/printing/service", () => ({ findPrinters: vi.fn().mockResolvedValue(["Thermal 80"]), submitPrintJob: vi.fn() }));
 afterEach(() => { cleanup(); localStorage.clear(); vi.clearAllMocks(); });
-const sale = { id: "automatic-ui", code: "V001", total: 20, customerName: "Balcão", paymentMethod: "CASH" } as Sale;
-function Provider({ children }: { children: React.ReactNode }) { return <I18nProvider locale="pt-BR" messages={{ labels, pdv }}>{children}</I18nProvider>; }
+const sale = { id: "automatic-ui", code: "V001", total: 20, customerName: "Balcão", paymentMethod: "CASH", createdAt: "2026-11-03T12:00:00Z", items: [] } as unknown as Sale;
+function Provider({ children }: { children: React.ReactNode }) { return <I18nProvider locale="pt-BR" messages={{ labels, pdv, sales: { details: { total: "Total" } }, paymentMethods: { CASH: "Dinheiro" } }}>{children}</I18nProvider>; }
 
 describe("printing workflow", () => {
+  it("prepares a manual PDV receipt and prints only after confirming the chosen intensity", async () => {
+    savePrintPreferences({ autoReceipt: false });
+    render(<Provider><DoneStep sale={{ ...sale, id: "manual-preview" }} company={null} onFinish={vi.fn()} /></Provider>);
+    fireEvent.click(screen.getByRole("button", { name: "Imprimir cupom" }));
+    const dialog = screen.getByRole("dialog", { name: labels.dialog.receiptTitle });
+    expect(printReceipt).not.toHaveBeenCalled();
+    fireEvent.click(within(dialog).getByRole("radio", { name: labels.dialog.mode["extra-bold"] }));
+    fireEvent.click(within(dialog).getByRole("button", { name: labels.dialog.confirm }));
+    await waitFor(() => expect(printReceipt).toHaveBeenCalledWith(expect.objectContaining({ id: "manual-preview" }), null, undefined, "extra-bold"));
+  });
   it("applies and persists the Knup media profile", () => {
     render(<Provider><PrintSettings kind="label" /></Provider>);
     fireEvent.click(screen.getByText(labels.printSettings));

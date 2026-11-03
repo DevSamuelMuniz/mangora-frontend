@@ -73,6 +73,25 @@ não há promessa de impressão silenciosa antes dessa configuração.
 
 ## Salvamento e automação
 
+Em `/vendas`, o ícone de impressora de cada venda concluída e a ação
+**Imprimir notinha** nos detalhes permitem reimprimir vendas registradas.
+Ambas abrem o modal de preparação com resumo, intensidade, impressora e papel.
+Somente **Confirmar impressão** consulta a venda pelo ID e os dados da empresa e utiliza o mesmo
+gerador e transporte do PDV. Se a venda tiver sido cancelada desde o carregamento
+da lista, o envio é bloqueado. Impressão não cria outra venda nem altera estoque
+ou financeiro. Valor recebido e troco só são incluídos quando disponíveis;
+não são reconstruídos a partir do total histórico.
+
+Etiquetas usam o mesmo modal: papel, dimensões, quantidades e prévia podem ser
+conferidos e ajustados antes do envio. Alterar o modelo para Knup aplica 48 × 30 mm
+e bobina contínua, inclusive quando havia dimensões personalizadas na tela.
+O perfil limita opções incompatíveis; a confirmação valida novamente o trabalho.
+Sem fila local selecionada, envio direto fica desabilitado. Abrir ou cancelar o
+modal não baixa PDFs nem envia trabalho. Preferências válidas continuam sendo
+salvas ao editar; cancelar fecha a preparação sem desfazer preferências salvas.
+Cupons manuais do PDV usam esse mesmo modal; o modo automático continua seguindo
+a preferência explícita `autoReceipt`.
+
 As preferências são locais ao navegador/computador, sem produtos ou dados de venda
 no localStorage. As medidas válidas são salvas ao alterar os controles. Uma venda
 registrada inicia a impressão do cupom por padrão; o operador pode desativar essa

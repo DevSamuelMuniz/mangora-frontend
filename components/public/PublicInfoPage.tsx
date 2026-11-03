@@ -1,4 +1,6 @@
 import Link from "next/link";
+import { getLocale } from "@/i18n/server";
+import { localePath } from "@/i18n/urls";
 import { ArrowLeft, CheckCircle2 } from "lucide-react";
 import BrandLogo from "@/components/brand/BrandLogo";
 
@@ -20,7 +22,7 @@ type PublicInfoPageProps = {
   sections: PublicInfoSection[];
 };
 
-export default function PublicInfoPage({
+export default async function PublicInfoPage({
   eyebrow,
   title,
   description,
@@ -31,16 +33,17 @@ export default function PublicInfoPage({
   loginLabel = "Entrar na plataforma",
   sections,
 }: PublicInfoPageProps) {
+  const locale = await getLocale();
   return (
     <main className="mangora-public min-h-screen bg-slate-50 text-slate-950">
       <header className="border-b border-slate-200 bg-white">
         <div className="mx-auto flex h-16 max-w-5xl items-center justify-between px-5 sm:px-8">
-          <Link href="/" className="flex items-center gap-3">
+          <Link href={localePath("/", locale)} className="flex items-center gap-3">
             <BrandLogo className="h-9" priority />
           </Link>
 
           <Link
-            href="/"
+            href={localePath("/", locale)}
             className="flex items-center gap-2 text-sm font-bold text-slate-600 transition hover:text-orange-700"
           >
             <ArrowLeft className="size-4" />

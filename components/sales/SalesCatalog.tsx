@@ -3,7 +3,7 @@
 import { useFormatters } from "@/i18n/provider";
 
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   AlertTriangle,
   Banknote,
@@ -15,6 +15,7 @@ import {
   LoaderCircle,
   MonitorPlay,
   MoreHorizontal,
+  Printer,
   ReceiptText,
   RefreshCw,
   Search,
@@ -33,6 +34,12 @@ import { useToast } from "@/components/ui/toast";
 import { FilterSelect } from "@/components/shared/FilterSelect";
 import { PageButton } from "@/components/shared/PageButton";
 import { SummaryCard } from "@/components/shared/SummaryCard";
+import { apiRequest } from "@/lib/api/client";
+import PrintDialog from "@/components/printing/PrintDialog";
+import ReceiptPrintPreview from "@/components/printing/ReceiptPrintPreview";
+import type { ReceiptMode } from "@/lib/pdv/print";
+import { printReceipt } from "@/lib/pdv/print";
+import type { CompanySettings } from "@/types/settings";
 
 const PAGE_SIZE = 6;
 const paymentMethods: PaymentMethod[] = ["PIX", "CREDIT_CARD", "DEBIT_CARD", "CASH", "BOLETO", "CHECK", "STORE_CREDIT"];
@@ -52,6 +59,37 @@ export default function SalesCatalog() {
   const [selectedSale, setSelectedSale] = useState<Sale | null>(null);
   const [saleToCancel, setSaleToCancel] = useState<Sale | null>(null);
   const [saleToReturn, setSaleToReturn] = useState<Sale | null>(null);
+  const [printingSaleId, setPrintingSaleId] = useState<string | null>(null);
+  const [printError, setPrintError] = useState("");
+  const printLock = useRef(false);
+  const [saleToPrint, setSaleToPrint] = useState<Sale | null>(null);
+  const [receiptMode, setReceiptMode] = useState<ReceiptMode>("standard");
+
+  async function handlePrint(sale: Sale) {
+    if (printLock.current || sale.status !== "COMPLETED") return;
+    printLock.current = true;
+    setPrintingSaleId(sale.id);
+    setPrintError("");
+    try {
+      const [currentSale, company] = await Promise.all([
+        apiRequest<Sale>(`/sales/${encodeURIComponent(sale.id)}`),
+        apiRequest<CompanySettings>("/companies/current"),
+      ]);
+      if (currentSale.status !== "COMPLETED") {
+        throw new Error(t("sales.printUnavailable"));
+      }
+      await printReceipt(currentSale, company, undefined, receiptMode);
+      toast.info(t("labels.printSubmitted"));
+    } catch (cause) {
+      const message = cause instanceof Error && cause.message === t("sales.printUnavailable") ? cause.message : t("labels.printError");
+      setPrintError(message);
+      toast.error(message);
+      throw new Error(message);
+    } finally {
+      printLock.current = false;
+      setPrintingSaleId(null);
+    }
+  }
 
   const errorMessage = actionError || (error instanceof Error ? error.message : "");
 
@@ -145,6 +183,7 @@ export default function SalesCatalog() {
         </div>
 
         {errorMessage && sales.length > 0 && <div role="alert" className="mt-4 flex items-center justify-between gap-3 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-xs font-semibold text-red-700"><span>{errorMessage}</span><button type="button" onClick={() => void loadSales()} className="font-bold underline">{t("sales.actions.retry")}</button></div>}
+        {printError && <p role="alert" className="mt-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-xs font-semibold text-red-700">{printError}</p>}
 
         <div className="mt-4 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
           {loading ? (
@@ -170,7 +209,9 @@ export default function SalesCatalog() {
                           <td className="px-4 py-3.5 text-xs text-slate-600">{t(`paymentMethods.${sale.paymentMethod}`)}</td>
                           <td className="px-4 py-3.5 text-xs font-black text-slate-900">{formatCurrency(sale.total, locale)}</td>
                           <td className="px-4 py-3.5"><span className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[10px] font-bold ${statusStyle.className}`}><StatusIcon className="size-3" />{t(`statuses.${sale.status}`)}</span></td>
-                          <td className="px-4 py-3.5 text-center">
+                          <td className="px-4 py-3.5 text-center"><div className="flex items-center justify-center gap-1">
+                            <button type="button" onClick={() => setSelectedSale(sale)} aria-label={t("sales.viewAria", { code: sale.code })} title={t("sales.actions.view")} className="flex size-9 shrink-0 cursor-pointer items-center justify-center rounded-lg text-slate-600 transition hover:bg-slate-100 focus-visible:outline-2 focus-visible:outline-orange-600 active:bg-slate-200"><Eye className="size-4" /></button>
+                            {sale.status === "COMPLETED" && <button type="button" onClick={() => setSaleToPrint(sale)} disabled={printingSaleId !== null} aria-busy={printingSaleId === sale.id} aria-label={t("sales.printAria", { code: sale.code })} title={t("sales.actions.printReceipt")} className="flex size-9 shrink-0 cursor-pointer items-center justify-center rounded-lg text-orange-700 transition hover:bg-orange-50 focus-visible:outline-2 focus-visible:outline-orange-600 active:bg-orange-100 disabled:cursor-wait disabled:opacity-50">{printingSaleId === sale.id ? <LoaderCircle className="size-4 animate-spin" /> : <Printer className="size-4" />}</button>}
                             <details className="relative inline-block text-left">
                               <summary aria-label={t("sales.actionsAria", { code: sale.code })} className="flex size-8 cursor-pointer list-none items-center justify-center rounded-lg text-slate-400 transition hover:bg-slate-100 hover:text-slate-700"><MoreHorizontal className="size-4" /></summary>
                               <div className="absolute right-0 z-20 mt-1 w-40 rounded-xl border border-slate-200 bg-white p-1.5 text-left shadow-xl">
@@ -179,7 +220,7 @@ export default function SalesCatalog() {
                                 {sale.status === "COMPLETED" && <button type="button" onClick={() => setSaleToCancel(sale)} className="flex h-9 w-full items-center gap-2 rounded-lg px-2.5 text-xs font-semibold text-red-600 hover:bg-red-50"><XCircle className="size-3.5" />{t("sales.actions.cancel")}</button>}
                               </div>
                             </details>
-                          </td>
+                          </div></td>
                         </tr>
                       );
                     })}
@@ -206,28 +247,36 @@ export default function SalesCatalog() {
         </div>
       </section>
 
-      {selectedSale && <SaleDetails sale={selectedSale} onClose={() => setSelectedSale(null)} />}
+      {saleToPrint && <PrintDialog kind="receipt" title={t("sales.printAria", { code: saleToPrint.code })} onClose={() => setSaleToPrint(null)} onConfirm={() => handlePrint(saleToPrint)}><ReceiptPrintPreview sale={saleToPrint} mode={receiptMode} onModeChange={setReceiptMode} /></PrintDialog>}
+      {selectedSale && <SaleDetails sale={selectedSale} onClose={() => setSelectedSale(null)} onPrint={() => setSaleToPrint(selectedSale)} printing={printingSaleId !== null} printError={printError} />}
       {saleToCancel && <CancelSale sale={saleToCancel} loading={cancelSale.isPending} onCancel={() => setSaleToCancel(null)} onConfirm={(reason) => void confirmCancellation(reason)} />}
       {saleToReturn && <SaleReturnForm sale={saleToReturn} onClose={() => setSaleToReturn(null)} onDone={(message) => toast.success(message)} />}
     </>
   );
 }
 
-function SaleDetails({ sale, onClose }: { sale: Sale; onClose: () => void }) {
+function SaleDetails({ sale, onClose, onPrint, printing, printError }: { sale: Sale; onClose: () => void; onPrint: () => void; printing: boolean; printError: string }) {
   const { formatDate, formatTime, formatCurrency } = useFormatters();
   const t = useT();
   const { locale } = useI18n();
+  const dialog = useRef<HTMLDialogElement>(null);
+  useEffect(() => {
+    const previousFocus = document.activeElement as HTMLElement | null;
+    const element = dialog.current;
+    element?.showModal();
+    return () => { element?.close(); previousFocus?.focus(); };
+  }, []);
   return (
-    <div className="fixed inset-0 z-[70] flex items-center justify-center bg-slate-950/40 p-4 backdrop-blur-sm">
-      <div role="dialog" aria-modal="true" className="w-full max-w-lg rounded-2xl border border-slate-200 bg-white p-5 shadow-2xl">
-        <div className="flex items-start justify-between gap-4"><div><p className="text-[10px] font-bold uppercase tracking-wider text-orange-600">{t("sales.details.title")}</p><h2 className="mt-1 text-lg font-black text-slate-950">Venda {sale.code}</h2><p className="mt-1 text-xs text-slate-500">{sale.customerName} · {formatDate(sale.createdAt)}, {formatTime(sale.createdAt)}</p></div><button type="button" onClick={onClose} aria-label={t("sales.details.close")} className="flex size-9 items-center justify-center rounded-xl text-slate-400 hover:bg-slate-100"><X className="size-4" /></button></div>
+      <dialog ref={dialog} onCancel={onClose} aria-labelledby="sale-details-title" className="fixed m-auto max-h-[90dvh] w-[calc(100%_-_2rem)] max-w-lg overflow-y-auto rounded-2xl border border-slate-200 bg-white p-5 shadow-2xl backdrop:bg-slate-950/40 backdrop:backdrop-blur-sm">
+        <div className="flex items-start justify-between gap-4"><div><p className="text-[10px] font-bold uppercase tracking-wider text-orange-600">{t("sales.details.title")}</p><h2 id="sale-details-title" className="mt-1 text-lg font-black text-slate-950">Venda {sale.code}</h2><p className="mt-1 text-xs text-slate-500">{sale.customerName} · {formatDate(sale.createdAt)}, {formatTime(sale.createdAt)}</p></div><button type="button" onClick={onClose} aria-label={t("sales.details.close")} className="flex size-9 items-center justify-center rounded-xl text-slate-400 hover:bg-slate-100"><X className="size-4" /></button></div>
         <div className="mt-5 overflow-hidden rounded-xl border border-slate-200">
           {sale.items.map((item) => <div key={item.id} className="flex items-center justify-between gap-4 border-b border-slate-100 px-3 py-3 last:border-0"><div><p className="text-xs font-bold text-slate-800">{item.productName}</p><p className="mt-0.5 text-[10px] text-slate-400">{item.quantity} × {formatCurrency(item.unitPrice, locale)}</p></div><p className="text-xs font-black text-slate-900">{formatCurrency(item.subtotal, locale)}</p></div>)}
         </div>
         <div className="mt-4 grid grid-cols-2 gap-3"><Info label={t("sales.filters.payment")} value={t(`paymentMethods.${sale.paymentMethod}`)} /><Info label="Total" value={formatCurrency(sale.total, locale)} /></div>
         {sale.status === "CANCELLED" && <div className="mt-3 rounded-xl bg-red-50 p-3 text-xs text-red-700"><strong>Cancelada:</strong> {sale.cancelReason}</div>}
-      </div>
-    </div>
+        {sale.status === "COMPLETED" && <button type="button" onClick={onPrint} disabled={printing} aria-busy={printing} className="mt-5 flex h-11 w-full cursor-pointer items-center justify-center gap-2 rounded-xl bg-orange-600 px-4 text-sm font-bold text-white transition hover:bg-orange-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600 active:bg-orange-800 disabled:cursor-wait disabled:opacity-50">{printing ? <LoaderCircle className="size-4 animate-spin" /> : <Printer className="size-4" />}{t("sales.actions.printReceipt")}</button>}
+        {printError && <p role="alert" className="mt-3 text-xs font-semibold text-red-700">{printError}</p>}
+      </dialog>
   );
 }
 

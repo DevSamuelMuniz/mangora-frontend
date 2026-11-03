@@ -3,6 +3,7 @@ import "server-only";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { API_BASE_URL, assertApiUrlConfigured } from "./config";
+import { serverBackendHeaders } from "./backend-identity";
 
 export async function serverApiRequest<T>(path: string): Promise<T> {
   assertApiUrlConfigured();
@@ -10,7 +11,7 @@ export async function serverApiRequest<T>(path: string): Promise<T> {
   const accessToken = cookieStore.get("gestao_access_token");
   const response = await fetch(`${API_BASE_URL}${path}`, {
     cache: "no-store",
-    headers: accessToken ? { cookie: `${accessToken.name}=${accessToken.value}` } : {},
+    headers: await serverBackendHeaders(new URL(`${API_BASE_URL}${path}`), new Headers(accessToken ? { cookie: `${accessToken.name}=${accessToken.value}` } : {})),
   });
   if (!response.ok) {
     if (response.status === 401) redirect("/login");

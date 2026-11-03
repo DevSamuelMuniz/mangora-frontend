@@ -61,5 +61,26 @@
   "printerProfile": "Printer model",
   "genericProfile": "Other printers",
   "knupHint": "Nominal 58 mm roll; 48 mm printable area. Labels are centered on a continuous roll. Set the driver paper size to 58 mm.",
-  "knupSizeError": "The KP-1025 prints up to 48 mm wide and does not use A4. Choose a width of up to 4.8 cm and continuous roll or individual labels."
+  "knupSizeError": "The KP-1025 prints up to 48 mm wide and does not use A4. Choose a width of up to 4.8 cm and continuous roll or individual labels.",
+  "dialog": {
+    "eyebrow": "Prepare printing",
+    "hint": "Review the content, paper and printer before sending.",
+    "close": "Close print preparation",
+    "device": "Printer and paper",
+    "browserDevice": "Selected in the browser print dialog",
+    "media": "Paper and printable area",
+    "knupMedia": "58 mm roll · 48 mm printable area",
+    "selectPrinterHint": "Find and select a printer to enable direct printing.",
+    "cancel": "Back",
+    "confirm": "Confirm printing",
+    "receiptSummary": "Receipt summary",
+    "intensity": "Print intensity",
+    "mode": {
+      "standard": "Standard",
+      "bold": "Bold",
+      "extra-bold": "Extra bold"
+    },
+    "labelTitle": "Print labels",
+    "receiptTitle": "Print receipt"
+  }
 }

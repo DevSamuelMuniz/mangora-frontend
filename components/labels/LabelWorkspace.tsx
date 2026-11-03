@@ -10,6 +10,7 @@ import { buildLabelPdf } from "@/lib/printing/label-pdf";
 import { submitPrintJob } from "@/lib/printing/service";
 import { savePrintPreferences } from "@/lib/printing/preferences";
 import { usePrintPreferences } from "@/lib/printing/use-print-preferences";
+import PrintDialog from "@/components/printing/PrintDialog";
 import PrintSettings from "@/components/printing/PrintSettings";
 
 const inputClass = "h-11 w-full rounded-xl border border-slate-200 bg-white px-3 text-sm outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-100";
@@ -31,6 +32,11 @@ export default function LabelWorkspace() {
   const presetKey = `${Number(width) * 10}x${Number(height) * 10}`;
   const preset = !customSize && LABEL_SIZES.some(item => `${item.width}x${item.height}` === presetKey) ? presetKey : "custom";
   const [printing, setPrinting] = useState(false);
+  const [printDialogOpen, setPrintDialogOpen] = useState(false);
+  const [lastProfile, setLastProfile] = useState(preferences.printerProfile);
+  if (lastProfile !== preferences.printerProfile) {
+    setLastProfile(preferences.printerProfile); setDraftWidth(null); setDraftHeight(null); setCustomSize(false);
+  }
   const [printError, setPrintError] = useState("");
   const [printStatus, setPrintStatus] = useState("");
   const size = { width: Number(width) * 10, height: Number(height) * 10 };
@@ -89,10 +95,13 @@ export default function LabelWorkspace() {
       setPrintStatus(t("labels.printSubmitted"));
     } catch {
       setPrintError(t("labels.printError"));
+      throw new Error(t("labels.printError"));
     } finally {
       setPrinting(false);
     }
   }
+
+  const formatFields = <LabelFormatFields preset={preset} width={width} height={height} paper={paper} knup={preferences.printerProfile === "knup-kp1025"} onPresetChange={chooseSize} onPaperChange={value => persist({ labelPaper: value })} onDimensionChange={changeDimension} />;
 
   return (
     <section className="mx-auto max-w-7xl">
@@ -103,7 +112,7 @@ export default function LabelWorkspace() {
           <h1 className="mt-1 flex items-center gap-2 text-2xl font-black text-slate-950 sm:text-3xl"><Barcode className="size-7 text-orange-600" />{t("labels.title")}</h1>
           <p className="mt-2 max-w-xl text-sm text-slate-500">{t("labels.subtitle")}</p>
         </div>
-        <button type="button" onClick={() => void handlePrint()} disabled={!canPrint} className="flex h-11 items-center gap-2 rounded-xl bg-orange-600 px-5 text-sm font-bold text-white hover:bg-orange-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600 disabled:cursor-not-allowed disabled:opacity-40">
+        <button type="button" onClick={() => setPrintDialogOpen(true)} disabled={!canPrint} className="flex h-11 items-center gap-2 rounded-xl bg-orange-600 px-5 text-sm font-bold text-white hover:bg-orange-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600 disabled:cursor-not-allowed disabled:opacity-40">
           {printing ? <LoaderCircle className="size-4 animate-spin" /> : <Printer className="size-4" />}{t("labels.print", { count: total })}
         </button>
       </header>
@@ -132,14 +141,7 @@ export default function LabelWorkspace() {
 
           <div className={panelClass}>
             <h2 className="flex items-center gap-2 text-sm font-bold text-slate-900"><Ruler className="size-4 text-orange-600" />{t("labels.dimensions")}</h2>
-            <div className="mt-4 grid gap-4 sm:grid-cols-2">
-              <label className="space-y-1.5 text-xs font-semibold text-slate-600"><span>{t("labels.size")}</span><select value={preset} onChange={(event) => chooseSize(event.target.value)} className={inputClass}>{LABEL_SIZES.map((item) => <option key={`${item.width}x${item.height}`} value={`${item.width}x${item.height}`}>{item.width / 10} × {item.height / 10} cm</option>)}<option value="custom">{t("labels.custom")}</option></select></label>
-              <label className="space-y-1.5 text-xs font-semibold text-slate-600"><span>{t("labels.paper")}</span><select value={paper} onChange={(event) => persist({ labelPaper: event.target.value as LabelPaper })} className={inputClass}><option value="continuous">{t("labels.continuous")}</option><option value="roll">{t("labels.roll")}</option><option value="a4">{t("labels.a4")}</option></select></label>
-              {preset === "custom" && <>
-                <label className="space-y-1.5 text-xs font-semibold text-slate-600"><span>{t("labels.width")}</span><input type="number" min="3" max="20" step="0.1" value={width} onChange={(event) => changeDimension("width", event.target.value)} className={inputClass} /></label>
-                <label className="space-y-1.5 text-xs font-semibold text-slate-600"><span>{t("labels.height")}</span><input type="number" min="2" max="20" step="0.1" value={height} onChange={(event) => changeDimension("height", event.target.value)} className={inputClass} /></label>
-              </>}
-            </div>
+            {formatFields}
             <p className="mt-3 text-xs leading-5 text-slate-500">{paper === "a4" ? t("labels.a4Hint") : paper === "continuous" ? t("labels.continuousHint") : t("labels.rollHint")}</p>
             {!validSize && <p role="alert" className="mt-3 text-xs font-semibold text-red-700">{t("labels.invalidSize")}</p>}
           </div>
@@ -172,6 +174,34 @@ export default function LabelWorkspace() {
           <p role="status" aria-live="polite" className="mt-3 min-h-5 text-xs text-slate-600">{printStatus}</p>
         </aside>
       </div>
+      {printDialogOpen && <PrintDialog kind="label" title={t("labels.dialog.labelTitle")} onClose={() => setPrintDialogOpen(false)} onConfirm={handlePrint} canConfirm={Boolean(canPrint)}>
+        <section className={panelClass}><h3 className="text-sm font-bold">{t("labels.dimensions")}</h3>{formatFields}
+          <p className="mt-3 text-xs text-slate-500">{paper === "a4" ? t("labels.a4Hint") : paper === "continuous" ? t("labels.continuousHint") : t("labels.rollHint")}</p>
+          {!validSize && <p role="alert" className="mt-2 text-xs text-red-700">{t("labels.invalidSize")}</p>}
+          {incompatiblePrinter && <p role="alert" className="mt-2 text-xs text-red-700">{t("labels.knupSizeError")}</p>}
+          {tooNarrow && <p role="alert" className="mt-2 text-xs text-red-700">{t("labels.narrowError")}</p>}
+        </section>
+        <section className={panelClass}><h3 className="text-sm font-bold">{t("labels.total", { count: total })}</h3><div className="mt-3 max-h-48 divide-y divide-slate-100 overflow-y-auto">{selected.map(item => <div key={item.id} className="flex items-center justify-between gap-3 py-2 text-xs"><p className="min-w-0 break-words font-semibold">{item.name}</p><label className="w-20 shrink-0"><span className="sr-only">{t("labels.quantity", { name: item.name })}</span><input type="number" min="1" max={MAX_LABELS} step="1" value={item.quantity || ""} onChange={event => setQuantities(current => ({ ...current, [item.id]: Number(event.target.value) }))} className={inputClass} /></label></div>)}</div>
+          {(invalidQuantity || total > MAX_LABELS) && <p role="alert" className="mt-2 text-xs text-red-700">{t("labels.quantityError", { max: MAX_LABELS })}</p>}
+        </section>
+        <section className={panelClass}><h3 className="text-sm font-bold">{t("labels.preview")}</h3><div className="mt-3 overflow-auto bg-slate-100 p-4">{preview && <div className="mx-auto w-fit bg-white shadow-sm" style={dimensions} dangerouslySetInnerHTML={{ __html: previewMarkup }} />}</div></section>
+      </PrintDialog>}
     </section>
   );
+}
+
+function LabelFormatFields({ preset, width, height, paper, knup, onPresetChange, onPaperChange, onDimensionChange }: {
+  preset: string; width: string; height: string; paper: LabelPaper; knup: boolean;
+  onPresetChange: (value: string) => void; onPaperChange: (value: LabelPaper) => void;
+  onDimensionChange: (axis: "width" | "height", value: string) => void;
+}) {
+  const t = useT();
+  return (<div className="mt-4 grid gap-4 sm:grid-cols-2">
+              <label className="space-y-1.5 text-xs font-semibold text-slate-600"><span>{t("labels.size")}</span><select value={preset} onChange={(event) => onPresetChange(event.target.value)} className={inputClass}>{LABEL_SIZES.filter(item => !knup || item.width <= 48).map((item) => <option key={`${item.width}x${item.height}`} value={`${item.width}x${item.height}`}>{item.width / 10} × {item.height / 10} cm</option>)}<option value="custom">{t("labels.custom")}</option></select></label>
+              <label className="space-y-1.5 text-xs font-semibold text-slate-600"><span>{t("labels.paper")}</span><select value={paper} onChange={(event) => onPaperChange(event.target.value as LabelPaper)} className={inputClass}><option value="continuous">{t("labels.continuous")}</option><option value="roll">{t("labels.roll")}</option><option value="a4" disabled={knup}>{t("labels.a4")}</option></select></label>
+              {preset === "custom" && <>
+                <label className="space-y-1.5 text-xs font-semibold text-slate-600"><span>{t("labels.width")}</span><input type="number" min="3" max={knup ? "4.8" : "20"} step="0.1" value={width} onChange={(event) => onDimensionChange("width", event.target.value)} className={inputClass} /></label>
+                <label className="space-y-1.5 text-xs font-semibold text-slate-600"><span>{t("labels.height")}</span><input type="number" min="2" max="20" step="0.1" value={height} onChange={(event) => onDimensionChange("height", event.target.value)} className={inputClass} /></label>
+              </>}
+            </div>);
 }

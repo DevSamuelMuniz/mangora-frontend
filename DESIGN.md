@@ -68,6 +68,13 @@ At PDV sale completion, print settings occupy a separate 320px column to the
 right of the sale summary from the md breakpoint; on smaller screens the two
 panels stack in document order. Expanding settings does not stretch the summary.
 
+Manual printing uses the shared native PrintDialog. Document summary or label
+preview occupies the left column; device information and editable settings use
+the same 320px right column. A sticky confirmation footer stays reachable while
+the dialog scrolls. Narrow screens stack the two columns. Use existing slate
+panels, orange primary actions and white paper previews. Device status must not
+claim physical connectivity from a saved printer name alone.
+
 ## Elevation & Depth
 
 Borders define workspace panels; the paper preview alone carries a small shadow.
@@ -98,3 +105,7 @@ both in help text rather than silently scaling output to fit.
 - Preserve physical millimetres and show the selected paper mode.
 - Keep operational controls familiar; avoid a visual rebrand during infrastructure work.
 - Do not report physical print success from a resolved spooler submission.
+
+## Public knowledge guides
+
+The /guias content section extends the cream/green/orange marketing identity and existing BrandLogo. Bricolage headlines, a ruled subject index and a left chapter rail prioritize reading over dashboard cards. The rail stacks above the article on narrow screens. Guides currently have only a pt-BR edition, explicitly labeled, with canonical redirects from locale-prefixed duplicates. Content is server rendered; FAQ answers remain visible without JavaScript, with native anchors and a skip link. No new application controls or tokens are introduced.

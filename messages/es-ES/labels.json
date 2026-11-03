@@ -61,5 +61,26 @@
   "printerProfile": "Modelo de impresora",
   "genericProfile": "Otras impresoras",
   "knupHint": "Bobina nominal de 58 mm; área útil de 48 mm. Etiquetas centradas en bobina continua. Configure papel de 58 mm en el controlador.",
-  "knupSizeError": "La KP-1025 imprime hasta 48 mm de ancho y no usa A4. Elija un ancho de hasta 4,8 cm y bobina continua o etiquetas individuales."
+  "knupSizeError": "La KP-1025 imprime hasta 48 mm de ancho y no usa A4. Elija un ancho de hasta 4,8 cm y bobina continua o etiquetas individuales.",
+  "dialog": {
+    "eyebrow": "Preparar impresión",
+    "hint": "Revise el contenido, el papel y la impresora antes de enviar.",
+    "close": "Cerrar preparación de impresión",
+    "device": "Impresora y papel",
+    "browserDevice": "Seleccionada en el diálogo del navegador",
+    "media": "Papel y área de impresión",
+    "knupMedia": "Bobina de 58 mm · área útil de 48 mm",
+    "selectPrinterHint": "Busque y seleccione una impresora para habilitar el envío directo.",
+    "cancel": "Volver",
+    "confirm": "Confirmar impresión",
+    "receiptSummary": "Resumen del recibo",
+    "intensity": "Intensidad de impresión",
+    "mode": {
+      "standard": "Estándar",
+      "bold": "Fuerte",
+      "extra-bold": "Extra fuerte"
+    },
+    "labelTitle": "Imprimir etiquetas",
+    "receiptTitle": "Imprimir recibo"
+  }
 }

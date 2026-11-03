@@ -8,7 +8,7 @@ import { findPrinters } from "@/lib/printing/service";
 
 const field = "h-11 w-full rounded-xl border border-slate-200 bg-white px-3 text-sm text-slate-900 focus-visible:outline-2 focus-visible:outline-orange-600";
 
-export default function PrintSettings({ kind }: { kind: "label" | "receipt" }) {
+export default function PrintSettings({ kind, embedded = false }: { kind: "label" | "receipt"; embedded?: boolean }) {
   const t = useT();
   const preferences = usePrintPreferences();
   const [printers, setPrinters] = useState<string[]>([]);
@@ -30,9 +30,7 @@ export default function PrintSettings({ kind }: { kind: "label" | "receipt" }) {
   }
   const printerKey = kind === "label" ? "labelPrinter" : "receiptPrinter";
   const options = [...new Set([preferences[printerKey], ...printers].filter(Boolean))];
-  return <details className="rounded-2xl border border-slate-200 bg-white p-4 text-left text-slate-900">
-    <summary className="cursor-pointer text-sm font-bold focus-visible:outline-2 focus-visible:outline-orange-600">{t("labels.printSettings")}</summary>
-    <div className="mt-4 space-y-3 text-sm">
+  const fields = <div className="mt-4 space-y-3 text-sm">
       <label className="block space-y-1"><span>{t("labels.printerProfile")}</span><select className={field} value={preferences.printerProfile} onChange={event => update(event.target.value === "knup-kp1025" ? { printerProfile: "knup-kp1025", receiptWidth: 58, labelWidth: 48, labelHeight: 30, labelPaper: "continuous" } : { printerProfile: "generic" })}>
         <option value="generic">{t("labels.genericProfile")}</option><option value="knup-kp1025">Knup KP-1025</option>
       </select></label>
@@ -47,11 +45,11 @@ export default function PrintSettings({ kind }: { kind: "label" | "receipt" }) {
       </>}
       {kind === "receipt" && <>
         <label className="block space-y-1"><span>{t("labels.receiptWidth")}</span><select className={field} value={preferences.receiptWidth} disabled={preferences.printerProfile === "knup-kp1025"} onChange={event => update({ receiptWidth: Number(event.target.value) as 58 | 80 })}><option value={58}>58 mm</option><option value={80}>80 mm</option></select></label>
-        <label className="flex cursor-pointer items-center gap-2"><input type="checkbox" checked={preferences.autoReceipt} onChange={event => update({ autoReceipt: event.target.checked })} />{t("labels.autoReceipt")}</label>
+        {!embedded && <label className="flex cursor-pointer items-center gap-2"><input type="checkbox" checked={preferences.autoReceipt} onChange={event => update({ autoReceipt: event.target.checked })} />{t("labels.autoReceipt")}</label>}
       </>}
       <label className="flex cursor-pointer items-center gap-2"><input type="checkbox" checked={preferences.savePdf} onChange={event => update({ savePdf: event.target.checked })} />{t("labels.savePdf")}</label>
       <p className="text-xs leading-5 text-slate-600">{t("labels.downloadHint")}</p>
       <p role="status" aria-live="polite" className="min-h-10 text-xs leading-5 text-slate-700">{message}</p>
-    </div>
-  </details>;
+    </div>;
+  return embedded ? <section className="rounded-2xl border border-slate-200 bg-white p-4 text-left text-slate-900"><h3 className="text-sm font-bold">{t("labels.printSettings")}</h3>{fields}</section> : <details className="rounded-2xl border border-slate-200 bg-white p-4 text-left text-slate-900"><summary className="cursor-pointer text-sm font-bold focus-visible:outline-2 focus-visible:outline-orange-600">{t("labels.printSettings")}</summary>{fields}</details>;
 }

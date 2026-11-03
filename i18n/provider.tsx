@@ -1,10 +1,14 @@
 "use client";
 
+import { useRouter } from "next/navigation";
+
 import { createContext, useCallback, useContext, useMemo, type ReactNode } from "react";
 
 import { LOCALE_COOKIE, localeLabels, locales, type Locale } from "@/i18n/config";
 import { createTranslator, type Messages } from "@/i18n/runtime";
 import { createFormatters } from "@/lib/format";
+import { localePath, splitLocalePrefix } from "@/i18n/urls";
+import { isPublicMarketingPath } from "@/lib/seo";
 
 type I18nValue = {
   locale: Locale;
@@ -16,6 +20,7 @@ type I18nValue = {
 const I18nContext = createContext<I18nValue | null>(null);
 
 export default function I18nProvider({ locale, messages, currency = "BRL", timezone = "America/Sao_Paulo", children }: { locale: Locale; messages: Messages; currency?: string; timezone?: string; children: ReactNode }) {
+  const router = useRouter();
   const t = useMemo(() => createTranslator(messages), [messages]);
   const formatters = useMemo(() => createFormatters(locale, currency, timezone), [locale, currency, timezone]);
 
@@ -26,8 +31,10 @@ export default function I18nProvider({ locale, messages, currency = "BRL", timez
     void import("@/lib/api/client").then(({ apiRequest }) =>
       apiRequest("/auth/preferences", { method: "PATCH", body: JSON.stringify({ locale: next }) }).catch(() => undefined),
     );
-    window.location.reload();
-  }, []);
+    const { pathname } = splitLocalePrefix(window.location.pathname);
+    if (isPublicMarketingPath(pathname)) router.push(`${localePath(pathname, next)}${window.location.search}${window.location.hash}`);
+    else window.location.reload();
+  }, [router]);
 
   const value = useMemo(() => ({ locale, t, setLocale, formatters }), [locale, t, setLocale, formatters]);
   return <I18nContext.Provider value={value}>{children}</I18nContext.Provider>;

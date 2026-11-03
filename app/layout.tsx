@@ -8,7 +8,6 @@ import {
 import Script from "next/script";
 import I18nProvider from "@/i18n/provider";
 import { getLocale, getTranslator, loadMessages, getRegionalPreferences } from "@/i18n/server";
-import { alternateLanguages } from "@/i18n/urls";
 import QueryProvider from "@/components/providers/QueryProvider";
 import { OperationPasswordProvider } from "@/components/ui/OperationPasswordProvider";
 import { ToastProvider } from "@/components/ui/toast";
@@ -47,7 +46,6 @@ export async function generateMetadata(): Promise<Metadata> {
     template: "%s | Mangora",
   },
   description: t("site.meta.description"),
-  alternates: { canonical: "/", languages: alternateLanguages("/") },
   applicationName: "Mangora",
   authors: [{ name: "Mangora", url: "https://www.mangora.com.br" }],
   creator: "Mangora",

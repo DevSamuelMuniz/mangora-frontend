@@ -9,7 +9,8 @@
     "cancel": "Cancel sale",
     "register": "Record sale",
     "clearFilters": "Clear filters",
-    "retry": "Try again"
+    "retry": "Try again",
+    "printReceipt": "Print receipt"
   },
   "summary": {
     "revenueToday": "Revenue today",
@@ -79,5 +80,8 @@
   "actionsAria": "Actions for sale {code}",
   "cashNote": "Cash sales are recorded in the company's open register.",
   "receivableNote": "The amount will go to accounts receivable and can be settled partially.",
-  "finalNote": "When you finish, the sale and the stock decrease are recorded together."
+  "finalNote": "When you finish, the sale and the stock decrease are recorded together.",
+  "printAria": "Print receipt for sale {code}",
+  "printUnavailable": "This sale was cancelled and cannot be printed as a completed sale.",
+  "viewAria": "View sale {code}"
 }

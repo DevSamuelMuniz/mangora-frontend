@@ -3,6 +3,7 @@ import "server-only";
 import { cookies } from "next/headers";
 import type { AuthSession } from "./types";
 import { API_BASE_URL, assertApiUrlConfigured } from "@/lib/api/config";
+import { serverBackendHeaders } from "@/lib/api/backend-identity";
 
 export async function getCurrentSession(): Promise<AuthSession | null> {
   let stage = "api_configuration";
@@ -17,9 +18,9 @@ export async function getCurrentSession(): Promise<AuthSession | null> {
     const response = await fetch(`${API_BASE_URL}/auth/me`, {
       cache: "no-store",
       signal: AbortSignal.timeout(5_000),
-      headers: {
+      headers: await serverBackendHeaders(new URL(`${API_BASE_URL}/auth/me`), new Headers({
         cookie: `${accessToken.name}=${accessToken.value}`,
-      },
+      })),
     });
 
     if (response.status === 401 || response.status === 403) return null;
