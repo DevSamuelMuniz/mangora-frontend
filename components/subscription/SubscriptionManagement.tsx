@@ -1,165 +1,89 @@
 "use client";
 
-import { useFormatters } from "@/i18n/provider";
-
-import { useState, type ReactNode } from "react";
+import Link from "next/link";
+import { useRef, useState } from "react";
+import { ArrowRight, Check, CreditCard, LoaderCircle, ShieldCheck, Users } from "lucide-react";
 import { useI18n, useT } from "@/i18n/provider";
-import { ArrowRight, Building2, CalendarDays, Check, CheckCircle2, CreditCard, ExternalLink, FileText, LoaderCircle, ShieldCheck, Sparkles, Users } from "lucide-react";
-import { subscriptionPlans } from "./subscription-data";
+import { useCancelSubscription, useReactivateSubscription, useSubscription, useSubscriptionCheckout, useSubscriptionRequest } from "@/features/subscription/hooks/useSubscription";
+import ModalDialog from "@/components/ui/ModalDialog";
 import ContractAndHistory from "./ContractAndHistory";
-import ConfirmDialog from "@/components/ui/ConfirmDialog";
-import type { SubscriptionOverview, SubscriptionPlan } from "@/types/subscription";
-import { apiRequest } from "@/lib/api/client";
-
+import type { SubscriptionOverview } from "@/types/subscription";
 import { addDaysToBrazilDateKey } from "@/lib/timezone";
-import { useReconcileSubscription, useCancelSubscription, useReactivateSubscription, useSubscription, useSubscriptionCheckout, useSubscriptionRequest } from "@/features/subscription/hooks/useSubscription";
 
+type Plan = SubscriptionOverview["plans"][number];
+const button = "inline-flex min-h-11 cursor-pointer items-center justify-center gap-2 rounded-xl px-4 py-2 text-sm font-bold transition focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600 disabled:cursor-not-allowed disabled:opacity-50";
 
 export default function SubscriptionManagement() {
-  const { formatCurrency, formatDate } = useFormatters();
   const t = useT();
   const { locale } = useI18n();
-  const { data: overview, isPending: loading, error } = useSubscription();
-  const requestMutation = useSubscriptionRequest();
-  const checkoutMutation = useSubscriptionCheckout();
-  const reconcileMutation = useReconcileSubscription();
-  const [paymentUrl, setPaymentUrl] = useState<string | null>(null);
-  const [openingPayment, setOpeningPayment] = useState(false);
-  const cancelMutation = useCancelSubscription();
-  const saving = requestMutation.isPending || checkoutMutation.isPending || cancelMutation.isPending;
-  const [actionError, setActionError] = useState("");
-  const [selected, setSelected] = useState<SubscriptionPlan | null>(null);
-  const [billingType, setBillingType] = useState<"PIX" | "BOLETO">("PIX");
-  const [nextDueDate, setNextDueDate] = useState(defaultDueDate);
-  const [couponCode, setCouponCode] = useState("");
+  const query = useSubscription();
+  const overview = query.data;
+  const checkout = useSubscriptionCheckout();
+  const request = useSubscriptionRequest();
+  const cancel = useCancelSubscription();
+  const reactivate = useReactivateSubscription();
+  const [selected, setSelected] = useState<Plan | null>(null);
+  const [cancelOpen, setCancelOpen] = useState(false);
+  const [method, setMethod] = useState<"PIX" | "BOLETO">("PIX");
+  const [due, setDue] = useState(() => addDaysToBrazilDateKey(0));
+  const [coupon, setCoupon] = useState("");
+  const [error, setError] = useState("");
   const [message, setMessage] = useState("");
-  const [confirmingCancellation, setConfirmingCancellation] = useState(false);
-
-  const errorMessage = actionError || (error instanceof Error ? error.message : "");
-
-  async function requestChange() {
-    if (!selected || !overview) return;
-    let paymentTab: Window | null = null;
+  const [fallback, setFallback] = useState<string | null>(null);
+  const lock = useRef(false);
+  const busy = checkout.isPending || request.isPending || cancel.isPending || reactivate.isPending;
+  const money = (value: number) => new Intl.NumberFormat(locale, { style: "currency", currency: overview?.market?.currency ?? "BRL" }).format(value);
+  const date = (value: string) => new Intl.DateTimeFormat(locale, { dateStyle: "medium", timeZone: overview?.enforcement?.timezone ?? "America/Sao_Paulo" }).format(new Date(value));
+  async function contract() {
+    if (!selected || !overview || lock.current) return;
+    if (overview.provider.name === "ASAAS" && selected.id !== "ENTERPRISE" && (!due || due < addDaysToBrazilDateKey(0))) { setError(t("billing.paymentFlow.invalidDue")); return; }
+    lock.current = true; setError(""); setMessage(""); setFallback(null);
+    let tab: Window | null = null;
     try {
-      setActionError("");
-      if (selected.id === "enterprise") {
-        await requestMutation.mutateAsync({
-          action: "CONTACT", targetPlan: "ENTERPRISE", notes: t("billing.toasts.contactNote"),
-        });
+      if (selected.id === "ENTERPRISE") {
+        await request.mutateAsync({ action: "CONTACT", targetPlan: selected.id });
         setMessage(t("billing.toasts.contactRequested"));
       } else {
-        if (!overview.provider.configured) throw new Error(`Configure o ${overview.provider.name} no backend antes de contratar um plano.`);
-        paymentTab = window.open("about:blank", "_blank");
-        const checkout = await checkoutMutation.mutateAsync({
-          targetPlan: selected.id.toUpperCase(),
-          ...(overview.provider.name === "ASAAS" ? { billingType, nextDueDate, couponCode: couponCode.trim() || undefined } : {}),
-        });
-        setPaymentUrl(checkout.checkoutUrl ?? null);
-        if (paymentTab) paymentTab.opener = null;
-        if (checkout.checkoutUrl) {
-          setMessage("Pagamento aberto. Após pagar, clique em Verificar pagamento para atualizar seu acesso.");
-          if (paymentTab) paymentTab.location.assign(checkout.checkoutUrl);
-          else window.open(checkout.checkoutUrl, "_blank", "noopener,noreferrer");
-        } else {
-          paymentTab?.close();
-          setMessage((checkout.discount ?? 0) > 0 && checkout.firstCharge != null && checkout.recurringPrice != null ? t("billing.manage.couponAppliedLong", { first: formatCurrency(checkout.firstCharge, locale), recurring: formatCurrency(checkout.recurringPrice, locale) }) : `Cobrança criada no ${overview.provider.name}. O plano será ativado assim que o pagamento for confirmado.`);
-        }
+        tab = window.open("about:blank", "_blank");
+        if (tab) tab.opener = null;
+        const result = await checkout.mutateAsync({ targetPlan: selected.id, ...(overview.provider.name === "ASAAS" ? { billingType: method, nextDueDate: due, couponCode: coupon.trim() || undefined } : {}) });
+        if (result.checkoutUrl) {
+          if (tab && !tab.closed) tab.location.assign(result.checkoutUrl);
+          else setFallback(result.checkoutUrl);
+        } else tab?.close();
+        setMessage(t("billing.paymentFlow.checkoutCreated"));
       }
       setSelected(null);
-    } catch (cause) { paymentTab?.close(); setActionError(cause instanceof Error ? cause.message : t("billing.errors.contact")); }
+    } catch (cause) { tab?.close(); setError(cause instanceof Error ? cause.message : t("billing.pendingPayment.paymentError")); }
+    finally { lock.current = false; }
   }
-  async function requestCancellation() {
+  async function changeCancellation(revert: boolean) {
+    if (lock.current) return;
+    lock.current = true; setError(""); setMessage("");
     try {
-      setConfirmingCancellation(false);
-      await cancelMutation.mutateAsync();
-      setMessage(t("billing.manage.cancelScheduled"));
-    } catch (cause) { setActionError(cause instanceof Error ? cause.message : t("billing.errors.cancel")); }
+      if (revert) await reactivate.mutateAsync(); else await cancel.mutateAsync();
+      setCancelOpen(false);
+      setMessage(t(revert ? "billing.toasts.reactivated" : "billing.manage.cancelScheduled"));
+    } catch (cause) { setError(cause instanceof Error ? cause.message : t("billing.errors.cancel")); }
+    finally { lock.current = false; }
   }
-  const reactivateMutation = useReactivateSubscription();
-  async function reactivateNow() {
-    try {
-      setActionError(""); setMessage("");
-      await reactivateMutation.mutateAsync();
-      setMessage(t("billing.manage.cancelledReverted"));
-    } catch (cause) { setActionError(cause instanceof Error ? cause.message : t("billing.errors.reactivate")); }
-  }
-
-  if (loading && !overview) return <div className="flex min-h-72 items-center justify-center gap-2 text-sm text-slate-500"><LoaderCircle className="size-4 animate-spin" />{t("billing.loading")}</div>;
-  if (!overview) return <div role="alert" className="rounded-xl border border-red-200 bg-red-50 p-4 text-xs font-semibold text-red-700">{errorMessage}</div>;
-  const currentPlanId = overview.plan.toLowerCase();
-  const statusLabel = overview.trialExpired ? t("billing.status.FREE") : t(`billing.status.${subscriptionStatus(overview.status)}`);
-
-  return <section className="space-y-5">
-    <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between"><div><p className="text-[11px] font-bold uppercase tracking-[0.14em] text-orange-600">{t("billing.eyebrow")}</p><h1 className="mt-1 text-2xl font-black text-slate-950 sm:text-3xl">{t("billing.title")}</h1><p className="mt-1 text-xs text-slate-500">{overview.trialExpired ? "O período completo terminou e sua conta continua ativa no Free." : overview.status === "TRIAL" ? `Você está nos 7 dias grátis${overview.trialDaysRemaining ? ` — restam ${overview.trialDaysRemaining} dia(s)` : ""}.` : t("billing.subtitle")}</p></div><span className={`w-fit rounded-full border px-3 py-1.5 text-[11px] font-bold ${overview.status === "ACTIVE" || overview.plan === "FREE" ? "border-green-200 bg-green-50 text-green-700" : "border-amber-200 bg-amber-50 text-amber-700"}`}>{statusLabel}</span></div>
-    {(overview.pendingPlan || overview.accessBlocked || paymentUrl) && <div className="rounded-2xl border border-amber-200 bg-amber-50 p-4" role="status">
-      <p className="text-sm font-bold text-amber-950">{overview.pendingPlan ? "Aguardando confirmação do pagamento" : "Situação do pagamento"}</p>
-      <p className="mt-1 text-xs text-amber-900">Seu acesso será atualizado quando o Asaas confirmar o pagamento. Se a janela não abriu, use o link abaixo.</p>
-      <div className="mt-3 flex flex-wrap gap-3">
-        {paymentUrl && <a href={paymentUrl} target="_blank" rel="noopener noreferrer" className="text-xs font-bold underline">Abrir pagamento</a>}
-        {!paymentUrl && overview.provider.name === "ASAAS" && <button disabled={openingPayment} className="text-xs font-bold underline disabled:opacity-50" onClick={async () => {
-          const tab = window.open("about:blank", "_blank");
-          if (tab) tab.opener = null;
-          setOpeningPayment(true); setActionError("");
-          try {
-            const result = await apiRequest<{ paymentUrl: string }>("/subscription/payment-link", { method: "POST" });
-            setPaymentUrl(result.paymentUrl);
-            if (tab) tab.location.assign(result.paymentUrl);
-          } catch (error) { tab?.close(); setActionError(error instanceof Error ? error.message : "Não foi possível abrir o pagamento."); }
-          finally { setOpeningPayment(false); }
-        }}>{openingPayment ? "Abrindo…" : "Abrir pagamento"}</button>}
-        <button disabled={reconcileMutation.isPending} className="text-xs font-bold underline disabled:opacity-50" onClick={async () => {
-          setActionError("");
-          try { const updated = await reconcileMutation.mutateAsync(); setMessage(updated.pendingPlan || updated.accessBlocked ? "Pagamento ainda não confirmado. Aguarde a compensação e tente novamente." : "Situação atualizada. Seu acesso está liberado."); }
-          catch (error) { setActionError(error instanceof Error ? error.message : "Não foi possível verificar o pagamento."); }
-        }}>{reconcileMutation.isPending ? "Verificando…" : "Verificar pagamento"}</button>
-      </div>
-    </div>}
-    {overview.cancellation?.requested && (
-      <div className="rounded-2xl border border-amber-300 bg-amber-50 p-4">
-        <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-center">
-          <p className="text-xs font-semibold leading-5 text-amber-900"><strong className="font-black">{t("billing.history.cancelScheduled")}</strong> Você mantém o acesso até {overview.cancellation.effectiveAt ? formatDate(overview.cancellation.effectiveAt) : "o fim do ciclo"}{overview.cancellation.daysLeft != null ? ` (${overview.cancellation.daysLeft} dia(s))` : ""} e pode reativar a qualquer momento antes disso.
-          </p>
-          {overview.cancellation.active ? <button type="button" disabled={saving || reactivateMutation.isPending} onClick={() => void reactivateNow()} className="inline-flex h-10 shrink-0 items-center justify-center rounded-xl bg-[#123d2b] px-4 text-xs font-black text-white hover:bg-[#147a45] disabled:opacity-50">Reativar assinatura</button> : <span className="shrink-0 rounded-full bg-red-100 px-3 py-1 text-[10px] font-bold text-red-700">Ciclo encerrado</span>}
-        </div>
-      </div>
-    )}
-    <div className="grid gap-4 xl:grid-cols-[1.35fr_0.65fr]"><div className="rounded-2xl bg-gradient-to-br from-orange-700 via-amber-700 to-yellow-600 p-6 text-white shadow-lg shadow-orange-200"><div className="flex justify-between gap-5"><div><div className="flex items-center gap-2 text-orange-100"><Sparkles className="size-4" /><span className="text-[10px] font-bold uppercase tracking-wider">Plano atual</span></div><h2 className="mt-3 text-2xl font-black">{overview.planName}</h2><p className="mt-1 text-xs text-white/70">{overview.pendingPlan ? `Plano ${overview.pendingPlan} aguardando confirmação do pagamento.` : overview.plan === "FREE" ? t("billing.plan.freeHint") : "Alterações de plano são ativadas após a confirmação do pagamento."}</p></div><div className="text-right"><p className="text-2xl font-black">{overview.price === 0 ? t("billing.plan.free") : formatCurrency(overview.price, locale)}</p>{overview.price === 0 ? <p className="text-[10px] text-white/60">para continuar</p> : <><p className="text-[10px] text-white/60">por mês</p>{overview.billingBreakdown && <p className="mt-2 max-w-44 text-right text-[9px] leading-4 text-white/70">{overview.billingBreakdown.calculationText}</p>}</>}</div></div><div className="mt-6 grid gap-3 border-t border-white/15 pt-5 sm:grid-cols-3"><Detail icon={CalendarDays} label="Próxima cobrança" value={overview.nextBillingAt ? formatDate(overview.nextBillingAt) : overview.plan === "FREE" ? t("billing.plan.noCharge") : t("billing.plan.toDefine")} /><Detail icon={CreditCard} label={t("billing.provider.billing")} value={overview.paymentMethod ?? t("billing.provider.notIntegrated")} /><Detail icon={ShieldCheck} label="Status" value={statusLabel} /></div></div>
-      <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm"><div className="flex items-center justify-between"><div><h2 className="text-sm font-bold text-slate-950">Uso do plano</h2><p className="text-[10px] text-slate-400">Calculado na empresa atual</p></div><Users className="size-4 text-orange-500" /></div><div className="mt-4 space-y-4">{overview.usage.map((item) => { const percentage = item.limit ? Math.min(item.current / item.limit * 100, 100) : 0; return <div key={item.key}><div className="flex justify-between text-[10px]"><span className="font-bold text-slate-600">{item.label}</span><span className="text-slate-400">{item.current} de {item.limit ?? "ilimitado"}</span></div><div className="mt-2 h-1.5 rounded-full bg-slate-100"><div className="h-full rounded-full bg-gradient-to-r from-orange-600 to-yellow-500" style={{ width: item.limit ? `${percentage}%` : "100%" }} /></div></div>; })}</div></div></div>
-{overview && <ContractAndHistory overview={overview} />}
-    {errorMessage && <Notice tone="error">{errorMessage}</Notice>}{message && <Notice tone="success"><CheckCircle2 className="size-4 shrink-0" />{message}</Notice>}
-    {selected && <CheckoutCard selected={selected} overview={overview} saving={saving} billingType={billingType} nextDueDate={nextDueDate} couponCode={couponCode} onBillingType={setBillingType} onDueDate={setNextDueDate} onCoupon={setCouponCode} onClose={() => setSelected(null)} onConfirm={() => void requestChange()} />}
-    <div><p className="text-[11px] font-bold uppercase tracking-wider text-orange-600">{t("billing.manage.availablePlans", { market: `${overview.market?.country ?? "BR"} / ${overview.market?.currency ?? "BRL"}` })}</p><h2 className="mt-1 text-lg font-black text-slate-950">{t("billing.manage.choosePlan")}</h2><div className="mt-4 grid gap-4 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-5">{subscriptionPlans.map((plan) => <PlanCard key={plan.id} plan={plan} displayPrice={overview.plans.find((item) => item.id.toLowerCase() === plan.id)?.regionalPrice?.formatted} current={plan.id === currentPlanId && (plan.id === "free" || (overview.status !== "CANCELLED" && overview.provider.subscriptionConnected))} onSelect={setSelected} />)}</div></div>
-    <div className="grid gap-4 xl:grid-cols-[1fr_300px]"><div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm"><div className="flex items-center justify-between border-b border-slate-200 px-5 py-3.5"><div><h2 className="text-sm font-bold text-slate-950">Cobranças</h2><p className="text-[10px] text-slate-400">Histórico recebido do Asaas</p></div><FileText className="size-4 text-slate-400" /></div>{overview.invoices.length ? <div className="divide-y divide-slate-100">{overview.invoices.map((invoice) => <div key={invoice.id} className="flex items-center justify-between gap-4 px-5 py-3.5"><div><p className="text-xs font-bold text-slate-800">{formatCurrency(invoice.amount, locale)} · {formatDate(invoice.dueDate)}</p><p className="mt-1 text-[10px] text-slate-400">{invoice.billingType ?? t("billing.provider.billing")} · {t(`billing.history.${invoiceStatus(invoice.status)}`)}</p></div>{(invoice.status === "PENDING" || invoice.status === "OVERDUE") ? (invoice.invoiceUrl || invoice.bankSlipUrl) && <a href={invoice.invoiceUrl ?? invoice.bankSlipUrl!} target="_blank" rel="noreferrer" className="flex items-center gap-1 rounded-lg bg-orange-600 px-2.5 py-1.5 text-[10px] font-black text-white hover:bg-orange-700">2ª via <ExternalLink className="size-3" /></a> : invoice.invoiceUrl && <a href={invoice.invoiceUrl} target="_blank" rel="noreferrer" className="flex items-center gap-1 text-[10px] font-bold text-orange-700">Ver fatura <ExternalLink className="size-3" /></a>}</div>)}</div> : <div className="p-8 text-center text-xs text-slate-400">Nenhuma cobrança recebida.</div>}</div><div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm"><CreditCard className="size-5 text-orange-600" /><h2 className="mt-3 text-sm font-bold text-slate-950">Asaas</h2><p className="mt-1 text-[10px] leading-4 text-slate-500">{overview.provider.configured ? `${overview.provider.environment === "sandbox" ? t("billing.provider.sandbox") : t("billing.provider.production")} configurado. Cobranças via PIX e boleto.` : "Integração não configurada. Nenhuma cobrança externa será criada."}</p><div className={`mt-3 rounded-lg px-3 py-2 text-[10px] font-bold ${overview.provider.configured ? "bg-green-50 text-green-700" : "bg-amber-50 text-amber-700"}`}>{overview.provider.configured ? "Provedor disponível" : t("billing.provider.credentialPending")}</div><button disabled={saving || !overview.provider.subscriptionConnected || overview.status === "CANCELLED"} onClick={() => setConfirmingCancellation(true)} className="mt-4 h-10 w-full rounded-xl text-xs font-bold text-red-600 hover:bg-red-50 disabled:opacity-40">{t("billing.actions.cancel")}</button></div></div>
-    <ConfirmDialog
-      open={confirmingCancellation}
-      title={t("billing.actions.cancel")}
-      description={t("billing.manage.cancelConfirm")}
-      note={t("billing.manage.cancelNote")}
-      confirmLabel={t("billing.actions.cancel")}
-      busy={cancelMutation.isPending}
-      onConfirm={() => void requestCancellation()}
-      onCancel={() => setConfirmingCancellation(false)}
-    />
+  if (query.isPending) return <p role="status" className="flex min-h-72 items-center justify-center gap-2 text-sm text-slate-500"><LoaderCircle className="size-4 animate-spin" />{t("billing.loading")}</p>;
+  if (!overview) return <div role="alert" className="rounded-xl bg-red-50 p-5 text-sm text-red-800"><p>{query.error?.message ?? t("billing.loadFailed")}</p><button type="button" onClick={() => void query.refetch()} className="mt-3 cursor-pointer font-bold underline">{t("billing.paymentFlow.retry")}</button></div>;
+  return <section className="space-y-6">
+    <header className="flex flex-wrap items-start justify-between gap-4"><div><p className="text-xs font-bold uppercase tracking-widest text-orange-700">{t("billing.eyebrow")}</p><h1 className="mt-2 text-3xl font-black">{t("billing.title")}</h1><p className="mt-2 text-sm text-slate-500">{t("billing.subtitle")}</p></div><Link href="/assinatura/cobrancas" className={`${button} bg-orange-600 text-white hover:bg-orange-700`}><CreditCard className="size-4" />{t("billing.paymentFlow.viewPayments")}<ArrowRight className="size-4" /></Link></header>
+    <div className="grid gap-4 lg:grid-cols-[1.4fr_1fr]">
+      <section className="rounded-2xl bg-[#173d2b] p-6 text-white"><div className="flex flex-wrap items-start justify-between gap-4"><div><p className="text-xs font-bold uppercase tracking-widest text-orange-300">{t("billing.paymentFlow.currentPlan")}</p><h2 className="mt-3 text-3xl font-black">{overview.planName}</h2></div><p className="rounded-full border border-white/20 px-3 py-2 text-xs font-semibold">{t(overview.accessBlocked ? "billing.paymentFlow.blocked" : `billing.status.${overview.trialExpired ? "FREE" : overview.status}`)}</p></div><p className="mt-5 text-3xl font-black tabular-nums">{overview.price === 0 ? t("billing.plan.free") : money(overview.price)}{overview.price > 0 && <span className="ml-2 text-sm font-medium text-white/65">{t("billing.pendingPayment.perMonth")}</span>}</p>{overview.billingBreakdown && <p className="mt-2 text-xs text-white/70">{overview.billingBreakdown.calculationText}</p>}<dl className="mt-6 grid gap-4 border-t border-white/20 pt-5 sm:grid-cols-2"><div><dt className="text-xs text-white/60">{t("billing.paymentFlow.due")}</dt><dd className="mt-1 font-semibold">{overview.billingDueAt || overview.nextBillingAt ? date((overview.billingDueAt ?? overview.nextBillingAt)!) : t("billing.plan.noCharge")}</dd></div><div><dt className="text-xs text-white/60">{t("billing.provider.billing")}</dt><dd className="mt-1 font-semibold">{overview.provider.name} · {overview.paymentMethod ?? "—"}</dd></div></dl></section>
+      <section className="rounded-2xl border border-slate-200 bg-white p-6"><h2 className="flex items-center gap-2 font-bold"><ShieldCheck className="size-5 text-orange-600" />{t("billing.paymentFlow.access")}</h2><p className="mt-4 text-sm leading-6 text-slate-600">{overview.plan === "FREE" || overview.trialExpired ? t("billing.plan.freeHint") : t("billing.paymentFlow.rule")}</p>{overview.enforcement?.blockAt && <p className="mt-3 rounded-xl bg-slate-50 p-3 text-xs leading-5 text-slate-600">{t(overview.accessBlocked ? "billing.paymentFlow.blockedSince" : "billing.paymentFlow.cutoff", { date: date(overview.enforcement.blockAt), timezone: overview.enforcement.timezone })}</p>}{overview.pendingPlan && <p className="mt-3 rounded-xl bg-amber-50 p-3 text-sm font-semibold text-amber-900">{t("billing.paymentFlow.pendingPlan", { plan: overview.pendingPlan })}</p>}{overview.trialDaysRemaining > 0 && <p className="mt-3 text-sm font-semibold text-green-800">{t("billing.trialGate.daysRemaining", { count: overview.trialDaysRemaining })}</p>}<Link href="/assinatura/cobrancas" className="mt-4 inline-flex items-center gap-2 text-sm font-bold text-orange-800 underline underline-offset-4">{t("billing.paymentFlow.viewPayments")}<ArrowRight className="size-4" /></Link></section>
+    </div>
+    {message && <p role="status" className="rounded-xl bg-green-50 p-4 text-sm text-green-900">{message}</p>}
+    {error && !selected && !cancelOpen && <p role="alert" className="rounded-xl bg-red-50 p-4 text-sm text-red-800">{error}</p>}
+    {fallback && <a href={fallback} target="_blank" rel="noopener noreferrer" className="block font-bold text-orange-800 underline">{t("billing.paymentFlow.openPayment")}</a>}
+    {overview.cancellation?.requested && <section className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-amber-200 bg-amber-50 p-4"><p className="text-sm font-semibold text-amber-950">{t("billing.manage.cancelScheduled")} {overview.cancellation.effectiveAt && date(overview.cancellation.effectiveAt)}</p>{overview.cancellation.active && overview.provider.name === "ASAAS" && <button type="button" disabled={busy} onClick={() => void changeCancellation(true)} className={`${button} border border-amber-300 bg-white hover:bg-amber-100`}>{t("billing.actions.reactivate")}</button>}</section>}
+    <section className="rounded-2xl border border-slate-200 bg-white p-5"><h2 className="flex items-center gap-2 font-bold"><Users className="size-4 text-orange-600" />{t("billing.paymentFlow.usage")}</h2><div className="mt-4 grid gap-4 sm:grid-cols-3">{overview.usage.map(item => <div key={item.key} className="rounded-xl bg-slate-50 p-4"><p className="text-xs text-slate-500">{t(`billing.paymentFlow.${item.key}`)}</p><p className="mt-2 text-xl font-black tabular-nums">{item.current} / {item.limit ?? "∞"}</p></div>)}</div></section>
+    <section><p className="text-xs font-bold uppercase tracking-widest text-orange-700">{t("billing.manage.availablePlans", { market: overview.market?.currency ?? "BRL" })}</p><h2 className="mt-2 text-xl font-black">{t("billing.manage.choosePlan")}</h2><div className="mt-4 grid gap-4 sm:grid-cols-2 xl:grid-cols-5">{overview.plans.map(plan => <article key={plan.id} className={`flex flex-col rounded-2xl border bg-white p-5 ${plan.id === overview.plan ? "border-orange-400 ring-1 ring-orange-200" : "border-slate-200"}`}><h3 className="font-black">{plan.name}</h3><p className="mt-3 text-xl font-black">{plan.regionalPrice?.formatted ?? (plan.price === 0 ? t("billing.plan.free") : t("billing.plan.pricePending"))}</p><p className="mt-1 min-h-10 text-xs leading-5 text-slate-500">{plan.id === "FREE" ? t("billing.plan.freeHint") : t("billing.paymentFlow.perUnit")}</p><ul className="my-5 space-y-3 text-xs text-slate-600">{[["owners", plan.ownerLimit], ["employees", plan.employeeLimit], ["units", plan.unitLimit]].map(([key, value]) => <li key={key} className="flex items-center gap-2"><Check className="size-3 shrink-0 text-green-700" />{value ?? "∞"} {t(`billing.paymentFlow.${key}`)}</li>)}</ul><button type="button" disabled={busy || plan.id === "FREE" || (plan.id === overview.plan && overview.status === "ACTIVE" && !overview.cancellation?.requested) || (!!overview.pendingPlan && plan.id !== overview.pendingPlan)} onClick={() => { setError(""); setSelected(plan); }} className={`${button} mt-auto border border-slate-200 hover:bg-orange-50`}>{t(plan.id === overview.plan ? "billing.paymentFlow.currentPlan" : plan.id === "ENTERPRISE" ? "billing.actions.contactSales" : "billing.paymentFlow.choose")}</button></article>)}</div></section>
+    <ContractAndHistory overview={overview} />
+    {overview.provider.subscriptionConnected && overview.status !== "CANCELLED" && !overview.cancellation?.requested && <div className="flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-slate-200 bg-white p-5"><p className="max-w-xl text-xs leading-5 text-slate-500">{t("billing.manage.cancelNote")}</p><button type="button" disabled={busy} onClick={() => { setError(""); setCancelOpen(true); }} className={`${button} border border-red-200 text-red-700 hover:bg-red-50`}>{t("billing.actions.cancel")}</button></div>}
+    {selected && <ModalDialog title={`${t("billing.paymentFlow.choose")} ${selected.name}`} onClose={() => setSelected(null)} busy={busy}><p className="text-sm text-slate-600">{selected.id === "ENTERPRISE" ? t("billing.toasts.contactHint") : t("billing.paymentFlow.checkoutHint", { price: selected.regionalPrice?.formatted ?? t("billing.plan.pricePending") })}</p><p className="rounded-xl bg-amber-50 p-3 text-xs leading-5 text-amber-950">{t("billing.paymentFlow.rule")}</p>{overview.provider.name === "ASAAS" && selected.id !== "ENTERPRISE" && <form id="subscription-checkout" noValidate onSubmit={event => { event.preventDefault(); void contract(); }} className="grid gap-4 sm:grid-cols-2"><label className="text-xs font-bold">{t("billing.provider.billing")}<select value={method} onChange={event => setMethod(event.target.value as "PIX" | "BOLETO")} disabled={busy} className="mt-2 h-11 w-full rounded-xl border border-slate-200 px-3"><option value="PIX">Pix</option><option value="BOLETO">{t("billing.billingTypes.BOLETO")}</option></select></label><label className="text-xs font-bold">{t("billing.paymentFlow.firstDue")}<input type="date" min={addDaysToBrazilDateKey(0)} value={due} disabled={busy} onChange={event => setDue(event.target.value)} aria-invalid={!!error} className="mt-2 h-11 w-full rounded-xl border border-slate-200 px-3" /></label><label className="text-xs font-bold sm:col-span-2">{t("billing.paymentFlow.coupon")}<input value={coupon} disabled={busy} maxLength={32} onChange={event => setCoupon(event.target.value.toUpperCase())} className="mt-2 h-11 w-full rounded-xl border border-slate-200 px-3" /></label></form>}{error && <p role="alert" className="rounded-xl bg-red-50 p-3 text-sm text-red-800">{error}</p>}<div className="flex flex-wrap justify-end gap-2"><button type="button" disabled={busy} onClick={() => setSelected(null)} className={`${button} border border-slate-200 hover:bg-slate-50`}>{t("common.actions.cancel")}</button><button type="button" disabled={busy || (selected.id !== "ENTERPRISE" && (!selected.regionalPrice?.checkoutAvailable || !overview.provider.configured))} onClick={() => void contract()} className={`${button} bg-orange-600 text-white hover:bg-orange-700`}>{busy && <LoaderCircle className="size-4 animate-spin" />}{t(selected.id === "ENTERPRISE" ? "billing.actions.contactSales" : "billing.actions.checkout")}</button></div></ModalDialog>}
+    {cancelOpen && <ModalDialog title={t("billing.actions.cancel")} onClose={() => setCancelOpen(false)} busy={busy}><p className="text-sm leading-6 text-slate-600">{t("billing.manage.cancelConfirm")}</p>{error && <p role="alert" className="text-sm text-red-800">{error}</p>}<div className="flex flex-wrap justify-end gap-3"><button type="button" disabled={busy} onClick={() => setCancelOpen(false)} className={`${button} border border-slate-200 hover:bg-slate-50`}>{t("common.actions.cancel")}</button><button type="button" disabled={busy} onClick={() => void changeCancellation(false)} className={`${button} bg-red-700 text-white hover:bg-red-800`}>{t("billing.actions.cancel")}</button></div></ModalDialog>}
   </section>;
 }
-
-function CheckoutCard({ selected, overview, saving, billingType, nextDueDate, couponCode, onBillingType, onDueDate, onCoupon, onClose, onConfirm }: {
-  selected: SubscriptionPlan; overview: SubscriptionOverview; saving: boolean; billingType: "PIX" | "BOLETO";
-  nextDueDate: string; couponCode: string; onBillingType: (value: "PIX" | "BOLETO") => void;
-  onDueDate: (value: string) => void; onCoupon: (value: string) => void; onClose: () => void; onConfirm: () => void;
-}) {
-  const t = useT();
-  const enterprise = selected.id === "enterprise";
-  const brazil = overview.provider.name === "ASAAS";
-  const regional = overview.plans.find((item) => item.id.toLowerCase() === selected.id)?.regionalPrice;
-  return <div className="rounded-2xl border border-orange-200 bg-orange-50 p-4"><div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between"><div><p className="text-xs font-bold text-orange-900">{enterprise ? t("billing.actions.contactSalesQuestion") : `Contratar ${selected.name} pelo ${overview.provider.name}`}</p><p className="mt-1 text-[10px] text-orange-700">{enterprise ? t("billing.toasts.contactHint") : `${regional?.formatted ?? t("billing.plan.pricePending")}/mês · ${overview.market?.country ?? "BR"}. O servidor confirma novamente país, preço, moeda e provedor antes da assinatura.`}</p>{!enterprise && brazil && <div className="mt-3 flex flex-wrap gap-3"><label className="text-[10px] font-bold text-orange-900">Pagamento<select value={billingType} onChange={(event) => onBillingType(event.target.value as "PIX" | "BOLETO")} className="mt-1 block h-10 rounded-xl border border-orange-200 bg-white px-3 text-xs"><option value="PIX">PIX</option><option value="BOLETO">Boleto</option></select></label><label className="text-[10px] font-bold text-orange-900">Primeiro vencimento<input type="date" min={defaultDueDate()} value={nextDueDate} onChange={(event) => onDueDate(event.target.value)} className="mt-1 block h-10 rounded-xl border border-orange-200 bg-white px-3 text-xs" /></label><label className="text-[10px] font-bold text-orange-900">Cupom (opcional)<input value={couponCode} onChange={(event) => onCoupon(event.target.value.toUpperCase())} maxLength={32} placeholder="EX.: BEMVINDO20" className="mt-1 block h-10 rounded-xl border border-orange-200 bg-white px-3 text-xs uppercase" /></label></div>}</div><div className="flex gap-2"><button onClick={onClose} className="h-10 rounded-xl border border-orange-200 bg-white px-4 text-xs font-bold text-orange-700">Voltar</button><button disabled={saving || (!enterprise && (!overview.provider.configured || !regional?.checkoutAvailable))} onClick={onConfirm} className="h-10 rounded-xl bg-orange-600 px-4 text-xs font-bold text-white disabled:opacity-60">{saving ? "Processando..." : enterprise ? "Solicitar contato" : brazil ? "Criar cobrança" : "Continuar para o checkout"}</button></div></div></div>;
-}
-
-function Detail({ icon: Icon, label, value }: { icon: typeof CalendarDays; label: string; value: string }) { return <div className="flex items-center gap-3"><div className="flex size-8 items-center justify-center rounded-lg bg-white/10"><Icon className="size-3.5" /></div><div><p className="text-[9px] text-white/55">{label}</p><p className="text-[11px] font-bold">{value}</p></div></div>; }
-function PlanCard({ plan, displayPrice, current, onSelect }: { plan: SubscriptionPlan; displayPrice?: string; current: boolean; onSelect: (plan: SubscriptionPlan) => void }) {
-  const { formatCurrency } = useFormatters(); const t = useT(); const { locale } = useI18n(); const freeUnavailable = plan.id === "free" && !current; return <article className={`flex flex-col rounded-2xl border bg-white p-4 shadow-sm ${plan.highlighted ? "border-orange-300 ring-2 ring-orange-100" : "border-slate-200"}`}><div className="flex justify-between"><div><h3 className="text-sm font-black text-slate-950">{plan.name}</h3><p className="mt-1 min-h-8 text-[10px] leading-4 text-slate-500">{plan.description}</p></div><Building2 className="size-4 text-orange-500" /></div><p className="mt-4 border-b border-slate-100 pb-4 text-lg font-black text-slate-950">{plan.price === null ? t("billing.status.CONTACT") : plan.price === 0 ? t("billing.plan.free") : displayPrice ?? formatCurrency(plan.price, locale)}</p><ul className="my-4 flex-1 space-y-2.5">{plan.features.map((feature) => <li key={feature} className="flex gap-2 text-[10px] leading-4 text-slate-600"><Check className="size-3.5 shrink-0 text-green-500" />{feature}</li>)}</ul><button disabled={current || freeUnavailable} onClick={() => onSelect(plan)} className={`flex h-10 items-center justify-center gap-2 rounded-xl text-xs font-bold ${current ? "bg-orange-50 text-orange-700" : freeUnavailable ? "bg-slate-50 text-slate-400" : "border border-slate-200 text-slate-700 hover:bg-orange-50"}`}>{current ? <><CheckCircle2 className="size-3.5" />Plano atual</> : freeUnavailable ? t("billing.plan.included") : <>{plan.id === "enterprise" ? "Solicitar contato" : `Solicitar ${plan.name}`}<ArrowRight className="size-3.5" /></>}</button></article>; }
-function Notice({ tone, children }: { tone: "error" | "success"; children: ReactNode }) { return <div role={tone === "error" ? "alert" : "status"} className={`flex items-start gap-2 rounded-xl border px-4 py-3 text-xs font-semibold ${tone === "error" ? "border-red-200 bg-red-50 text-red-700" : "border-green-200 bg-green-50 text-green-700"}`}>{children}</div>; }
-
-function defaultDueDate() { return addDaysToBrazilDateKey(1); }
-function subscriptionStatus(status: SubscriptionOverview["status"]) { return ({ TRIAL: "TRIAL", ACTIVE: "ACTIVE", PENDING: "PENDING", PAST_DUE: "PAST_DUE", CANCELLED: "CANCELLED", CONTACT: "CONTACT" } as Record<string, string>)[status] ?? status; }
-function invoiceStatus(status: SubscriptionOverview["invoices"][number]["status"]) { return ({ PENDING: "PENDING", CONFIRMED: "CONFIRMED", RECEIVED: "RECEIVED", OVERDUE: "OVERDUE", REFUNDED: "REFUNDED" } as Record<string, string>)[status] ?? status; }

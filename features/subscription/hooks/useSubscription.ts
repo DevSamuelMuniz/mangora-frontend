@@ -1,6 +1,8 @@
+import { useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
+import { updateBillingAccess } from "@/lib/billing/access";
 import { apiRequest } from "@/lib/api/client";
 import type { SubscriptionOverview } from "@/types/subscription";
 
@@ -13,13 +15,29 @@ import type { SubscriptionOverview } from "@/types/subscription";
 export const subscriptionQueryKey = ["subscription"] as const;
 
 export function useSubscription(enabled = true) {
-    return useQuery<SubscriptionOverview, Error>({
+    const router = useRouter();
+    const queryClient = useQueryClient();
+    useEffect(() => {
+        const refresh = () => { void queryClient.invalidateQueries({ queryKey: subscriptionQueryKey }); };
+        window.addEventListener("mangora:subscription-payment-required", refresh);
+        return () => window.removeEventListener("mangora:subscription-payment-required", refresh);
+    }, [queryClient]);
+    const previousBlocked = useRef<boolean | undefined>(undefined);
+    const result = useQuery<SubscriptionOverview, Error>({
         enabled,
         refetchOnWindowFocus: true,
-        refetchInterval: (query) => query.state.data?.pendingPlan || query.state.data?.accessBlocked ? 15_000 : false,
+        refetchInterval: (query) => query.state.data?.pendingPlan || query.state.data?.accessBlocked ? 15_000 : 60_000,
+        retry: 1,
         queryKey: subscriptionQueryKey,
-        queryFn: () => apiRequest<SubscriptionOverview>("/subscription"),
+        queryFn: ({ signal }) => apiRequest<SubscriptionOverview>("/subscription", { signal }),
     });
+    useEffect(() => {
+        if (!result.data) return;
+        updateBillingAccess({ blocked: result.data.accessBlocked, blockAt: result.data.enforcement?.blockAt });
+        if (previousBlocked.current !== undefined && previousBlocked.current !== result.data.accessBlocked) router.refresh();
+        previousBlocked.current = result.data.accessBlocked;
+    }, [result.data, router]);
+    return result;
 }
 
 export function useSubscriptionRequest() {
@@ -68,10 +86,23 @@ export function useReconcileSubscription() {
     const router = useRouter();
     return useMutation<SubscriptionOverview, Error, void>({
         mutationFn: () => apiRequest("/subscription/reconcile", { method: "POST" }),
-        onSuccess: (overview) => {
+        onSuccess: async (overview) => {
+            await queryClient.cancelQueries({ queryKey: subscriptionQueryKey });
             queryClient.setQueryData(subscriptionQueryKey, overview);
             void queryClient.invalidateQueries();
             router.refresh();
         },
     });
+}
+
+export function useSubscriptionAccess(enabled = true) {
+    const result = useQuery<Pick<SubscriptionOverview, "accessBlocked" | "enforcement" | "billingDueAt" | "evaluatedAt">>({
+        queryKey: ["subscription", "access"], enabled, retry: 1,
+        refetchOnWindowFocus: true, refetchInterval: 30_000,
+        queryFn: ({ signal }) => apiRequest("/subscription/access", { signal }),
+    });
+    useEffect(() => {
+        if (enabled && result.data) updateBillingAccess({ blocked: result.data.accessBlocked, blockAt: result.data.enforcement?.blockAt });
+    }, [enabled, result.data]);
+    return result;
 }

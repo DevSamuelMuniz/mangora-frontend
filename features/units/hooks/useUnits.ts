@@ -1,3 +1,4 @@
+import { updateBillingAccess } from "@/lib/billing/access";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { apiRequest } from "@/lib/api/client";
@@ -57,9 +58,15 @@ export function useCreateUnit() {
 }
 
 export function useSwitchCompany() {
+    const queryClient = useQueryClient();
     return useMutation<void, Error, { membershipId: string }>({
         mutationFn: ({ membershipId }) =>
             apiRequest("/auth/switch-company", { method: "POST", body: JSON.stringify({ membershipId }) }),
+        onSuccess: async () => {
+            await queryClient.cancelQueries();
+            queryClient.clear();
+            updateBillingAccess(null);
+        },
     });
 }
 

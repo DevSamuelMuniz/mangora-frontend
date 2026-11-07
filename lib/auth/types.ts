@@ -40,6 +40,7 @@ export type AuthSession = {
     trialDaysRemaining: number;
     trialExpired: boolean;
     accessBlocked: boolean;
+    enforcement?: { blocked: boolean; blockAt: string | null };
   };
   security: {
     emailVerified: boolean;

@@ -1,5 +1,7 @@
 "use client";
 
+import { updateBillingAccess } from "@/lib/billing/access";
+
 import { ReactNode, useEffect, useState, useSyncExternalStore } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -39,6 +41,10 @@ export default function DashboardShell({
     () => window.localStorage.getItem(simpleModeKey) === "true",
     () => false,
   );
+
+  useEffect(() => {
+    updateBillingAccess({ blocked: session.company.accessBlocked, blockAt: session.company.enforcement?.blockAt });
+  }, [session.company.accessBlocked, session.company.enforcement?.blockAt]);
 
   useEffect(() => {
     setUserProperties({ logged_in: "true", role: session.membership.role, app: "mangora-web" });

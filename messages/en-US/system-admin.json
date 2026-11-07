@@ -210,7 +210,7 @@
     "unitsLimit": "Store limit",
     "trialEnds": "Trial period end",
     "billingTitle": "Subscription billing",
-    "billingHint": "Set when the store is warned and when the plan is closed. On the closing date the store becomes read-only until the payment is registered.",
+    "billingHint": "Set the due date and reminder start date. Access is blocked at midnight the following day in the company timezone.",
     "billingDueAt": "Billing date",
     "billingNoticeAt": "Warning date",
     "billingSuspendsAt": "Plan closing date",
@@ -221,7 +221,7 @@
     "billingTimelineEmpty": "No dates set — the store follows the system's automatic schedule.",
     "planDefaultPlaceholder": "Plan default",
     "limitsHint": "Leave a field empty to use the plan default. Price changes update the group's single subscription in Asaas.",
-    "billingDescription": "Adjust notice, due, and suspension dates for this subscription."
+    "billingDescription": "Update the due date and reminder date for this subscription."
   },
   "support": {
     "eyebrow": "Support console",

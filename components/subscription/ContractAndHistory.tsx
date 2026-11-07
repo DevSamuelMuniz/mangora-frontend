@@ -2,7 +2,7 @@
 
 import { useFormatters } from "@/i18n/provider";
 
-import { useT } from "@/i18n/provider";
+import { useI18n, useT } from "@/i18n/provider";
 
 import { ArrowDownRight, ArrowUpRight, FileClock, Minus, ScrollText } from "lucide-react";
 
@@ -22,13 +22,15 @@ const historyTone: Record<SubscriptionOverview["history"][number]["type"], strin
 
 function planName(id: string | null, overview: SubscriptionOverview) {
   if (!id) return null;
-  const found = overview.plans.find((plan) => plan.id === id.toLowerCase());
+  const found = overview.plans.find((plan) => plan.id.toUpperCase() === id.toUpperCase());
   return found?.name ?? id;
 }
 
 /** Contrato (versão congelada do catálogo) + extrato do histórico de assinatura. */
 export default function ContractAndHistory({ overview }: { overview: SubscriptionOverview }) {
-  const { formatDateTime, formatCurrency } = useFormatters();
+  const { formatDateTime } = useFormatters();
+  const { locale } = useI18n();
+  const money = (amount: number) => new Intl.NumberFormat(locale, { style: "currency", currency: overview.market?.currency ?? "BRL" }).format(amount);
   const t = useT();
   const snapshot = overview.contract.planSnapshot as null | { version?: number; plan?: string; name?: string } | undefined;
 
@@ -38,7 +40,7 @@ export default function ContractAndHistory({ overview }: { overview: Subscriptio
         <div className="flex items-center gap-2">
           <span className="flex size-8 items-center justify-center rounded-lg bg-orange-50 text-orange-600"><ScrollText className="size-4" /></span>
           <div>
-            <h2 className="text-sm font-black text-slate-950">Seu contrato</h2>
+            <h2 className="text-sm font-black text-slate-950">{t("billing.paymentFlow.contract")}</h2>
             <p className="mt-0.5 text-[10px] text-slate-500">{t("billing.contract.frozen")}</p>
           </div>
         </div>
@@ -65,9 +67,9 @@ export default function ContractAndHistory({ overview }: { overview: Subscriptio
                   </div>
                   {entry.toPrice !== null ? (
                     <p className="flex shrink-0 items-center gap-1 font-mono text-xs font-black tabular-nums text-slate-800">
-                      {entry.fromPrice !== null && <span className="text-slate-400 line-through decoration-slate-300">{formatCurrency(entry.fromPrice)}</span>}
+                      {entry.fromPrice !== null && <span className="text-slate-400 line-through decoration-slate-300">{money(entry.fromPrice)}</span>}
                       {Delta ? <Delta className="size-3.5 text-green-600" /> : <Minus className="size-3.5 text-slate-300" />}
-                      {formatCurrency(entry.toPrice)}
+                      {money(entry.toPrice)}
                     </p>
                   ) : null}
                 </li>

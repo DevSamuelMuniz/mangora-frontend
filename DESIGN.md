@@ -109,3 +109,19 @@ both in help text rather than silently scaling output to fit.
 ## Public knowledge guides
 
 The /guias content section extends the cream/green/orange marketing identity and existing BrandLogo. Bricolage headlines, a ruled subject index and a left chapter rail prioritize reading over dashboard cards. The rail stacks above the article on narrow screens. Guides currently have only a pt-BR edition, explicitly labeled, with canonical redirects from locale-prefixed duplicates. Content is server rendered; FAQ answers remain visible without JavaScript, with native anchors and a skip link. No new application controls or tokens are introduced.
+
+## Assinatura e pagamentos
+
+As superfícies de cobrança são produto administrativo. Preservam o verde #173d2b,
+laranja de ação e painéis brancos/slate existentes; a assinatura tem um painel
+verde para o contrato atual e um painel adjacente para acesso e vencimento. Os
+limites e preços vêm do catálogo regional da API, sem duplicar promessas de plano.
+A página separada de cobranças é uma lista paginada com totais por moeda, filtros
+e ações de 44px. Em telas estreitas, linhas e barras de ações empilham em ordem.
+
+`components/ui/ModalDialog.tsx` usa dialog nativo no top layer, com título,
+foco contido, restauração do foco, Escape, scroll interno e fechamento desabilitado
+durante gravação. É o proprietário dos novos diálogos de cobrança e dos editores
+administrativos migrados. Ícones Lucide continuam sem nova biblioteca visual.
+Selects e datas usam controles nativos com popup e teclado do sistema operacional.
+Não introduzir cores ou fontes novas para estados de pagamento.

@@ -11,6 +11,7 @@ export const metadata = {
 export default async function PdvPage() {
     const session = await getCurrentSession();
     if (!session) redirect("/login");
+    if (session.company.accessBlocked) redirect("/assinatura/cobrancas");
 
     return <PdvScreen session={session} />;
 }

@@ -1,5 +1,7 @@
 "use client";
 
+import { updateBillingAccess } from "@/lib/billing/access";
+
 import { useFormatters } from "@/i18n/provider";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
@@ -80,6 +82,10 @@ export default function PdvScreen({ session }: { session: AuthSession }) {
         scanRef.current?.focus();
     }, []);
     useEffect(() => {
+    updateBillingAccess({ blocked: session.company.accessBlocked, blockAt: session.company.enforcement?.blockAt });
+  }, [session.company.accessBlocked, session.company.enforcement?.blockAt]);
+
+  useEffect(() => {
         if (step !== "items") return;
         keepScanFocus();
         const onKey = (event: KeyboardEvent) => {

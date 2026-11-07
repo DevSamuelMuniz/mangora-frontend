@@ -149,7 +149,7 @@
     "unitsLimit": "Limite de lojas",
     "trialEnds": "Fim do período grátis",
     "billingTitle": "Cobrança da assinatura",
-    "billingHint": "Defina quando a loja é avisada e quando o plano é encerrado. Na data de encerramento a loja fica em somente leitura até o pagamento ser registado.",
+    "billingHint": "Defina o vencimento e o início dos avisos. A utilização é bloqueada às 00h do dia seguinte ao vencimento, no fuso da empresa.",
     "billingDueAt": "Data de cobrança",
     "billingNoticeAt": "Data de aviso",
     "billingSuspendsAt": "Data que encerra o plano",
@@ -160,7 +160,7 @@
     "billingTimelineEmpty": "Nenhuma data marcada — a loja segue a régua automática do sistema.",
     "planDefaultPlaceholder": "Padrão do plano",
     "limitsHint": "Deixe um campo vazio para usar o valor padrão do plano. Alterações de preço atualizam a subscrição única do grupo no Asaas.",
-    "billingDescription": "Ajuste as datas de aviso, vencimento e suspensão desta subscrição."
+    "billingDescription": "Ajuste o vencimento e a data de aviso desta subscrição."
   },
   "support": {
     "eyebrow": "Central de suporte",
