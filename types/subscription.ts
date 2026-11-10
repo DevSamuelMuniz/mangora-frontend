@@ -82,7 +82,7 @@ export type SubscriptionOverview = {
   market: null | { country: string; market: string; currency: string; locale: string; timezone: string };
   provider: { name: "ASAAS" | "PADDLE"; configured: boolean; environment: "sandbox" | "production" | "international"; customerConnected: boolean; subscriptionConnected: boolean };
   usage: Array<{ key: string; label: string; current: number; limit: number | null }>;
-  plans: Array<{ id: string; name: string; price: number | null; ownerLimit: number | null; employeeLimit: number | null; unitLimit: number | null; regionalPrice: null | { formatted: string; currency: string; amount: number; provider: "ASAAS" | "PADDLE"; checkoutAvailable: boolean } }>;
+  plans: Array<{ id: string; name: string; price: number | null; ownerLimit: number | null; employeeLimit: number | null; unitLimit: number | null; checkoutAmount?: number | null; regionalPrice: null | { formatted: string; currency: string; amount: number; provider: "ASAAS" | "PADDLE"; checkoutAvailable: boolean } }>;
   requests: Array<{ id: string; type: "PLAN_CHANGE" | "CANCELLATION" | "CONTACT"; targetPlan: string | null; status: string; requestedByName: string; createdAt: string }>;
   invoices: SubscriptionInvoice[];
 };

@@ -224,5 +224,12 @@
     "invalidFields": "Verifique os campos assinalados antes de guardar.",
     "blockedSince": "Bloqueado desde {date}, às 00h ({timezone}).",
     "contract": "O seu contrato"
+  },
+  "checkoutPage": {
+    "title": "Pagamento da subscrição",
+    "summary": "Resumo do plano",
+    "unavailable": "Este plano está indisponível para subscrição de momento.",
+    "awaitingLink": "A ligação de pagamento ainda não está disponível. Tente novamente dentro de instantes ou consulte Cobranças e pagamentos.",
+    "continue": "Continuar para {provider}"
   }
 }

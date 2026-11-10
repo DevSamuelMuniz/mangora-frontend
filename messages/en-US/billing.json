@@ -224,5 +224,12 @@
     "invalidFields": "Check the highlighted fields before saving.",
     "blockedSince": "Blocked since {date}, 00:00 ({timezone}).",
     "contract": "Your contract"
+  },
+  "checkoutPage": {
+    "title": "Subscription checkout",
+    "summary": "Plan summary",
+    "unavailable": "This plan is currently unavailable for checkout.",
+    "awaitingLink": "The payment link is still being prepared. Try again shortly or check Billing and payments.",
+    "continue": "Continue to {provider}"
   }
 }

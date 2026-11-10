@@ -45,3 +45,28 @@ test("admin cancellation requires a concrete confirmation", async ({ page }) => 
   await expect(dialog).not.toBeVisible();
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
 });
+
+test("paid plans navigate to checkout and open the Asaas invoice in the same tab", async ({ page }) => {
+  const paymentUrl = "https://example.test/asaas-payment";
+  let attempts = 0;
+  await page.route(paymentUrl, route => route.fulfill({ body: "Asaas payment" }));
+  await page.route("**/api/backend/subscription/checkout", route => {
+    attempts += 1;
+    expect(route.request().postDataJSON()).toMatchObject({ targetPlan: "PREMIUM", billingType: "BOLETO" });
+    return attempts === 1
+      ? route.fulfill({ status: 503, json: { message: "Asaas indisponível" } })
+      : route.fulfill({ json: { checkoutUrl: paymentUrl } });
+  });
+  await page.goto("/assinatura");
+  await page.locator('a[href="/assinatura/checkout/premium"]').click();
+  await expect(page).toHaveURL(/assinatura\/checkout\/premium$/);
+  await expect(page.getByRole("heading", { name: "Checkout da assinatura" })).toBeVisible();
+  await expect(page.getByRole("dialog")).toHaveCount(0);
+  await page.getByRole("combobox").selectOption("BOLETO");
+  const continueButton = page.getByRole("button", { name: "Continuar para ASAAS" });
+  await continueButton.click();
+  await expect(page.getByRole("alert")).toHaveText("Asaas indisponível");
+  await expect(page.getByRole("combobox")).toHaveValue("BOLETO");
+  await continueButton.click();
+  await expect(page).toHaveURL(paymentUrl);
+});

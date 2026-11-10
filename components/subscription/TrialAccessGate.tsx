@@ -13,7 +13,7 @@ export default function TrialAccessGate({ session }: { session: AuthSession }) {
   const [showTrialEnded, setShowTrialEnded] = useState(false);
   const { company, membership } = session;
   const canResolveBilling = membership.role === "OWNER";
-  const billingRoute = pathname === "/assinatura";
+  const billingRoute = pathname === "/assinatura" || pathname.startsWith("/assinatura/");
   useEffect(() => {
     if (!company.trialExpired || billingRoute) return;
     const key = `mangora:trial-ended:${company.id}:${company.trialEndsAt ?? "expired"}`;
@@ -29,7 +29,7 @@ export default function TrialAccessGate({ session }: { session: AuthSession }) {
     setShowTrialEnded(false);
   }
 
-  if (showTrialEnded) {
+  if (showTrialEnded && !billingRoute) {
     return (
       <div className="fixed inset-0 z-[100] flex items-center justify-center bg-[#123d2b]/80 p-4 backdrop-blur-md" role="dialog" aria-modal="true" aria-labelledby="trial-ended-title">
         <div className="relative w-full max-w-xl overflow-hidden rounded-[2rem] border-2 border-[#123d2b] bg-white p-6 shadow-[10px_10px_0_#ffb21a] sm:p-9">

@@ -51,8 +51,9 @@ SystemAdminGuard. O frontend apresenta o estado calculado pela API.
 | Modal | components/ui/ModalDialog.tsx | dialog nativo + foco circular | billing / admin editor | test/billing-browser/billing.spec.ts |
 | Select/Listbox | HTML select | DESIGN.md; filtros de cobrança | native | browser desktop/mobile |
 | Date | HTML input date | DESIGN.md; checkout e editor admin | native | validação antes da contratação |
-| Form | ModalDialog + validação antes da mutação | servidor e atributos dos campos | checkout / admin editor | testes e build |
+| Form | Formulário de checkout ou ModalDialog + validação antes da mutação | servidor e atributos dos campos | checkout / admin editor | testes e build |
 
+- Planos pagos levam a `/assinatura/checkout/[plan]`. Ao receber o link, o checkout abre o pagamento do provedor na mesma aba.
 - A página de assinatura navega para `/assinatura/cobrancas`; o histórico completo
   local é paginado e o portal Paddle permite consultar o histórico do provedor.
 - Filtros e página ficam na URL. Totais são agrupados por moeda, sem converter ou
