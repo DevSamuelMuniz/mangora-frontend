@@ -88,7 +88,8 @@ Printed paper uses rectangular pages with no decorative frame.
 ## Components
 
 `components/printing/PrintSettings.tsx` owns printer selection, connection feedback,
-automatic receipt and PDF-download controls for both flows. `lib/printing` owns
+protocol, media, test page, automatic receipt and PDF-download controls. Show RAW
+capabilities only for a configured receipt queue. `lib/printing` owns
 preferences, local transport and physical sizing. Use native labeled fields,
 visible focus, busy/disabled states, inline errors and polite status regions.
 Lucide icons remain the existing icon family. Loading animation communicates work;

@@ -11,7 +11,7 @@ type Props = {
   title: string;
   children: ReactNode;
   onClose: () => void;
-  onConfirm: () => Promise<void>;
+  onConfirm: (pdfOnly: boolean) => Promise<void>;
   canConfirm?: boolean;
 };
 
@@ -34,11 +34,11 @@ export default function PrintDialog({ kind, title, children, onClose, onConfirm,
     return () => { element?.close(); document.body.style.overflow = previousOverflow; previous?.focus(); };
   }, []);
 
-  async function confirm() {
-    if (lock.current || !canConfirm || missingPrinter) return;
+  async function confirm(pdfOnly = false) {
+    if (lock.current || !canConfirm || (missingPrinter && !pdfOnly)) return;
     lock.current = true;
     setBusy(true); setError("");
-    try { await onConfirm(); onClose(); }
+    try { await onConfirm(pdfOnly); onClose(); }
     catch (cause) { setError(cause instanceof Error ? cause.message : t("labels.printError")); }
     finally { lock.current = false; setBusy(false); }
   }
@@ -66,6 +66,7 @@ export default function PrintDialog({ kind, title, children, onClose, onConfirm,
       <div className="min-h-5 text-xs" aria-live="polite">{error ? <p role="alert" className="font-semibold text-red-700">{error}</p> : missingPrinter ? <p className="text-amber-800">{t("labels.dialog.selectPrinterHint")}</p> : busy ? <p role="status" className="text-slate-600">{t("labels.printing")}</p> : null}</div>
       <div className="mt-3 flex flex-wrap justify-end gap-3">
         <button type="button" disabled={busy} onClick={onClose} className="h-11 cursor-pointer rounded-xl border border-slate-300 px-4 text-sm font-bold hover:bg-slate-100 focus-visible:outline-2 focus-visible:outline-orange-600 disabled:cursor-wait disabled:opacity-50">{t("labels.dialog.cancel")}</button>
+        <button type="button" disabled={busy || !canConfirm} onClick={() => void confirm(true)} className="h-11 cursor-pointer rounded-xl border border-slate-300 px-4 text-sm font-bold hover:bg-slate-100 focus-visible:outline-2 focus-visible:outline-orange-600 disabled:cursor-not-allowed disabled:opacity-50">{t("labels.downloadPdf")}</button>
         <button type="button" disabled={busy || !canConfirm || missingPrinter} aria-busy={busy} onClick={() => void confirm()} className="flex h-11 min-w-48 cursor-pointer items-center justify-center gap-2 rounded-xl bg-orange-600 px-4 text-sm font-bold text-white hover:bg-orange-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600 disabled:cursor-not-allowed disabled:opacity-50">{busy ? <LoaderCircle className="size-4 animate-spin" /> : <Printer className="size-4" />}{t("labels.dialog.confirm")}</button>
       </div>
     </footer>

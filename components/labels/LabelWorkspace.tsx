@@ -6,8 +6,9 @@ import { Barcode, Check, LoaderCircle, Printer, Ruler, Search, Trash2 } from "lu
 import { useProducts } from "@/features/products/hooks/useProducts";
 import { useFormatters, useT } from "@/i18n/provider";
 import { barcodeFits, LABEL_CSS, LABEL_SIZES, labelCode, labelMarkup, MAX_LABELS, validLabelSize, type LabelItem, type LabelPaper } from "@/lib/labels";
-import { buildLabelPdf } from "@/lib/printing/label-pdf";
 import { submitPrintJob } from "@/lib/printing/service";
+import { printErrorMessage, printResultMessage } from "@/lib/printing/messages";
+import { usePrintScope } from "@/lib/printing/scope";
 import { savePrintPreferences } from "@/lib/printing/preferences";
 import { usePrintPreferences } from "@/lib/printing/use-print-preferences";
 import PrintDialog from "@/components/printing/PrintDialog";
@@ -18,6 +19,7 @@ const panelClass = "rounded-2xl border border-slate-200 bg-white p-4 sm:p-5";
 
 export default function LabelWorkspace() {
   const t = useT();
+  const scope = usePrintScope();
   const { formatCurrency } = useFormatters();
   const { data: products = [], isLoading, error, refetch } = useProducts();
   const [search, setSearch] = useState("");
@@ -64,7 +66,7 @@ export default function LabelWorkspace() {
   }
 
   function persist(patch: Parameters<typeof savePrintPreferences>[0]) {
-    try { savePrintPreferences(patch); }
+    try { savePrintPreferences(patch, scope); }
     catch { setPrintStatus(t("labels.settingsError")); }
   }
   function changeDimension(axis: "width" | "height", value: string) {
@@ -82,20 +84,20 @@ export default function LabelWorkspace() {
     });
   }
 
-  async function handlePrint() {
+  async function handlePrint(pdfOnly: boolean) {
     if (!canPrint) return;
     setPrinting(true);
     setPrintError("");
     setPrintStatus("");
     try {
-      const job = buildLabelPdf(selected, size, paper, preferences.printerProfile);
-      try { savePrintPreferences({ labelWidth: size.width, labelHeight: size.height, labelPaper: paper }); }
+      try { savePrintPreferences({ labelWidth: size.width, labelHeight: size.height, labelPaper: paper }, scope); }
       catch { setPrintStatus(t("labels.settingsError")); }
-      await submitPrintJob(job);
-      setPrintStatus(t("labels.printSubmitted"));
-    } catch {
-      setPrintError(t("labels.printError"));
-      throw new Error(t("labels.printError"));
+      const result = await submitPrintJob({ kind: "label", items: selected, size, paper }, { scope, pdfOnly });
+      setPrintStatus(printResultMessage(t, result));
+    } catch (cause) {
+      const message = printErrorMessage(t, cause);
+      setPrintError(message);
+      throw new Error(message, { cause });
     } finally {
       setPrinting(false);
     }

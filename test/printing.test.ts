@@ -1,19 +1,21 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { buildLabelPdf } from "@/lib/printing/label-pdf";
-import { buildReceiptPdf, claimAutomaticReceipt } from "@/lib/pdv/print";
+import { receiptLayout } from "@/lib/printing/receipt";
+import { renderReceiptPdf } from "@/lib/printing/receipt-pdf";
+import { printerProfile } from "@/lib/printing/preferences";
 import { readPrintPreferences, savePrintPreferences } from "@/lib/printing/preferences";
-import { validSigningRequest } from "@/lib/printing/signing";
-import { submitPrintJob } from "@/lib/printing/service";
+import { QzTrayAdapter } from "@/lib/printing/qz-tray-adapter";
+import { PrintService, submitPrintJob } from "@/lib/printing/service";
 import type { Sale } from "@/types/sale";
 
 const qz = vi.hoisted(() => ({
   websocket: { isActive: vi.fn(() => true), connect: vi.fn() },
   security: { setCertificatePromise: vi.fn(), setSignatureAlgorithm: vi.fn(), setSignaturePromise: vi.fn() },
-  api: { setSha256Type: vi.fn() }, configs: { create: vi.fn(() => ({})) }, print: vi.fn().mockResolvedValue(undefined),
+  printers: { find: vi.fn().mockResolvedValue(["Thermal"]) }, configs: { create: vi.fn(() => ({})) }, print: vi.fn().mockResolvedValue(undefined),
 }));
 vi.mock("qz-tray", () => ({ default: qz }));
 const product = { id: "p1", name: "SPACE", code: "000000000005", price: "R$ 20,00", quantity: 2 };
-const sale = { id: "sale-print-test", code: "V001", createdAt: "2026-11-02T12:00:00Z", customerName: "Balcão", paymentMethod: "CASH", subtotal: 20, total: 20, discount: 0, items: [{ productName: "SPACE", quantity: 1, unitPrice: 20, subtotal: 20 }] } as Sale;
+const sale = { id: "sale-print-test", companyId: "one", status: "COMPLETED", code: "V001", createdAt: "2026-11-02T12:00:00Z", customerName: "Balcão", paymentMethod: "CASH", subtotal: 20, total: 20, discount: 0, items: [{ productName: "SPACE", quantity: 1, unitPrice: 20, subtotal: 20 }] } as Sale;
 
 beforeEach(() => { localStorage.clear(); vi.clearAllMocks(); qz.print.mockResolvedValue(undefined); });
 
@@ -53,8 +55,10 @@ describe("physical printing", () => {
     expect(() => buildLabelPdf([{ ...product, code: "1".repeat(32) }], { width: 30, height: 20 }, "roll")).toThrow();
   });
   it.each([58, 80] as const)("sizes a %d mm receipt to its content and wraps long names", width => {
-    const short = buildReceiptPdf(sale, null, { received: 30, change: 10 }, "standard", width);
-    const long = buildReceiptPdf({ ...sale, items: Array.from({ length: 80 }, () => ({ ...sale.items[0], productName: "Produto muito longo ".repeat(8) })) }, null, undefined, "bold", width);
+    const profile = printerProfile({ ...readPrintPreferences(), receiptWidth: width }, "receipt");
+    const short = renderReceiptPdf(receiptLayout({ kind: "receipt", sale, company: null, change: { received: 30, change: 10 }, mode: "standard" }), profile);
+    const longSale = { ...sale, items: Array.from({ length: 80 }, () => ({ ...sale.items[0], productName: "Produto muito longo ".repeat(8) })) };
+    const long = renderReceiptPdf(receiptLayout({ kind: "receipt", sale: longSale, company: null, mode: "bold" }), profile);
     expect(short.pdf.internal.pageSize.getWidth()).toBeCloseTo(width);
     expect(short.height).toBeLessThan(200);
     expect(long.pdf.getNumberOfPages()).toBeGreaterThan(1);
@@ -75,48 +79,54 @@ describe("physical printing", () => {
   });
   it("submits a vector PDF with zero margins, explicit paper size and no scaling", async () => {
     savePrintPreferences({ transport: "qz", labelPrinter: "Thermal", savePdf: false });
-    await submitPrintJob(buildLabelPdf([product], { width: 50, height: 30 }, "roll"));
+    await submitPrintJob({ kind: "label", items: [product], size: { width: 50, height: 30 }, paper: "roll" });
     expect(qz.configs.create).toHaveBeenCalledWith("Thermal", expect.objectContaining({ units: "mm", size: { width: 50, height: 30 }, margins: 0, scaleContent: false, rasterize: false, copies: 1 }));
     expect(qz.print).toHaveBeenCalledOnce();
     expect(qz.print.mock.calls[0][1]).toEqual([expect.objectContaining({ format: "pdf", flavor: "base64", data: expect.stringMatching(/^JVBERi0/) })]);
-    const payload = JSON.stringify({ call: "printers.find", timestamp: Date.now() });
-    const hash = qz.api.setSha256Type.mock.calls[0][0] as (value: string) => Promise<string>;
-    const sign = qz.security.setSignaturePromise.mock.calls[0][0] as (value: string) => Promise<string>;
-    const fetchMock = vi.fn().mockResolvedValueOnce(new Response("public-certificate")).mockResolvedValueOnce(new Response("signed-hash"));
-    vi.stubGlobal("fetch", fetchMock);
-    try {
-      const digest = await hash(payload);
-      expect(digest).toMatch(/^[a-f0-9]{64}$/);
-      expect(await sign(digest)).toBe("signed-hash");
-      expect(fetchMock).toHaveBeenLastCalledWith("/api/printing/sign", expect.objectContaining({ method: "POST", body: payload }));
-    } finally { vi.unstubAllGlobals(); }
+    expect(await qz.security.setCertificatePromise.mock.calls[0][0]()).toBe("");
+    expect(await qz.security.setSignaturePromise.mock.calls[0][0]("untrusted request")).toBe("");
   });
-  it("saves the PDF and never retries a rejected spooler submission", async () => {
-    savePrintPreferences({ transport: "qz", labelPrinter: "Thermal" });
-    const job = buildLabelPdf([product], { width: 50, height: 30 }, "roll");
-    const save = vi.spyOn(job.pdf, "save").mockReturnValue(job.pdf);
+  it("classifies an ambiguous rejection and never retries", async () => {
+    savePrintPreferences({ transport: "qz", labelPrinter: "Thermal", savePdf: false });
+    const service = new PrintService();
     qz.print.mockRejectedValueOnce(new Error("connection-lost"));
-    await expect(submitPrintJob(job)).rejects.toThrow("connection-lost");
-    expect(save).toHaveBeenCalledWith(job.filename);
+    await expect(service.submit({ kind: "label", items: [product], size: { width: 50, height: 30 }, paper: "roll" })).rejects.toMatchObject({ code: "unknown" });
     expect(qz.print).toHaveBeenCalledOnce();
+    expect(service.history("")[0]).toMatchObject({ state: "unknown", reason: "unknown" });
   });
-  it("does not submit without a selected printer", async () => {
+  it("stops later pages and records unknown after a partial submission", async () => {
+    savePrintPreferences({ transport: "qz", labelPrinter: "Thermal", savePdf: false });
+    const service = new PrintService();
+    qz.print.mockResolvedValueOnce(undefined).mockRejectedValueOnce(new Error("Request blocked"));
+    await expect(service.submit({ kind: "label", items: [{ ...product, quantity: 70 }], size: { width: 50, height: 30 }, paper: "continuous" })).rejects.toMatchObject({ code: "unknown" });
+    expect(qz.print).toHaveBeenCalledTimes(2);
+    expect(service.history("")[0].state).toBe("unknown");
+  });
+  it("does not submit without a selected or available printer", async () => {
     savePrintPreferences({ transport: "qz", savePdf: false });
-    await expect(submitPrintJob(buildReceiptPdf(sale, null))).rejects.toThrow("printer-not-selected");
+    const receipt = { kind: "receipt", sale, company: null, mode: "standard" } as const;
+    await expect(submitPrintJob(receipt)).rejects.toMatchObject({ code: "printer-missing" });
+    savePrintPreferences({ receiptPrinter: "Nonexistent" });
+    await expect(submitPrintJob(receipt)).rejects.toMatchObject({ code: "printer-missing" });
     expect(qz.print).not.toHaveBeenCalled();
   });
-  it("claims automatic printing once per sale", () => {
-    expect(claimAutomaticReceipt(sale.id)).toBe(true);
-    expect(claimAutomaticReceipt(sale.id)).toBe(false);
+  it("sends RAW bytes over the local bridge with explicit copies and capabilities", async () => {
+    qz.websocket.isActive.mockReturnValueOnce(false);
+    qz.websocket.connect.mockResolvedValueOnce(undefined);
+    savePrintPreferences({ transport: "qz", receiptPrinter: "Thermal", receiptProtocol: "escpos", receiptCopies: 2, receiptCutter: true, receiptCut: true, receiptQr: true });
+    const result = await submitPrintJob({ kind: "test", target: "receipt" });
+    expect(result).toBe("submitted");
+    expect(qz.websocket.connect).toHaveBeenCalledWith({
+      host: "localhost", usingSecure: true, retries: 0,
+      port: { secure: [8181, 8282, 8383, 8484], insecure: [] },
+    });
+    expect(qz.print).toHaveBeenCalledOnce();
+    expect(qz.print.mock.calls[0][1]).toEqual([{ type: "raw", format: "command", flavor: "hex", data: expect.stringMatching(/^x1bx40.*x1dx56x00x1bx40.*x1dx56x00$/) }]);
   });
-  it("only signs recent printer discovery and inline PDF requests", () => {
-    const timestamp = Date.now();
-    expect(validSigningRequest({ call: "printers.find", timestamp })).toBe(true);
-    const payload = { call: "print", timestamp, params: { data: [{ type: "pixel", format: "pdf", flavor: "base64", data: "JVBERi0x" }] } };
-    expect(validSigningRequest(payload)).toBe(true);
-    expect(validSigningRequest({ ...payload, timestamp: timestamp - 120_000 })).toBe(false);
-    expect(validSigningRequest({ ...payload, call: "file.write" })).toBe(false);
-    expect(validSigningRequest({ ...payload, params: { data: [{ type: "raw", data: "commands" }] } })).toBe(false);
-    expect(validSigningRequest({ ...payload, params: { data: [{ type: "pixel", format: "pdf", flavor: "file", data: "file:///secret" }] } })).toBe(false);
+  it.each([["User denied request", "cancelled"], ["out of paper", "out-of-paper"], ["unsupported format", "incompatible"]])("classifies driver response %s", async (message, code) => {
+    const adapter = new QzTrayAdapter();
+    const profile = printerProfile({ ...readPrintPreferences(), receiptPrinter: "Thermal" }, "receipt");
+    qz.print.mockRejectedValueOnce(new Error(message));
+    await expect(adapter.print({ format: "escpos", bytes: Uint8Array.of(27, 64), filename: "test" }, profile)).rejects.toMatchObject({ code });
   });
 });

@@ -1,4 +1,5 @@
 import type { NextConfig } from "next";
+import { QZ_HOST, QZ_SECURE_PORTS } from "./lib/printing/qz-connection";
 
 const nextConfig: NextConfig = {
   poweredByHeader: false,
@@ -10,6 +11,7 @@ const nextConfig: NextConfig = {
   },
   async headers() {
     const isDevelopment = process.env.NODE_ENV !== "production";
+    const localPrinting = QZ_SECURE_PORTS.map(port => `wss://${QZ_HOST}:${port}`).join(" ");
     // Vercel Toolbar resources: https://vercel.com/docs/vercel-toolbar/managing-toolbar#using-a-content-security-policy
     const contentSecurityPolicy = [
       "default-src 'self'",
@@ -17,8 +19,8 @@ const nextConfig: NextConfig = {
       "style-src 'self' 'unsafe-inline' https://vercel.live",
       "img-src 'self' data: blob: https:",
       "font-src 'self' data: https://vercel.live https://assets.vercel.com",
-      "connect-src 'self' https://api.mangora.com.br https://www.google-analytics.com https://region1.google-analytics.com https://vercel.live wss://ws-us3.pusher.com",
-      "frame-src 'self' https://vercel.live",
+      `connect-src 'self' https://api.mangora.com.br https://www.google-analytics.com https://region1.google-analytics.com https://vercel.live wss://ws-us3.pusher.com ${localPrinting}`,
+      "frame-src 'self' blob: https://vercel.live",
       "frame-ancestors 'none'",
       "base-uri 'self'",
       "form-action 'self'",

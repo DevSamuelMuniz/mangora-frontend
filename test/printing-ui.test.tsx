@@ -5,15 +5,13 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import I18nProvider from "@/i18n/provider";
 import DoneStep from "@/components/pdv/DoneStep";
 import PrintSettings from "@/components/printing/PrintSettings";
-import { printReceipt } from "@/lib/pdv/print";
-import { findPrinters } from "@/lib/printing/service";
+import { findPrinters, submitPrintJob } from "@/lib/printing/service";
 import { savePrintPreferences } from "@/lib/printing/preferences";
 import labels from "@/messages/pt-BR/labels.json";
 import pdv from "@/messages/pt-BR/pdv.json";
 import type { Sale } from "@/types/sale";
 
-vi.mock("@/lib/pdv/print", async original => ({ ...await original<typeof import("@/lib/pdv/print")>(), printReceipt: vi.fn().mockResolvedValue(undefined) }));
-vi.mock("@/lib/printing/service", () => ({ findPrinters: vi.fn().mockResolvedValue(["Thermal 80"]), submitPrintJob: vi.fn() }));
+vi.mock("@/lib/printing/service", () => ({ findPrinters: vi.fn().mockResolvedValue(["Thermal 80"]), submitPrintJob: vi.fn().mockResolvedValue("submitted") }));
 afterEach(() => { cleanup(); localStorage.clear(); vi.clearAllMocks(); });
 const sale = { id: "automatic-ui", code: "V001", total: 20, customerName: "Balcão", paymentMethod: "CASH", createdAt: "2026-11-03T12:00:00Z", items: [] } as unknown as Sale;
 function Provider({ children }: { children: React.ReactNode }) { return <I18nProvider locale="pt-BR" messages={{ labels, pdv, sales: { details: { total: "Total" } }, paymentMethods: { CASH: "Dinheiro" } }}>{children}</I18nProvider>; }
@@ -24,10 +22,10 @@ describe("printing workflow", () => {
     render(<Provider><DoneStep sale={{ ...sale, id: "manual-preview" }} company={null} onFinish={vi.fn()} /></Provider>);
     fireEvent.click(screen.getByRole("button", { name: "Imprimir cupom" }));
     const dialog = screen.getByRole("dialog", { name: labels.dialog.receiptTitle });
-    expect(printReceipt).not.toHaveBeenCalled();
+    expect(submitPrintJob).not.toHaveBeenCalled();
     fireEvent.click(within(dialog).getByRole("radio", { name: labels.dialog.mode["extra-bold"] }));
     fireEvent.click(within(dialog).getByRole("button", { name: labels.dialog.confirm }));
-    await waitFor(() => expect(printReceipt).toHaveBeenCalledWith(expect.objectContaining({ id: "manual-preview" }), null, undefined, "extra-bold"));
+    await waitFor(() => expect(submitPrintJob).toHaveBeenCalledWith(expect.objectContaining({ kind: "receipt", sale: expect.objectContaining({ id: "manual-preview" }), company: null, mode: "extra-bold" }), { scope: "", automatic: false, pdfOnly: false }));
   });
   it("applies and persists the Knup media profile", () => {
     render(<Provider><PrintSettings kind="label" /></Provider>);
@@ -38,23 +36,23 @@ describe("printing workflow", () => {
   });
   it("dispatches automatic receipts once even under Strict Mode", async () => {
     render(<StrictMode><Provider><DoneStep sale={sale} company={null} onFinish={vi.fn()} /></Provider></StrictMode>);
-    await waitFor(() => expect(printReceipt).toHaveBeenCalledOnce());
+    await waitFor(() => expect(submitPrintJob).toHaveBeenCalledOnce());
     await waitFor(() => expect(screen.getByText(labels.printSubmitted)).toBeTruthy());
   });
   it("honors the preference to disable automatic printing", async () => {
     savePrintPreferences({ autoReceipt: false });
     render(<Provider><DoneStep sale={{ ...sale, id: "automatic-off" }} company={null} onFinish={vi.fn()} /></Provider>);
     await Promise.resolve();
-    expect(printReceipt).not.toHaveBeenCalled();
+    expect(submitPrintJob).not.toHaveBeenCalled();
   });
   it("keeps the completed sale visible when automatic printing fails", async () => {
-    vi.mocked(printReceipt).mockRejectedValueOnce(new Error("offline"));
+    vi.mocked(submitPrintJob).mockRejectedValueOnce(new Error("offline"));
     const finish = vi.fn();
     render(<Provider><DoneStep sale={{ ...sale, id: "automatic-failure" }} company={null} onFinish={finish} /></Provider>);
     await waitFor(() => expect(screen.getByRole("alert").textContent).toBe(labels.printError));
     expect(screen.getByText("Venda V001")).toBeTruthy();
     expect(finish).not.toHaveBeenCalled();
-    expect(printReceipt).toHaveBeenCalledOnce();
+    expect(submitPrintJob).toHaveBeenCalledOnce();
   });
   it("discovers printers and saves the selected local device", async () => {
     savePrintPreferences({ transport: "qz" });

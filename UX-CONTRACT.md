@@ -14,17 +14,20 @@ compartilhadas e por `ARCHITECTURE.md`.
   impressora, método e automação mantém o mesmo significado em Etiquetas e PDV.
 - Fonte do comportamento: solicitação do proprietário de salvar e imprimir
   automaticamente, sem o intervalo excessivo na bobina; detalhes em docs/printing.md.
-- Configurações são locais ao navegador e ficam salvas automaticamente. Nenhuma
+- Configurações são locais ao navegador, separadas por empresa e salvas automaticamente. Nenhuma
   seleção de produtos ou dado de cliente é persistido por essa preferência.
 - Ao registrar a venda, iniciar uma tentativa de cupom se autoReceipt estiver ativa.
   Não repetir automaticamente uma tentativa ambígua. A ação manual permite reimprimir.
-- Só informar envio ao spooler; não alegar impressão física concluída.
+- Mostrar separadamente envio ao spooler, solicitação de diálogo do navegador,
+  download de PDF, recusa local e envio indeterminado. O teste usa a mesma fila.
+  O download explícito fica disponível sem a ponte local.
 - Na lista de vendas, reimprimir é uma ação manual por venda concluída, disponível
   na linha e nos detalhes. Essas ações abrem `PrintDialog`, que também prepara
   etiquetas e cupons manuais do PDV. Consultar a venda e a empresa ao confirmar;
-  reutilizar `printReceipt` e as preferências locais do PDV. Abrir os detalhes
+  reutilizar `PrintService` e as preferências locais do PDV. Abrir os detalhes
   ou o modal não dispara impressão/download. Uma falha não deve provocar reenvio
-  automático. O envio só ocorre em “Confirmar impressão”. Enquanto envia,
+  automático. O envio manual ocorre em “Confirmar impressão” ou “Imprimir teste”.
+  “Baixar PDF” gera o arquivo. Enquanto envia o documento preparado,
   bloquear alterações e fechamento para evitar uma tentativa ambígua.
 - O modal mostra resumo do documento, perfil e fila local, papel, método e
   preferências persistidas. Em etiquetas, permitir medidas, papel e quantidades

@@ -5,7 +5,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import SalesCatalog from "@/components/sales/SalesCatalog";
 import I18nProvider from "@/i18n/provider";
 import { apiRequest } from "@/lib/api/client";
-import { printReceipt } from "@/lib/pdv/print";
+import { submitPrintJob } from "@/lib/printing/service";
 import sales from "@/messages/pt-BR/sales.json";
 import labels from "@/messages/pt-BR/labels.json";
 import common from "@/messages/pt-BR/common.json";
@@ -20,14 +20,14 @@ const company = { tradeName: "Loja Mangora", document: "123" };
 vi.mock("@/features/sales/hooks/useSales", () => ({ useSales: () => ({ data: [sale, cancelled], isLoading: false }), useCancelSale: () => ({ isPending: false }), useReturnSaleItems: () => ({ isPending: false }) }));
 vi.mock("@/components/ui/toast", () => ({ useToast: () => spies }));
 vi.mock("@/lib/api/client", () => ({ apiRequest: vi.fn() }));
-vi.mock("@/lib/pdv/print", () => ({ printReceipt: vi.fn() }));
+vi.mock("@/lib/printing/service", () => ({ submitPrintJob: vi.fn() }));
 beforeEach(() => {
   vi.clearAllMocks();
   localStorage.clear();
   vi.spyOn(HTMLDialogElement.prototype, "showModal").mockImplementation(function (this: HTMLDialogElement) { this.open = true; });
   vi.spyOn(HTMLDialogElement.prototype, "close").mockImplementation(function (this: HTMLDialogElement) { this.open = false; });
   vi.mocked(apiRequest).mockImplementation(async path => path === "/companies/current" ? company : sale);
-  vi.mocked(printReceipt).mockResolvedValue(undefined);
+  vi.mocked(submitPrintJob).mockResolvedValue("submitted");
 });
 afterEach(() => { cleanup(); vi.restoreAllMocks(); });
 function confirmPrint() { fireEvent.click(within(screen.getByRole("dialog", { name: "Imprimir notinha da venda V001" })).getByRole("button", { name: labels.dialog.confirm })); }
@@ -38,7 +38,7 @@ describe("receipt reprinting from recorded sales", () => {
     setup();
     fireEvent.click(screen.getByRole("button", { name: "Imprimir notinha da venda V001" }));
     fireEvent.click(within(screen.getByRole("dialog", { name: "Imprimir notinha da venda V001" })).getByRole("button", { name: labels.dialog.cancel }));
-    expect(printReceipt).not.toHaveBeenCalled();
+    expect(submitPrintJob).not.toHaveBeenCalled();
     expect(apiRequest).not.toHaveBeenCalled();
   });
   it("requires an explicit local printer for direct printing", () => {
@@ -48,15 +48,15 @@ describe("receipt reprinting from recorded sales", () => {
     const dialog = screen.getByRole("dialog", { name: "Imprimir notinha da venda V001" });
     expect((within(dialog).getByRole("button", { name: labels.dialog.confirm }) as HTMLButtonElement).disabled).toBe(true);
     expect(within(dialog).getByText(labels.dialog.selectPrinterHint)).toBeTruthy();
-    expect(printReceipt).not.toHaveBeenCalled();
+    expect(submitPrintJob).not.toHaveBeenCalled();
   });
   it("loads the recorded sale and company, then uses the existing receipt printer", async () => {
     setup();
     fireEvent.click(screen.getByRole("button", { name: "Imprimir notinha da venda V001" }));
-    expect(printReceipt).not.toHaveBeenCalled();
+    expect(submitPrintJob).not.toHaveBeenCalled();
     expect(apiRequest).not.toHaveBeenCalled();
     confirmPrint();
-    await waitFor(() => expect(printReceipt).toHaveBeenCalledWith(sale, company, undefined, "standard"));
+    await waitFor(() => expect(submitPrintJob).toHaveBeenCalledWith({ kind: "receipt", sale, company, mode: "standard" }, { scope: "", pdfOnly: false }));
     expect(apiRequest).toHaveBeenCalledWith("/sales/sale-1");
     expect(apiRequest).toHaveBeenCalledWith("/companies/current");
     expect(spies.info).toHaveBeenCalledWith(labels.printSubmitted);
@@ -68,31 +68,31 @@ describe("receipt reprinting from recorded sales", () => {
     const dialog = screen.getByRole("dialog", { name: "Venda V001" });
     fireEvent.click(within(dialog).getByRole("button", { name: "Imprimir notinha" }));
     confirmPrint();
-    await waitFor(() => expect(printReceipt).toHaveBeenCalledOnce());
+    await waitFor(() => expect(submitPrintJob).toHaveBeenCalledOnce());
   });
   it("blocks concurrent submissions and allows a later explicit reprint", async () => {
-    let resolve!: () => void;
-    vi.mocked(printReceipt).mockReturnValueOnce(new Promise<void>(done => { resolve = done; }));
+    let resolve!: (result: "submitted") => void;
+    vi.mocked(submitPrintJob).mockReturnValueOnce(new Promise<"submitted">(done => { resolve = done; }));
     setup();
     const button = screen.getByRole("button", { name: "Imprimir notinha da venda V001" });
     fireEvent.click(button);
     confirmPrint();
     fireEvent.click(within(screen.getByRole("dialog", { name: "Imprimir notinha da venda V001" })).getByRole("button", { name: labels.dialog.confirm }));
-    await waitFor(() => expect(printReceipt).toHaveBeenCalledOnce());
+    await waitFor(() => expect(submitPrintJob).toHaveBeenCalledOnce());
     expect((button as HTMLButtonElement).disabled).toBe(true);
-    resolve();
+    resolve("submitted");
     await waitFor(() => expect((button as HTMLButtonElement).disabled).toBe(false));
     fireEvent.click(button);
     confirmPrint();
-    await waitFor(() => expect(printReceipt).toHaveBeenCalledTimes(2));
+    await waitFor(() => expect(submitPrintJob).toHaveBeenCalledTimes(2));
   });
   it("keeps the sale and displays an error without automatically retrying", async () => {
-    vi.mocked(printReceipt).mockRejectedValueOnce(new Error("offline"));
+    vi.mocked(submitPrintJob).mockRejectedValueOnce(new Error("offline"));
     setup();
     fireEvent.click(screen.getByRole("button", { name: "Imprimir notinha da venda V001" }));
     confirmPrint();
     await waitFor(() => expect(within(screen.getByRole("dialog", { name: "Imprimir notinha da venda V001" })).getByRole("alert").textContent).toBe(labels.printError));
-    expect(printReceipt).toHaveBeenCalledOnce();
+    expect(submitPrintJob).toHaveBeenCalledOnce();
     expect(within(screen.getByRole("dialog", { name: "Imprimir notinha da venda V001" })).getByText("V001")).toBeTruthy();
   });
   it("does not print a sale cancelled since the list was loaded", async () => {
@@ -101,6 +101,6 @@ describe("receipt reprinting from recorded sales", () => {
     fireEvent.click(screen.getByRole("button", { name: "Imprimir notinha da venda V001" }));
     confirmPrint();
     await waitFor(() => expect(within(screen.getByRole("dialog", { name: "Imprimir notinha da venda V001" })).getByRole("alert").textContent).toBe(sales.printUnavailable));
-    expect(printReceipt).not.toHaveBeenCalled();
+    expect(submitPrintJob).not.toHaveBeenCalled();
   });
 });

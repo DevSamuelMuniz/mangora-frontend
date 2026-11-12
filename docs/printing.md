@@ -1,132 +1,137 @@
 # Impressão local
 
-## Arquitetura e decisão
+## Fluxos e contratos
 
-Etiquetas e cupons usam jsPDF para produzir PDFs com medidas físicas explícitas.
-JsBarcode mantém o CODE128 e seus zeros iniciais; os módulos são desenhados como
-vetores, sem captura de tela. O serviço compartilhado usa QZ Tray para enviar o PDF
-à impressora instalada no computador do usuário. O modo navegador mantém um caminho
-com diálogo para quem ainda não instalou o agente local.
+`PrintService` recebe documentos tipados de quatro pontos: conclusão automática do
+PDV, impressão manual no PDV, reimpressão em Vendas e etiquetas. O teste de
+impressão usa o mesmo serviço, com conteúdo de exemplo. A seleção de produtos, o
+salvamento da venda e a atualização de estoque e financeiro continuam nos serviços
+que já os atendem.
 
-Referências pesquisadas:
+Vendas consulta `/sales/:id` e `/companies/current` ao confirmar a reimpressão,
+inclusive para baixar o PDF. Uma venda cancelada ou de outra empresa é rejeitada.
+O comprovante inclui subtotal, desconto, pagamentos e troco quando disponível.
+O conteúdo impresso traz **DOCUMENTO NÃO FISCAL**. Os modelos `Order`,
+`CashRegister` e `CashMovement` existem, mas os fluxos atuais de pedidos e caixa
+não emitem documentos para impressão. Não foi localizada emissão fiscal nem
+artefatos autorizados para DANFE. O histórico de auditoria contém nomes de eventos
+fiscais e o catálogo de cobranças contém faturas de assinatura.
 
-- https://github.com/parallax/jsPDF — páginas e unidades personalizadas.
-- https://qz.io/docs/pixel — PDF, margens, escala e formato físico.
-- https://qz.io/docs/signing — assinatura para remover avisos de autorização.
-- https://github.com/parzibyte/plugin-ticket-js — alternativa voltada a ESC/POS.
+## Configurar no terminal
 
-QZ foi escolhido por atender impressoras cadastradas no sistema e PDFs de etiquetas,
-A4 e cupons com o mesmo transporte. O driver deve aceitar impressão gráfica/PDF;
-dispositivos somente RAW precisam de outro adaptador (ESC/POS, ZPL ou TSPL).
+1. Instale o driver e teste a impressora no sistema operacional. Para envio direto,
+   instale e abra o [QZ Tray](https://qz.io/download/).
+2. Em Etiquetas ou na conclusão do PDV, abra **Preferências de impressão**.
+   Os mesmos controles aparecem ao preparar uma reimpressão.
+3. Escolha **Direto na impressora**, busque e selecione uma fila local. Cupons e
+   etiquetas têm destinos independentes. Autorize o acesso à rede local se o
+   navegador solicitar e confira o destino na autorização do QZ.
+4. Em comprovantes, ajuste bobina de 58 ou 80 mm e de uma a cinco vias. Use
+   **PDF pelo driver** para filas gráficas. Habilite a rasterização se o driver
+   precisar de bitmap. Em etiquetas, as quantidades continuam por produto.
+5. Para comprovantes em fila compatível com RAW, selecione **ESC/POS (RAW)** e a
+   tabela PC850 ou PC858 compatível com o firmware. Marque guilhotina e QR nativo
+   somente se o modelo implementar esses comandos. A opção de corte aparece após
+   declarar a guilhotina. Caracteres fora da página selecionada geram erro antes
+   do envio. Use PDF para o repertório suportado pelas fontes desse formato.
+6. Clique em **Imprimir teste**. Confira acentuação, largura, vias, avanço e, se
+   habilitados, corte e leitura do QR. Depois ajuste a preferência de automação.
+7. Em caso de falha na ponte, use **Baixar PDF** na preparação ou troque para o
+   diálogo do navegador. Ajuste o papel e a escala a 100% no driver.
 
-## Configuração no computador do operador
+O teste de etiqueta usa um CODE128 fictício. O QR do teste de comprovante contém
+texto de diagnóstico, sem dados de pagamento. O PDF de etiquetas usa barras
+vetoriais e preserva zeros iniciais. A bobina contínua agrupa as etiquetas e
+divide páginas longas conforme a altura de cada trecho.
 
 ### Knup KP-1025
 
-Modelo informado pelo operador. Fonte oficial:
-https://knup.com.br/produto/kp-1025/ — bobina nominal de **58 mm** e impressão
-efetiva de **48 mm**. A medida manual de 5,5 cm informada não foi tratada como
-largura útil: o driver deve usar o formato nominal de 58 mm.
+O [perfil do fabricante](https://knup.com.br/produto/kp-1025/) especifica bobina
+de 58 mm e área útil de 48 mm. O perfil mantém envio pelo driver, centraliza a
+etiqueta de 48 × 30 mm em papel de 58 mm e bloqueia A4 e etiquetas mais largas
+que a área útil. Selecione a fila instalada após a busca. A altura de 30 mm é o
+formato inicial da etiqueta.
 
-Em Preferências de impressão, escolher **Modelo da impressora → Knup KP-1025**.
-Esse perfil salva cupom de 58 mm, etiquetas de 48 × 30 mm e bobina contínua.
-O PDF usa página de 58 mm e centraliza a etiqueta de 48 mm; cupons de 58 mm
-também limitam as linhas a 48 mm úteis. A4 e etiquetas mais largas que 48 mm
-são bloqueados enquanto esse perfil estiver ativo. A altura de 30 mm é uma
-configuração inicial de layout, não um intervalo físico imposto pelo equipamento.
+## Escopo, fila e diagnóstico
 
-O perfil não adivinha o nome da fila no Windows: o operador seleciona a
-impressora instalada após buscar pelo QZ Tray. Outras lojas mantêm seu perfil
-genérico; a escolha do modelo é local ao navegador.
+As preferências ficam por empresa no perfil do navegador do terminal. Não há
+cadastro persistente de terminais. Dois caixas no mesmo computador que usem a
+mesma empresa precisam de perfis de navegador separados se usarem filas
+diferentes. A migração reaproveita papel, modelo, automação e download do
+armazenamento anterior. A seleção da fila direta exige nova configuração por
+empresa.
 
-### Instalação
+A fila da aba serializa os trabalhos, atribui IDs e guarda até 100 registros de
+status em memória. O histórico contém tipo, transporte, horário e motivo da falha.
+Na automação, a tentativa fica registrada por empresa e venda antes do envio.
+A proteção usa Web Locks quando disponíveis e conserva até 256 tentativas recentes
+por empresa durante sete dias. Se o armazenamento estiver bloqueado, a proteção
+em memória vale durante a sessão da página. Uma reimpressão manual posterior
+permanece possível.
 
-1. Instalar o driver oficial e testar a impressora pelo sistema operacional.
-2. Instalar o QZ Tray de https://qz.io/download/ e mantê-lo aberto.
-3. Em Etiquetas ou na conclusão de uma venda, abrir Preferências de impressão.
-4. Selecionar Direto na impressora, buscar e selecionar a impressora local.
-   Etiquetas e cupons têm impressoras independentes.
-5. Para papel como o da ocorrência, usar **Bobina contínua / sem intervalos**.
-   As etiquetas ficam na mesma página/faixa, sem uma página por etiqueta.
-   Para etiquetas pré-cortadas, escolher uma etiqueta por página; para folhas, A4.
-6. Informar as medidas reais. Cupons suportam bobinas de 58 ou 80 mm.
-7. Fazer um teste, conferir a leitura do código e o avanço/corte do driver.
+A descoberta identifica filas instaladas. A confirmação do QZ indica submissão ao
+spooler. O aplicativo mostra falta de papel ou recusa quando a ponte informa essa
+condição. Timeout, desconexão durante o envio e falha depois de uma página aceita
+podem deixar o resultado indeterminado. Confira o spooler antes de reimprimir.
+A fila não reenvia trabalhos automaticamente. O navegador informa que o diálogo
+foi acionado. A decisão de imprimir ou cancelar fica no diálogo do sistema.
 
-Sem impressora disponível no ambiente de desenvolvimento, a saída física permanece
-dependente desse teste. O firmware pode impor avanço mínimo, corte e área não
-imprimível. O sistema não deve compensar isso com páginas A4 ou escala automática.
+## Segurança do QZ Tray
 
-## Assinatura em produção
+A conexão usa WebSocket seguro em `localhost`. A CSP permite somente as quatro
+portas seguras do QZ nesse host e frames `blob:` para o PDF local. O adaptador verifica se o nome
+selecionado está entre as filas locais antes do envio. O QZ Tray aplica a
+autorização do operador na estação, e o aplicativo usa o modo sem certificado.
+As antigas rotas de certificado e assinatura foram removidas. A assinatura
+anterior validava o envelope PDF, mas assinava conteúdo e destinos fornecidos
+pelo cliente sem vínculo com impressoras cadastradas. As variáveis
+`QZ_CERTIFICATE` e `QZ_PRIVATE_KEY` deixaram de ser usadas neste módulo.
+Impressão silenciosa com certificado exigiria autorização do destino e do
+documento no servidor, além de provisionamento local da confiança.
 
-Configurar `QZ_CERTIFICATE` com o certificado PEM confiável pelo QZ e
-`QZ_PRIVATE_KEY` com a chave RSA correspondente no servidor Next. As variáveis
-aceitam quebras de linha reais ou `\n`. Nunca usar prefixo NEXT_PUBLIC_ nem enviar
-a chave ao navegador. Provisionar a confiança/autorização do site no QZ conforme
-as instruções oficiais; apenas preencher variáveis não estabelece confiança.
+O renderizador RAW limita o texto às páginas de código configuradas e remove
+caracteres de controle dos campos. Os bytes ESC/POS vêm do renderizador. O corte
+e o QR nativo são opcionais. A largura em colunas pressupõe fonte A de 32 ou 42
+colunas, conforme a bobina, e deve ser conferida no equipamento.
 
-O cliente calcula o SHA-256 da mensagem QZ e mantém seu payload até a assinatura.
-O endpoint autenticado verifica origem, sessão, tamanho, timestamp e operações
-permitidas antes de assinar o hash com RSA-SHA512. Só descoberta de impressoras e
-PDF inline são aceitos; arquivos locais, URLs e comandos RAW não são assinados.
-Não há registro do conteúdo do PDF nos logs. Sem certificado, o QZ pede autorização;
-não há promessa de impressão silenciosa antes dessa configuração.
-
-## Salvamento e automação
-
-Em `/vendas`, o ícone de impressora de cada venda concluída e a ação
-**Imprimir notinha** nos detalhes permitem reimprimir vendas registradas.
-Ambas abrem o modal de preparação com resumo, intensidade, impressora e papel.
-Somente **Confirmar impressão** consulta a venda pelo ID e os dados da empresa e utiliza o mesmo
-gerador e transporte do PDV. Se a venda tiver sido cancelada desde o carregamento
-da lista, o envio é bloqueado. Impressão não cria outra venda nem altera estoque
-ou financeiro. Valor recebido e troco só são incluídos quando disponíveis;
-não são reconstruídos a partir do total histórico.
-
-Etiquetas usam o mesmo modal: papel, dimensões, quantidades e prévia podem ser
-conferidos e ajustados antes do envio. Alterar o modelo para Knup aplica 48 × 30 mm
-e bobina contínua, inclusive quando havia dimensões personalizadas na tela.
-O perfil limita opções incompatíveis; a confirmação valida novamente o trabalho.
-Sem fila local selecionada, envio direto fica desabilitado. Abrir ou cancelar o
-modal não baixa PDFs nem envia trabalho. Preferências válidas continuam sendo
-salvas ao editar; cancelar fecha a preparação sem desfazer preferências salvas.
-Cupons manuais do PDV usam esse mesmo modal; o modo automático continua seguindo
-a preferência explícita `autoReceipt`.
-
-As preferências são locais ao navegador/computador, sem produtos ou dados de venda
-no localStorage. As medidas válidas são salvas ao alterar os controles. Uma venda
-registrada inicia a impressão do cupom por padrão; o operador pode desativar essa
-preferência. O PDF é baixado por padrão antes do envio, inclusive se o QZ falhar.
-O destino depende das configurações do navegador; um site não pode escolher
-arbitrariamente uma pasta ou suprimir o diálogo de salvamento do usuário.
-
-Uma tentativa automática é marcada por ID de venda na sessão antes de enviar,
-com proteção adicional em memória contra remontagens/Strict Mode. Não há retry
-automático após falha: o trabalho pode já estar no spooler. Conferir a fila antes
-de reimprimir manualmente. Trabalho enviado não significa saída física confirmada.
-Cupons e bobinas com mais de 990 mm são divididos; cada parte usa sua altura real,
-inclusive a última. Isso evita área vazia por reutilização da altura da primeira.
+Referências: [QZ RAW](https://qz.io/docs/raw), [QZ PDF](https://qz.io/docs/pixel),
+[QZ Signing](https://qz.io/docs/signing),
+[Epson ESC/POS](https://download4.epson.biz/sec_pubs/pos/reference_en/escpos/commands.html)
+e [tabelas PC850/PC858](https://download4.epson.biz/sec_pubs/pos/reference_en/escpos/esc_lt.html).
 
 ## Verificação
 
-`npm test`, `npx tsc --noEmit`, `npm run lint` e `npm run build`.
-Os testes de impressão verificam medidas reais do PDF, quantidade de páginas,
-CODE128, rolos, A4, paginação longa, preferências, configuração QZ e falhas sem retry.
+Os testes automatizados de impressão cobrem a fila simulada, integração com o
+cliente QZ simulado, escopo de empresa, preferências, dimensões de PDFs,
+etiquetas, comprovantes longos, acentos, desconto, quantidades, QR, vias,
+reimpressão, erro de conexão e recuperação manual.
 
-Resultado desta alteração (02/11/2026):
+Resultado da migração: 44 testes de impressão passaram. O build, o TypeScript
+e o lint dos arquivos alterados passaram. O Chrome no Windows foi exercitado
+em 1280 px e 390 px com QZ simulado, incluindo seleção por teclado, falta de
+papel, desconexão e download de PDF com duas vias. A suíte geral teve 201 testes
+aprovados e três falhas anteriores à migração, em chaves de tradução e no
+mock do roteador do teste de preferências regionais.
+O Chrome também carregou o PDF local com a CSP do build de produção e
+bloqueou uma porta fora da lista do QZ.
 
-- 27 testes de etiquetas, transporte, assinatura e interface passaram.
-- Após acrescentar o perfil KP-1025 informado pelo operador: 29 testes passaram,
-  incluindo papel de 58 mm, restrição de largura útil e persistência do perfil.
-- TypeScript e build de produção passaram; lint dos arquivos alterados passou.
-- Suíte geral: 150 passaram e 2 falharam em chaves de tradução já ausentes no HEAD
-  (`products.stock.reservedShort` e diferenças de billing entre pt-BR e pt-PT).
-- Lint geral mantém 2 erros anteriores em SystemAdminConsole e useConnectivity,
-  além de 2 avisos em BillingConfigPanel. Auditoria estática preservada em
-  `printing-audit.json`: 5 ocorrências anteriores nas telas públicas de autenticação.
-- Controles compartilhados conferidos no navegador em desktop e 390px; seleção
-  nativa e propagação das preferências entre os dois usos verificadas.
-- PDF de referência conferido visualmente e com leitor independente: duas
-  etiquetas de 50 × 30 mm em uma única página de 50 × 60 mm.
-- O ambiente lista apenas Microsoft Print to PDF e AnyDesk Printer: impressão
-  térmica física, leitura por scanner e integração com um QZ instalado seguem
-  pendentes de validação no computador com a impressora do operador.
+Para homologar no balcão, valide uma fila gráfica e uma fila RAW em Windows,
+permissão de rede local e autorização real no QZ Tray, papel de 58/80 mm,
+corte, scanner de código de barras/QR, desconexão e falta de papel em cada modelo.
+
+## Arquivos da migração
+
+- Núcleo em `lib/printing`: `types.ts`, `service.ts`, `preferences.ts`,
+  `scope.tsx`, `use-print-preferences.ts` e `messages.ts`.
+- Renderização em `receipt.ts`, `receipt-pdf.ts`, `label-pdf.ts` e `escpos.ts`.
+- Transporte em `qz-connection.ts`, `qz-tray-adapter.ts`,
+  `system-printer-adapter.ts` e `browser-pdf-adapter.ts`. A CSP está em
+  `next.config.ts`.
+- Integrações em `app/pdv/page.tsx`, `app/(dashboard)/layout.tsx`,
+  `DoneStep.tsx`, `SalesCatalog.tsx` e `LabelWorkspace.tsx`. Controles e
+  prévia em `PrintSettings.tsx`, `PrintDialog.tsx` e `ReceiptPrintPreview.tsx`.
+  Os quatro catálogos `messages/*/labels.json` receberam o texto da interface.
+- Testes em `printing.test.ts`, `print-service.test.ts`, `printing-ui.test.tsx`,
+  `sales-receipt.test.tsx` e `label-workspace.test.tsx`. A implementação
+  `lib/pdv/print.ts`, `lib/printing/signing.ts`, as duas rotas de assinatura e
+  seu teste foram removidos. Os contratos estão em `DESIGN.md` e `UX-CONTRACT.md`.

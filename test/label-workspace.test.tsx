@@ -11,7 +11,7 @@ vi.mock("@/features/products/hooks/useProducts", () => ({ useProducts: () => ({
   data: [{ id: "coffee", name: "Café especial", barcode: "0012345678905", sku: "CAFE", price: 19.9 }, { id: "tea", name: "Chá", barcode: null, sku: "CHA", price: 0 }],
   isLoading: false, error: null,
 }) }));
-vi.mock("@/lib/printing/service", () => ({ submitPrintJob: vi.fn().mockResolvedValue(undefined), findPrinters: vi.fn().mockResolvedValue([]) }));
+vi.mock("@/lib/printing/service", () => ({ submitPrintJob: vi.fn().mockResolvedValue("submitted"), findPrinters: vi.fn().mockResolvedValue([]) }));
 
 afterEach(() => { cleanup(); localStorage.clear(); vi.clearAllMocks(); });
 function setup() { render(<I18nProvider locale="pt-BR" messages={{ labels, navigation: { groups: { supplies: "Suprimentos" } } }}><LabelWorkspace /></I18nProvider>); }
@@ -50,10 +50,7 @@ describe("página Etiquetas", () => {
     expect(submitPrintJob).not.toHaveBeenCalled();
     fireEvent.click(within(screen.getByRole("dialog", { name: labels.dialog.labelTitle })).getByRole("button", { name: labels.dialog.confirm }));
     await waitFor(() => expect(submitPrintJob).toHaveBeenCalledOnce());
-    const job = vi.mocked(submitPrintJob).mock.calls[0][0];
-    expect(job.width).toBe(50);
-    expect(job.height).toBe(120);
-    expect(job.pdf.getNumberOfPages()).toBe(1);
+    expect(submitPrintJob).toHaveBeenCalledWith({ kind: "label", size: { width: 50, height: 40 }, paper: "continuous", items: [expect.objectContaining({ quantity: 3 })] }, { scope: "", pdfOnly: false });
     expect(screen.getByText(/R\$\s19,90/)).toBeTruthy();
     expect(JSON.parse(localStorage.getItem("mangora.printing.v1")!).labelHeight).toBe(40);
   });

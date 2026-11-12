@@ -37,8 +37,10 @@ import { SummaryCard } from "@/components/shared/SummaryCard";
 import { apiRequest } from "@/lib/api/client";
 import PrintDialog from "@/components/printing/PrintDialog";
 import ReceiptPrintPreview from "@/components/printing/ReceiptPrintPreview";
-import type { ReceiptMode } from "@/lib/pdv/print";
-import { printReceipt } from "@/lib/pdv/print";
+import type { ReceiptMode } from "@/lib/printing/types";
+import { submitPrintJob } from "@/lib/printing/service";
+import { printErrorMessage, printResultMessage } from "@/lib/printing/messages";
+import { usePrintScope } from "@/lib/printing/scope";
 import type { CompanySettings } from "@/types/settings";
 
 const PAGE_SIZE = 6;
@@ -47,6 +49,7 @@ const paymentMethods: PaymentMethod[] = ["PIX", "CREDIT_CARD", "DEBIT_CARD", "CA
 export default function SalesCatalog() {
   const { formatCurrency, formatDate, formatTime } = useFormatters();
   const t = useT();
+  const scope = usePrintScope();
   const { locale } = useI18n();
   const { data: sales = [], isLoading: loading, error, refetch: loadSales } = useSales();
   const cancelSale = useCancelSale();
@@ -65,7 +68,7 @@ export default function SalesCatalog() {
   const [saleToPrint, setSaleToPrint] = useState<Sale | null>(null);
   const [receiptMode, setReceiptMode] = useState<ReceiptMode>("standard");
 
-  async function handlePrint(sale: Sale) {
+  async function handlePrint(sale: Sale, pdfOnly: boolean) {
     if (printLock.current || sale.status !== "COMPLETED") return;
     printLock.current = true;
     setPrintingSaleId(sale.id);
@@ -78,10 +81,10 @@ export default function SalesCatalog() {
       if (currentSale.status !== "COMPLETED") {
         throw new Error(t("sales.printUnavailable"));
       }
-      await printReceipt(currentSale, company, undefined, receiptMode);
-      toast.info(t("labels.printSubmitted"));
+      const result = await submitPrintJob({ kind: "receipt", sale: currentSale, company, mode: receiptMode }, { scope, pdfOnly });
+      toast.info(printResultMessage(t, result));
     } catch (cause) {
-      const message = cause instanceof Error && cause.message === t("sales.printUnavailable") ? cause.message : t("labels.printError");
+      const message = cause instanceof Error && cause.message === t("sales.printUnavailable") ? cause.message : printErrorMessage(t, cause);
       setPrintError(message);
       toast.error(message);
       throw new Error(message);
@@ -247,7 +250,7 @@ export default function SalesCatalog() {
         </div>
       </section>
 
-      {saleToPrint && <PrintDialog kind="receipt" title={t("sales.printAria", { code: saleToPrint.code })} onClose={() => setSaleToPrint(null)} onConfirm={() => handlePrint(saleToPrint)}><ReceiptPrintPreview sale={saleToPrint} mode={receiptMode} onModeChange={setReceiptMode} /></PrintDialog>}
+      {saleToPrint && <PrintDialog kind="receipt" title={t("sales.printAria", { code: saleToPrint.code })} onClose={() => setSaleToPrint(null)} onConfirm={pdfOnly => handlePrint(saleToPrint, pdfOnly)}><ReceiptPrintPreview sale={saleToPrint} mode={receiptMode} onModeChange={setReceiptMode} /></PrintDialog>}
       {selectedSale && <SaleDetails sale={selectedSale} onClose={() => setSelectedSale(null)} onPrint={() => setSaleToPrint(selectedSale)} printing={printingSaleId !== null} printError={printError} />}
       {saleToCancel && <CancelSale sale={saleToCancel} loading={cancelSale.isPending} onCancel={() => setSaleToCancel(null)} onConfirm={(reason) => void confirmCancellation(reason)} />}
       {saleToReturn && <SaleReturnForm sale={saleToReturn} onClose={() => setSaleToReturn(null)} onDone={(message) => toast.success(message)} />}

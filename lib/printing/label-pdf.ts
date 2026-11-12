@@ -1,8 +1,8 @@
 import { jsPDF } from "jspdf";
 import { barcodeData, barcodeFits, MAX_LABELS, validLabelSize, type LabelItem, type LabelPaper, type LabelSize } from "@/lib/labels";
-import type { PrintJob } from "./service";
+import type { PdfOutput, PrinterProfile } from "./types";
 
-export function buildLabelPdf(items: LabelItem[], size: LabelSize, paper: LabelPaper, profile: "generic" | "knup-kp1025" = "generic"): PrintJob {
+export function buildLabelPdf(items: LabelItem[], size: LabelSize, paper: LabelPaper, profile: PrinterProfile["model"] = "generic"): PdfOutput {
   const total = items.reduce((sum, item) => sum + item.quantity, 0);
   const knup = profile === "knup-kp1025";
   if (knup && (paper === "a4" || size.width > 48)) throw new Error("knup-printable-width-exceeded");
@@ -16,7 +16,7 @@ export function buildLabelPdf(items: LabelItem[], size: LabelSize, paper: LabelP
   const rows = paper === "continuous" ? Math.min(total, continuousRows) : Math.floor((page.height - margin * 2 + gap) / (size.height + gap));
   if (columns < 1 || rows < 1) throw new Error("label-does-not-fit-paper");
   const pdf = new jsPDF({ unit: "mm", format: [page.width, page.height], orientation: page.width > page.height ? "landscape" : "portrait", compress: true });
-  const parts: NonNullable<PrintJob["parts"]> = [];
+  const parts: NonNullable<PdfOutput["parts"]> = [];
   let part = new jsPDF({ unit: "mm", format: [page.width, page.height], orientation: page.width > page.height ? "landscape" : "portrait", compress: true });
   if (paper === "continuous") parts.push({ pdf: part, ...page });
   let index = 0;
@@ -57,5 +57,5 @@ export function buildLabelPdf(items: LabelItem[], size: LabelSize, paper: LabelP
       target.setFont("helvetica", "normal").setFontSize(7).text(item.code, x + size.width / 2, barY + barHeight + 3, { align: "center" });
     }
   }
-  return { pdf, ...page, ...(parts.length ? { parts } : {}), kind: "label", filename: `etiquetas-${Date.now()}.pdf` };
+  return { pdf, ...page, ...(parts.length ? { parts } : {}), filename: `etiquetas-${Date.now()}.pdf` };
 }

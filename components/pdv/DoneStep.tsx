@@ -1,19 +1,18 @@
 "use client";
 
-import { useFormatters } from "@/i18n/provider";
-
 import { useCallback, useEffect, useRef, useState } from "react";
-import { useT } from "@/i18n/provider";
+import { useFormatters, useT } from "@/i18n/provider";
 import { CheckCircle2, Printer, RotateCcw } from "lucide-react";
-
 
 import { paymentMethodLabels, type Sale } from "@/types/sale";
 import type { CompanySettings } from "@/types/settings";
-import { claimAutomaticReceipt, printReceipt } from "@/lib/pdv/print";
+import { submitPrintJob } from "@/lib/printing/service";
+import { printErrorMessage, printResultMessage } from "@/lib/printing/messages";
+import { usePrintScope } from "@/lib/printing/scope";
 import { readPrintPreferences } from "@/lib/printing/preferences";
 import PrintDialog from "@/components/printing/PrintDialog";
 import ReceiptPrintPreview from "@/components/printing/ReceiptPrintPreview";
-import type { ReceiptMode } from "@/lib/pdv/print";
+import type { ReceiptMode } from "@/lib/printing/types";
 import PrintSettings from "@/components/printing/PrintSettings";
 
 type DoneStepProps = {
@@ -26,33 +25,38 @@ type DoneStepProps = {
 
 /** Etapa final — venda registrada: imprimir o cupom de compra ou concluir. */
 export default function DoneStep({ sale, company, received, change, onFinish }: DoneStepProps) {
-  const { formatCurrency } = useFormatters();
-  const t = useT();
+    const { formatCurrency } = useFormatters();
+    const t = useT();
+    const scope = usePrintScope();
     const [printOptionsOpen, setPrintOptionsOpen] = useState(false);
     const [printing, setPrinting] = useState(false);
     const [printMessage, setPrintMessage] = useState("");
     const [printFailed, setPrintFailed] = useState(false);
     const printLock = useRef(false);
+    const automaticSale = useRef<string | null>(null);
     const [receiptMode, setReceiptMode] = useState<ReceiptMode>("standard");
 
-    const print = useCallback(async (mode: ReceiptMode, propagate = false) => {
+    const print = useCallback(async (mode: ReceiptMode, automatic: boolean, pdfOnly = false) => {
         const changeInfo = received !== undefined && change !== undefined ? { received, change } : undefined;
         if (printLock.current) return;
         printLock.current = true;
         setPrinting(true); setPrintFailed(false); setPrintMessage("");
         try {
-            await printReceipt(sale, company, changeInfo, mode);
-            setPrintMessage(t("labels.printSubmitted"));
-        } catch {
-            setPrintFailed(true); setPrintMessage(t("labels.printError"));
-            if (propagate) throw new Error(t("labels.printError"));
+            const result = await submitPrintJob({ kind: "receipt", sale, company, change: changeInfo, mode }, { scope, automatic, pdfOnly });
+            const message = printResultMessage(t, result);
+            if (message) setPrintMessage(message);
+        } catch (cause) {
+            const message = printErrorMessage(t, cause);
+            setPrintFailed(true); setPrintMessage(message);
+            if (!automatic) throw new Error(message, { cause });
         } finally { printLock.current = false; setPrinting(false); }
-    }, [sale, company, received, change, t]);
+    }, [sale, company, received, change, t, scope]);
 
     useEffect(() => {
-        if (!readPrintPreferences().autoReceipt || !claimAutomaticReceipt(sale.id)) return;
-        void Promise.resolve().then(() => print("standard"));
-    }, [sale.id, print]);
+        if (automaticSale.current === sale.id || !readPrintPreferences(scope).autoReceipt) return;
+        automaticSale.current = sale.id;
+        void Promise.resolve().then(() => print("standard", true));
+    }, [print, sale.id, scope]);
 
     return (
         <><div className="mx-auto grid w-full max-w-4xl items-start gap-6 md:grid-cols-[minmax(0,1fr)_320px]">
@@ -92,7 +96,7 @@ export default function DoneStep({ sale, company, received, change, onFinish }: 
         </div>
         <aside className="min-w-0"><PrintSettings kind="receipt" /></aside>
         </div>
-        {printOptionsOpen && <PrintDialog kind="receipt" title={t("labels.dialog.receiptTitle")} onClose={() => setPrintOptionsOpen(false)} onConfirm={() => print(receiptMode, true)}><ReceiptPrintPreview sale={sale} mode={receiptMode} onModeChange={setReceiptMode} /></PrintDialog>}
+        {printOptionsOpen && <PrintDialog kind="receipt" title={t("labels.dialog.receiptTitle")} onClose={() => setPrintOptionsOpen(false)} onConfirm={pdfOnly => print(receiptMode, false, pdfOnly)}><ReceiptPrintPreview sale={sale} mode={receiptMode} onModeChange={setReceiptMode} /></PrintDialog>}
         </>
     );
 }
