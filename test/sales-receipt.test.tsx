@@ -27,7 +27,7 @@ beforeEach(() => {
   vi.spyOn(HTMLDialogElement.prototype, "showModal").mockImplementation(function (this: HTMLDialogElement) { this.open = true; });
   vi.spyOn(HTMLDialogElement.prototype, "close").mockImplementation(function (this: HTMLDialogElement) { this.open = false; });
   vi.mocked(apiRequest).mockImplementation(async path => path === "/companies/current" ? company : sale);
-  vi.mocked(submitPrintJob).mockResolvedValue("submitted");
+  vi.mocked(submitPrintJob).mockResolvedValue("dialog-opened");
 });
 afterEach(() => { cleanup(); vi.restoreAllMocks(); });
 function confirmPrint() { fireEvent.click(within(screen.getByRole("dialog", { name: "Imprimir notinha da venda V001" })).getByRole("button", { name: labels.dialog.confirm })); }
@@ -41,16 +41,16 @@ describe("receipt reprinting from recorded sales", () => {
     expect(submitPrintJob).not.toHaveBeenCalled();
     expect(apiRequest).not.toHaveBeenCalled();
   });
-  it("requires an explicit local printer for direct printing", () => {
-    localStorage.setItem("mangora.printing.v1", JSON.stringify({ transport: "qz" }));
+  it("opens the browser dialog even if old settings specified direct printing", async () => {
+    localStorage.setItem("mangora.printing.v1", JSON.stringify({ transport: "qz", printerProfile: "knup-kp1025" }));
     setup();
     fireEvent.click(screen.getByRole("button", { name: "Imprimir notinha da venda V001" }));
     const dialog = screen.getByRole("dialog", { name: "Imprimir notinha da venda V001" });
-    expect((within(dialog).getByRole("button", { name: labels.dialog.confirm }) as HTMLButtonElement).disabled).toBe(true);
-    expect(within(dialog).getByText(labels.dialog.selectPrinterHint)).toBeTruthy();
-    expect(submitPrintJob).not.toHaveBeenCalled();
+    expect(within(dialog).getByText(labels.dialog.hint)).toBeTruthy();
+    confirmPrint();
+    await waitFor(() => expect(submitPrintJob).toHaveBeenCalledOnce());
   });
-  it("loads the recorded sale and company, then uses the existing receipt printer", async () => {
+  it("loads the recorded sale and company, then requests the browser print dialog", async () => {
     setup();
     fireEvent.click(screen.getByRole("button", { name: "Imprimir notinha da venda V001" }));
     expect(submitPrintJob).not.toHaveBeenCalled();
@@ -59,7 +59,7 @@ describe("receipt reprinting from recorded sales", () => {
     await waitFor(() => expect(submitPrintJob).toHaveBeenCalledWith({ kind: "receipt", sale, company, mode: "standard" }, { scope: "", pdfOnly: false }));
     expect(apiRequest).toHaveBeenCalledWith("/sales/sale-1");
     expect(apiRequest).toHaveBeenCalledWith("/companies/current");
-    expect(spies.info).toHaveBeenCalledWith(labels.printSubmitted);
+    expect(spies.info).toHaveBeenCalledWith(labels.browserOpened);
     expect(screen.queryByRole("button", { name: "Imprimir notinha da venda V002" })).toBeNull();
   });
   it("offers the same print action in sale details", async () => {
@@ -71,8 +71,8 @@ describe("receipt reprinting from recorded sales", () => {
     await waitFor(() => expect(submitPrintJob).toHaveBeenCalledOnce());
   });
   it("blocks concurrent submissions and allows a later explicit reprint", async () => {
-    let resolve!: (result: "submitted") => void;
-    vi.mocked(submitPrintJob).mockReturnValueOnce(new Promise<"submitted">(done => { resolve = done; }));
+    let resolve!: (result: "dialog-opened") => void;
+    vi.mocked(submitPrintJob).mockReturnValueOnce(new Promise<"dialog-opened">(done => { resolve = done; }));
     setup();
     const button = screen.getByRole("button", { name: "Imprimir notinha da venda V001" });
     fireEvent.click(button);
@@ -80,7 +80,7 @@ describe("receipt reprinting from recorded sales", () => {
     fireEvent.click(within(screen.getByRole("dialog", { name: "Imprimir notinha da venda V001" })).getByRole("button", { name: labels.dialog.confirm }));
     await waitFor(() => expect(submitPrintJob).toHaveBeenCalledOnce());
     expect((button as HTMLButtonElement).disabled).toBe(true);
-    resolve("submitted");
+    resolve("dialog-opened");
     await waitFor(() => expect((button as HTMLButtonElement).disabled).toBe(false));
     fireEvent.click(button);
     confirmPrint();

@@ -1,13 +1,12 @@
-import { PrintError, type PrinterAdapter, type PrintOutput, type AdapterResult } from "./types";
+import { PrintError, type PdfOutput } from "./types";
 
-export class BrowserPdfAdapter implements PrinterAdapter {
-  async discover() { return []; }
-  async connect() {}
-  async diagnose() { return "unknown" as const; }
-
-  async print(output: PrintOutput): Promise<AdapterResult> {
-    if (output.format !== "pdf") throw new PrintError("incompatible");
-    await openPrintDialog(output.document.pdf.output("blob"));
+export class BrowserPdfAdapter {
+  async print(document: PdfOutput): Promise<"dialog-opened"> {
+    try {
+      await openPrintDialog(document.pdf.output("blob"));
+    } catch (cause) {
+      throw new PrintError("browser", { cause });
+    }
     return "dialog-opened";
   }
 }
@@ -31,18 +30,18 @@ function openPrintDialog(blob: Blob): Promise<void> {
     frame.onload = () => {
       frame.onload = null;
       try {
-        if (!frame.contentWindow) throw new PrintError("browser");
+        if (!frame.contentWindow) throw new Error("Missing PDF frame window");
         frame.contentWindow.addEventListener("afterprint", cleanup, { once: true });
         frame.contentWindow.focus();
         frame.contentWindow.print();
         resolve();
       } catch (cause) {
         cleanup();
-        reject(new PrintError("browser", { cause }));
+        reject(cause);
       }
     };
-    frame.onerror = () => { cleanup(); reject(new PrintError("browser")); };
-    const timer = window.setTimeout(() => { cleanup(); reject(new PrintError("browser")); }, 120_000);
+    frame.onerror = () => { cleanup(); reject(new Error("Could not load PDF")); };
+    const timer = window.setTimeout(() => { cleanup(); reject(new Error("PDF load timed out")); }, 120_000);
     frame.src = url;
     document.body.appendChild(frame);
   });

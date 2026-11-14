@@ -1,35 +1,29 @@
 import { BrowserPdfAdapter } from "./browser-pdf-adapter";
-import { renderEscPos } from "./escpos";
 import { buildLabelPdf } from "./label-pdf";
-import { printerProfile, readPrintPreferences, type PrintPreferences } from "./preferences";
-import { QzTrayAdapter } from "./qz-tray-adapter";
+import { readPrintPreferences, type PrintPreferences } from "./preferences";
 import { receiptLayout, receiptTestLayout } from "./receipt";
 import { renderReceiptPdf } from "./receipt-pdf";
-import { PrintError, type PrinterAdapter, type PrinterProfile, type PrintDocument, type PrintLog, type PrintResult, type PrintState } from "./types";
+import { PrintError, type PrintDocument, type PrintLog, type PrintResult, type PrintState } from "./types";
 
 export type PrintOptions = { scope?: string; automatic?: boolean; pdfOnly?: boolean };
 
 const ATTEMPT_LIMIT = 256;
 const ATTEMPT_WINDOW = 7 * 24 * 60 * 60 * 1000;
 
-function renderDocument(document: PrintDocument, preferences: PrintPreferences, profile: PrinterProfile) {
+function renderDocument(document: PrintDocument, preferences: PrintPreferences) {
   if (document.kind === "label") {
-    return { pdf: buildLabelPdf(document.items, document.size, document.paper, profile.model) };
+    return buildLabelPdf(document.items, document.size, document.paper);
   }
   if (document.kind === "test" && document.target === "label") {
     const pdf = buildLabelPdf(
       [{ id: "test", name: "TESTE • Café", code: "00123456", price: "R$ 12,00", quantity: 1 }],
-      { width: preferences.labelWidth, height: preferences.labelHeight }, preferences.labelPaper, profile.model,
+      { width: preferences.labelWidth, height: preferences.labelHeight }, preferences.labelPaper,
     );
-    return { pdf: { ...pdf, filename: "teste-de-etiqueta.pdf" } };
+    return { ...pdf, filename: "teste-de-etiqueta.pdf" };
   }
-  const layout = document.kind === "receipt" ? receiptLayout(document) : receiptTestLayout(profile.width);
-  return {
-    pdf: profile.transport !== "escpos" || preferences.savePdf
-      ? renderReceiptPdf(layout, profile, profile.transport === "browser" ? profile.copies : 1)
-      : undefined,
-    layout,
-  };
+  const width = preferences.receiptWidth;
+  const layout = document.kind === "receipt" ? receiptLayout(document) : receiptTestLayout(width);
+  return renderReceiptPdf(layout, width, preferences.receiptCopies);
 }
 
 export class PrintService {
@@ -38,14 +32,7 @@ export class PrintService {
   private attempts = new Map<string, number>();
   private logs: { scope: string; entry: PrintLog }[] = [];
 
-  constructor(
-    private readonly direct: PrinterAdapter = new QzTrayAdapter(),
-    private readonly browser: PrinterAdapter = new BrowserPdfAdapter(),
-  ) {}
-
-  discover() {
-    return this.direct.discover();
-  }
+  constructor(private readonly browser = new BrowserPdfAdapter()) {}
 
   history(scope: string): PrintLog[] {
     return this.logs.filter(log => log.scope === scope).map(log => ({ ...log.entry }));
@@ -65,10 +52,8 @@ export class PrintService {
     const key = JSON.stringify([scope, document.kind, documentKey, pdfOnly]);
     const pending = this.pending.get(key);
     if (pending) return pending;
-    const target = document.kind === "test" ? document.target : document.kind;
-    const profile = printerProfile(preferences, target, pdfOnly ? "browser" : undefined);
     const id = crypto.randomUUID?.() ?? Array.from(crypto.getRandomValues(new Uint32Array(4)), part => part.toString(16)).join("-");
-    const entry: PrintLog = { id, kind: document.kind, transport: profile.transport, state: "queued", updatedAt: Date.now() };
+    const entry: PrintLog = { id, kind: document.kind, state: "queued", updatedAt: Date.now() };
     const log = (state: PrintState, reason?: PrintError["code"]) => {
       Object.assign(entry, { state, updatedAt: Date.now(), reason });
     };
@@ -83,28 +68,22 @@ export class PrintService {
           return "skipped";
         }
         log("preparing");
-        const prepared = renderDocument(document, preferences, profile);
-        if (prepared.pdf && (pdfOnly || (document.kind !== "test" && preferences.savePdf))) {
-          prepared.pdf.pdf.save(prepared.pdf.filename);
+        const prepared = renderDocument(document, preferences);
+        if (pdfOnly || (document.kind !== "test" && preferences.savePdf)) {
+          prepared.pdf.save(prepared.filename);
         }
         if (pdfOnly) {
           log("download-requested");
           return "download-requested";
         }
 
-        const adapter = profile.transport === "browser" ? this.browser : this.direct;
-        const output = profile.transport === "escpos" && prepared.layout
-          ? { format: "escpos" as const, bytes: renderEscPos(prepared.layout, profile), filename: prepared.layout.filename.replace(/\.pdf$/, "") }
-          : prepared.pdf && { format: "pdf" as const, document: prepared.pdf };
-        if (!output) throw new PrintError("incompatible");
-        await adapter.diagnose(profile);
         log("sending");
-        const result = await adapter.print(output, profile);
+        const result = await this.browser.print(prepared);
         log(result);
         return result;
       } catch (cause) {
-        const error = cause instanceof PrintError ? cause : new PrintError(entry.state === "sending" ? "unknown" : "invalid", { cause });
-        log(error.code === "unknown" ? "unknown" : error.code === "cancelled" ? "cancelled" : "failed", error.code);
+        const error = cause instanceof PrintError ? cause : new PrintError(entry.state === "sending" ? "browser" : "invalid", { cause });
+        log("failed", error.code);
         throw error;
       }
     });
@@ -143,4 +122,3 @@ export class PrintService {
 
 const printing = new PrintService();
 export const submitPrintJob = (document: PrintDocument, options?: PrintOptions) => printing.submit(document, options);
-export const findPrinters = () => printing.discover();

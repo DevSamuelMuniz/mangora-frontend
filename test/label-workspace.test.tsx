@@ -11,7 +11,7 @@ vi.mock("@/features/products/hooks/useProducts", () => ({ useProducts: () => ({
   data: [{ id: "coffee", name: "Café especial", barcode: "0012345678905", sku: "CAFE", price: 19.9 }, { id: "tea", name: "Chá", barcode: null, sku: "CHA", price: 0 }],
   isLoading: false, error: null,
 }) }));
-vi.mock("@/lib/printing/service", () => ({ submitPrintJob: vi.fn().mockResolvedValue("submitted"), findPrinters: vi.fn().mockResolvedValue([]) }));
+vi.mock("@/lib/printing/service", () => ({ submitPrintJob: vi.fn().mockResolvedValue("dialog-opened") }));
 
 afterEach(() => { cleanup(); localStorage.clear(); vi.clearAllMocks(); });
 function setup() { render(<I18nProvider locale="pt-BR" messages={{ labels, navigation: { groups: { supplies: "Suprimentos" } } }}><LabelWorkspace /></I18nProvider>); }
@@ -27,14 +27,14 @@ describe("página Etiquetas", () => {
     expect(screen.queryByRole("dialog")).toBeNull();
     expect(submitPrintJob).not.toHaveBeenCalled();
   });
-  it("applies the Knup paper profile in preparation and blocks invalid quantities", () => {
+  it("offers A4 despite an obsolete device profile and blocks invalid quantities", () => {
+    localStorage.setItem("mangora.printing.v1", JSON.stringify({ printerProfile: "knup-kp1025", labelWidth: 100 }));
     setup();
     fireEvent.click(screen.getByRole("checkbox", { name: "Selecionar Café especial" }));
     fireEvent.click(screen.getByRole("button", { name: "Imprimir 1 etiquetas" }));
     const dialog = screen.getByRole("dialog", { name: labels.dialog.labelTitle });
-    fireEvent.change(within(dialog).getByLabelText(labels.printerProfile), { target: { value: "knup-kp1025" } });
-    expect((within(dialog).getByLabelText(labels.size) as HTMLSelectElement).value).toBe("48x30");
-    expect(within(dialog).getByText(labels.dialog.knupMedia)).toBeTruthy();
+    expect((within(dialog).getByRole("option", { name: labels.a4 }) as HTMLOptionElement).disabled).toBe(false);
+    expect((within(dialog).getByLabelText(labels.width) as HTMLInputElement).value).toBe("10");
     fireEvent.change(within(dialog).getByLabelText("Quantidade de etiquetas de Café especial"), { target: { value: "0" } });
     expect((within(dialog).getByRole("button", { name: labels.dialog.confirm }) as HTMLButtonElement).disabled).toBe(true);
     expect(submitPrintJob).not.toHaveBeenCalled();

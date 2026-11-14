@@ -69,11 +69,10 @@ right of the sale summary from the md breakpoint; on smaller screens the two
 panels stack in document order. Expanding settings does not stretch the summary.
 
 Manual printing uses the shared native PrintDialog. Document summary or label
-preview occupies the left column; device information and editable settings use
+preview occupies the left column; editable document settings use
 the same 320px right column. A sticky confirmation footer stays reachable while
 the dialog scrolls. Narrow screens stack the two columns. Use existing slate
-panels, orange primary actions and white paper previews. Device status must not
-claim physical connectivity from a saved printer name alone.
+panels, orange primary actions and white paper previews. Printer selection belongs to the browser print dialog.
 
 ## Elevation & Depth
 
@@ -87,18 +86,12 @@ Printed paper uses rectangular pages with no decorative frame.
 
 ## Components
 
-`components/printing/PrintSettings.tsx` owns printer selection, connection feedback,
-protocol, media, test page, automatic receipt and PDF-download controls. Show RAW
-capabilities only for a configured receipt queue. `lib/printing` owns
+`components/printing/PrintSettings.tsx` owns receipt format, test page, automatic receipt dialog and PDF-download controls. `lib/printing` owns
 preferences, local transport and physical sizing. Use native labeled fields,
 visible focus, busy/disabled states, inline errors and polite status regions.
 Lucide icons remain the existing icon family. Loading animation communicates work;
 new settings add no decorative animation. Product copy names concrete actions and
-distinguishes a submitted job from physically printed paper.
-
-Printer models are selected through the same native settings fields. The KP-1025
-profile distinguishes physical paper (58 mm) from printable width (48 mm); show
-both in help text rather than silently scaling output to fit.
+reports when the print dialog was requested.
 
 ## Do's and Don'ts
 

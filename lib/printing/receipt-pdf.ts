@@ -1,9 +1,10 @@
 import { jsPDF } from "jspdf";
 import QRCode from "qrcode";
 import type { ReceiptLayout, ReceiptLine } from "./receipt";
-import type { PdfOutput, PdfPart, PrinterProfile } from "./types";
+import type { PdfOutput } from "./types";
 
-export function renderReceiptPdf(layout: ReceiptLayout, { width, margin }: PrinterProfile, copies = 1): PdfOutput {
+export function renderReceiptPdf(layout: ReceiptLayout, width: 58 | 80, copies = 1): PdfOutput {
+  const margin = width === 58 ? 5 : 4;
   type Line = ReceiptLine & { height: number };
   type Page = { lines: Line[]; height: number; qr?: ReturnType<typeof QRCode.create> };
   const measure = new jsPDF({ unit: "mm" });
@@ -55,12 +56,6 @@ export function renderReceiptPdf(layout: ReceiptLayout, { width, margin }: Print
   const orientation = (height: number) => width > height ? "landscape" : "portrait";
   const newPdf = (height: number) => new jsPDF({ unit: "mm", format: [width, height], orientation: orientation(height), compress: true });
   const pdf = newPdf(height);
-  const parts: PdfPart[] = pages.length > 1 ? pages.map(page => {
-    const height = Math.max(30, page.height);
-    const pdf = newPdf(height);
-    draw(pdf, page);
-    return { pdf, width, height };
-  }) : [];
   for (let copy = 0; copy < copies; copy++) {
     pages.forEach((page, index) => {
       const pageHeight = Math.max(30, page.height);
@@ -68,5 +63,5 @@ export function renderReceiptPdf(layout: ReceiptLayout, { width, margin }: Print
       draw(pdf, page);
     });
   }
-  return { pdf, width, height, filename: layout.filename, ...(parts.length ? { parts } : {}) };
+  return { pdf, width, height, filename: layout.filename };
 }

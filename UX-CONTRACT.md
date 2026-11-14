@@ -10,36 +10,23 @@ compartilhadas e por `ARCHITECTURE.md`.
 
 ## Impressão
 
-- `PrintSettings` é o proprietário das preferências compartilhadas; selecionar
-  impressora, método e automação mantém o mesmo significado em Etiquetas e PDV.
-- Fonte do comportamento: solicitação do proprietário de salvar e imprimir
-  automaticamente, sem o intervalo excessivo na bobina; detalhes em docs/printing.md.
-- Configurações são locais ao navegador, separadas por empresa e salvas automaticamente. Nenhuma
-  seleção de produtos ou dado de cliente é persistido por essa preferência.
-- Ao registrar a venda, iniciar uma tentativa de cupom se autoReceipt estiver ativa.
-  Não repetir automaticamente uma tentativa ambígua. A ação manual permite reimprimir.
-- Mostrar separadamente envio ao spooler, solicitação de diálogo do navegador,
-  download de PDF, recusa local e envio indeterminado. O teste usa a mesma fila.
-  O download explícito fica disponível sem a ponte local.
-- Na lista de vendas, reimprimir é uma ação manual por venda concluída, disponível
-  na linha e nos detalhes. Essas ações abrem `PrintDialog`, que também prepara
-  etiquetas e cupons manuais do PDV. Consultar a venda e a empresa ao confirmar;
-  reutilizar `PrintService` e as preferências locais do PDV. Abrir os detalhes
-  ou o modal não dispara impressão/download. Uma falha não deve provocar reenvio
-  automático. O envio manual ocorre em “Confirmar impressão” ou “Imprimir teste”.
-  “Baixar PDF” gera o arquivo. Enquanto envia o documento preparado,
-  bloquear alterações e fechamento para evitar uma tentativa ambígua.
-- O modal mostra resumo do documento, perfil e fila local, papel, método e
-  preferências persistidas. Em etiquetas, permitir medidas, papel e quantidades
-  dentro da preparação, com prévia e validações antes de habilitar a confirmação.
-- A impressão automática de conclusão do PDV permanece regida por `autoReceipt`;
-  a confirmação do modal é obrigatória para ações manuais.
-- Erros preservam o produto/venda para nova tentativa após conferir a fila.
-- Usar controles nativos de seleção: popup e teclado pertencem ao sistema operacional.
-- O perfil Knup KP-1025 aplica as medidas publicadas pelo fabricante (58 mm de
-  papel, 48 mm úteis), referenciadas em docs/printing.md. A escolha é local ao
-  navegador; não muda o perfil das demais lojas.
-- Esta mudança não altera autorização de vendas, cobrança ou ciclo de vida dos dados.
+- O navegador oferece as impressoras disponíveis no dispositivo. O Mangora
+  prepara o PDF e solicita a janela de impressão. A confirmação final e o
+  cancelamento acontecem nessa janela.
+- As preferências do documento são locais ao navegador e separadas por empresa.
+  A leitura de preferências antigas aproveita papel, medidas, vias, automação e
+  download. Modelo, fila e conexão deixam de influenciar o documento.
+- O cupom automático do PDV solicita a janela de impressão uma vez por venda
+  quando a preferência estiver habilitada. Uma nova tentativa é manual.
+- Em Vendas, ações na lista e nos detalhes abrem o mesmo diálogo de preparação
+  usado pelo PDV e por Etiquetas. A reimpressão consulta a venda e a empresa
+  ao confirmar. Cupom disponível para vendas concluídas.
+- Abrir a preparação preserva a seleção e permite revisar o conteúdo. “Abrir
+  impressão” solicita a janela do navegador. “Baixar PDF” baixa o documento.
+  Durante a preparação, os controles ficam bloqueados. Uma falha permite
+  tentar novamente ou baixar o PDF.
+- Em Etiquetas, medidas, papel e quantidades podem ser ajustados na preparação.
+  Os campos de seleção de formato usam os controles nativos do navegador.
 
 ## Assinatura e cobrança
 

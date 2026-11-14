@@ -91,7 +91,7 @@ export default function DoneStep({ sale, company, received, change, onFinish }: 
                     <RotateCcw className="size-4" /> Concluir venda
                 </button>
             </div>
-            <p className="mt-4 font-mono text-[10px] text-pdv-fg/60">{t("labels.printHint")}</p>
+            <p className="mt-4 font-mono text-[10px] text-pdv-fg/60">{t("labels.dialog.hint")}</p>
             <p role={printFailed ? "alert" : "status"} aria-live="polite" className="mt-3 min-h-10 text-xs text-pdv-fg">{printing ? t("labels.printing") : printMessage}</p>
         </div>
         <aside className="min-w-0"><PrintSettings kind="receipt" /></aside>

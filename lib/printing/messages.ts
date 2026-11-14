@@ -10,6 +10,5 @@ export function printErrorMessage(t: Translate, cause: unknown, fallback = "labe
 export function printResultMessage(t: Translate, result: PrintResult) {
   if (result === "skipped") return "";
   if (result === "dialog-opened") return t("labels.browserOpened");
-  if (result === "download-requested") return t("labels.downloadRequested");
-  return t("labels.printSubmitted");
+  return t("labels.downloadRequested");
 }
