@@ -13,7 +13,8 @@ export type PrintDocument =
   | { kind: "label"; items: LabelItem[]; size: LabelSize; paper: LabelPaper }
   | { kind: "test"; target: PrintKind };
 
-export type PdfOutput = { pdf: jsPDF; width: number; height: number; filename: string };
+export type PrintPage = { width: number; height: number; svg: string };
+export type PdfOutput = { pdf: jsPDF; width: number; height: number; filename: string; pages: PrintPage[] };
 
 export type PrintResult = "dialog-opened" | "download-requested" | "skipped";
 export type PrintState = PrintResult | "queued" | "preparing" | "sending" | "failed";

@@ -1,6 +1,7 @@
 import { jsPDF } from "jspdf";
 import QRCode from "qrcode";
 import type { ReceiptLayout, ReceiptLine } from "./receipt";
+import { PrintPageDrawing } from "./print-page";
 import type { PdfOutput } from "./types";
 
 export function renderReceiptPdf(layout: ReceiptLayout, width: 58 | 80, copies = 1): PdfOutput {
@@ -35,19 +36,25 @@ export function renderReceiptPdf(layout: ReceiptLayout, width: 58 | 80, copies =
     page.qr = QRCode.create(layout.qr, { errorCorrectionLevel: "M" });
   }
 
-  function draw(pdf: jsPDF, page: Page) {
+  function draw(pdf: jsPDF, page: Page, drawing: PrintPageDrawing) {
     let y = 3;
     for (const line of page.lines) {
       y += line.height;
       pdf.setFont("helvetica", line.bold ? "bold" : "normal").setFontSize(line.size);
-      pdf.text(line.text, line.center ? width / 2 : margin, y - 1, { align: line.center ? "center" : "left" });
+      const x = line.center ? width / 2 : margin;
+      pdf.text(line.text, x, y - 1, { align: line.center ? "center" : "left" });
+      drawing.text(line.text, x, y - 1, line.size, line.bold, line.center);
     }
     if (page.qr) {
       const { size, data } = page.qr.modules;
       const moduleSize = 24 / (size + 8);
       const x = (width - size * moduleSize) / 2;
       data.forEach((dark, index) => {
-        if (dark) pdf.rect(x + index % size * moduleSize, y + 4 * moduleSize + Math.floor(index / size) * moduleSize, moduleSize, moduleSize, "F");
+        if (!dark) return;
+        const left = x + index % size * moduleSize;
+        const top = y + (4 + Math.floor(index / size)) * moduleSize;
+        pdf.rect(left, top, moduleSize, moduleSize, "F");
+        drawing.rect(left, top, moduleSize, moduleSize);
       });
     }
   }
@@ -56,12 +63,15 @@ export function renderReceiptPdf(layout: ReceiptLayout, width: 58 | 80, copies =
   const orientation = (height: number) => width > height ? "landscape" : "portrait";
   const newPdf = (height: number) => new jsPDF({ unit: "mm", format: [width, height], orientation: orientation(height), compress: true });
   const pdf = newPdf(height);
+  const printPages: PdfOutput["pages"] = [];
   for (let copy = 0; copy < copies; copy++) {
     pages.forEach((page, index) => {
       const pageHeight = Math.max(30, page.height);
       if (index || copy) pdf.addPage([width, pageHeight], orientation(pageHeight));
-      draw(pdf, page);
+      const drawing = new PrintPageDrawing(width, pageHeight);
+      draw(pdf, page, drawing);
+      printPages.push(drawing.page());
     });
   }
-  return { pdf, width, height, filename: layout.filename };
+  return { pdf, width, height, filename: layout.filename, pages: printPages };
 }

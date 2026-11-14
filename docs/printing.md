@@ -2,7 +2,8 @@
 
 Notinhas do PDV, reimpressões em Vendas, etiquetas e páginas de teste usam
 a janela de impressão do navegador. Cada operador escolhe nela a impressora
-disponível no dispositivo e confirma ou cancela o trabalho.
+disponível no dispositivo e confirma ou cancela o trabalho. A janela nativa é
+acionada como no Ctrl+P, com apenas o conteúdo do trabalho na prévia.
 
 ## Uso no balcão
 

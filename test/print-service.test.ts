@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import nextConfig from "@/next.config";
-import { BrowserPdfAdapter } from "@/lib/printing/browser-pdf-adapter";
+import { BrowserPrintAdapter } from "@/lib/printing/browser-print-adapter";
 import { readPrintPreferences, savePrintPreferences } from "@/lib/printing/preferences";
 import { receiptTestLayout } from "@/lib/printing/receipt";
 import { renderReceiptPdf } from "@/lib/printing/receipt-pdf";
@@ -82,29 +82,29 @@ describe("typed printing queue", () => {
     expect(output.pdf.internal.pageSize.getWidth()).toBeCloseTo(80);
   });
 
-  it("opens the local PDF, reports the dialog request, and disposes the frame", async () => {
+  it("prints the HTML document with the native dialog and disposes the frame", async () => {
     const target = new EventTarget();
     const print = vi.fn();
-    Object.assign(target, { print, focus: vi.fn() });
+    Object.assign(target, { print });
     vi.spyOn(HTMLIFrameElement.prototype, "contentWindow", "get").mockReturnValue(target as unknown as Window);
-    vi.spyOn(URL, "createObjectURL").mockReturnValue("about:blank");
-    const revoke = vi.spyOn(URL, "revokeObjectURL").mockImplementation(() => {});
-    const pending = new BrowserPdfAdapter().print(renderReceiptPdf(receiptTestLayout(80), 80));
+    const pending = new BrowserPrintAdapter().print(renderReceiptPdf(receiptTestLayout(80), 80));
     const frame = document.querySelector("iframe")!;
+    expect(frame.srcdoc).toContain("size: 80mm");
+    expect(frame.srcdoc).toContain("TESTE DE IMPRESSÃO");
+    expect(frame.srcdoc).not.toContain("<embed");
     frame.dispatchEvent(new Event("load"));
     await expect(pending).resolves.toBe("dialog-opened");
     expect(print).toHaveBeenCalledOnce();
     target.dispatchEvent(new Event("afterprint"));
     expect(frame.isConnected).toBe(false);
-    expect(revoke).toHaveBeenCalledOnce();
   });
 
-  it("allows the local PDF viewer without granting WebSocket access to local printers", async () => {
+  it("allows same-origin frames without granting WebSocket access to local printers", async () => {
     const headers = await nextConfig.headers!();
     const csp = headers[0].headers.find(header => header.key === "Content-Security-Policy")!.value;
     const directives = csp.split("; ");
     const connect = directives.find(directive => directive.startsWith("connect-src "))!;
     expect(connect).not.toMatch(/\bwss?:\/\/localhost\S*/);
-    expect(directives.find(directive => directive.startsWith("frame-src "))).toContain("blob:");
+    expect(directives.find(directive => directive.startsWith("frame-src "))).toContain("'self'");
   });
 });

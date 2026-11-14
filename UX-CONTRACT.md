@@ -11,7 +11,7 @@ compartilhadas e por `ARCHITECTURE.md`.
 ## Impressão
 
 - O navegador oferece as impressoras disponíveis no dispositivo. O Mangora
-  prepara o PDF e solicita a janela de impressão. A confirmação final e o
+  abre a janela nativa de impressão com o documento isolado. A confirmação final e o
   cancelamento acontecem nessa janela.
 - As preferências do documento são locais ao navegador e separadas por empresa.
   A leitura de preferências antigas aproveita papel, medidas, vias, automação e

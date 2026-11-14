@@ -1,4 +1,4 @@
-import { BrowserPdfAdapter } from "./browser-pdf-adapter";
+import { BrowserPrintAdapter } from "./browser-print-adapter";
 import { buildLabelPdf } from "./label-pdf";
 import { readPrintPreferences, type PrintPreferences } from "./preferences";
 import { receiptLayout, receiptTestLayout } from "./receipt";
@@ -32,7 +32,7 @@ export class PrintService {
   private attempts = new Map<string, number>();
   private logs: { scope: string; entry: PrintLog }[] = [];
 
-  constructor(private readonly browser = new BrowserPdfAdapter()) {}
+  constructor(private readonly browser = new BrowserPrintAdapter()) {}
 
   history(scope: string): PrintLog[] {
     return this.logs.filter(log => log.scope === scope).map(log => ({ ...log.entry }));
