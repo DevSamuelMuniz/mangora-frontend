@@ -45,6 +45,9 @@ Runtime ownership remains in `app/globals.css`; this document mirrors its tokens
 `colors.primary` maps to `--brand-primary`, foreground to `--foreground`, background
 to `--background`, secondary to `--brand-secondary`, accent to `--brand-accent`.
 Tailwind's existing slate/white label panels remain the neutral workspace palette.
+Global scrollbars inherit the slate palette from `--scrollbar-thumb`, `--scrollbar-track`,
+`--scrollbar-hover` and `--scrollbar-active` in `app/globals.css`, with system colors
+in forced-colors mode. No per-panel opt-in is required.
 PDV content uses `pdv-*` semantic tokens and the existing dark/green themes.
 
 ## Typography
@@ -83,6 +86,13 @@ Do not add ornamental gradients, new floating tools or dashboard metrics to prin
 
 Rounded-xl controls and rounded-2xl panels follow existing label-workspace geometry.
 Printed paper uses rectangular pages with no decorative frame.
+
+Labels use a single measured vector drawing in LabelPreview, browser printing
+and PDF export. The product name anchors the top, followed by the SKU; the barcode
+and its readable digits occupy the middle, and a bold price anchors the bottom.
+Fixed physical zones prevent a long name from displacing the barcode. Compact
+20mm labels use a smaller type scale and one name line. Preview paper scales down
+to its container on mobile; printed dimensions remain in millimetres.
 
 ## Components
 

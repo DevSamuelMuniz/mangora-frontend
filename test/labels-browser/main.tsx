@@ -1,0 +1,10 @@
+import React from "react";
+import { createRoot } from "react-dom/client";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import I18nProvider from "@/i18n/provider";
+import labels from "@/messages/pt-BR/labels.json";
+import LabelWorkspace from "@/components/labels/LabelWorkspace";
+import "../../app/globals.css";
+import "../billing-browser/preview.css";
+const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
+createRoot(document.getElementById("root")!).render(<QueryClientProvider client={client}><I18nProvider locale="pt-BR" messages={{ labels, navigation: { groups: { supplies: "Suprimentos" } } }}><main style={{ padding: 16 }}><LabelWorkspace /></main></I18nProvider></QueryClientProvider>);

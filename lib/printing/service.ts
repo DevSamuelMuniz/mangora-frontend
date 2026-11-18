@@ -16,7 +16,7 @@ function renderDocument(document: PrintDocument, preferences: PrintPreferences) 
   }
   if (document.kind === "test" && document.target === "label") {
     const pdf = buildLabelPdf(
-      [{ id: "test", name: "TESTE • Café", code: "00123456", price: "R$ 12,00", quantity: 1 }],
+      [{ id: "test", name: "TESTE • Café", productCode: "CAFE-001", code: "00123456", price: "R$ 12,00", quantity: 1 }],
       { width: preferences.labelWidth, height: preferences.labelHeight }, preferences.labelPaper,
     );
     return { ...pdf, filename: "teste-de-etiqueta.pdf" };

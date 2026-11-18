@@ -1,0 +1,34 @@
+{
+  "profile": "product-admin",
+  "sourceRoots": [
+    "components/labels",
+    "components/printing",
+    "lib/printing"
+  ],
+  "locale": "pt-BR",
+  "canonicalMap": "UX-CONTRACT.md",
+  "requiredCapabilities": [
+    "Select/Listbox",
+    "Scrollbar"
+  ],
+  "ownership": {
+    "Select/Listbox": "native"
+  },
+  "requiredCommands": [
+    "labels-unit",
+    "labels-browser",
+    "labels-lint",
+    "typecheck",
+    "build"
+  ],
+  "commands": {
+    "labels-unit": "npx vitest run test/labels.test.ts test/printing.test.ts test/label-workspace.test.tsx test/print-service.test.ts test/printing-ui.test.tsx",
+    "labels-browser": "npx playwright test --config playwright.labels.config.ts",
+    "labels-lint": "npx eslint components/labels lib/labels.ts lib/printing/label-pdf.ts lib/printing/service.ts test/labels-browser test/labels.test.ts test/printing.test.ts test/label-workspace.test.tsx playwright.labels.config.ts",
+    "typecheck": "npx tsc --noEmit",
+    "build": "npm run build"
+  },
+  "evidence": {
+    "failurePaths": "test/labels-browser/labels.spec.ts"
+  }
+}

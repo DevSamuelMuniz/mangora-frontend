@@ -17,6 +17,17 @@ afterEach(() => { cleanup(); localStorage.clear(); vi.clearAllMocks(); });
 function setup() { render(<I18nProvider locale="pt-BR" messages={{ labels, navigation: { groups: { supplies: "Suprimentos" } } }}><LabelWorkspace /></I18nProvider>); }
 
 describe("página Etiquetas", () => {
+  it("exibe SKU e código de barras separados e limpa a busca sem perder a seleção", () => {
+    setup();
+    fireEvent.click(screen.getByRole("checkbox", { name: "Selecionar Café especial" }));
+    expect(screen.getByRole("img", { name: /Café especial; CAFE; 0012345678905/ })).toBeTruthy();
+    const input = screen.getByPlaceholderText(labels.search);
+    fireEvent.change(input, { target: { value: "inexistente" } });
+    fireEvent.click(screen.getByRole("button", { name: labels.clearSearch }));
+    expect((input as HTMLInputElement).value).toBe("");
+    expect(document.activeElement).toBe(input);
+    expect((screen.getByRole("checkbox", { name: "Selecionar Café especial" }) as HTMLInputElement).checked).toBe(true);
+  });
   it("opens preparation without dispatching and cancels without downloading", () => {
     setup();
     fireEvent.click(screen.getByRole("checkbox", { name: "Selecionar Café especial" }));
@@ -50,8 +61,8 @@ describe("página Etiquetas", () => {
     expect(submitPrintJob).not.toHaveBeenCalled();
     fireEvent.click(within(screen.getByRole("dialog", { name: labels.dialog.labelTitle })).getByRole("button", { name: labels.dialog.confirm }));
     await waitFor(() => expect(submitPrintJob).toHaveBeenCalledOnce());
-    expect(submitPrintJob).toHaveBeenCalledWith({ kind: "label", size: { width: 50, height: 40 }, paper: "continuous", items: [expect.objectContaining({ quantity: 3 })] }, { scope: "", pdfOnly: false });
-    expect(screen.getByText(/R\$\s19,90/)).toBeTruthy();
+    expect(submitPrintJob).toHaveBeenCalledWith({ kind: "label", size: { width: 50, height: 40 }, paper: "continuous", items: [expect.objectContaining({ quantity: 3, productCode: "CAFE", code: "0012345678905" })] }, { scope: "", pdfOnly: false });
+    expect(screen.getAllByText(/R\$\s19,90/).length).toBeGreaterThan(0);
     expect(JSON.parse(localStorage.getItem("mangora.printing.v1")!).labelHeight).toBe(40);
   });
 

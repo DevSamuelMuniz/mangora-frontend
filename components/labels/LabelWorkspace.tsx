@@ -1,11 +1,12 @@
 "use client";
 
-import { useState, type CSSProperties } from "react";
+import { useRef, useState } from "react";
 import Link from "next/link";
-import { Barcode, Check, LoaderCircle, Printer, Ruler, Search, Trash2 } from "lucide-react";
+import { Barcode, Check, LoaderCircle, Printer, Ruler, Search, Trash2, X } from "lucide-react";
 import { useProducts } from "@/features/products/hooks/useProducts";
 import { useFormatters, useT } from "@/i18n/provider";
-import { barcodeFits, LABEL_CSS, LABEL_SIZES, labelCode, labelMarkup, MAX_LABELS, validLabelSize, type LabelItem, type LabelPaper } from "@/lib/labels";
+import { barcodeFits, LABEL_SIZES, labelCode, MAX_LABELS, validLabelSize, type LabelItem, type LabelPaper } from "@/lib/labels";
+import LabelPreview from "./LabelPreview";
 import { submitPrintJob } from "@/lib/printing/service";
 import { printErrorMessage, printResultMessage } from "@/lib/printing/messages";
 import { usePrintScope } from "@/lib/printing/scope";
@@ -23,6 +24,7 @@ export default function LabelWorkspace() {
   const { formatCurrency } = useFormatters();
   const { data: products = [], isLoading, error, refetch } = useProducts();
   const [search, setSearch] = useState("");
+  const searchInput = useRef<HTMLInputElement>(null);
   const [quantities, setQuantities] = useState<Record<string, number>>({});
   const preferences = usePrintPreferences();
   const [customSize, setCustomSize] = useState(false);
@@ -41,7 +43,7 @@ export default function LabelWorkspace() {
   const validSize = validLabelSize(size);
   const selected: LabelItem[] = products.flatMap((product) => {
     const code = labelCode(product);
-    return quantities[product.id] !== undefined && code ? [{ id: product.id, name: product.name, code, price: formatCurrency(product.price), quantity: quantities[product.id] }] : [];
+    return quantities[product.id] !== undefined && code ? [{ id: product.id, name: product.name, productCode: product.sku, code, price: formatCurrency(product.price), quantity: quantities[product.id] }] : [];
   });
   const total = selected.reduce((sum, item) => sum + item.quantity, 0);
   const invalidQuantity = selected.some((item) => !Number.isInteger(item.quantity) || item.quantity < 1);
@@ -49,8 +51,6 @@ export default function LabelWorkspace() {
   const canPrint = selected.length > 0 && validSize && !invalidQuantity && total <= MAX_LABELS && !tooNarrow && !printing && !error;
   const visible = products.filter((product) => `${product.name} ${product.sku} ${product.barcode ?? ""}`.toLocaleLowerCase().includes(search.toLocaleLowerCase()));
   const preview = selected[0];
-  const previewMarkup = preview ? labelMarkup(preview) : "";
-  const dimensions = { "--label-width": `${validSize ? size.width : 50}mm`, "--label-height": `${validSize ? size.height : 50}mm` } as CSSProperties;
 
   function chooseSize(value: string) {
     setCustomSize(value === "custom");
@@ -102,14 +102,13 @@ export default function LabelWorkspace() {
 
   return (
     <section className="mx-auto max-w-7xl">
-      <style>{LABEL_CSS}</style>
       <header className="flex flex-wrap items-start justify-between gap-4">
         <div>
           <p className="text-[11px] font-bold uppercase tracking-wider text-orange-600">{t("navigation.groups.supplies")}</p>
           <h1 className="mt-1 flex items-center gap-2 text-2xl font-black text-slate-950 sm:text-3xl"><Barcode className="size-7 text-orange-600" />{t("labels.title")}</h1>
           <p className="mt-2 max-w-xl text-sm text-slate-500">{t("labels.subtitle")}</p>
         </div>
-        <button type="button" onClick={() => setPrintDialogOpen(true)} disabled={!canPrint} className="flex h-11 items-center gap-2 rounded-xl bg-orange-600 px-5 text-sm font-bold text-white hover:bg-orange-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600 disabled:cursor-not-allowed disabled:opacity-40">
+        <button type="button" onClick={() => setPrintDialogOpen(true)} disabled={!canPrint} className="flex h-11 cursor-pointer items-center gap-2 rounded-xl bg-orange-600 px-5 text-sm font-bold text-white hover:bg-orange-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600 disabled:cursor-not-allowed disabled:opacity-40">
           {printing ? <LoaderCircle className="size-4 animate-spin" /> : <Printer className="size-4" />}{t("labels.print", { count: total })}
         </button>
       </header>
@@ -118,17 +117,18 @@ export default function LabelWorkspace() {
         <div className="space-y-5">
           <div className={panelClass}>
             <h2 className="text-sm font-bold text-slate-900">{t("labels.products")}</h2>
-            <label className="relative mt-3 block"><Search className="absolute left-3 top-3.5 size-4 text-slate-400" /><span className="sr-only">{t("labels.search")}</span><input value={search} onChange={(event) => setSearch(event.target.value)} placeholder={t("labels.search")} className={`${inputClass} pl-9`} /></label>
+            <div className="relative mt-3"><Search aria-hidden="true" className="pointer-events-none absolute left-3 top-3.5 size-4 text-slate-400" /><label><span className="sr-only">{t("labels.search")}</span><input ref={searchInput} value={search} onChange={(event) => setSearch(event.target.value)} placeholder={t("labels.search")} className={`${inputClass} pl-9 pr-11`} /></label>{search && <button type="button" aria-label={t("labels.clearSearch")} onClick={() => { setSearch(""); searchInput.current?.focus(); }} className="absolute right-0 top-0 flex size-11 cursor-pointer items-center justify-center rounded-xl text-slate-500 hover:bg-slate-100 focus-visible:outline-2 focus-visible:outline-orange-600"><X className="size-4" /></button>}</div>
             <div className="mt-3 max-h-72 divide-y divide-slate-100 overflow-y-auto">
               {isLoading && <p role="status" className="py-6 text-center text-sm text-slate-500">{t("labels.loading")}</p>}
-              {error && <div role="alert" className="py-4 text-sm text-red-700">{t("labels.loadError")} <button onClick={() => void refetch()} className="font-bold underline">{t("labels.retry")}</button></div>}
+              {error && <div role="alert" className="py-4 text-sm text-red-700">{t("labels.loadError")} <button onClick={() => void refetch()} className="cursor-pointer rounded focus-visible:outline-2 focus-visible:outline-orange-600 font-bold underline hover:text-red-900">{t("labels.retry")}</button></div>}
               {!isLoading && !error && !visible.length && <p className="py-6 text-center text-sm text-slate-500">{t("labels.noProducts")}</p>}
               {visible.map((product) => {
                 const code = labelCode(product);
                 const checked = quantities[product.id] !== undefined;
                 return <div key={product.id} className="flex items-center gap-3 py-3">
-                  <input type="checkbox" checked={checked} disabled={!code} onChange={() => toggle(product.id)} aria-label={t("labels.selectProduct", { name: product.name })} className="size-4 shrink-0 accent-orange-600" />
-                  <div className="min-w-0 flex-1"><p className="truncate text-sm font-semibold text-slate-800" title={product.name}>{product.name}</p><p className="mt-0.5 text-xs text-slate-500">{code ?? t("labels.missingCode")}</p></div>
+                  <input type="checkbox" checked={checked} disabled={!code} onChange={() => toggle(product.id)} aria-label={t("labels.selectProduct", { name: product.name })} className="size-4 shrink-0 cursor-pointer accent-orange-600 focus-visible:outline-2 focus-visible:outline-orange-600 disabled:cursor-not-allowed" />
+                  <div className="min-w-0 flex-1"><p className="break-words text-sm font-semibold text-slate-800">{product.name}</p><p className="mt-0.5 break-all font-mono text-xs text-slate-500">{product.sku} · {code ?? t("labels.missingCode")}</p></div>
+                  <span className="shrink-0 text-sm font-bold tabular-nums text-slate-800">{formatCurrency(product.price)}</span>
                   {!code ? <Link href={`/produtos?acao=editar&id=${encodeURIComponent(product.id)}`} className="shrink-0 text-xs font-bold text-orange-700 underline">{t("labels.edit")}</Link> : checked && <Check className="size-4 shrink-0 text-orange-600" />}
                 </div>;
               })}
@@ -144,25 +144,25 @@ export default function LabelWorkspace() {
           </div>
 
           {selected.length > 0 && <div className={panelClass}>
-            <div className="flex items-center justify-between gap-3"><h2 className="text-sm font-bold">{t("labels.queue")}</h2><button onClick={() => setQuantities({})} className="text-xs font-semibold text-slate-500 underline">{t("labels.clear")}</button></div>
+            <div className="flex items-center justify-between gap-3"><h2 className="text-sm font-bold">{t("labels.queue")}</h2><button onClick={() => setQuantities({})} className="min-h-11 cursor-pointer rounded px-2 text-xs font-semibold text-slate-500 underline hover:text-slate-900 focus-visible:outline-2 focus-visible:outline-orange-600">{t("labels.clear")}</button></div>
             <div className="mt-3 divide-y divide-slate-100">{selected.map((item) => <div key={item.id} className="flex items-center gap-3 py-3">
-              <div className="min-w-0 flex-1"><p className="truncate text-sm font-semibold" title={item.name}>{item.name}</p><p className="text-xs text-slate-500">{item.code}</p></div>
+              <div className="min-w-0 flex-1"><p className="break-words text-sm font-semibold">{item.name}</p><p className="break-all font-mono text-xs text-slate-500">{item.productCode}</p></div>
               <label className="w-20 shrink-0"><span className="sr-only">{t("labels.quantity", { name: item.name })}</span><input type="number" min="1" max={MAX_LABELS} step="1" value={item.quantity || ""} onChange={(event) => setQuantities((current) => ({ ...current, [item.id]: Number(event.target.value) }))} className={inputClass} /></label>
-              <button onClick={() => toggle(item.id)} aria-label={t("labels.remove", { name: item.name })} className="rounded-lg p-2 text-slate-400 hover:bg-red-50 hover:text-red-600"><Trash2 className="size-4" /></button>
+              <button onClick={() => toggle(item.id)} aria-label={t("labels.remove", { name: item.name })} className="flex size-11 shrink-0 cursor-pointer items-center justify-center rounded-lg text-slate-500 hover:bg-red-50 hover:text-red-600 focus-visible:outline-2 focus-visible:outline-red-600"><Trash2 className="size-4" /></button>
             </div>)}</div>
             <p className="mt-3 border-t pt-3 text-xs font-semibold text-slate-600" aria-live="polite">{t("labels.total", { count: total })}</p>
           </div>}
         </div>
 
         <aside className="min-w-0 lg:sticky lg:top-5">
-          <div className="mb-4"><PrintSettings kind="label" /></div>
           <div className="overflow-hidden rounded-2xl border border-slate-200 bg-slate-100">
             <div className="flex items-center justify-between gap-3 border-b border-slate-200 bg-white px-5 py-4"><h2 className="text-sm font-bold">{t("labels.preview")}</h2><span className="rounded-md bg-slate-100 px-2 py-1 font-mono text-xs text-slate-600">{validSize ? `${width} × ${height} cm` : "—"}</span></div>
             <div className="flex min-h-80 items-center overflow-auto p-8" style={{ backgroundImage: "radial-gradient(#cbd5e1 1px, transparent 1px)", backgroundSize: "12px 12px" }}>
-              {preview ? <div className="mx-auto shrink-0 shadow-lg ring-1 ring-black/5" style={dimensions} dangerouslySetInnerHTML={{ __html: previewMarkup }} /> : <div className="mx-auto max-w-60 text-center"><Barcode className="mx-auto size-12 text-slate-300" /><p className="mt-3 text-sm leading-6 text-slate-500">{t("labels.emptyPreview")}</p></div>}
+              {preview ? <LabelPreview item={preview} size={size} /> : <div className="mx-auto max-w-60 text-center"><Barcode className="mx-auto size-12 text-slate-300" /><p className="mt-3 text-sm leading-6 text-slate-500">{t("labels.emptyPreview")}</p></div>}
             </div>
             <p className="border-t border-slate-200 bg-white px-5 py-3 text-xs leading-5 text-slate-500">{t("labels.previewHint")}</p>
           </div>
+          <div className="mt-4"><PrintSettings kind="label" /></div>
           <p className="mt-4 text-xs leading-5 text-slate-500">{t("labels.printHint")}</p>
           {(invalidQuantity || total > MAX_LABELS) && <p role="alert" className="mt-3 rounded-xl bg-red-50 p-3 text-xs font-semibold text-red-700">{t("labels.quantityError", { max: MAX_LABELS })}</p>}
           {tooNarrow && <p role="alert" className="mt-3 rounded-xl bg-amber-50 p-3 text-xs font-semibold text-amber-800">{t("labels.narrowError")}</p>}
@@ -179,7 +179,7 @@ export default function LabelWorkspace() {
         <section className={panelClass}><h3 className="text-sm font-bold">{t("labels.total", { count: total })}</h3><div className="mt-3 max-h-48 divide-y divide-slate-100 overflow-y-auto">{selected.map(item => <div key={item.id} className="flex items-center justify-between gap-3 py-2 text-xs"><p className="min-w-0 break-words font-semibold">{item.name}</p><label className="w-20 shrink-0"><span className="sr-only">{t("labels.quantity", { name: item.name })}</span><input type="number" min="1" max={MAX_LABELS} step="1" value={item.quantity || ""} onChange={event => setQuantities(current => ({ ...current, [item.id]: Number(event.target.value) }))} className={inputClass} /></label></div>)}</div>
           {(invalidQuantity || total > MAX_LABELS) && <p role="alert" className="mt-2 text-xs text-red-700">{t("labels.quantityError", { max: MAX_LABELS })}</p>}
         </section>
-        <section className={panelClass}><h3 className="text-sm font-bold">{t("labels.preview")}</h3><div className="mt-3 overflow-auto bg-slate-100 p-4">{preview && <div className="mx-auto w-fit bg-white shadow-sm" style={dimensions} dangerouslySetInnerHTML={{ __html: previewMarkup }} />}</div></section>
+        <section className={panelClass}><h3 className="text-sm font-bold">{t("labels.preview")}</h3><div className="mt-3 overflow-auto bg-slate-100 p-4">{preview && <LabelPreview item={preview} size={size} />}</div></section>
       </PrintDialog>}
     </section>
   );

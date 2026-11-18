@@ -6,7 +6,25 @@
   --brand-primary: #f97316;
   --brand-secondary: #f59e0b;
   --brand-accent: #16803c;
+  --scrollbar-thumb: #94a3b8;
+  --scrollbar-track: #f1f5f9;
+  --scrollbar-hover: #64748b;
+  --scrollbar-active: #475569;
   color-scheme: light;
+}
+
+/* Shared baseline: new app-owned overflow regions inherit usable scrollbars. */
+html { scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track); scrollbar-width: auto; }
+* { scrollbar-color: inherit; scrollbar-width: inherit; }
+*::-webkit-scrollbar { width: 12px; height: 12px; }
+*::-webkit-scrollbar-track { background: var(--scrollbar-track); }
+*::-webkit-scrollbar-thumb { background: var(--scrollbar-thumb); border: 3px solid var(--scrollbar-track); border-radius: 8px; }
+*::-webkit-scrollbar-thumb:hover { background: var(--scrollbar-hover); }
+*::-webkit-scrollbar-thumb:active { background: var(--scrollbar-active); }
+@media (forced-colors: active) {
+  html { scrollbar-color: auto; }
+  *::-webkit-scrollbar-track { background: Canvas; }
+  *::-webkit-scrollbar-thumb { background: ButtonText; border-color: Canvas; }
 }
 
 @theme inline {

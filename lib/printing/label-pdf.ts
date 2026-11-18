@@ -28,7 +28,11 @@ export function buildLabelPdf(items: LabelItem[], size: LabelSize, paper: LabelP
     const x = margin + (cell % columns) * (size.width + gap);
     const y = margin + Math.floor(cell / columns) * (size.height + gap);
     const available = size.width - 4;
-    pdf.setFont("helvetica", "bold").setFontSize(9);
+    const compact = size.height < 30;
+    const namePoints = compact ? 6.5 : 8;
+    const lineHeight = namePoints * 25.4 / 72 * 1.1;
+    const nameY = y + 1.5 + namePoints * 25.4 / 72;
+    pdf.setFont("helvetica", "bold").setFontSize(namePoints);
     const lines: string[] = pdf.splitTextToSize(item.name, available);
     const name = lines.slice(0, size.height >= 30 ? 2 : 1);
     if (lines.length > name.length) {
@@ -36,16 +40,28 @@ export function buildLabelPdf(items: LabelItem[], size: LabelSize, paper: LabelP
       while (pdf.getTextWidth(`${last}...`) > available && last.length) last = last.slice(0, -1);
       name[name.length - 1] = `${last}...`;
     }
-    pdf.text(name, x + size.width / 2, y + 4.5, { align: "center", lineHeightFactor: 1.1 });
-    name.forEach((line, index) => drawing.text(line, x + size.width / 2, y + 4.5 + index * 9 * 25.4 / 72 * 1.1, 9, true, true));
-    const priceY = y + 4.5 + name.length * 3.5;
-    pdf.setFontSize(10).text(item.price, x + size.width / 2, priceY, { align: "center", maxWidth: available });
-    drawing.text(item.price, x + size.width / 2, priceY, 10, true, true);
+    pdf.text(name, x + size.width / 2, nameY, { align: "center", lineHeightFactor: 1.1 });
+    name.forEach((line, index) => drawing.text(line, x + size.width / 2, nameY + index * lineHeight, namePoints, true, true));
+    // Reserve fixed zones so wrapping a name never pushes the barcode off the label.
+    const skuY = nameY + (compact ? 0 : lineHeight) + 2.5;
+    const center = x + size.width / 2;
+    function fitText(text: string, baseline: number, points: number, bold: boolean) {
+      pdf.setFont("helvetica", bold ? "bold" : "normal").setFontSize(points);
+      const fitted = Math.min(points, points * available / Math.max(pdf.getTextWidth(text), 0.01));
+      pdf.setFontSize(fitted).text(text, center, baseline, { align: "center" });
+      drawing.text(text, center, baseline, fitted, bold, true);
+      return fitted;
+    }
+    fitText(item.productCode ?? item.code, skuY, compact ? 6 : 7, false);
+    const priceY = y + size.height - 1.5;
+    const pricePoints = fitText(item.price, priceY, compact ? 11 : 16, true);
+    const codeY = priceY - pricePoints * 25.4 / 72 - 0.8;
     const data = barcodeData(item.code);
     const moduleWidth = Math.min(0.4, available / (data.length + 20));
     const barcodeWidth = (data.length + 20) * moduleWidth;
-    const barY = priceY + 1.5;
-    const barHeight = Math.min(12, y + size.height - 5 - barY);
+    const barY = skuY + 1;
+    const digitsGap = 2.8;
+    const barHeight = Math.min(12, codeY - digitsGap - barY);
     if (barHeight < 3) throw new Error("label-too-short");
     const startX = x + (size.width - barcodeWidth) / 2 + 10 * moduleWidth;
     pdf.setFillColor("#000000");
@@ -55,8 +71,7 @@ export function buildLabelPdf(items: LabelItem[], size: LabelSize, paper: LabelP
       pdf.rect(barX, barY, moduleWidth, barHeight, "F");
       drawing.rect(barX, barY, moduleWidth, barHeight);
     }
-    pdf.setFont("helvetica", "normal").setFontSize(7).text(item.code, x + size.width / 2, barY + barHeight + 3, { align: "center" });
-    drawing.text(item.code, x + size.width / 2, barY + barHeight + 3, 7, false, true);
+    fitText(item.code, barY + barHeight + digitsGap, compact ? 5.5 : 6.5, false);
   }
   pages.push(drawing.page());
   return { pdf, ...page, pages, filename: `etiquetas-${Date.now()}.pdf` };

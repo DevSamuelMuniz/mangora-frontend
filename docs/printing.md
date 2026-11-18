@@ -30,3 +30,33 @@ O serviço enfileira preparações na aba e agrupa solicitações simultâneas d
 mesmo documento. A abertura automática no PDV mantém uma proteção por empresa
 e venda. O estado do trabalho no aplicativo indica se a janela foi solicitada
 ou se o PDF foi baixado. A impressão física é acompanhada no sistema operacional.
+
+## Etiquetas: conteúdo e verificação
+
+Cada etiqueta contém nome, SKU do produto, código de barras com dígitos legíveis
+e preço cadastrado. O SKU não substitui o código de barras. Nome longo recebe
+reticências; a impressão preserva as medidas físicas e as margens de leitura.
+`LabelPreview` usa o desenho vetorial de `buildLabelPdf`, também usado pelo
+documento isolado do navegador e pelo download de PDF. A prévia pode diminuir
+na tela para caber no celular; isso não altera a medida impressa.
+
+Verificação desta alteração:
+
+- 35 testes unitários/de componentes de etiquetas e impressão passaram.
+- Oito verificações Playwright passaram em Chrome desktop e viewport móvel:
+  seleção, busca, preparação, Escape, download, documento isolado, dimensões,
+  carregamento, vazio e recuperação de falha. O documento de 30 × 20 mm foi
+  renderizado com mídia de impressão, com verificação dos limites do texto.
+- Build, TypeScript, ESLint dos arquivos alterados e lint de DESIGN.md passaram
+  (o último mantém dois avisos sobre tokens existentes).
+- `docs/labels-premium.json` define a auditoria da área de impressão;
+  `docs/labels-scoped-audit.json` não contém achados. A auditoria geral em
+  `docs/labels-audit.json` registra cinco problemas existentes em autenticação.
+- A suíte geral mantém três falhas fora desta alteração: chave
+  `products.stock.reservedShort`, paridade de traduções de clientes e montagem
+  do App Router no teste de preferências regionais. O lint geral aponta um erro
+  existente em `lib/offline/useConnectivity.ts` e dois avisos em BillingConfigPanel.
+
+Os testes de navegador usam os componentes reais e uma API local simulada.
+A chamada da janela nativa é interceptada; a impressão física e a leitura em
+scanner precisam ser conferidas na impressora do operador, usando escala de 100%.

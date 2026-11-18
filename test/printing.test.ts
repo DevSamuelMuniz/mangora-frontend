@@ -1,4 +1,5 @@
 import { beforeEach, describe, expect, it } from "vitest";
+import { LABEL_SIZES } from "@/lib/labels";
 import { buildLabelPdf } from "@/lib/printing/label-pdf";
 import { receiptLayout } from "@/lib/printing/receipt";
 import { renderReceiptPdf } from "@/lib/printing/receipt-pdf";
@@ -11,6 +12,22 @@ const sale = { id: "sale-print-test", companyId: "one", status: "COMPLETED", cod
 beforeEach(() => { localStorage.clear(); });
 
 describe("physical printing", () => {
+  it.each(LABEL_SIZES)("keeps all four fields inside %j with long names and distinct SKU", size => {
+    const job = buildLabelPdf([{ ...product, name: 'Café <Especial> & Premium '.repeat(8), productCode: "CAFE-001", code: "001234", quantity: 1 }], size, "roll");
+    const root = new DOMParser().parseFromString(job.pages[0].svg, "image/svg+xml");
+    const texts = [...root.querySelectorAll("text")];
+    expect(texts.map(text => text.textContent)).toEqual(expect.arrayContaining(["CAFE-001", "001234", product.price]));
+    expect(root.querySelector("Especial")).toBeNull();
+    for (const element of root.querySelectorAll("rect, text")) {
+      const y = Number(element.getAttribute("y"));
+      expect(y).toBeGreaterThan(0);
+      expect(y + Number(element.getAttribute("height") ?? 0)).toBeLessThan(size.height);
+    }
+    const bars = [...root.querySelectorAll("rect")];
+    const nameTexts = texts.slice(0, size.height < 30 ? 1 : 2);
+    expect(Number(texts[nameTexts.length].getAttribute("y"))).toBeLessThan(Number(bars[0].getAttribute("y")));
+    expect(Number(bars[0].getAttribute("height"))).toBeGreaterThanOrEqual(3);
+  });
   it("keeps continuous labels together and sizes the final strip without blank feed", () => {
     const job = buildLabelPdf([product], { width: 50, height: 30 }, "continuous");
     expect(job.pdf.getNumberOfPages()).toBe(1);

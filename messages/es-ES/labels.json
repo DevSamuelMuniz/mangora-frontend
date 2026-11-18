@@ -29,7 +29,7 @@
   "total": "Total: {count} etiquetas",
   "preview": "Vista previa",
   "emptyPreview": "Selecciona un producto para ver su etiqueta.",
-  "previewHint": "Vista del contenido. El PDF conserva las medidas en milímetros. Pruebe la lectura antes de imprimir el lote.",
+  "previewHint": "La vista previa usa el diseño de impresión: nombre, código del producto, código de barras y precio. Prueba la lectura antes de imprimir el lote.",
   "printHint": "Para mantener las medidas de las etiquetas, selecciona el papel correspondiente y usa la escala del 100 %.",
   "quantityError": "Usa cantidades enteras desde 1, con un máximo de {max} etiquetas por impresión.",
   "narrowError": "Un código es demasiado largo para este ancho. Elige una etiqueta más ancha para mantener la lectura.",
@@ -70,5 +70,6 @@
   "printingErrors": {
     "browser": "No se pudo abrir el diálogo de impresión. Descarga el PDF para imprimirlo manualmente.",
     "invalid": "No se pudo preparar el documento. Comprueba los datos y las medidas del papel."
-  }
+  },
+  "clearSearch": "Borrar búsqueda"
 }

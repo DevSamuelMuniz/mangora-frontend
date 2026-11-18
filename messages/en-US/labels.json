@@ -29,7 +29,7 @@
   "total": "Total: {count} labels",
   "preview": "Label preview",
   "emptyPreview": "Select a product to preview its label.",
-  "previewHint": "Content preview. The PDF preserves millimetre dimensions. Test barcode scanning before printing a batch.",
+  "previewHint": "The preview uses the print layout: product name, product code, barcode and price. Test scanning before printing the batch.",
   "printHint": "To keep the label dimensions, select the matching paper size and print at 100% scale.",
   "quantityError": "Use whole quantities starting at 1, with a maximum of {max} labels per print job.",
   "narrowError": "A product code is too long for this width. Choose a wider label to keep it readable.",
@@ -70,5 +70,6 @@
   "printingErrors": {
     "browser": "The print dialog could not open. Download the PDF to print manually.",
     "invalid": "The document could not be prepared. Check the data and paper dimensions."
-  }
+  },
+  "clearSearch": "Clear search"
 }

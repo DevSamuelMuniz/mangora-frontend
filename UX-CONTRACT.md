@@ -7,6 +7,8 @@ compartilhadas e por `ARCHITECTURE.md`.
 | Capability | Canonical owner | Source of truth | Allowed variants | Verification |
 |---|---|---|---|---|
 | Select/Listbox | Native HTML select | DESIGN.md; controles existentes de Etiquetas | native | test/label-workspace.test.tsx; revisão visual |
+| Label drawing | lib/printing/label-pdf.ts + components/labels/LabelPreview.tsx | Pedido do proprietário: nome, código do produto, código de barras e preço | compact / standard; roll / continuous / A4 | test/printing.test.ts; test/labels-browser/labels.spec.ts |
+| Scrollbar | app/globals.css | DESIGN.md | global / forced-colors | test/labels-browser/labels.spec.ts |
 
 ## Impressão
 
@@ -27,6 +29,11 @@ compartilhadas e por `ARCHITECTURE.md`.
   tentar novamente ou baixar o PDF.
 - Em Etiquetas, medidas, papel e quantidades podem ser ajustados na preparação.
   Os campos de seleção de formato usam os controles nativos do navegador.
+- O código do produto é o SKU cadastrado, separado do valor codificado nas barras.
+  A regra existente de código de barras numérico e fallback para SKU numérico
+  permanece em `lib/labels.ts`. Os zeros à esquerda são preservados. A prévia
+  compartilha o desenho da impressão e do PDF; nomes longos recebem reticências.
+  A busca local e a seleção do lote são transitórias; limpar a busca mantém a seleção.
 
 ## Assinatura e cobrança
 
