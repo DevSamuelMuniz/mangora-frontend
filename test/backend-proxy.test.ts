@@ -12,6 +12,42 @@ afterEach(() => { vi.unstubAllEnvs(); vi.unstubAllGlobals(); vi.restoreAllMocks(
 const context = { params: Promise.resolve({ path: ["auth", "login"] }) };
 
 describe("backend proxy", () => {
+  it.each(["mangora.com.br", "www.mangora.com.br"])("persists device trust across official frontend hosts: %s", async host => {
+    const expires = new Date(Date.now() + 30 * 86400000).toUTCString();
+    const headers = new Headers({ "content-type": "application/json" });
+    headers.append("set-cookie", `mangora_trusted_device=test-trust; Domain=api.mangora.com.br; Path=/; Expires=${expires}; Max-Age=2592000; HttpOnly; Secure; SameSite=Lax`);
+    vi.stubGlobal("fetch", vi.fn().mockResolvedValue(new Response("{}", { headers })));
+    const response = await POST(new NextRequest(`https://${host}/api/backend/auth/security/mfa/challenge`, { method: "POST", body: "{}" }), { params: Promise.resolve({ path: ["auth", "security", "mfa", "challenge"] }) });
+    const cookies = response.headers.getSetCookie();
+    expect(cookies).toHaveLength(2);
+    expect(cookies[0]).toContain("Max-Age=0");
+    expect(cookies[0]).not.toContain("Domain=");
+    expect(cookies[1]).toContain("Domain=mangora.com.br");
+    expect(cookies[1]).toContain("Max-Age=2592000");
+    expect(cookies[1]).toContain("HttpOnly");
+    expect(cookies[1]).not.toContain("Domain=api.");
+    expect(response.headers.get("cache-control")).toBe("no-store");
+  });
+  it("keeps preview cookies local and forwards the trust token and browser on the next login", async () => {
+    const fetchMock = vi.fn().mockResolvedValue(new Response("{}", { headers: { "set-cookie": "mangora_trusted_device=test-trust; Domain=api.example.test; Path=/; Max-Age=2592000; HttpOnly" } }));
+    vi.stubGlobal("fetch", fetchMock);
+    const result = await POST(new NextRequest("https://preview.example.test/api/backend/auth/login", { method: "POST", headers: { cookie: "mangora_trusted_device=test-trust", "user-agent": "test-browser" }, body: "{}" }), context);
+    expect(result.headers.get("set-cookie")).not.toContain("Domain=");
+    const forwarded = fetchMock.mock.calls[0][1].headers as Headers;
+    expect(forwarded.get("cookie")).toBe("mangora_trusted_device=test-trust");
+    expect(forwarded.get("user-agent")).toBe("test-browser");
+  });
+  it("keeps sessions host-only and propagates trust revocation to both cookie scopes", async () => {
+    const headers = new Headers();
+    headers.append("set-cookie", "gestao_access_token=session; Domain=api.mangora.com.br; Path=/; HttpOnly; Secure");
+    headers.append("set-cookie", "mangora_trusted_device=; Domain=api.mangora.com.br; Path=/; Max-Age=0; HttpOnly; Secure");
+    vi.stubGlobal("fetch", vi.fn().mockResolvedValue(new Response("{}", { headers })));
+    const result = await POST(new NextRequest("https://www.mangora.com.br/api/backend/auth/login", { method: "POST", body: "{}" }), context);
+    const cookies = result.headers.getSetCookie();
+    expect(cookies.find(cookie => cookie.startsWith("gestao_access_token="))).not.toContain("Domain=");
+    expect(cookies.filter(cookie => cookie.startsWith("mangora_trusted_device="))).toHaveLength(2);
+    for (const cookie of cookies.filter(cookie => cookie.startsWith("mangora_trusted_device="))) expect(cookie).toContain("Max-Age=0");
+  });
   it("signs the Vercel client IP for the exact backend method and URL", () => {
     const target = new URL("https://api.example.test/api/auth/login?source=test");
     const headers = signBackendIdentity(new Headers({ "x-vercel-forwarded-for": "203.0.113.8", "x-forwarded-for": "forged" }), target, "POST");

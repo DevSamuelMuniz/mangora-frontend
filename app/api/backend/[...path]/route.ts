@@ -52,6 +52,7 @@ async function proxy(request: NextRequest, context: RouteContext) {
   }
 
   const responseHeaders = new Headers(response.headers);
+  if (path[0] === "auth") responseHeaders.set("cache-control", "no-store");
   responseHeaders.delete("content-encoding");
   responseHeaders.delete("content-length");
   const cookieHeaders = (response.headers as Headers & { getSetCookie?: () => string[] }).getSetCookie?.()
@@ -59,9 +60,18 @@ async function proxy(request: NextRequest, context: RouteContext) {
   if (cookieHeaders.length) {
     responseHeaders.delete("set-cookie");
     for (const cookie of cookieHeaders) {
-      // The browser is talking to www.mangora.com.br, not directly to the API.
-      // Removing Domain makes login and logout cookies belong to this origin.
-      responseHeaders.append("set-cookie", cookie.replace(/;\s*domain=[^;]+/i, ""));
+      // Sessions stay host-only. Device trust must survive moving between the
+      // two official frontend hosts; never apply this domain to preview/local URLs.
+      const hostOnly = cookie.replace(/;\s*domain=[^;]+/i, "");
+      const officialHost = ["mangora.com.br", "www.mangora.com.br"].includes(request.nextUrl.hostname);
+      const trustedCookie = /^mangora_trusted_device=/.test(hostOnly);
+      if (trustedCookie && officialHost) {
+        // Migrate the earlier host-only cookie, including logout/disable expiry.
+        responseHeaders.append("set-cookie", "mangora_trusted_device=; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=0");
+        responseHeaders.append("set-cookie", `${hostOnly}; Domain=mangora.com.br`);
+      } else {
+        responseHeaders.append("set-cookie", hostOnly);
+      }
     }
   }
 
