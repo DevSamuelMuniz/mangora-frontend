@@ -45,7 +45,8 @@ test("small labels print isolated vectors", async ({ page }, testInfo) => {
   const frame = page.locator("iframe");
   await expect(frame).toHaveCount(1);
   const source = await frame.getAttribute("srcdoc");
-  expect(source).toContain("30mm 20mm");
+  expect(source).toContain("@page { size: auto; margin: 0; }");
+  expect(source).toContain("width:30mm;height:20mm");
   expect(source).toContain("CHA-002");
   expect(source).toContain("001234");
   expect(source).toMatch(/R\$\s9,50/);
@@ -54,7 +55,7 @@ test("small labels print isolated vectors", async ({ page }, testInfo) => {
   await printPage.setContent(source!);
   await printPage.emulateMedia({ media: "print" });
   await printPage.locator("svg").screenshot({ path: testInfo.outputPath("printed-label.png") });
-  await printPage.pdf({ path: testInfo.outputPath("printed-label.pdf"), preferCSSPageSize: true });
+  await printPage.pdf({ path: testInfo.outputPath("printed-label.pdf"), width: "30mm", height: "20mm" });
   const bounds = await printPage.locator("svg").evaluate(svg => [...svg.querySelectorAll("text")].map(text => {
     const { x, y, width, height } = text.getBBox();
     return { x, y, width, height };

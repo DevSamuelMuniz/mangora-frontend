@@ -42,3 +42,21 @@ for (const job of jobs) test(`prints actual paper dimensions: ${job.name}`, asyn
     expect(Math.abs(Number(box[2]) * 25.4 / 72 - expected.height)).toBeLessThan(0.5);
   });
 });
+
+test("lays out native printing on the selected driver paper from the top", async ({ page }, testInfo) => {
+  const output = renderReceiptPdf(receiptTestLayout(58), 58);
+  await page.setContent(buildBrowserPrintHtml(output.pages, "printer"));
+  await page.emulateMedia({ media: "print" });
+  const rules = await page.evaluate(() => [...document.styleSheets[0].cssRules].filter(rule => rule instanceof CSSPageRule).map(rule => rule.cssText));
+  expect(rules).toEqual(["@page { size: auto; margin: 0px; }"]);
+  expect((await page.locator("section").boundingBox())!.y).toBe(0);
+  const pdf = await page.pdf({
+    path: testInfo.outputPath("native-58x297.pdf"), width: "58mm", height: "297mm",
+    preferCSSPageSize: false, displayHeaderFooter: true,
+    headerTemplate: "<span>UNWANTED HEADER</span>", footerTemplate: "<span>UNWANTED FOOTER</span>",
+    margin: { top: 0, bottom: 0, left: 0, right: 0 },
+  });
+  const boxes = [...pdf.toString("latin1").matchAll(/\/MediaBox\s*\[\s*0\s+0\s+([\d.]+)\s+([\d.]+)\s*\]/g)];
+  expect(boxes).toHaveLength(1);
+  expect(Math.abs(Number(boxes[0][2]) * 25.4 / 72 - 297)).toBeLessThan(0.5);
+});

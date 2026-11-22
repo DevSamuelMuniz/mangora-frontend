@@ -28,14 +28,79 @@ de PDF, escolha tamanho real. Para cupons, use a largura configurada de 58 ou
 80 mm. A página informa suas dimensões por CSS; as opções disponíveis de papel
 e a alimentação física dependem do driver da impressora.
 
-O documento isolado define o tamanho padrão em `@page`, além dos tamanhos
-por página para lotes com comprimentos diferentes. Cada SVG também declara
-largura e altura em milímetros; a abertura da impressão aguarda as fontes e
-o cálculo do layout. A regressão de 40 × 40 mm, etiquetas em paisagem, faixa
+O documento da janela de impressão usa `@page { size: auto; margin: 0 }`,
+desenhando no topo da folha selecionada no driver. Isso evita que o Chromium
+centralize verticalmente uma página CSS curta em uma folha física de 297 ou
+420 mm. A exportação de PDF continua com as medidas exatas do documento;
+a opção `document` do gerador HTML preserva tamanhos por página para auditoria.
+Cada SVG declara largura e altura em milímetros; a abertura da impressão
+aguarda as fontes e o cálculo do layout. A regressão de 40 × 40 mm, etiquetas em paisagem, faixa
 contínua com última página menor, A4 e cupons de 58/80 mm é verificada em
 `test/labels-browser/print-dimensions.spec.ts`, incluindo as dimensões reais
 das páginas do PDF produzido pelo Chromium. Esses testes não operam o driver
 HPRT nem verificam a saída física.
+
+### Impressão nativa do Windows e bobina curta
+
+O diálogo nativo do Windows usa as preferências do usuário no driver. Essas
+preferências podem continuar em 58 × 420 mm mesmo quando o HTML/PDF informa
+uma etiqueta de 40 × 40 mm. Verificar apenas o PDF do Chromium não confirma
+o comprimento de papel usado pelo driver.
+
+Para configurar uma HPRT MPT-II para um trecho curto, execute no Windows
+PowerShell 5.1, a partir da pasta do frontend:
+
+```powershell
+powershell.exe -NoProfile -File scripts/configure-windows-thermal.ps1 -WhatIf
+powershell.exe -NoProfile -File scripts/configure-windows-thermal.ps1
+```
+
+O script usa papel físico de 58 × 40 mm por padrão, mantém uma cópia do
+PrintTicket anterior em `%LOCALAPPDATA%\Mangora\Printing\Backups`, valida o
+formato com o driver antes de aplicar e confere se foi persistido. A largura
+de 58 mm é a da bobina; uma etiqueta de 40 mm continua sendo conteúdo de
+40 mm. O script não envia impressão e não modifica os arquivos do driver.
+As preferências são por usuário, sem alterar o padrão global da fila.
+
+Feche e abra novamente a janela de impressão para carregar o novo formato.
+Se o navegador ainda oferecer apenas 297/420/3276 mm, é necessário cadastrar
+um formulário com nome, além de alterar as preferências do usuário:
+
+```powershell
+powershell.exe -NoProfile -File scripts/register-windows-paper.ps1
+powershell.exe -NoProfile -File scripts/register-windows-paper.ps1 -HeightMm 100
+powershell.exe -NoProfile -File scripts/register-windows-paper.ps1 -HeightMm 150
+```
+
+Os formatos aparecem como **Mangora 58x40mm**, **Mangora 58x100mm** e
+**Mangora 58x150mm**. A criação usa a API `AddForm` do spooler, não altera o
+driver e não substitui formulários existentes. Depois de reabrir a janela,
+escolha o formato curto que comporte o trabalho. Use 40 mm para etiquetas
+de 40 mm de altura; uma nota mais comprida precisa de outro comprimento.
+Configure **Margens: Nenhuma**, **Escala: Personalizado, 100%** e desmarque
+**Cabeçalhos e rodapés**. O site não pode desativar a opção de cabeçalhos e
+rodapés guardada pelo navegador. A seleção antiga de 58 × 297 mm pode ficar
+memorizada por impressora mesmo após mudar as preferências do Windows.
+
+Para uma nota maior, ajuste o comprimento ao documento e use largura de
+58 mm no Mangora para essa impressora:
+
+```powershell
+powershell.exe -NoProfile -File scripts/configure-windows-thermal.ps1 -HeightMm 100
+```
+
+O comprimento de 100 mm acima é um exemplo, não detecção automática da nota.
+Um formulário de 40 mm não deve ser usado para encaixar uma nota inteira de
+100 mm em uma só página. O site não controla o PrintTicket escolhido pelo
+diálogo nativo; a sincronização automática de um comprimento diferente para
+cada trabalho exige integração local com o spooler do Windows.
+
+Para restaurar as preferências anteriores, informe o caminho de backup
+retornado pelo script:
+
+```powershell
+powershell.exe -NoProfile -File scripts/configure-windows-thermal.ps1 -RestoreFrom 'C:\caminho\do\backup.xml'
+```
 
 ## Comportamento
 

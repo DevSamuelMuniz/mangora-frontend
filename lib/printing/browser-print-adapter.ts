@@ -11,7 +11,7 @@ export class BrowserPrintAdapter {
   }
 }
 
-export function buildBrowserPrintHtml(pages: PrintPage[]) {
+export function buildBrowserPrintHtml(pages: PrintPage[], paperSizing: "document" | "printer" = "document") {
   if (!pages.length || pages.some(({ width, height }) => !Number.isFinite(width) || !Number.isFinite(height) || width <= 0 || height <= 0)) {
     throw new Error("Invalid print page dimensions");
   }
@@ -23,13 +23,14 @@ export function buildBrowserPrintHtml(pages: PrintPage[]) {
       name = `sheet-${pageSizes.size}`;
       pageSizes.set(size, name);
     }
-    return `<section style="page:${name};width:${width}mm;height:${height}mm">${svg}</section>`;
+    return `<section style="${paperSizing === "document" ? `page:${name};` : ""}width:${width}mm;height:${height}mm">${svg}</section>`;
   });
   const rules = [...pageSizes].map(([size, name]) => `@page ${name} { size: ${size}; margin: 0; }`);
   return `<!doctype html><html><head><meta charset="utf-8"><title>Mangora</title><style>
-    /* Supply default paper geometry as well as each section's named size. */
-    @page { size: ${pages[0].width}mm ${pages[0].height}mm; margin: 0; }
-    ${rules.join("\n")}
+    /* A smaller CSS page is centered on larger driver paper by Chromium.
+       Native printing must lay out directly on the selected printer sheet. */
+    @page { size: ${paperSizing === "printer" ? "auto" : `${pages[0].width}mm ${pages[0].height}mm`}; margin: 0; }
+    ${paperSizing === "document" ? rules.join("\n") : ""}
     html, body { margin: 0; padding: 0; }
     body { width: ${pages[0].width}mm; }
     section { display: block; box-sizing: border-box; margin: 0; padding: 0; break-inside: avoid; overflow: hidden; }
@@ -39,7 +40,7 @@ export function buildBrowserPrintHtml(pages: PrintPage[]) {
 }
 
 function openPrintDialog(pages: PrintPage[]): Promise<void> {
-  const html = buildBrowserPrintHtml(pages);
+  const html = buildBrowserPrintHtml(pages, "printer");
   return new Promise((resolve, reject) => {
     const frame = document.createElement("iframe");
     frame.title = "Mangora";

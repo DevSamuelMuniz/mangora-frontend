@@ -90,7 +90,9 @@ describe("typed printing queue", () => {
     vi.spyOn(HTMLIFrameElement.prototype, "contentWindow", "get").mockReturnValue(target as unknown as Window);
     const pending = new BrowserPrintAdapter().print(renderReceiptPdf(receiptTestLayout(80), 80));
     const frame = document.querySelector("iframe")!;
-    expect(frame.srcdoc).toContain("size: 80mm");
+    expect(frame.srcdoc).toContain("@page { size: auto; margin: 0; }");
+    expect(frame.srcdoc).toContain("width:80mm");
+    expect(frame.srcdoc).not.toContain("@page sheet-");
     expect(frame.srcdoc).toContain("TESTE DE IMPRESSÃO");
     expect(frame.srcdoc).not.toContain("<embed");
     frame.dispatchEvent(new Event("load"));
