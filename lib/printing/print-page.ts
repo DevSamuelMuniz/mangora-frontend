@@ -19,6 +19,6 @@ export class PrintPageDrawing {
 
   page(): PrintPage {
     const { width, height } = this;
-    return { width, height, svg: `<svg viewBox="0 0 ${width} ${height}" xmlns="http://www.w3.org/2000/svg" font-family="Arial, sans-serif" fill="#000" xml:space="preserve">${this.elements.join("")}</svg>` };
+    return { width, height, svg: `<svg width="${width}mm" height="${height}mm" viewBox="0 0 ${width} ${height}" xmlns="http://www.w3.org/2000/svg" font-family="Arial, sans-serif" fill="#000" xml:space="preserve">${this.elements.join("")}</svg>` };
   }
 }

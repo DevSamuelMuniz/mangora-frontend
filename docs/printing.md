@@ -16,6 +16,27 @@ acionada como no Ctrl+P, com apenas o conteúdo do trabalho na prévia.
 4. Se a janela de impressão estiver indisponível, clique em **Baixar PDF**,
    abra o arquivo e imprima pelo visualizador.
 
+### Papel comprido ou tamanho diferente da prévia
+
+Uma etiqueta configurada como 4 × 4 cm corresponde a 40 × 40 mm. Para uma
+única etiqueta, inclusive no modo contínuo, o documento deve ter esse tamanho.
+Se a janela mostrar uma faixa comprida, confira o tamanho do papel nas
+preferências da impressora no Windows e em **Mais definições** do navegador.
+Selecione ou cadastre o formato correspondente ao papel instalado e use
+escala de 100%, margens zero e cabeçalhos/rodapés desativados. No visualizador
+de PDF, escolha tamanho real. Para cupons, use a largura configurada de 58 ou
+80 mm. A página informa suas dimensões por CSS; as opções disponíveis de papel
+e a alimentação física dependem do driver da impressora.
+
+O documento isolado define o tamanho padrão em `@page`, além dos tamanhos
+por página para lotes com comprimentos diferentes. Cada SVG também declara
+largura e altura em milímetros; a abertura da impressão aguarda as fontes e
+o cálculo do layout. A regressão de 40 × 40 mm, etiquetas em paisagem, faixa
+contínua com última página menor, A4 e cupons de 58/80 mm é verificada em
+`test/labels-browser/print-dimensions.spec.ts`, incluindo as dimensões reais
+das páginas do PDF produzido pelo Chromium. Esses testes não operam o driver
+HPRT nem verificam a saída física.
+
 ## Comportamento
 
 O formato do documento e as preferências de download e abertura automática

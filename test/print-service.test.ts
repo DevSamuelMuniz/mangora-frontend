@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import nextConfig from "@/next.config";
-import { BrowserPrintAdapter } from "@/lib/printing/browser-print-adapter";
+import { BrowserPrintAdapter, buildBrowserPrintHtml } from "@/lib/printing/browser-print-adapter";
+import { buildLabelPdf } from "@/lib/printing/label-pdf";
 import { readPrintPreferences, savePrintPreferences } from "@/lib/printing/preferences";
 import { receiptTestLayout } from "@/lib/printing/receipt";
 import { renderReceiptPdf } from "@/lib/printing/receipt-pdf";
@@ -97,6 +98,42 @@ describe("typed printing queue", () => {
     expect(print).toHaveBeenCalledOnce();
     target.dispatchEvent(new Event("afterprint"));
     expect(frame.isConnected).toBe(false);
+  });
+
+  it("declares a default 40 × 40 mm page as well as the named page for a single continuous label", () => {
+    const output = buildLabelPdf([{ id: "blouse", name: "Blusa de Tule CAOS", productCode: "600461", code: "2028813", price: "R$ 599,90", quantity: 1 }], { width: 40, height: 40 }, "continuous");
+    const html = buildBrowserPrintHtml(output.pages);
+    expect(html).toContain("@page { size: 40mm 40mm; margin: 0; }");
+    expect(html).toContain("@page sheet-0 { size: 40mm 40mm; margin: 0; }");
+    expect(html).toContain('<svg width="40mm" height="40mm"');
+    expect(output.pdf.internal.pageSize.getWidth()).toBeCloseTo(40);
+    expect(output.pdf.internal.pageSize.getHeight()).toBeCloseTo(40);
+  });
+
+  it("waits for fonts before opening the print dialog", async () => {
+    let ready!: () => void;
+    const fonts = new Promise<void>(resolve => { ready = resolve; });
+    const target = new EventTarget();
+    const print = vi.fn();
+    Object.assign(target, { print });
+    vi.spyOn(HTMLIFrameElement.prototype, "contentWindow", "get").mockReturnValue(target as unknown as Window);
+    vi.spyOn(HTMLIFrameElement.prototype, "contentDocument", "get").mockReturnValue({ fonts: { ready: fonts }, body: document.body } as unknown as Document);
+    const pending = new BrowserPrintAdapter().print(renderReceiptPdf(receiptTestLayout(58), 58));
+    const frame = document.querySelector("iframe")!;
+    frame.dispatchEvent(new Event("load"));
+    expect(print).not.toHaveBeenCalled();
+    ready();
+    await pending;
+    expect(print).toHaveBeenCalledOnce();
+    target.dispatchEvent(new Event("afterprint"));
+  });
+
+  it("rejects empty or invalid paper sizes before opening a frame", async () => {
+    const output = renderReceiptPdf(receiptTestLayout(58), 58);
+    for (const pages of [[], [{ ...output.pages[0], width: NaN }], [{ ...output.pages[0], height: 0 }]]) {
+      await expect(new BrowserPrintAdapter().print({ ...output, pages })).rejects.toMatchObject({ code: "browser" });
+      expect(document.querySelector("iframe")).toBeNull();
+    }
   });
 
   it("allows same-origin frames without granting WebSocket access to local printers", async () => {
