@@ -29,6 +29,7 @@ export function OperationPasswordProvider({ children }: { children: ReactNode })
         action={request?.action ?? null}
         message={request?.message ?? null}
         error={request?.error ?? null}
+        credentialType={request?.credentialType ?? "password"}
         onSubmit={submit}
         onCancel={cancel}
       />

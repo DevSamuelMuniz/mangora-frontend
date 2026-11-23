@@ -91,3 +91,31 @@ Fonte: solicitação do proprietário de 23/11/2026 e `ProductsService.remove` n
   e permite nova tentativa. Ao cancelar, restaura o foco no acionador.
 - Após sucesso, o item sai do cache de produtos e as consultas de catálogo e
   estoque são atualizadas. A página é limitada ao último índice válido.
+
+## Senha de produtos e estoque
+
+Fonte: solicitação do proprietário de 23/11/2026; contrato de backend
+`../mangorabackend/docs/operation-pin.md`, `OperationPinService` e
+`OperationPasswordGuard`. As regras de autorização são decididas na API.
+
+| Capability | Canonical owner | Source of truth | Allowed variants | Verification |
+|---|---|---|---|---|
+| Modal | components/ui/ModalDialog.tsx | foco, Escape, top layer e restauração compartilhados | confirmação por e-mail / autorização de operação | test/products-browser/operation-pin.spec.ts |
+| CRUD | useOperationPin + apiRequest | endpoints auth/operation-pin; guard global | proprietário configura / demais membros consultam estado | testes do backend e navegador |
+| Form | OperationPinSettings + validação da API | código e senha numéricos de seis dígitos | enviar / confirmar / criar senha | test/products-browser/operation-pin.spec.ts |
+
+- A proteção é configurada em Segurança. A senha é separada da senha de login,
+  aplicada em cada mutação e exigida também do proprietário. A consulta de
+  produtos e estoque mantém o fluxo existente.
+- A criação e toda troca exigem novo código de e-mail, em diálogo antes dos
+  campos da nova senha. Código incorreto, expirado ou já utilizado não libera
+  a etapa de criação; autorização vencida oferece reinício da confirmação.
+- Membros sem autorização de proprietário veem o estado e a explicação, sem
+  ação de configuração. A API aplica a mesma regra.
+- Falhas ficam junto ao formulário. Envio pendente bloqueia fechamento e ações
+  repetidas; cancelamento descarta código, senha e autorização da memória da UI.
+- A senha é solicitada ao enviar uma alteração, sem duplicar o pedido de senha
+  de login na abertura do editor de produto ou estoque. O barramento diferencia
+  o PIN de seis números das confirmações legadas que ainda usam senha de login.
+- Essas mutações exigem conexão e não entram na fila offline. Leituras de
+  catálogo seguem disponíveis para os fluxos existentes de venda offline.

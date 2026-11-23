@@ -136,3 +136,14 @@ O catálogo mantém os painéis brancos/slate e as ações laranja existentes.
 Excluir aparece diretamente na lista e nos cards, com ícone, texto e vermelho
 semântico. A confirmação usa `components/ui/ModalDialog.tsx`, preserva o nome
 do produto, bloqueia ações durante a gravação e apresenta falhas dentro do diálogo.
+
+## Senha de operação
+
+Configurações → Segurança contém `OperationPinSettings`, com o mesmo painel
+branco/slate, ações laranja e campos de 44px. O proprietário confirma um código
+de e-mail antes de criar ou trocar a senha de seis números da empresa.
+`OperationPasswordProvider` mantém um único barramento para as solicitações da
+API; `OperationPasswordModal` usa o `ModalDialog` compartilhado, inclusive quando
+aparece sobre uma confirmação de exclusão. Senhas ficam ocultas por padrão e
+podem ser reveladas explicitamente. O campo usa teclado numérico sem perder
+zeros à esquerda. Mensagens próprias seguem o catálogo do idioma ativo.

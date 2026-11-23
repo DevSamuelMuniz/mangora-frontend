@@ -2,7 +2,7 @@
 // them to the API and makes the HttpOnly session cookie visible to Next.js.
 const API_URL = "/api/backend";
 import { billingBlocksOfflineUse, updateBillingAccess } from "@/lib/billing/access";
-import { isSensitivePath } from "@/lib/offline/security-policy";
+import { isSensitivePath, requiresOnlineOperationAuthorization } from "@/lib/offline/security-policy";
 
 const OFFLINE_MESSAGE = "Sem conexão. Registramos a alteração e vamos sincronizá-la quando a conexão voltar.";
 const CANCELLED_BY_USER = "Operação cancelada: a senha não foi informada.";
@@ -10,6 +10,7 @@ const CANCELLED_BY_USER = "Operação cancelada: a senha não foi informada.";
 const MAXIMUM_PASSWORD_ATTEMPTS = 3;
 
 type ApiErrorPayload = {
+  credentialType?: "password" | "pin";
   message?: string | string[];
   code?: string;
 };
@@ -49,6 +50,9 @@ export async function apiRequest<T>(path: string, init?: RequestInit): Promise<T
     });
     if (operationPassword) pendingOperationPassword = null;
   } catch {
+    if (!isRead && requiresOnlineOperationAuthorization(path)) {
+      throw new ApiError("Para alterar produtos ou estoque, conecte-se e confirme a senha de operação. Tente novamente quando a conexão voltar.", 0);
+    }
     // A known billing cutoff must not turn a rejected sale into offline work.
     if (!isSensitivePath(path) && billingBlocksOfflineUse()) {
       throw new ApiError("A assinatura venceu. Conecte-se e regularize o pagamento para continuar.", 403);
@@ -78,7 +82,7 @@ export async function apiRequest<T>(path: string, init?: RequestInit): Promise<T
       let previousError: string | null = null;
       for (let attempt = 0; attempt < MAXIMUM_PASSWORD_ATTEMPTS; attempt++) {
         const message = Array.isArray(payload.message) ? payload.message.join(" ") : payload.message;
-        const password = await requestOperationPassword({ message: message || "", action: null, error: previousError });
+        const password = await requestOperationPassword({ message: message || "", action: null, error: previousError, credentialType: payload.credentialType });
         if (password === null) throw new ApiError(CANCELLED_BY_USER, 428);
         response = await fetch(`${API_URL}${path}`, {
           ...init,

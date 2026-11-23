@@ -10,6 +10,7 @@
  * deixar uma Promise pendente segurando uma ação do usuário.
  */
 export type OperationPasswordRequest = {
+  credentialType: "password" | "pin";
   id: number;
   /** Mensagem devolvida pelo servidor — explica o que está sendo liberado. */
   message: string;
@@ -29,7 +30,7 @@ const listeners = new Set<() => void>();
 
 function publish(next: PendingRequest | null) {
   pending = next;
-  snapshot = next ? { id: next.id, message: next.message, action: next.action, error: next.error } : null;
+  snapshot = next ? { id: next.id, message: next.message, action: next.action, error: next.error, credentialType: next.credentialType } : null;
   for (const listener of listeners) listener();
 }
 
@@ -47,7 +48,7 @@ export function operationPasswordSnapshot(): OperationPasswordRequest | null {
 }
 
 /** Abre o modal e resolve com a senha digitada — ou `null` se o usuário cancelar. */
-export function requestOperationPassword(input: { message: string; action?: string | null; error?: string | null }): Promise<string | null> {
+export function requestOperationPassword(input: { message: string; action?: string | null; error?: string | null; credentialType?: "password" | "pin" }): Promise<string | null> {
   if (pending) {
     const previous = pending;
     publish(null);
@@ -56,6 +57,7 @@ export function requestOperationPassword(input: { message: string; action?: stri
   return new Promise<string | null>((resolve) => {
     publish({
       id: nextId++,
+      credentialType: input.credentialType ?? "password",
       message: input.message.trim(),
       action: input.action?.trim() || null,
       error: input.error?.trim() || null,

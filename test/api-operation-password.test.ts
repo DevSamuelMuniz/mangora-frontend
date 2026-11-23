@@ -100,4 +100,25 @@ describe("apiRequest com senha de operação", () => {
     unsubscribe();
     expect(listener).not.toHaveBeenCalled();
   });
+
+  it("identifica a senha de seis dígitos sem usar a senha de login", async () => {
+    const fetchMock = vi.fn()
+      .mockResolvedValueOnce(jsonResponse(428, { ...REQUIRED, credentialType: "pin" }))
+      .mockResolvedValueOnce(new Response(null, { status: 204 }));
+    vi.stubGlobal("fetch", fetchMock);
+    const unsubscribe = subscribeOperationPassword(() => {
+      const request = operationPasswordSnapshot();
+      if (!request) return;
+      expect(request.credentialType).toBe("pin");
+      resolveOperationPassword("012345");
+    });
+    await expect(apiRequest("/products/product-1", { method: "DELETE" })).resolves.toBeUndefined();
+    unsubscribe();
+    expect(fetchMock.mock.calls[1][1].headers["x-operation-password"]).toBe("012345");
+  });
+
+  it("não enfileira alterações de produtos ou estoque sem conexão", async () => {
+    vi.stubGlobal("fetch", vi.fn().mockRejectedValue(new Error("offline")));
+    await expect(apiRequest("/products/product-1", { method: "DELETE" })).rejects.toMatchObject({ status: 0, message: expect.stringContaining("confirme a senha de operação") });
+  });
 });

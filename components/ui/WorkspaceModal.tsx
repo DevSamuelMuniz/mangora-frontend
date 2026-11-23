@@ -24,8 +24,10 @@ export default function WorkspaceModal({ children, closeHref, label, size = "lar
   const t = useT();
   const router = useRouter();
   const { data: settings, isLoading } = useCompanySettings();
-  const policy = ["/produtos", "/clientes", "/fornecedores", "/servicos", "/funcionarios"].includes(closeHref) ? "records" : closeHref === "/estoque" ? "stock" : null;
-  const passwordRequired = policy === "records" ? settings?.requirePasswordForRecords : policy === "stock" ? settings?.requirePasswordForStock : false;
+  // Product and inventory changes are authorized by the API when submitted.
+  // Do not ask for the login password before the separate operation PIN.
+  const policy = ["/clientes", "/fornecedores", "/servicos", "/funcionarios"].includes(closeHref) ? "records" : null;
+  const passwordRequired = policy === "records" ? settings?.requirePasswordForRecords : false;
   const [unlocked, setUnlocked] = useState(false);
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");

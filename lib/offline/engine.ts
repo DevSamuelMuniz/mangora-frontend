@@ -3,7 +3,7 @@
  * Usa IndexedDB quando disponível e cai para memória quando não (SSR/tests).
  */
 
-import { isSensitivePath } from "./security-policy";
+import { isSensitivePath, requiresOnlineOperationAuthorization } from "./security-policy";
 
 export type QueuedMutation = {
   id: string;
@@ -147,7 +147,7 @@ export async function cacheWrite(path: string, data: unknown): Promise<void> {
 }
 
 export async function enqueueMutation(method: string, url: string, body?: string): Promise<void> {
-  if (isSensitivePath(url)) throw new Error("Esta operação exige conexão e não pode ser armazenada offline.");
+  if (isSensitivePath(url) || requiresOnlineOperationAuthorization(url)) throw new Error("Esta operação exige conexão e não pode ser armazenada offline.");
   const item: QueuedMutation = { id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`, method, url, body, createdAt: Date.now() };
   await storage.queueAdd(item);
   notify();
