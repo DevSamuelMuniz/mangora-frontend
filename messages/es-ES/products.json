@@ -32,6 +32,7 @@
     "inactivePlural": "Inactivos"
   },
   "stock": {
+    "reservedShort": "{count} reservado(s)",
     "label": "Inventario",
     "physical": "Inventario físico",
     "reserved": "Reservado",
@@ -62,12 +63,13 @@
     "hintFirst": "Registra el primer producto para empezar tu catálogo."
   },
   "loading": "Cargando productos...",
+  "deleteAria": "Eliminar producto {name}",
   "deleteFailed": "No se pudo eliminar el producto.",
   "deleteDialog": {
     "title": "¿Eliminar producto?",
     "confirm": "Eliminar",
     "deleting": "Eliminando...",
-    "warning": "Esto quita el producto del catálogo y no se puede deshacer."
+    "warning": "El producto se eliminará del catálogo y del inventario actual, aunque tenga movimientos. Se conservará el historial y se podrán reutilizar el SKU y el código de barras."
   },
   "pagination": {
     "previous": "Página anterior",

@@ -75,3 +75,19 @@ SystemAdminGuard. O frontend apresenta o estado calculado pela API.
   recuperação e novas mutações offline quando há bloqueio/corte conhecido.
 - Verificação de navegador usa as telas e hooks reais com backend local simulado;
   não substitui homologação com credenciais sandbox dos provedores.
+
+## Exclusão de produtos
+
+Fonte: solicitação do proprietário de 23/11/2026 e `ProductsService.remove` no backend.
+
+| Capability | Canonical owner | Source of truth | Allowed variants | Verification |
+|---|---|---|---|---|
+| CRUD | useDeleteProduct + ProductsService.remove | API com escopo de empresa e exclusão lógica | lista / cards | products.service.spec.ts; test/products-browser/products.spec.ts |
+| Modal | components/ui/ModalDialog.tsx | dialog nativo + foco circular | confirmação de exclusão | test/products-browser/products.spec.ts |
+
+- Excluir exige uma confirmação com nome e consequência. Movimentações anteriores
+  não impedem a remoção; o histórico permanece e os códigos ficam disponíveis.
+- A confirmação bloqueia ações e Escape durante o envio, mantém falhas visíveis
+  e permite nova tentativa. Ao cancelar, restaura o foco no acionador.
+- Após sucesso, o item sai do cache de produtos e as consultas de catálogo e
+  estoque são atualizadas. A página é limitada ao último índice válido.

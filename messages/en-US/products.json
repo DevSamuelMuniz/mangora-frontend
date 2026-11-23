@@ -32,6 +32,7 @@
     "inactivePlural": "Inactive"
   },
   "stock": {
+    "reservedShort": "{count} reserved",
     "label": "Stock",
     "physical": "On hand",
     "reserved": "Reserved",
@@ -62,12 +63,13 @@
     "hintFirst": "Add your first product to start your catalog."
   },
   "loading": "Loading products...",
+  "deleteAria": "Delete product {name}",
   "deleteFailed": "Could not delete the product.",
   "deleteDialog": {
     "title": "Delete product?",
     "confirm": "Delete",
     "deleting": "Deleting...",
-    "warning": "This removes the product from the catalog and cannot be undone."
+    "warning": "The product will be removed from the catalog and current inventory, even if it has stock movements. History will be preserved, and the SKU and barcode can be reused."
   },
   "pagination": {
     "previous": "Previous page",

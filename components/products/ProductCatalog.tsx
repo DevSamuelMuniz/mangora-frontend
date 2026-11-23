@@ -28,6 +28,7 @@ import type { Product } from "@/types/product";
 
 import { useDeleteProduct, useProducts } from "@/features/products/hooks/useProducts";
 import { FilterSelect } from "@/components/shared/FilterSelect";
+import ModalDialog from "@/components/ui/ModalDialog";
 
 const PAGE_SIZE = 6;
 
@@ -96,7 +97,7 @@ export default function ProductCatalog() {
   }
 
   async function confirmDelete() {
-    if (!productToDelete) return;
+    if (!productToDelete || deleteProduct.isPending) return;
 
     try {
       setActionError("");
@@ -191,7 +192,7 @@ export default function ProductCatalog() {
                           {product.trackStock && product.reservedStock > 0 && <p className="mt-1 text-[10px] text-slate-400">{t("products.stock.reservedShort", { count: product.reservedStock })}</p>}
                           <div className="mt-auto flex items-center justify-between gap-2 pt-4">
                             <Link href={`/produtos?acao=editar&id=${product.id}`} className="inline-flex h-10 items-center gap-2 rounded-xl border border-slate-200 px-3 text-xs font-bold text-slate-700 hover:bg-slate-50 focus-visible:outline-orange-600"><Pencil aria-hidden="true" className="size-3.5" />{t("products.actions.edit")}</Link>
-                            <button type="button" onClick={() => setActionsProduct(product)} aria-label={t("products.actionsAria", { name: product.name })} className="flex size-10 items-center justify-center rounded-xl text-slate-500 hover:bg-slate-100 focus-visible:outline-orange-600"><MoreHorizontal className="size-4" /></button>
+                            <button type="button" onClick={() => { setActionError(""); setProductToDelete(product); }} aria-label={t("products.deleteAria", { name: product.name })} className="inline-flex h-11 cursor-pointer items-center gap-2 rounded-xl px-3 text-xs font-bold text-red-600 hover:bg-red-50 focus-visible:outline-2 focus-visible:outline-red-600"><Trash2 aria-hidden="true" className="size-4" />{t("products.deleteDialog.confirm")}</button>
                           </div>
                         </div>
                       </article>
@@ -202,7 +203,7 @@ export default function ProductCatalog() {
               <div className="overflow-x-auto">
                 <table className="w-full min-w-[880px] border-collapse text-left">
                   <thead className="border-b border-slate-200 bg-slate-50 text-[10px] font-bold uppercase tracking-[0.12em] text-slate-500">
-                    <tr><th className="px-5 py-3">{t("products.table.product")}</th><th className="px-4 py-3">Categoria</th><th className="px-4 py-3">{t("products.table.price")}</th><th className="px-4 py-3">Estoque</th><th className="px-4 py-3">Status</th><th className="w-16 px-4 py-3 text-center">{t("products.table.actions")}</th></tr>
+                    <tr><th className="px-5 py-3">{t("products.table.product")}</th><th className="px-4 py-3">Categoria</th><th className="px-4 py-3">{t("products.table.price")}</th><th className="px-4 py-3">Estoque</th><th className="px-4 py-3">Status</th><th className="w-44 px-4 py-3 text-center">{t("products.table.actions")}</th></tr>
                   </thead>
                   <tbody className="divide-y divide-slate-100">
                     {visibleProducts.map((product) => {
@@ -216,6 +217,7 @@ export default function ProductCatalog() {
                           <td className="px-4 py-3.5"><div className="flex items-center gap-2"><span className={`text-xs font-bold ${product.trackStock && availableStock === 0 ? "text-red-600" : lowStock ? "text-amber-600" : "text-slate-800"}`}>{product.trackStock ? `${availableStock}${product.reservedStock ? ` · ${t("products.stock.reservedShort", { count: product.reservedStock })}` : ""}` : t("products.stock.untracked")}</span>{lowStock && <AlertTriangle className="size-3.5 text-amber-500" />}</div></td>
                           <td className="px-4 py-3.5"><span className={`inline-flex rounded-full px-2.5 py-1 text-[10px] font-bold ${product.active ? "bg-green-50 text-green-600" : "bg-slate-100 text-slate-500"}`}>{product.active ? t("products.status.active") : t("products.status.inactive")}</span></td>
                           <td className="px-4 py-3.5 text-center">
+                            <div className="flex items-center justify-center gap-2">
                             <button
                               type="button"
                               onClick={() => setActionsProduct(product)}
@@ -224,6 +226,8 @@ export default function ProductCatalog() {
                             >
                               <MoreHorizontal className="size-4" />
                             </button>
+                            <button type="button" onClick={() => { setActionError(""); setProductToDelete(product); }} aria-label={t("products.deleteAria", { name: product.name })} className="inline-flex h-11 cursor-pointer items-center gap-2 rounded-xl px-3 text-xs font-bold text-red-600 hover:bg-red-50 focus-visible:outline-2 focus-visible:outline-red-600"><Trash2 aria-hidden="true" className="size-4" />{t("products.deleteDialog.confirm")}</button>
+                            </div>
                           </td>
                         </tr>
                       );
@@ -258,10 +262,10 @@ export default function ProductCatalog() {
           product={actionsProduct}
           onClose={() => setActionsProduct(null)}
           onView={() => { setActionsProduct(null); setSelectedProduct(actionsProduct); }}
-          onDelete={() => { setActionsProduct(null); setProductToDelete(actionsProduct); }}
+          onDelete={() => { setActionError(""); setActionsProduct(null); setProductToDelete(actionsProduct); }}
         />
       )}
-      {productToDelete && <DeleteProductModal product={productToDelete} loading={deleteProduct.isPending} onCancel={() => setProductToDelete(null)} onConfirm={() => void confirmDelete()} />}
+      {productToDelete && <DeleteProductModal product={productToDelete} error={actionError} loading={deleteProduct.isPending} onCancel={() => { setProductToDelete(null); setActionError(""); }} onConfirm={() => void confirmDelete()} />}
     </>
   );
 }
@@ -314,16 +318,15 @@ function ProductDetailsModal({ product, onClose }: { product: Product; onClose: 
   );
 }
 
-function DeleteProductModal({ product, loading, onCancel, onConfirm }: { product: Product; loading: boolean; onCancel: () => void; onConfirm: () => void }) {
+function DeleteProductModal({ product, error, loading, onCancel, onConfirm }: { product: Product; error: string; loading: boolean; onCancel: () => void; onConfirm: () => void }) {
   const t = useT();
   return (
-    <div onMouseDown={(event) => { if (!loading && event.target === event.currentTarget) onCancel(); }} className="fixed inset-0 z-[70] flex items-center justify-center bg-slate-950/40 p-4 backdrop-blur-sm">
-      <div role="alertdialog" aria-modal="true" className="w-full max-w-sm rounded-2xl border border-slate-200 bg-white p-5 shadow-2xl">
+    <ModalDialog title={t("products.deleteDialog.title")} onClose={onCancel} busy={loading}>
         <div className="flex size-10 items-center justify-center rounded-xl bg-red-50 text-red-600"><Trash2 className="size-4.5" /></div>
-        <h2 className="mt-4 text-base font-black text-slate-950">{t("products.deleteDialog.title")}</h2>
-        <p className="mt-2 text-xs leading-5 text-slate-500">O produto <strong className="text-slate-700">{product.name}</strong> {t("products.deleteDialog.warning")}</p>
+        <p className="break-words text-sm font-bold text-slate-800">{product.name}</p>
+        <p className="text-xs leading-5 text-slate-500">{t("products.deleteDialog.warning")}</p>
+        {error && <p role="alert" className="rounded-xl bg-red-50 p-3 text-xs font-semibold text-red-700">{error}</p>}
         <div className="mt-5 flex justify-end gap-2"><button type="button" disabled={loading} onClick={onCancel} className="h-10 rounded-xl border border-slate-200 px-4 text-xs font-bold text-slate-600 hover:bg-slate-50 disabled:opacity-60">{t("products.actions.cancel")}</button><button type="button" disabled={loading} onClick={onConfirm} className="inline-flex h-10 items-center gap-2 rounded-xl bg-red-600 px-4 text-xs font-bold text-white hover:bg-red-700 disabled:opacity-60">{loading && <LoaderCircle className="size-3.5 animate-spin" />}{loading ? t("products.deleteDialog.deleting") : t("products.deleteDialog.confirm")}</button></div>
-      </div>
-    </div>
+    </ModalDialog>
   );
 }

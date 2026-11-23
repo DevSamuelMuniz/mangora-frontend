@@ -129,3 +129,10 @@ durante gravação. É o proprietário dos novos diálogos de cobrança e dos ed
 administrativos migrados. Ícones Lucide continuam sem nova biblioteca visual.
 Selects e datas usam controles nativos com popup e teclado do sistema operacional.
 Não introduzir cores ou fontes novas para estados de pagamento.
+
+## Exclusão de produtos
+
+O catálogo mantém os painéis brancos/slate e as ações laranja existentes.
+Excluir aparece diretamente na lista e nos cards, com ícone, texto e vermelho
+semântico. A confirmação usa `components/ui/ModalDialog.tsx`, preserva o nome
+do produto, bloqueia ações durante a gravação e apresenta falhas dentro do diálogo.

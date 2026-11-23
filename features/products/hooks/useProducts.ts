@@ -25,8 +25,14 @@ export function useDeleteProduct() {
     const queryClient = useQueryClient();
     return useMutation<void, Error, { id: string }>({
         mutationFn: ({ id }) => apiRequest<void>(`/products/${id}`, { method: "DELETE" }),
-        onSuccess: () => {
-            void queryClient.invalidateQueries({ queryKey: productsQueryKey });
+        onSuccess: (_, { id }) => {
+            queryClient.setQueryData<Product[]>(productsQueryKey, (products) => products?.filter((product) => product.id !== id));
+            queryClient.removeQueries({ queryKey: ["product-form", id] });
+            void Promise.all([
+                queryClient.invalidateQueries({ queryKey: productsQueryKey }),
+                queryClient.invalidateQueries({ queryKey: ["stock"] }),
+                queryClient.invalidateQueries({ queryKey: ["categories"] }),
+            ]);
         },
     });
 }
