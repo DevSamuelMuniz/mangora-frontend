@@ -362,6 +362,43 @@
     "previewNote": "La vista previa muestra el borrador. Publica para actualizar la página. Los textos personalizados se comparten entre idiomas.",
     "leaveCopy": "Al salir se descartarán los cambios sin publicar.",
     "stay": "Seguir editando",
-    "discard": "Descartar y salir"
+    "discard": "Descartar y salir",
+    "library": "Layouts listos para usar",
+    "libraryHint": "Elige la composición de tu página. Publicar guarda los textos de cada layout para volver después. Los descuentos y las fechas se mantienen al cambiar.",
+    "published": "Publicado",
+    "selectedLayout": "Seleccionado para editar",
+    "chooseLayout": "Usar este layout",
+    "editingLayout": "Editando: {name}",
+    "finishText": "Completa los textos de este layout antes de cambiar.",
+    "layouts": {
+      "standard": {
+        "name": "Original",
+        "description": "La identidad original, con texto y demo lado a lado.",
+        "headline": "Ventas, inventario y finanzas. Todo bajo control.",
+        "copy": "Sabe cuánto vendiste, qué queda por cobrar y qué productos se están agotando. Organiza la rutina de tu negocio con Mangora.",
+        "cta": "Probar gratis 7 días"
+      },
+      "showcase": {
+        "name": "Vitrina del producto",
+        "description": "Apertura centrada y demostración del producto a todo el ancho.",
+        "headline": "Todo tu negocio. En la misma pantalla.",
+        "copy": "Descubre ventas, inventario y finanzas trabajando juntos. Conoce Mangora y pruébalo con los datos de tu negocio.",
+        "cta": "Probar gratis 7 días"
+      },
+      "editorial": {
+        "name": "Editorial",
+        "description": "Una ficha de gestión destaca, con funciones antes de la demo.",
+        "headline": "Menos improvisación. Más control de tu tienda.",
+        "copy": "Desde el primer pedido hasta el cierre de caja, sigue tu tienda y toma decisiones con los números claros.",
+        "cta": "Probar gratis 7 días"
+      },
+      "black-friday": {
+        "name": "Black Friday",
+        "description": "Cupón gigante, fondo oscuro y franjas de oferta.",
+        "headline": "Tu tienda al siguiente nivel. Tus costos más bajos.",
+        "copy": "Punto de venta, inventario y finanzas juntos. Descubre Black Friday Mangora y organiza tu tienda con más ahorro.",
+        "cta": "Probar gratis 7 días"
+      }
+    }
   }
 }

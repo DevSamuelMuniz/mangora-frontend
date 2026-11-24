@@ -1,5 +1,26 @@
 import { test, expect } from "@playwright/test";
 
+test("all ready-made layouts render distinct compositions on desktop and mobile", async ({ page, request }) => {
+  await page.route("**/api/backend/pricing?*", route => route.fulfill({ json: { amount: 6000, formatted: "R$ 60,00", locale: "pt-BR", currency: "BRL", promotion: { percent: 50, months: 3 } } }));
+  for (const layout of ["standard", "showcase", "editorial", "black-friday"]) {
+    await request.get(`http://127.0.0.1:4181/test/layout/${layout}`);
+    await page.goto("/");
+    await expect(page.locator(`main[data-layout="${layout}"]`)).toBeVisible();
+    await expect(page.locator(".campaign-banner")).toHaveCount(3);
+    await expect(page.locator(".editorial-hero")).toHaveCount(layout === "editorial" ? 1 : 0);
+    expect(await page.evaluate(() => {
+      const sections = Array.from(document.querySelectorAll("main > section")).map(section => section.id);
+      return sections.indexOf("recursos") < sections.indexOf("por-dentro");
+    })).toBe(layout === "editorial");
+    for (const width of [1440, 390]) {
+      await page.setViewportSize({ width, height: 1000 });
+      await page.evaluate(() => scrollTo(0, 0));
+      expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+      await page.screenshot({ path: `test-results/layout-${layout}-${width}.png` });
+    }
+  }
+});
+
 test("Black Friday spans the actual landing page with regional prices and responsive layouts", async ({ page, request }) => {
   await page.route("**/api/backend/pricing?*", route => {
     const code = new URL(route.request().url()).searchParams.get("plan") ?? "FREE";

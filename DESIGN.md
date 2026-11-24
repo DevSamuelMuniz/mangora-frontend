@@ -167,3 +167,18 @@ Admin → LP e promoções preserva os painéis brancos, laranja de ação,
 campos de 44px e rolagem natural. A prévia é um rascunho; Publicar alterações
 grava na API. Select e datas são controles nativos, com popup do sistema.
 As datas de campanha representam meia-noite de America/Sao_Paulo.
+
+### Biblioteca de layouts
+
+LP e promoções oferece quatro composições persistentes. Original conserva a
+abertura com texto e painel lado a lado; Vitrine do produto centraliza a abertura
+e amplia a demonstração; Editorial inverte a abertura no desktop, apresenta uma
+ficha de gestão e mostra os recursos antes da demonstração; Black Friday conserva
+o cupom e as faixas de campanha. As composições compartilham navegação, preços,
+FAQ e Instagram. A paleta, Manrope e Bricolage continuam sendo as da marca.
+
+`app/globals.css` mantém os adaptadores `.landing-layout-*`, o papel do Editorial
+e a superfície branca da Vitrine. `LayoutThumbnail` é o proprietário das miniaturas
+estruturais usadas na biblioteca e na prévia. A galeria usa quatro colunas no
+desktop e duas no celular. A seleção tem contorno laranja e estado pressionado;
+o selo “No ar” indica o layout publicado, independentemente do rascunho selecionado.

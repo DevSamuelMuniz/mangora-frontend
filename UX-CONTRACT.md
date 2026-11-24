@@ -145,3 +145,20 @@ Fonte: pedido do proprietário de 23/11/2026 e MarketingService / SubscriptionsS
   Os preços regionais vêm da API. Em falha de preço, orientar a conferir na contratação.
 - Textos personalizados são compartilhados entre os idiomas e identificados
   assim no editor; os rótulos do produto seguem o catálogo ativo.
+
+### Troca de layouts
+
+- `lib/marketing.ts` mantém as identidades `standard`, `showcase`, `editorial`
+  e `black-friday`; `LayoutThumbnail` representa as composições disponíveis.
+- Os botões da galeria usam `aria-pressed`, foco visível e teclado nativo.
+  Selecionar atualiza apenas o rascunho. Publicar grava o layout ativo e os textos
+  de todos os layouts editados; voltar a outro layout recupera seus próprios textos.
+- Título, descrição e botão são específicos de cada layout. Regras de desconto,
+  ativação e datas pertencem à campanha e não mudam ao selecionar um layout.
+  A ação explícita de preset Black Friday continua aplicando 50% por três meses.
+- Rascunhos inéditos começam com textos prontos no idioma do admin. A migração
+  preserva o texto atualmente publicado como primeiro perfil, sem trocar a LP no ar.
+- Textos incompletos precisam ser corrigidos antes de trocar de layout. Falhas
+  de gravação mantêm rascunhos; sair da aba continua usando o ModalDialog existente.
+- Verificação: `lib/marketing.test.ts`, testes da API de marketing e
+  `test/billing-browser/campaign.spec.ts` / `test/campaign-browser/landing.spec.ts`.

@@ -6,6 +6,11 @@ let theme = "black-friday";
 const server = createServer((request, response) => {
   response.setHeader("Content-Type", "application/json");
   if (request.url === "/test/standard") { theme = "standard"; return response.end("{}"); }
+  if (request.url?.startsWith("/test/layout/")) {
+    const next = request.url.split("/").at(-1);
+    if (!["standard", "showcase", "editorial", "black-friday"].includes(next)) { response.statusCode = 400; return response.end("{}"); }
+    theme = next; return response.end("{}");
+  }
   response.end(JSON.stringify({ theme, promotionEnabled: true, promotionActive: true, headline: "Sua loja no próximo nível. Pela metade do preço.", description: "PDV, estoque e financeiro juntos. Aproveite a Black Friday Mangora e organize sua loja com mais economia.", ctaLabel: "Quero aproveitar", discountPercent: 50, discountMonths: 3, startsAt: null, endsAt: null }));
 });
 server.listen(4181, "127.0.0.1");

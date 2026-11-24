@@ -98,7 +98,7 @@ export default async function Home() {
   const faq = landingFaq(t);
   const brandGraph = buildBrandGraph(locale, t("landing.meta.description"), faq);
   return (
-    <main className={`mangora-landing ${blackFriday ? "landing-black-friday" : ""} min-h-screen overflow-hidden bg-[var(--lp-background)] font-[family-name:var(--font-manrope)] text-[var(--lp-ink)]`}>
+    <main data-layout={campaign?.theme ?? "standard"} className={`mangora-landing landing-layout-${campaign?.theme ?? "standard"} ${blackFriday ? "landing-black-friday" : ""} min-h-screen overflow-hidden bg-[var(--lp-background)] font-[family-name:var(--font-manrope)] text-[var(--lp-ink)]`}>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(brandGraph).replace(/</g, "\\u003c") }} />
       <Header t={t} blackFriday={blackFriday} />
       <ConversionTracking />
@@ -169,7 +169,7 @@ export default async function Home() {
             <p className="bf-ticket__period">{t("landing.campaign.period", { months: campaign.discountMonths })}</p>
             <p className="bf-ticket__plans">{t("landing.campaign.offer")}</p>
             <div className="bf-ticket__bottom"><span>PDV + ESTOQUE + FINANCEIRO</span><ArrowRight aria-hidden="true" /></div>
-          </div> : <HeroCounter t={t} />}
+          </div> : campaign?.theme === "editorial" ? <EditorialHero t={t} /> : <HeroCounter t={t} />}
         </div>
 
         <div className="border-y border-[var(--lp-line)] bg-[var(--lp-surface)]/65">
@@ -193,7 +193,7 @@ export default async function Home() {
         </div>
       </section>
 
-      <ProductWalkthrough />
+      {campaign?.theme !== "editorial" && <ProductWalkthrough />}
 
       {banner}
       <section id="recursos" className="bg-[var(--lp-surface)] py-16 sm:py-24">
@@ -237,6 +237,7 @@ export default async function Home() {
         </div>
       </section>
 
+      {campaign?.theme === "editorial" && <ProductWalkthrough />}
       <section id="como-funciona" className="relative py-24 sm:py-32">
         <div className="absolute inset-x-0 top-1/2 h-px bg-[#123d2b]/10" />
         <div className="relative mx-auto grid max-w-[1380px] gap-12 px-5 sm:px-8 lg:grid-cols-[0.72fr_1.28fr] lg:items-center lg:px-10">
@@ -450,6 +451,20 @@ export default async function Home() {
       <Footer t={t} />
     </main>
   );
+}
+
+function EditorialHero({ t }: { t: (key: string) => string }) {
+  const items = [
+    { icon: ShoppingBag, name: t("landing.features.tabs.sales"), detail: t("landing.features.items.sales.title") },
+    { icon: Boxes, name: t("landing.features.tabs.stock"), detail: t("landing.features.items.stock.title") },
+    { icon: CircleDollarSign, name: t("landing.features.tabs.finance"), detail: t("landing.features.items.finance.title") },
+  ];
+  return <div className="editorial-hero">
+    <div className="editorial-hero__masthead"><span>MANGORA</span><ReceiptText aria-hidden="true" className="size-6" /></div>
+    <p className="editorial-hero__title">{t("landing.hero.title")}</p>
+    <ul>{items.map(({ icon: Icon, name, detail }) => <li key={name}><Icon aria-hidden="true" className="size-5" /><div><strong>{name}</strong><p>{detail}</p></div><Check aria-hidden="true" className="size-5" /></li>)}</ul>
+    <div className="editorial-hero__footer"><span>{t("landing.hero.noCard")}</span><span>{t("landing.nav.trialChip")}</span></div>
+  </div>;
 }
 
 async function Header({ t, blackFriday }: { blackFriday: boolean; t: (key: string, params?: Record<string, string | number>) => string }) {

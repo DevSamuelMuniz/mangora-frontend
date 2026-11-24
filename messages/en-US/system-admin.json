@@ -362,6 +362,43 @@
     "previewNote": "This preview shows your draft. Publish to update the public page. Custom text is shared across languages.",
     "leaveCopy": "Leaving discards unpublished changes.",
     "stay": "Keep editing",
-    "discard": "Discard and leave"
+    "discard": "Discard and leave",
+    "library": "Ready-made layouts",
+    "libraryHint": "Choose your landing page composition. Publishing saves the text for each layout so you can switch back later. Discounts and dates stay unchanged when switching.",
+    "published": "Live",
+    "selectedLayout": "Selected for editing",
+    "chooseLayout": "Use this layout",
+    "editingLayout": "Editing: {name}",
+    "finishText": "Complete this layout’s text before switching.",
+    "layouts": {
+      "standard": {
+        "name": "Original",
+        "description": "The original identity, with copy and demo side by side.",
+        "headline": "Sales, stock and finance. Everything under control.",
+        "copy": "Know how much you sold, what is still to be received and which products are running out. Organise your business routine with Mangora.",
+        "cta": "Try free for 7 days"
+      },
+      "showcase": {
+        "name": "Product showcase",
+        "description": "Centered opening and a full-width product demonstration.",
+        "headline": "Your entire business. On the same screen.",
+        "copy": "See sales, stock and finances working together. Explore Mangora and try it with your own business data.",
+        "cta": "Try free for 7 days"
+      },
+      "editorial": {
+        "name": "Editorial",
+        "description": "A management sheet leads, followed by features and the demo.",
+        "headline": "Less guesswork. More control over your shop.",
+        "copy": "From the first order to closing the register, follow your shop’s daily activity and make decisions with clear numbers.",
+        "cta": "Try free for 7 days"
+      },
+      "black-friday": {
+        "name": "Black Friday",
+        "description": "An oversized coupon, dark background and offer banners.",
+        "headline": "Take your shop further. Bring your costs down.",
+        "copy": "Point of sale, stock and finances together. Discover Mangora Black Friday and organize your shop for less.",
+        "cta": "Try free for 7 days"
+      }
+    }
   }
 }

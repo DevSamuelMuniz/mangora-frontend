@@ -34,7 +34,7 @@ test("campaign editor publishes a persisted offer and keeps a failed draft", asy
 test("campaign editor validates dates, changes themes and applies the preset", async ({ page }) => {
   await page.route("**/api/backend/system-admin/landing", route => route.fulfill({ json: config }));
   await page.goto("/campaign-editor");
-  await page.getByLabel("Tema da página").selectOption("standard");
+  await page.getByRole("button", { name: /^Original/ }).click();
   await expect(page.locator(".campaign-preview--black")).toHaveCount(0);
   await page.getByRole("button", { name: "Usar Black Friday" }).click();
   await expect(page.locator(".campaign-preview--black")).toBeVisible();
@@ -46,6 +46,39 @@ test("campaign editor validates dates, changes themes and applies the preset", a
   await expect(page.getByLabel("Término exclusivo (opcional)")).toHaveAttribute("aria-invalid", "true");
   await page.getByLabel("Ativar promoção").uncheck();
   await expect(page.locator(".campaign-preview__discount")).toHaveCount(0);
+});
+
+test("layout library restores each page's text after switching and publishing", async ({ page }) => {
+  let saved = { ...config };
+  await page.route("**/api/backend/system-admin/landing", route => {
+    if (route.request().method() === "PATCH") saved = route.request().postDataJSON();
+    return route.fulfill({ json: saved });
+  });
+  await page.goto("/campaign-editor");
+  await page.getByLabel("Título principal").fill("Minha Black Friday personalizada");
+  await page.getByRole("button", { name: /^Original/ }).focus();
+  await page.keyboard.press("Space");
+  await expect(page.getByRole("button", { name: /^Original/ })).toHaveAttribute("aria-pressed", "true");
+  await expect(page.getByLabel("Título principal")).toHaveValue("Vendas, estoque e financeiro. Tudo sob controle.");
+  await page.getByLabel("Título principal").fill("Minha página original personalizada");
+  await page.getByRole("button", { name: /^Vitrine do produto/ }).click();
+  await expect(page.locator(".campaign-preview--showcase")).toBeVisible();
+  await page.getByRole("button", { name: /^Editorial/ }).click();
+  await expect(page.locator(".campaign-preview--editorial")).toBeVisible();
+  await page.getByRole("button", { name: /^Black Friday/ }).click();
+  await expect(page.getByLabel("Título principal")).toHaveValue("Minha Black Friday personalizada");
+  await expect(page.getByLabel("Desconto (%)", { exact: true })).toHaveValue("50");
+  await expect(page.getByLabel("Duração (meses)")).toHaveValue("3");
+  await page.getByRole("button", { name: "Publicar alterações" }).click();
+  await expect(page.getByRole("status")).toContainText("Alterações publicadas");
+  await page.reload();
+  await page.getByRole("button", { name: /^Original/ }).click();
+  await expect(page.getByLabel("Título principal")).toHaveValue("Minha página original personalizada");
+  await page.getByLabel("Ativar promoção").uncheck();
+  await page.getByRole("button", { name: /^Editorial/ }).click();
+  await expect(page.getByLabel("Ativar promoção")).not.toBeChecked();
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+  await page.screenshot({ path: `test-results/layout-library-${test.info().project.name}.png`, fullPage: true });
 });
 
 test("campaign loading failure provides explicit retry", async ({ page }) => {

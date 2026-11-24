@@ -362,6 +362,43 @@
     "previewNote": "A prévia mostra o rascunho. Publique para atualizar a página pública. Os textos personalizados são compartilhados entre os idiomas.",
     "leaveCopy": "Ao sair, as alterações não publicadas serão descartadas.",
     "stay": "Continuar editando",
-    "discard": "Descartar e sair"
+    "discard": "Descartar e sair",
+    "library": "Layouts prontos",
+    "libraryHint": "Escolha a composição da sua LP. Os textos de cada layout ficam guardados ao publicar, para você trocar e voltar depois. Descontos e datas são mantidos na troca.",
+    "published": "No ar",
+    "selectedLayout": "Selecionado para edição",
+    "chooseLayout": "Usar este layout",
+    "editingLayout": "Editando: {name}",
+    "finishText": "Complete os textos deste layout antes de trocar.",
+    "layouts": {
+      "standard": {
+        "name": "Original",
+        "description": "A identidade original, com texto e demonstração lado a lado.",
+        "headline": "Vendas, estoque e financeiro. Tudo sob controle.",
+        "copy": "Saiba quanto vendeu, o que tem para receber e quais produtos estão acabando. Organize a rotina do seu negócio com a Mangora.",
+        "cta": "Testar grátis por 7 dias"
+      },
+      "showcase": {
+        "name": "Vitrine do produto",
+        "description": "Abertura centralizada e demonstração em largura total.",
+        "headline": "Seu negócio inteiro. Na mesma tela.",
+        "copy": "Veja vendas, estoque e financeiro trabalhando juntos. Conheça a Mangora e experimente com os dados do seu negócio.",
+        "cta": "Testar grátis por 7 dias"
+      },
+      "editorial": {
+        "name": "Editorial",
+        "description": "Ficha de gestão em destaque e recursos antes da demonstração.",
+        "headline": "Menos improviso. Mais controle da sua loja.",
+        "copy": "Do primeiro pedido ao fechamento do caixa, acompanhe o que acontece na sua loja e decida com os números na mesa.",
+        "cta": "Testar grátis por 7 dias"
+      },
+      "black-friday": {
+        "name": "Black Friday",
+        "description": "Cupom gigante, fundo escuro e faixas de oferta.",
+        "headline": "Sua loja no próximo nível. O preço lá embaixo.",
+        "copy": "PDV, estoque e financeiro juntos. Conheça a Black Friday Mangora e organize sua loja com mais economia.",
+        "cta": "Testar grátis por 7 dias"
+      }
+    }
   }
 }
