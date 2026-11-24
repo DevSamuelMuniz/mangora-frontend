@@ -169,5 +169,16 @@
     "autoUpdate": "Atualização automática",
     "title": "Menos digitação. Mais visão do negócio.",
     "copy": "A venda dá baixa no estoque, movimenta o caixa e aparece no seu painel. É assim que a rotina ganha tempo."
+  },
+  "campaign": {
+    "offer": "Em todos os planos pagos online",
+    "period": "Nos primeiros {months} meses",
+    "cta": "Ver planos com desconto",
+    "automatic": "Oferta automática, sem cupom. Após {months} meses, preço normal. Free continua grátis. Enterprise sob consulta.",
+    "regular": "Depois: {price}/mês",
+    "pricePeriod": "por {months} meses",
+    "unavailable": "Consulte o preço atualizado na contratação.",
+    "planTitle": "{percent}% OFF. Por {months} meses.",
+    "closingTitle": "Sua próxima fase começa com {percent}% OFF."
   }
 }

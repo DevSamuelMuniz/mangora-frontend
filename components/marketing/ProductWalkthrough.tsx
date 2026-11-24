@@ -17,15 +17,15 @@ export default function ProductWalkthrough() {
   const t = useT();
   const [selected, setSelected] = useState(0);
   const example = buildExamples(t)[selected];
-  return <section id="por-dentro" className="bg-[#fff8ea] px-5 py-16 text-[#123d2b] sm:px-8 sm:py-24 lg:px-10">
+  return <section id="por-dentro" className="bg-[var(--lp-background,#fff8ea)] px-5 py-16 text-[var(--lp-ink,#123d2b)] sm:px-8 sm:py-24 lg:px-10">
     <div className="mx-auto max-w-[1200px]">
-      <p className="text-xs font-black uppercase tracking-widest text-[#147a45]">{t("publicUi.walkthrough.title")}</p>
+      <p className="text-xs font-black uppercase tracking-widest text-[var(--lp-eyebrow,#147a45)]">{t("publicUi.walkthrough.title")}</p>
       <h2 className="mt-4 max-w-3xl font-[family-name:var(--font-bricolage)] text-4xl font-extrabold tracking-tight sm:text-5xl">{t("publicUi.walkthrough.closingTitle")}</h2>
-      <p className="mt-5 text-[#315847]">{t("publicUi.walkthrough.subtitle")}</p>
+      <p className="mt-5 text-[var(--lp-muted,#315847)]">{t("publicUi.walkthrough.subtitle")}</p>
       <div className="mt-8 flex flex-wrap gap-3" aria-label={t("publicUi.walkthrough.rotations")}>
-        {buildExamples(t).map((item, index) => <button key={item.name} type="button" aria-pressed={selected === index} aria-controls="product-example" onClick={() => { setSelected(index); track("product_demo_viewed", { module: item.name }); }} className={`min-h-12 rounded-xl border-2 border-[#123d2b] px-6 font-bold focus-visible:outline-4 focus-visible:outline-offset-4 focus-visible:outline-[#ff6b1a] ${selected === index ? "bg-[#123d2b] text-white" : "bg-white text-[#123d2b] hover:bg-[#ffb21a]/20"}`}>{item.name}</button>)}
+        {buildExamples(t).map((item, index) => <button key={item.name} type="button" aria-pressed={selected === index} aria-controls="product-example" onClick={() => { setSelected(index); track("product_demo_viewed", { module: item.name }); }} className={`min-h-12 rounded-xl border-2 border-[#123d2b] px-6 font-bold focus-visible:outline-4 focus-visible:outline-offset-4 focus-visible:outline-[#ff6b1a] ${selected === index ? "bg-[#123d2b] text-white" : "bg-[var(--lp-surface,#fff)] text-[var(--lp-ink,#123d2b)] hover:bg-[#ffb21a]/20"}`}>{item.name}</button>)}
       </div>
-      <div id="product-example" className="mt-6 grid overflow-hidden rounded-3xl border-2 border-[#123d2b] bg-white lg:grid-cols-[0.8fr_1.2fr]">
+      <div id="product-example" className="mt-6 grid overflow-hidden rounded-3xl border-2 border-[#123d2b] bg-[var(--lp-surface,#fff)] lg:grid-cols-[0.8fr_1.2fr]">
         <div className="bg-[#123d2b] p-6 text-white sm:p-9" aria-live="polite">
           <h3 className="font-[family-name:var(--font-bricolage)] text-3xl font-bold">{example.question}</h3>
           <p className="mt-4 leading-7 text-white/90">{example.description}</p>
@@ -33,9 +33,9 @@ export default function ProductWalkthrough() {
           <Link href="/cadastro" className="mt-8 inline-flex min-h-12 items-center gap-2 rounded-xl bg-[#ffb21a] px-5 font-bold text-[#123d2b] focus-visible:outline-4 focus-visible:outline-white">{t("publicUi.walkthrough.withMyData")} <ArrowRight className="size-4" /></Link>
         </div>
         <div className="min-w-0 p-5 sm:p-9">
-          <p className="mb-6 text-xs font-semibold text-[#597064]">{t("publicUi.walkthrough.disclaimer")}</p>
-          <div className="overflow-x-auto"><table className="w-full text-left text-sm"><caption className="sr-only">Exemplo de {example.name}</caption><thead><tr>{example.columns.map(column => <th key={column} scope="col" className="border-b border-[#123d2b]/20 pb-4 pr-4">{column}</th>)}</tr></thead><tbody>{example.rows.map(row => <tr key={row[0]}>{row.map((cell, index) => <td key={index} className="border-b border-[#123d2b]/10 py-5 pr-4 text-[#315847]">{cell}</td>)}</tr>)}</tbody></table></div>
-          <p className="mt-6 text-xs leading-5 text-[#597064]">{t("publicUi.walkthrough.disclaimer")}</p>
+          <p className="mb-6 text-xs font-semibold text-[var(--lp-muted,#597064)]">{t("publicUi.walkthrough.disclaimer")}</p>
+          <div className="overflow-x-auto"><table className="w-full text-left text-sm"><caption className="sr-only">Exemplo de {example.name}</caption><thead><tr>{example.columns.map(column => <th key={column} scope="col" className="border-b border-[#123d2b]/20 pb-4 pr-4">{column}</th>)}</tr></thead><tbody>{example.rows.map(row => <tr key={row[0]}>{row.map((cell, index) => <td key={index} className="border-b border-[#123d2b]/10 py-5 pr-4 text-[var(--lp-muted,#315847)]">{cell}</td>)}</tr>)}</tbody></table></div>
+          <p className="mt-6 text-xs leading-5 text-[var(--lp-muted,#597064)]">{t("publicUi.walkthrough.disclaimer")}</p>
         </div>
       </div>
     </div>

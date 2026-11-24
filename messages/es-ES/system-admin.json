@@ -9,7 +9,8 @@
     "central": "Central",
     "billing": "Cobros",
     "config": "Configuración del sistema",
-    "payments": "Pagos"
+    "payments": "Pagos",
+    "landing": "LP y promociones"
   },
   "header": {
     "badge": "System",
@@ -327,5 +328,40 @@
     "companies": "Buscar por empresa, correo o documento",
     "users": "Buscar por nombre o correo",
     "payments": "Buscar empresa, correo o ID de pago"
+  },
+  "landing": {
+    "title": "Landing page y promociones",
+    "intro": "Personaliza la página pública y la oferta aplicada al contratar planes.",
+    "open": "Abrir página publicada",
+    "appearance": "Identidad de la campaña",
+    "theme": "Tema de la página",
+    "standard": "Identidad original",
+    "preset": "Usar Black Friday: 50% por 3 meses",
+    "headline": "Título principal",
+    "description": "Descripción",
+    "cta": "Texto del botón",
+    "offer": "Descuento en planes",
+    "enabled": "Activar promoción",
+    "percent": "Descuento (%)",
+    "months": "Duración (meses)",
+    "rules": "Aplicación automática en todos los planes de pago de contratación online, una vez por cuenta. Free sigue gratis; Enterprise se negocia con ventas. No se acumula con cupones. Después vuelve el precio normal. Los cambios no afectan ofertas contratadas.",
+    "startsAt": "Inicio (opcional)",
+    "endsAt": "Fin exclusivo (opcional)",
+    "schedule": "Fechas a medianoche de Brasilia. Sin inicio: disponible inmediatamente. Sin fin: activa hasta desactivarla. El fin conserva los descuentos contratados.",
+    "save": "Publicar cambios",
+    "saved": "Cambios publicados en la página y en las suscripciones.",
+    "saveError": "No se pudo publicar. Inténtalo de nuevo.",
+    "loadError": "No se pudo cargar la configuración.",
+    "retry": "Reintentar",
+    "loading": "Cargando configuración…",
+    "validation": "Revisa los textos obligatorios, descuento del 1 al 90% y duración de 1 a 12 meses.",
+    "dateError": "El fin debe ser posterior al inicio.",
+    "unsaved": "Tienes cambios sin publicar.",
+    "preview": "Vista previa de la campaña",
+    "previewPeriod": "por {months} meses",
+    "previewNote": "La vista previa muestra el borrador. Publica para actualizar la página. Los textos personalizados se comparten entre idiomas.",
+    "leaveCopy": "Al salir se descartarán los cambios sin publicar.",
+    "stay": "Seguir editando",
+    "discard": "Descartar y salir"
   }
 }

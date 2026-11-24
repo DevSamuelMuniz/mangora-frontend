@@ -5,18 +5,19 @@ import { useFormatters } from "@/i18n/provider";
 import Link from "next/link";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { Activity, AlertTriangle, ArrowLeft, Building2, Check, CheckCircle2, ChevronDown, ChevronLeft, ChevronRight, CreditCard, Globe2, KeyRound, LayoutDashboard, LifeBuoy, LoaderCircle, LockKeyhole, LogOut, Pencil, RefreshCw, Search, ShieldCheck, Tags, Unlock, Users, X, SlidersHorizontal, CalendarClock, CircleDollarSign } from "lucide-react";
+import { Sparkles, Activity, AlertTriangle, ArrowLeft, Building2, Check, CheckCircle2, ChevronDown, ChevronLeft, ChevronRight, CreditCard, Globe2, KeyRound, LayoutDashboard, LifeBuoy, LoaderCircle, LockKeyhole, LogOut, Pencil, RefreshCw, Search, ShieldCheck, Tags, Unlock, Users, X, SlidersHorizontal, CalendarClock, CircleDollarSign } from "lucide-react";
 import BrandLogo from "@/components/brand/BrandLogo";
 import { useT } from "@/i18n/provider";
 import type { Translate } from "@/i18n/runtime";
 import { ApiError, apiRequest } from "@/lib/api/client";
 import PaymentsPanel, { type PaymentReconciliation, type SystemPayment } from "./PaymentsPanel";
 import ModalDialog from "@/components/ui/ModalDialog";
+import LandingConfigPanel from "./LandingConfigPanel";
 import BillingConfigPanel from "./BillingConfigPanel";
 
 
-type Tab = "overview" | "companies" | "users" | "plans" | "prices" | "coupons" | "billing" | "payments" | "config";
-const tabs: Tab[] = ["overview", "companies", "users", "plans", "prices", "coupons", "billing", "payments", "config"];
+type Tab = "landing" | "overview" | "companies" | "users" | "plans" | "prices" | "coupons" | "billing" | "payments" | "config";
+const tabs: Tab[] = ["landing", "overview", "companies", "users", "plans", "prices", "coupons", "billing", "payments", "config"];
 type Overview = { metrics: { users: number; activeUsers: number; companies: number; activeCompanies: number; newCompanies: number; monthlyRecurringRevenue: number }; plans: Plan[]; recentCompanies: Company[] };
 type Plan = { id: string; name: string; price: number | null; ownerLimit: number | null; employeeLimit: number | null; unitLimit: number | null; companies: number };
 type User = { id: string; name: string; email: string; phone: string | null; status: string; isSystemAdmin: boolean; failedLoginAttempts: number; lockedUntil: string | null; createdAt: string; _count: { memberships: number; sessions: number } };
@@ -36,6 +37,7 @@ function buildNav(t: Translate) {
     { id: "users" as const, label: t("systemAdmin.nav.users"), icon: Users },
     { id: "plans" as const, label: t("systemAdmin.nav.plans"), icon: CreditCard },
     { id: "prices" as const, label: t("systemAdmin.nav.prices"), icon: Globe2 },
+    { id: "landing" as const, label: t("systemAdmin.nav.landing"), icon: Sparkles },
     { id: "coupons" as const, label: t("systemAdmin.nav.coupons"), icon: Tags },
     { id: "config" as const, label: t("systemAdmin.nav.config"), icon: ShieldCheck },
   ];
@@ -56,6 +58,8 @@ export default function SystemAdminConsole({ operatorName }: { operatorName: str
   const nav = buildNav(t);
   const requestedTab = searchParams.get("tab");
   const tab: Tab = tabs.includes(requestedTab as Tab) ? requestedTab as Tab : "overview";
+  const [landingDirty, setLandingDirty] = useState(false);
+  const [leaveLanding, setLeaveLanding] = useState<Tab | null>(null);
   const [overview, setOverview] = useState<Overview | null>(null);
   const [users, setUsers] = useState<User[]>([]);
   const [companies, setCompanies] = useState<Company[]>([]);
@@ -88,7 +92,9 @@ export default function SystemAdminConsole({ operatorName }: { operatorName: str
   const [supportingUser, setSupportingUser] = useState<User | null>(null);
   const [editingCompany, setEditingCompany] = useState<Company | null>(null);
 
-  function navigate(nextTab: Tab) {
+  function navigate(nextTab: Tab, discard = false) {
+    if (tab === "landing" && landingDirty && nextTab !== tab && !discard) { setLeaveLanding(nextTab); return; }
+    setLeaveLanding(null);
     const params = new URLSearchParams(searchParams.toString());
     if (nextTab === "overview") params.delete("tab"); else params.set("tab", nextTab);
     params.delete("q");
@@ -174,6 +180,7 @@ export default function SystemAdminConsole({ operatorName }: { operatorName: str
             {(tab === "companies" || tab === "users" || tab === "payments") && <SearchBar value={search} onChange={(value) => { setSearch(value); const params = new URLSearchParams(searchParams.toString()); if (value) params.set("q", value); else params.delete("q"); router.replace(`${pathname}${params.size ? `?${params.toString()}` : ""}`, { scroll: false }); }} placeholder={tab === "companies" ? t("systemAdmin.search.companies") : tab === "users" ? t("systemAdmin.search.users") : t("systemAdmin.payments.search")} />}
             {tab === "overview" && <OverviewPanel data={overview} onCompanies={() => navigate("companies")} onUsers={() => navigate("users")} onPlans={() => navigate("plans")} onPrices={() => navigate("prices")} onCoupons={() => navigate("coupons")} />}
             {tab === "config" && <BillingConfigPanel />}
+            {tab === "landing" && <LandingConfigPanel onDirtyChange={setLandingDirty} />}
             {tab === "companies" && <CompaniesPanel items={visibleCompanies} onEdit={setEditingCompany} onReload={() => void load()} notify={notify} />}
             {tab === "users" && <UsersPanel items={visibleUsers} onEdit={setEditingUser} onSupport={setSupportingUser} />}
             {tab === "plans" && <PlansPanel plans={overview.plans} onCompanies={navigate} onPrices={navigate} />}
@@ -185,6 +192,7 @@ export default function SystemAdminConsole({ operatorName }: { operatorName: str
         </div>
       </section>
     </div>
+    {leaveLanding && <ModalDialog title={t("systemAdmin.landing.unsaved")} onClose={() => setLeaveLanding(null)}><p className="text-sm">{t("systemAdmin.landing.leaveCopy")}</p><div className="flex flex-wrap justify-end gap-3"><button type="button" onClick={() => setLeaveLanding(null)} className="min-h-11 cursor-pointer rounded-xl border border-slate-300 px-4 text-sm font-bold hover:bg-slate-100">{t("systemAdmin.landing.stay")}</button><button type="button" onClick={() => navigate(leaveLanding, true)} className="min-h-11 cursor-pointer rounded-xl bg-orange-700 px-4 text-sm font-bold text-white hover:bg-orange-800">{t("systemAdmin.landing.discard")}</button></div></ModalDialog>}
     {editingUser && <UserEditor user={editingUser} onClose={() => setEditingUser(null)} onSaved={(updated) => { setUsers((items) => items.map((item) => item.id === updated.id ? { ...item, ...updated } : item)); setEditingUser(null); notify(t("systemAdmin.messages.userUpdated")); }} />}
     {supportingUser && <SupportEditor user={supportingUser} onClose={() => setSupportingUser(null)} onChanged={(next) => { setUsers((items) => items.map((item) => item.id === next.id ? { ...item, ...next } : item)); }} notify={notify} />}
     {editingCompany && <CompanyEditor company={editingCompany} onClose={() => setEditingCompany(null)} onSaved={(updated) => { setCompanies((items) => items.map((item) => item.id === updated.id ? { ...item, ...updated } : item)); setEditingCompany(null); notify(t("systemAdmin.messages.companyUpdated")); void load(); }} />}

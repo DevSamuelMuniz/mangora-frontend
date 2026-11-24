@@ -169,5 +169,16 @@
     "autoUpdate": "Automatic update",
     "title": "Less typing. More business insight.",
     "copy": "The sale decreases stock, moves the cash and appears on your dashboard. That is how the routine gains time."
+  },
+  "campaign": {
+    "offer": "On every self-service paid plan",
+    "period": "For the first {months} months",
+    "cta": "See discounted plans",
+    "automatic": "Applied automatically, no coupon. Regular prices after {months} months. Free stays free. Contact sales for Enterprise.",
+    "regular": "Then: {price}/month",
+    "pricePeriod": "for {months} months",
+    "unavailable": "Check the current price at checkout.",
+    "planTitle": "{percent}% OFF. For {months} months.",
+    "closingTitle": "Your next chapter starts with {percent}% OFF."
   }
 }

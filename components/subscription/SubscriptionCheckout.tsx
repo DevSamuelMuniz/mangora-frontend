@@ -33,6 +33,9 @@ export default function SubscriptionCheckout({ planId }: { planId: string }) {
   const showFields = provider === "ASAAS" && !resume;
   const busy = checkout.isPending || redirecting;
   const amount = plan?.checkoutAmount ?? (regional && regional.amount * Math.max(1, overview?.usage.find(item => item.key === "units")?.current ?? 1));
+  const promotion = !resume ? regional?.promotion : null;
+  const promotionalPrice = regional && typeof amount === "number" && promotion
+    ? new Intl.NumberFormat(locale, { style: "currency", currency: regional.currency }).format(Math.round(amount * (100 - promotion.percent) / 100) / 100) : null;
   const price = regional && typeof amount === "number"
     ? new Intl.NumberFormat(locale, { style: "currency", currency: regional.currency }).format(amount / 100)
     : regional?.formatted ?? t("billing.plan.pricePending");
@@ -85,7 +88,8 @@ export default function SubscriptionCheckout({ planId }: { planId: string }) {
           <aside className="rounded-2xl bg-[#173d2b] p-6 text-white">
             <p className="text-xs font-bold uppercase tracking-widest text-orange-300">{t("billing.checkoutPage.summary")}</p>
             <h2 className="mt-2 text-2xl font-black">{plan?.name ?? planId}</h2>
-            {!resume && regional && <p className="mt-4 border-t border-white/20 pt-4 text-2xl font-black tabular-nums">{price} <span className="text-sm font-medium">{t("billing.pendingPayment.perMonth")}</span></p>}
+            {!resume && regional && <p className="mt-4 border-t border-white/20 pt-4 text-2xl font-black tabular-nums">{promotionalPrice ?? price} <span className="text-sm font-medium">{t("billing.pendingPayment.perMonth")}</span></p>}
+            {promotion && <p className="mt-4 rounded-xl border border-orange-300/40 bg-black/15 p-3 text-sm leading-6 text-orange-100">{t("billing.campaign.offer", { percent: promotion.percent, months: promotion.months, price })}</p>}
           </aside>
           <form noValidate onSubmit={submit} aria-busy={busy} className="space-y-4 rounded-2xl border border-slate-200 bg-white p-5 sm:p-6">
             <h2 className="text-lg font-bold">{t("billing.provider.billing")}</h2>
@@ -103,7 +107,7 @@ export default function SubscriptionCheckout({ planId }: { planId: string }) {
                   {invalidDue && <span id="checkout-due-error" role="alert" className="mt-1 block text-red-800">{t("billing.paymentFlow.invalidDue")}</span>}
                 </label>
                 <label className="text-xs font-bold sm:col-span-2">{t("billing.paymentFlow.coupon")}
-                  <input value={coupon} disabled={busy} maxLength={32} onChange={event => setCoupon(event.target.value.toUpperCase())} className={field} />
+                  <input value={coupon} disabled={busy || !!promotion} maxLength={32} onChange={event => setCoupon(event.target.value.toUpperCase())} className={field} />
                 </label>
               </div>
             )}

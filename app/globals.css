@@ -1,5 +1,73 @@
 @import "tailwindcss";
 
+/* Marketing palette: campaign changes remain scoped to the public page. */
+.mangora-landing {
+  --lp-eyebrow: #147a45;
+  --lp-background: #fff8ea;
+  --lp-surface: #ffffff;
+  --lp-ink: #123d2b;
+  --lp-muted: #4a695c;
+  --lp-line: #123d2b1a;
+}
+.mangora-landing.landing-black-friday {
+  --lp-eyebrow: #ffb21a;
+  --lp-background: #101713;
+  --lp-surface: #1a251e;
+  --lp-ink: #fff8ea;
+  --lp-muted: #c5cec7;
+  --lp-line: #fff8ea26;
+  color-scheme: dark;
+}
+.landing-black-friday .lp-orange-ink { color: #101713; }
+.landing-black-friday #inicio { background: repeating-linear-gradient(115deg, transparent 0 78px, #ffffff03 78px 79px); }
+.landing-black-friday #inicio h1 { font-size: clamp(3rem, 5.6vw, 5.4rem); line-height: .99; }
+.landing-black-friday #segmentos { --lp-ink: #123d2b; --lp-muted: #315847; --lp-background: #fff8ea; --lp-surface: #fff; }
+.landing-black-friday #planos article { border-width: 2px; }
+.landing-black-friday #recursos { border-top: 1px solid var(--lp-line); border-bottom: 1px solid var(--lp-line); }
+.mangora-landing.landing-black-friday :is(a, button):focus-visible { outline-color: #ffb21a; }
+.mangora-landing a, .mangora-landing button { cursor: pointer; }
+.bf-ticket { position: relative; padding: clamp(1.5rem, 4vw, 3rem); color: #101713; background: #ffb21a; border: 2px solid #101713; box-shadow: 12px 12px 0 #ff6b1a; transform: rotate(3deg); font-family: var(--font-bricolage), sans-serif; }
+.bf-ticket::before, .bf-ticket::after { content: ""; position: absolute; width: 28px; height: 28px; border-radius: 50%; background: #101713; top: 67%; }
+.bf-ticket::before { left: -15px; }.bf-ticket::after { right: -15px; }
+.bf-ticket__top, .bf-ticket__bottom { display: flex; align-items: center; justify-content: space-between; gap: 1rem; font-size: .75rem; font-weight: 900; letter-spacing: .1em; }
+.bf-ticket__top { padding-bottom: 1rem; border-bottom: 2px solid #101713; }
+.bf-ticket__amount { display: flex; align-items: center; justify-content: center; padding: 1.5rem 0 0; }
+.bf-ticket__amount strong { font-size: clamp(8rem, 17vw, 17rem); line-height: .88; letter-spacing: -.09em; font-weight: 900; }
+.bf-ticket__amount > span { font-size: clamp(2.5rem, 5vw, 5rem); font-weight: 900; line-height: .95; margin-left: .5rem; }
+.bf-ticket__period { font-size: clamp(1.4rem, 2.8vw, 2.5rem); text-align: center; font-weight: 900; margin-top: 1rem; }
+.bf-ticket__plans { text-align: center; font-size: .875rem; margin: .5rem 0 2rem; font-weight: 700; }
+.bf-ticket__bottom { border-top: 2px dashed #10171388; padding-top: 1.5rem; }
+.campaign-banner { background: #ff6b1a; color: #101713; padding: 1.5rem max(1.25rem, calc((100vw - 1300px) / 2)); display: flex; flex-wrap: wrap; gap: 1.5rem; align-items: center; justify-content: space-between; border-block: 2px solid #101713; }
+.campaign-banner__label { display: flex; align-items: center; gap: .5rem; font-size: .7rem; letter-spacing: .12em; font-weight: 900; }
+.campaign-banner > p { display: flex; align-items: center; flex-wrap: wrap; gap: 1.25rem; }
+.campaign-banner > p strong { font: 900 clamp(2rem, 4vw, 4rem)/1 var(--font-bricolage), sans-serif; letter-spacing: -.05em; }
+.campaign-banner > p span { font-size: .8rem; line-height: 1.6; font-weight: 800; }
+.campaign-banner > a { display: inline-flex; align-items: center; gap: 1rem; min-height: 44px; padding: .75rem 1.25rem; border: 2px solid #101713; font-size: .875rem; font-weight: 900; box-shadow: 3px 3px 0 #101713; transition: background .2s; }
+.campaign-banner > a:hover { background: #ffb21a; }
+.campaign-terms { margin: 2rem auto 0; padding: 1rem; max-width: 46rem; border: 1px dashed #ff6b1a; text-align: center; font-size: .875rem; line-height: 1.7; color: var(--lp-muted); }
+.campaign-price { display: flex; flex-direction: column; gap: .6rem; }
+.campaign-price del { font-family: var(--font-manrope), sans-serif; font-size: 1rem; line-height: 1.3; font-weight: 500; color: var(--lp-muted); letter-spacing: 0; }
+.campaign-price small { font-family: var(--font-manrope), sans-serif; font-size: .75rem; line-height: 1.5; font-weight: 700; color: var(--lp-muted); letter-spacing: 0; }
+.campaign-price small:first-of-type { color: #ff6b1a; }
+.campaign-preview { --preview-ink: #123d2b; border: 2px solid #123d2b; border-radius: 1rem; padding: clamp(1.5rem, 3vw, 2.5rem); background: #fff8ea; color: var(--preview-ink); overflow-wrap: anywhere; }
+.campaign-preview--black { --preview-ink: #fff8ea; background: #101713; border-color: #ffb21a; box-shadow: 6px 6px 0 #ff6b1a; }
+.campaign-preview__eyebrow { font-size: .7rem; letter-spacing: .15em; font-weight: 900; color: #ce4a0a; }
+.campaign-preview--black .campaign-preview__eyebrow { color: #ffb21a; }
+.campaign-preview h4 { font-family: var(--font-bricolage), sans-serif; font-size: clamp(2rem, 3vw, 3rem); font-weight: 900; letter-spacing: -.04em; line-height: 1.05; margin: 1.5rem 0 1rem; }
+.campaign-preview__description { font-size: .875rem; line-height: 1.8; }
+.campaign-preview__discount { display: flex; flex-wrap: wrap; align-items: baseline; gap: .75rem; padding: 1rem 0; }
+.campaign-preview__discount strong { font-family: var(--font-bricolage), sans-serif; font-size: 5rem; line-height: 1; color: #ce4a0a; font-weight: 900; letter-spacing: -.07em; }
+.campaign-preview--black .campaign-preview__discount strong { color: #ffb21a; }
+.campaign-preview__discount span { font-size: .8rem; font-weight: 700; }
+.campaign-preview__cta { display: flex; justify-content: space-between; align-items: center; gap: 1rem; padding: 1rem; margin-top: 1rem; background: #ffb21a; color: #123d2b; font-size: .875rem; font-weight: 900; border-radius: .75rem; }
+@media (max-width: 639px) {
+  .bf-ticket { margin-inline: .5rem 1rem; transform: rotate(2deg); }
+  .bf-ticket__amount strong { font-size: clamp(7rem, 34vw, 12rem); }
+  .bf-ticket__amount > span { font-size: clamp(2.5rem, 11vw, 4rem); }
+  .campaign-banner { gap: 1rem; }
+  .campaign-banner > p { width: 100%; }
+}
+
 :root {
   --background: #e9dfd2;
   --foreground: #173d2b;

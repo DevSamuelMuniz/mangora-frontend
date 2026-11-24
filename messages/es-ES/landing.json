@@ -169,5 +169,16 @@
     "autoUpdate": "Actualización automática",
     "title": "Menos teclear. Más visión del negocio.",
     "copy": "La venta descuenta el inventario, mueve la caja y aparece en tu panel. Así la rutina gana tiempo."
+  },
+  "campaign": {
+    "offer": "En todos los planes de pago online",
+    "period": "Los primeros {months} meses",
+    "cta": "Ver planes con descuento",
+    "automatic": "Oferta automática, sin cupón. Después de {months} meses, precio normal. Free sigue gratis. Enterprise bajo consulta.",
+    "regular": "Después: {price}/mes",
+    "pricePeriod": "por {months} meses",
+    "unavailable": "Consulta el precio actualizado al contratar.",
+    "planTitle": "{percent}% OFF. Por {months} meses.",
+    "closingTitle": "Tu próxima etapa empieza con {percent}% OFF."
   }
 }

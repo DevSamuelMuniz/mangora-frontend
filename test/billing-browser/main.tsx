@@ -5,6 +5,7 @@ import I18nProvider from "@/i18n/provider";
 import billing from "@/messages/pt-BR/billing.json";
 import common from "@/messages/pt-BR/common.json";
 import systemAdmin from "@/messages/pt-BR/system-admin.json";
+import LandingConfigPanel from "@/components/system-admin/LandingConfigPanel";
 import SubscriptionCheckout from "@/components/subscription/SubscriptionCheckout";
 import SubscriptionManagement from "@/components/subscription/SubscriptionManagement";
 import SubscriptionPayments from "@/components/subscription/SubscriptionPayments";
@@ -15,5 +16,5 @@ import "./preview.css";
 const payment: SystemPayment = { ...invoice, rawStatus: invoice.status, createdAt: invoice.dueDate, paymentProvider: "ASAAS" };
 const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
 createRoot(document.getElementById("root")!).render(<QueryClientProvider client={client}><I18nProvider locale="pt-BR" messages={{ billing, common, systemAdmin }}><main style={{ maxWidth: 1440, margin: "0 auto", padding: 24 }}>
-{window.location.pathname === "/admin" ? <PaymentsPanel items={[payment]} status="" onStatus={() => {}} onReconcile={async () => ({ items: [payment], checked: 1, updated: 0, failed: 0, providerConfigured: true })} onReload={() => {}} onCancel={async () => "CANCELLED"} /> : window.location.pathname.includes("/cobrancas") ? <SubscriptionPayments /> : window.location.pathname.includes("/checkout/") ? <SubscriptionCheckout planId={window.location.pathname.split("/").at(-1)!.toUpperCase()} /> : <SubscriptionManagement />}
+{window.location.pathname === "/campaign-editor" ? <LandingConfigPanel /> : window.location.pathname === "/admin" ? <PaymentsPanel items={[payment]} status="" onStatus={() => {}} onReconcile={async () => ({ items: [payment], checked: 1, updated: 0, failed: 0, providerConfigured: true })} onReload={() => {}} onCancel={async () => "CANCELLED"} /> : window.location.pathname.includes("/cobrancas") ? <SubscriptionPayments /> : window.location.pathname.includes("/checkout/") ? <SubscriptionCheckout planId={window.location.pathname.split("/").at(-1)!.toUpperCase()} /> : <SubscriptionManagement />}
 </main></I18nProvider></QueryClientProvider>);

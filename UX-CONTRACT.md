@@ -119,3 +119,29 @@ Fonte: solicitação do proprietário de 23/11/2026; contrato de backend
   o PIN de seis números das confirmações legadas que ainda usam senha de login.
 - Essas mutações exigem conexão e não entram na fila offline. Leituras de
   catálogo seguem disponíveis para os fluxos existentes de venda offline.
+
+## LP e promoções
+
+Fonte: pedido do proprietário de 23/11/2026 e MarketingService / SubscriptionsService.
+
+| Capability | Canonical owner | Source of truth | Allowed variants | Verification |
+|---|---|---|---|---|
+| Form | LandingConfigPanel + apiRequest | LandingConfigDto | editor e prévia | test/billing-browser/campaign.spec.ts |
+| Select/Listbox | HTML select | DESIGN.md | native | tema original / Black Friday |
+| Date | HTML input date | datas de campanha da API | native | início incluso / fim exclusivo |
+| Modal | components/ui/ModalDialog.tsx | UX-CONTRACT.md | descartar rascunho | navegação entre abas |
+| Promotion | MarketingService + snapshot SubscriptionPromotion | docs/billing.md do backend | Asaas / Paddle | marketing.service.spec.ts |
+
+- Configuração persiste no servidor e só o admin do sistema pode alterá-la.
+- Salvar é explícito. Falhas preservam o rascunho; retry é explícito. Não simular
+  sucesso com localStorage. A prévia diferencia rascunho de página publicada.
+- A aba usa `?tab=landing`. Trocar de aba com alterações exige ModalDialog;
+  fechar ou recarregar usa beforeunload. Não ocultar erros apenas em toast.
+- Datas usam meia-noite de Brasília. Término encerra novas adesões e não
+  altera condições de assinaturas já contratadas.
+- Oferta automática em planos pagos online, sem acumular cupom, uma vez por
+  conta de cobrança; Free permanece grátis e Enterprise exige comercial.
+- Preço original, preço com desconto, duração e preço posterior aparecem juntos.
+  Os preços regionais vêm da API. Em falha de preço, orientar a conferir na contratação.
+- Textos personalizados são compartilhados entre os idiomas e identificados
+  assim no editor; os rótulos do produto seguem o catálogo ativo.

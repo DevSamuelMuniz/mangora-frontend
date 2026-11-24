@@ -9,7 +9,8 @@
     "central": "Console",
     "billing": "Billing",
     "config": "System settings",
-    "payments": "Payments"
+    "payments": "Payments",
+    "landing": "LP & promotions"
   },
   "header": {
     "badge": "System",
@@ -327,5 +328,40 @@
     "companies": "Search by company, e-mail or document",
     "users": "Search by name or e-mail",
     "payments": "Search company, email, or payment ID"
+  },
+  "landing": {
+    "title": "Landing page and promotions",
+    "intro": "Customize the public page and the offer applied when subscribing.",
+    "open": "Open published page",
+    "appearance": "Campaign identity",
+    "theme": "Page theme",
+    "standard": "Original identity",
+    "preset": "Use Black Friday: 50% for 3 months",
+    "headline": "Main headline",
+    "description": "Description",
+    "cta": "Button label",
+    "offer": "Plan discount",
+    "enabled": "Enable promotion",
+    "percent": "Discount (%)",
+    "months": "Duration (months)",
+    "rules": "Applied automatically to every self-service paid plan, once per billing account. Free stays free; Enterprise is negotiated with sales. Cannot be combined with coupons. Regular prices resume afterward. Changes do not affect existing offers.",
+    "startsAt": "Start (optional)",
+    "endsAt": "Exclusive end (optional)",
+    "schedule": "Dates at midnight in Brasília. No start: available immediately. No end: active until disabled. Ending a campaign preserves contracted discounts.",
+    "save": "Publish changes",
+    "saved": "Changes published to the landing page and subscriptions.",
+    "saveError": "Could not publish. Try again.",
+    "loadError": "Could not load settings.",
+    "retry": "Try again",
+    "loading": "Loading settings…",
+    "validation": "Check required text, discount from 1 to 90%, and duration from 1 to 12 months.",
+    "dateError": "End must be after start.",
+    "unsaved": "You have unpublished changes.",
+    "preview": "Campaign preview",
+    "previewPeriod": "for {months} months",
+    "previewNote": "This preview shows your draft. Publish to update the public page. Custom text is shared across languages.",
+    "leaveCopy": "Leaving discards unpublished changes.",
+    "stay": "Keep editing",
+    "discard": "Discard and leave"
   }
 }

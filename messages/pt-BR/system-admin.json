@@ -9,7 +9,8 @@
     "central": "Central",
     "billing": "Cobrança",
     "config": "Configurações do sistema",
-    "payments": "Pagamentos"
+    "payments": "Pagamentos",
+    "landing": "LP e promoções"
   },
   "header": {
     "badge": "System",
@@ -327,5 +328,40 @@
     "companies": "Buscar por empresa, e-mail ou documento",
     "users": "Buscar por nome ou e-mail",
     "payments": "Buscar empresa, e-mail ou ID do pagamento"
+  },
+  "landing": {
+    "title": "Landing page e promoções",
+    "intro": "Personalize a página pública e configure a oferta aplicada na contratação dos planos.",
+    "open": "Abrir LP publicada",
+    "appearance": "Identidade da campanha",
+    "theme": "Tema da página",
+    "standard": "Identidade original",
+    "preset": "Usar Black Friday: 50% por 3 meses",
+    "headline": "Título principal",
+    "description": "Descrição",
+    "cta": "Texto do botão",
+    "offer": "Desconto nos planos",
+    "enabled": "Ativar promoção",
+    "percent": "Desconto (%)",
+    "months": "Duração (meses)",
+    "rules": "Aplicação automática em todos os planos pagos de contratação online, uma vez por conta de cobrança. Free permanece grátis; Enterprise é negociado com o comercial. Não acumula com cupons. Depois do período, volta o preço normal. Alterações não afetam ofertas já contratadas.",
+    "startsAt": "Início (opcional)",
+    "endsAt": "Término exclusivo (opcional)",
+    "schedule": "Datas à meia-noite de Brasília. Sem início: disponível imediatamente. Sem término: ativa até ser desativada. O término encerra novas adesões, preservando os meses já contratados.",
+    "save": "Publicar alterações",
+    "saved": "Alterações publicadas na LP e na contratação dos planos.",
+    "saveError": "Não foi possível publicar. Tente novamente.",
+    "loadError": "Não foi possível carregar a configuração.",
+    "retry": "Tentar novamente",
+    "loading": "Carregando configuração…",
+    "validation": "Revise os campos: textos obrigatórios, desconto de 1 a 90% e duração de 1 a 12 meses.",
+    "dateError": "O término deve ser posterior ao início.",
+    "unsaved": "Você tem alterações não publicadas.",
+    "preview": "Prévia da campanha",
+    "previewPeriod": "por {months} meses",
+    "previewNote": "A prévia mostra o rascunho. Publique para atualizar a página pública. Os textos personalizados são compartilhados entre os idiomas.",
+    "leaveCopy": "Ao sair, as alterações não publicadas serão descartadas.",
+    "stay": "Continuar editando",
+    "discard": "Descartar e sair"
   }
 }

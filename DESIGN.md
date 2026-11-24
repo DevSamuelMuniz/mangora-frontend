@@ -147,3 +147,23 @@ API; `OperationPasswordModal` usa o `ModalDialog` compartilhado, inclusive quand
 aparece sobre uma confirmação de exclusão. Senhas ficam ocultas por padrão e
 podem ser reveladas explicitamente. O campo usa teclado numérico sem perder
 zeros à esquerda. Mensagens próprias seguem o catálogo do idioma ativo.
+
+## Campanhas da landing page
+
+A LP pública mantém Manrope para leitura e Bricolage Grotesque para títulos.
+O preset Black Friday usa um cupom gigante inclinado, faixas entre seções,
+preços anteriores riscados e chamadas de oferta no começo e no fim da página.
+As cores seguem a marca: floresta escura #101713, superfície #1a251e,
+papel #fff8ea, amarelo #ffb21a e laranja #ff6b1a. O fundo escuro foi
+solicitado para esta campanha; não altera o tema do aplicativo administrativo.
+
+`app/globals.css` é o proprietário dos tokens `--lp-background`, `--lp-surface`,
+`--lp-ink`, `--lp-muted`, `--lp-line` e `--lp-eyebrow`. `.landing-black-friday`
+adapta esses tokens; `app/page.tsx` e `ProductWalkthrough` os consomem.
+Superfícies amarelas mantêm tinta verde escura para contraste. Sem animação
+decorativa nova; os controles seguem o foco visível e reduced-motion existentes.
+
+Admin → LP e promoções preserva os painéis brancos, laranja de ação,
+campos de 44px e rolagem natural. A prévia é um rascunho; Publicar alterações
+grava na API. Select e datas são controles nativos, com popup do sistema.
+As datas de campanha representam meia-noite de America/Sao_Paulo.

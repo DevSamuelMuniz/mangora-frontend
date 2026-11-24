@@ -231,5 +231,8 @@
     "unavailable": "This plan is currently unavailable for checkout.",
     "awaitingLink": "The payment link is still being prepared. Try again shortly or check Billing and payments.",
     "continue": "Continue to {provider}"
+  },
+  "campaign": {
+    "offer": "Automatic offer: {percent}% OFF for {months} months. Then: {price}/month. Cannot be combined with coupons."
   }
 }

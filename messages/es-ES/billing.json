@@ -231,5 +231,8 @@
     "unavailable": "Este plan no está disponible para contratar en este momento.",
     "awaitingLink": "El enlace de pago aún no está disponible. Inténtalo en unos instantes o consulta Facturación y pagos.",
     "continue": "Continuar a {provider}"
+  },
+  "campaign": {
+    "offer": "Oferta automática: {percent}% OFF por {months} meses. Después: {price}/mes. No se acumula con cupones."
   }
 }

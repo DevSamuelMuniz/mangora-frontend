@@ -12,6 +12,7 @@ export const marketCountries = [
 ] as const;
 
 export type RegionalPrice = {
+  promotion?: { percent: number; months: number } | null;
   planCode: string;
   planName: string;
   country: string;
